@@ -128,7 +128,7 @@ async function listLabels(auth: any) {
   //@ts-ignore
   let mailIdList = res.data.messages.map((res) => res.id);
 
-  console.log(mailIdList);
+  // console.log(mailIdList);
 
   
 

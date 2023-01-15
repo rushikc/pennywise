@@ -9,8 +9,8 @@ import MiniDrawer from "./components/MiniDrawer";
 import Home from "./pages/Home";
 import TagExpenses from "./pages/TagExpenses";
 import './App.css'; 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './BootStrap.css';
+
+import UpdateGmail from "./pages/UpdateGmail";
 
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
       <Routes>
         <Route path='/Home' element={<Home/>} />
         <Route path='/Tag_Expenses' element={<TagExpenses/>} />
-        <Route path='/Gmail' element={<TagExpenses/>} />
+        <Route path='/Update_Gmail' element={<UpdateGmail/>} />
         <Route path='/' element={<Home/>} />
       </Routes>
 

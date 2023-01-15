@@ -25,6 +25,10 @@ export class ExpenseAPI {
         return API._get(`/api/expense/all`);
     }
 
+    static getUpdateGmailList(){
+        return API._get(`/api/expense/updateGmail`);
+    }
+
     static addExpenses(time: string, data: any){
         return API._post(`/api/expense/${time}`, data);
     }

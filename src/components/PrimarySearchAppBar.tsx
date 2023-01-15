@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 // const pages = ['Products', 'Pricing', 'Blog'];
 const pages: string[] = [];
-const settings = ['Home', 'Tag_Expenses','Gmail', 'Dashboard', 'Logout'];
+const settings = ['Home', 'Tag Expenses','Update Gmail', 'Dashboard', 'Logout'];
 
 interface Props {
   open: boolean,
@@ -42,7 +42,7 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
 
   const handleCloseUserMenu = (setting: string) => {
     setAnchorElUser(null);
-    navigate(setting);
+    navigate(setting.replace(' ', '_'));
   };
 
   return (

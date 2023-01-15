@@ -32,7 +32,7 @@ interface Finance {
 }
 
 const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
-'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'parents', 'emi', 'medical', 'clothes']
+'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'parents', 'emi', 'medical', 'clothes', 'alcohol']
 
 
 
