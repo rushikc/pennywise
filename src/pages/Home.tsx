@@ -59,7 +59,6 @@ const Home: FC<any> = (): ReactElement => {
           ))
         }
 
-
         <Item elevation={16} sx={{margin: 2, height: 100}}>
           <Chip 
             icon={<CurrencyRupeeIcon sx={{width: 20}} />} 
