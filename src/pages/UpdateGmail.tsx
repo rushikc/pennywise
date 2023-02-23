@@ -10,6 +10,10 @@ import { ExpenseAPI } from "../api/ExpenseAPI";
 import { Row } from "reactstrap";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Button from "@mui/material/Button/Button";
+import { GoogleLogin } from '@react-oauth/google';
+
+import { google } from 'googleapis';
+import { addExpense, addUser, getExpenseList, getUnTaggedExpenseList } from "../api/BaseApi";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -19,6 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
   height: 60,
   lineHeight: '60px',
 }));
+
 
 
 const UpdateGmail: FC<any> = (): ReactElement => {
@@ -40,14 +45,33 @@ const UpdateGmail: FC<any> = (): ReactElement => {
 
     const updateGmail = () => {
       console.log('update G');
-      setLoading('loading');
-      ExpenseAPI.getUpdateGmailList().then((res) => {
-        console.log("getUpdateGmailList List -> ", res);
-        setResponse(res);
-        setLoading('loaded');
-      }).catch((res1) => alert(res1))
+
+      // ExpenseAPI.getExpenseList().then((res) => {
+      //   console.log("Expense List -> ", res[1]);
+        
+      //   res.forEach((element:any) => {
+      //     addExpense(element);
+      //   });
+
+
+      // }).catch((res1) => alert(res1))
+
+
+      getUnTaggedExpenseList();
       
     }
+
+    
+
+    // useGoogleOneTapLogin({
+    //   onSuccess: credentialResponse => {
+    //     console.log(credentialResponse);
+    //   },
+    //   onError: () => {
+    //     console.log('Login Failed');
+    //   },
+    // });
+
 
     // useEffect(() => {
       
@@ -56,6 +80,27 @@ const UpdateGmail: FC<any> = (): ReactElement => {
     return (
       <Box component="main">
         <DrawerHeader />
+
+        <GoogleLogin
+          onSuccess={(credentialResponse: any) => {
+            const payload = JSON.stringify({
+              type: 'authorized_user',
+              client_id: credentialResponse.clientId,
+              client_secret: credentialResponse.credential,
+              // refresh_token: client.credentials.refresh_token,
+            });
+
+            console.log(credentialResponse);
+
+            // getGAuth(payload).then(res => console.log(res));
+
+
+
+          }}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />;
         
         <Row style={{ paddingTop: '4rem'}}>
         {

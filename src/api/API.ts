@@ -4,6 +4,8 @@ import { METHODS } from "http";
 
 export default class API {
 
+    
+
     static _get(url: string){
         return this._withPayLoad(url, 'GET', {})
     }
@@ -22,9 +24,10 @@ export default class API {
 
         return axios({
             method: method,
-            url: 'http://192.168.1.102:8080' + url,
+            // url: 'https://4db4-2409-4071-e0e-b1f6-f44b-5f3d-9730-454c.in.ngrok.io' + url,
+            url: 'http://192.168.1.103:8080' + url,
             data: Object.keys(data).length > 0? JSON.stringify(data): null,
-            headers: {'Content-type' : 'application/json'},
+            headers: {'Content-type' : 'application/json', 'ngrok-skip-browser-warning': 'any value'},
             // auth: {
             //     username: 'foo',
             //     password: 'bar'

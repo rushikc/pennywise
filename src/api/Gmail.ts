@@ -32,6 +32,23 @@ async function loadSavedCredentialsIfExist() {
   }
 }
 
+
+export const getGAuth = async function (content: any) {
+  try {
+    const credentials = JSON.parse(content);
+    let client =  google.auth.fromJSON(credentials);
+    if (client) {
+      return client;
+    }
+    else{
+      console.log('client not loaded');
+    }
+  } catch (err) {
+    return null;
+  }
+}
+
+
 /**
  * Serializes credentials to a file comptible with GoogleAUth.fromJSON.
  *
@@ -70,12 +87,14 @@ async function authorize() {
   return client;
 }
 
+
+
 /**
  * Lists the labels in the user's account.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-async function listLabels(auth: any) {
+export const listLabels = async function (auth: any) {
   const gmail = google.gmail({version: 'v1', auth});
   
 

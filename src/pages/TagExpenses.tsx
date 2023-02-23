@@ -14,6 +14,8 @@ import Button from "@mui/material/Button/Button";
 import { DateTime } from "luxon";
 import { getDateTime, sortByTime } from "../Utiliy";
 import Checkbox from "@mui/material/Checkbox/Checkbox";
+import { getUnTaggedExpenseList } from "../api/BaseApi";
+import { Expense } from "../api/Types";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -24,15 +26,11 @@ const Item = styled(Paper)(({ theme }) => ({
   lineHeight: '60px',
 }));
 
-interface Finance {
-  vendor: string, 
-  e_date: string,
-  cost: number,
-  id: number,
-}
+
 
 const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
-'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'parents', 'emi', 'medical', 'clothes', 'alcohol']
+'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'parents', 
+'emi', 'medical', 'clothes','noodles', 'fitness', 'alcohol']
 
 
 
@@ -51,7 +49,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
     
     const [expenseIndex, setexpenseIndex] = useState<number>(0);
     const [tagIndex, setTagIndex] = useState<number>(-1);
-    const [expense, setexpense] = useState<Finance[]>([]);
+    const [expense, setexpense] = useState<Expense[]>([]);
     const [selectedExpense, setSelectedExpense] = useState<string[]>([]);
     const [autoTag, setAutoTag] = useState<boolean>(false);
 
@@ -59,19 +57,18 @@ const TagExpenses: FC<any> = (): ReactElement => {
     
 
     useEffect(() => {
-      ExpenseAPI.getUnTaggedExpenseList().then((res) => {
-        // console.log("Expense List -> ", res);
 
-        let resp = sortByTime(res, 'e_date');
+      getUnTaggedExpenseList().then((res) => {
+        res = sortByTime(res, 'date');
+        console.log("Expense List -> ", res[1]);
+        console.log("Expense List -> ", res[150]);
+        setexpense(res);
+      });
 
-        console.log("Expense List -> ", resp[1]);
-
-        setexpense(resp);
-      }).catch((res1) => alert(res1))
     }, []);
 
 
-    const handleSelectedTag = (id: number, tag: string) => {
+    const handleSelectedTag = (id: string, tag: string) => {
       setSelectedExpense([tag]);
       if(autoTag){
         ExpenseAPI.autoTagExpense(expense[expenseIndex].vendor, tag).then(() => {
@@ -82,13 +79,13 @@ const TagExpenses: FC<any> = (): ReactElement => {
           }, 200);
         })
       }else{
-        ExpenseAPI.tagExpense(id, tag).then(() => {
-          setTimeout(() => {
-            setexpenseIndex(expenseIndex+1);
-            setSelectedExpense([]);
-            setAutoTag(false);
-          }, 200);
-        })
+        // ExpenseAPI.tagExpense(id, tag).then(() => {
+        //   setTimeout(() => {
+        //     setexpenseIndex(expenseIndex+1);
+        //     setSelectedExpense([]);
+        //     setAutoTag(false);
+        //   }, 200);
+        // })
       }
     }
 
@@ -107,7 +104,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
         {
             expense.length > 0 &&
-            <Item elevation={10} sx={{marginTop: 4,margin: 2, height: 680}}>
+            <Item elevation={10} sx={{marginTop: 4,margin: 2, height: '100vh'}}>
                 <div style={{fontSize: '20px', fontWeight: 600, color: '#26559bcf'}}>
                     Tag Expenses
                 </div>
@@ -124,9 +121,9 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
                 
                 <div style={{fontSize: "18px"}}>
-                    {DateTime.fromISO(expense[expenseIndex].e_date).toLocaleString(DateTime.DATE_MED)}
+                    {DateTime.fromISO(expense[expenseIndex].date).toLocaleString(DateTime.DATE_MED)}
                     {" - "}
-                    <b>{getDateTime(DateTime.fromISO(expense[expenseIndex].e_date).toLocaleString(DateTime.TIME_SIMPLE))}</b>
+                    <b>{getDateTime(DateTime.fromISO(expense[expenseIndex].date).toLocaleString(DateTime.TIME_SIMPLE))}</b>
                 </div>
 
                 <div>
@@ -140,14 +137,13 @@ const TagExpenses: FC<any> = (): ReactElement => {
                     
                     {
                       tag_list.map((val, index) => (
-                        index > tagIndex && index < tagIndex+9 &&
-                        <div className="col-6" key={index} >
+                        <div className="col-4" key={index} >
                           <Button 
                             style={{
-                              width: '150px', 
+                              width: '120px', 
                               height: '50px',
-                              marginRight: (index+1)%2 == 0? '10px': '0px',
-                              marginLeft: (index+1)%2 == 0? '0px': '10px',
+                              // marginRight: (index+1)%2 == 0? '10px': '0px',
+                              // marginLeft: (index+1)%2 == 0? '0px': '10px',
                             }} 
                             variant={selectedExpense.includes(val)? "contained": "outlined"}
                             onClick={() => 
@@ -162,10 +158,10 @@ const TagExpenses: FC<any> = (): ReactElement => {
                   <Row>
                     <Button 
                       style={{
-                        width: '90px', 
+                        width: '190px', 
                         height: '40px',
                         marginTop: '30px',
-                        marginLeft: '20px',
+                        marginLeft: '45px',
                       }}
                       variant={"contained"}
                       onClick={() => 
@@ -174,7 +170,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
                       skip
                     </Button>
                     <Button style={{
-                        width: '30px', 
+                        width: '190px', 
                         height: '40px',
                         marginTop: '30px',
                         marginLeft: '10px',
@@ -183,7 +179,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
                       startIcon={<SettingsBackupRestoreIcon />}
                       onClick={() => setexpenseIndex(expenseIndex-1)}
                     />
-                    <Button 
+                    {/* <Button 
                       style={{
                         width: '70px', 
                         height: '40px',
@@ -207,7 +203,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
                         handleTagIndex('+')}
                       >
                       {'>>'}
-                    </Button>
+                    </Button> */}
                   </Row>
                 </div>
             </Item>

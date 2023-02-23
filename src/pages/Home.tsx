@@ -8,6 +8,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import DoneIcon from '@mui/icons-material/Done';
 import { ExpenseAPI } from "../api/ExpenseAPI";
 import { Row } from "reactstrap";
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -33,11 +34,15 @@ const Home: FC<any> = (): ReactElement => {
 
     
     const [expense, setexpense] = useState([]);
+    const [isLoading, setLoading] = useState('ns');
 
     useEffect(() => {
+      setLoading('loading');
       ExpenseAPI.getExpenseList().then((res) => {
         console.log("Expense List -> ", res);
         setexpense(res);
+        setLoading('loaded');
+
       }).catch((res1) => alert(res1))
     }, []);
 
@@ -45,34 +50,30 @@ const Home: FC<any> = (): ReactElement => {
       <Box component="main">
         <DrawerHeader />
         {
+          isLoading === 'loading' &&
+          <div style={{paddingLeft: '9rem', paddingTop: '4rem'}}>
+            {/* <span>Fetaching Gmail Data</span>
+            <br/> */}
+            <CircularProgress style={{marginTop: '1rem'}}  />
+          </div>
+        }
+
+        {
+          isLoading === 'loaded' &&
           expense.map((val: {vendor: string, cost: number, id: number}, ind) => (
             <Item key={val.id} elevation={16} sx={{margin: 2, height: 100}}>
-              <Row>
+              <Row style={{margin: 0, borderRadius: '4px'}}>
                 <Chip 
                   icon={<CurrencyRupeeIcon sx={{width: 20}} />} 
                   label={val.cost} 
-                  sx={{fontSize: "18px"}}
+                  sx={{fontSize: "18px", borderRadius: 0, backgroundColor: '#27539361'}}
+                  // sx={{fontSize: "18px", borderRadius: 0, backgroundColor: '#0d6efd61'}}
                 />
               </Row>
               <span>Vendor: {val.vendor}</span>
             </Item>
           ))
         }
-
-        <Item elevation={16} sx={{margin: 2, height: 100}}>
-          <Chip 
-            icon={<CurrencyRupeeIcon sx={{width: 20}} />} 
-            label="213.33" 
-            sx={{fontSize: "18px"}}
-          />
-        </Item>
-
-        <Item elevation={16} sx={{margin: 2, height: 100}}>
-          {`elevation=`}
-        </Item>
-        <Item elevation={16} sx={{margin: 2, height: 100}}>
-          {`elevation=`}
-        </Item>
 
       </Box>
     );
