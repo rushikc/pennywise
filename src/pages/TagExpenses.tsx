@@ -61,9 +61,9 @@ const TagExpenses: FC<any> = (): ReactElement => {
     useEffect(() => {
 
       ExpenseAPI.getUnTaggedExpenseList().then((res) => {
-        res = sortByTime(res, 'date');
-        console.log("Expense List -> ", res[1]);
-        setexpense(res);
+        res = sortByTime(res, 'date', 'desc');
+        // console.log("Expense List -> ", res[1]);
+        setexpense(res.reverse());
       });
 
     }, []);
