@@ -1,14 +1,13 @@
 // src/pages/Home.tsx
 
-import React, {ReactElement, FC, useState, useEffect} from "react";
-import {Box, Typography, Chip} from "@mui/material";
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import DoneIcon from '@mui/icons-material/Done';
-import { ExpenseAPI } from "../api/ExpenseAPI";
-import { Row } from "reactstrap";
+import { Box, Chip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import React, {ReactElement, FC, useState, useEffect} from "react";
+import { Row } from "reactstrap";
+import { ExpenseAPI } from "../api/ExpenseAPI";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -42,13 +41,13 @@ const Home: FC<any> = (): ReactElement => {
         console.log("Expense List -> ", res);
         setexpense(res);
         setLoading('loaded');
-
       }).catch((res1) => alert(res1))
     }, []);
 
     return (
       <Box component="main">
         <DrawerHeader />
+
         {
           isLoading === 'loading' &&
           <div style={{paddingLeft: '9rem', paddingTop: '4rem'}}>

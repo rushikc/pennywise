@@ -1,7 +1,10 @@
 
 
-import {ExpenseAPI} from "./ExpenseAPI";
-import { getExpense } from "./GmailFunctions";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore/lite";
+import { getFirabseConfig } from "../utility/secrets";
+import { getDateTimeSecFromISO } from "../utility/utility";
+import { ExpenseAPI } from "./ExpenseAPI";
 
 const path = require('path');
 const processVar = require('process');
@@ -16,6 +19,18 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 // time.
 const TOKEN_PATH = path.join(processVar.cwd(), 'token.json');
 const CREDENTIALS_PATH = path.join(processVar.cwd(), '../credentials/credentials_finance_desktop.json');
+
+
+
+
+const firebaseConfig = getFirabseConfig();
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+
+
 
 /**
  * Reads previously authorized credentials from the save file.
@@ -88,13 +103,27 @@ async function authorize() {
 }
 
 
+const getExpense = (timeStamp: any) => {
+  return {
+      cost: 0,
+      vendor: null,
+      tag: null,
+      date: new Date(timeStamp),
+      user: 'rushi',
+  };
+}
+
+
+
+
+
 
 /**
  * Lists the labels in the user's account.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-export const listLabels = async function (auth: any) {
+export const updateFromGmail = async function (auth: any) {
   const gmail = google.gmail({version: 'v1', auth});
   
 
@@ -119,26 +148,27 @@ export const listLabels = async function (auth: any) {
 
 
 
-  let temp = Date.now()/1000;
-  let updateStartTime = Math.trunc(temp);
+
   let lastUpdateStartTime;
 
-  await ExpenseAPI.getUpdatedTime()
+  await ExpenseAPI.getConfig('gmailLastUpdated')
   .then(response => lastUpdateStartTime = response);
 
-  // console.log('after:' + lastUpdateStartTime);
 
-  // lastUpdateStartTime = '1670336683'
+  let temp = Date.now()/1000;
+  let updateStartTime = Math.trunc(temp);
 
   res = await gmail.users.messages.list({
     userId: 'me',
     q: 'after:' + lastUpdateStartTime
   });
 
-  // console.log(res.data);
+
+  console.log(res.data);
+  // return;
 
   if(res.data.resultSizeEstimate === 0){
-    ExpenseAPI.updateTime(updateStartTime.toString());
+    ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
     console.log("\n\n\n\n");
     return;
   }
@@ -169,19 +199,19 @@ export const listLabels = async function (auth: any) {
 
   let expenseList = [];
 
-  for (const mailInex in mailIdList) {
+  for (const mailIndex in mailIdList) {
 
-    // console.log(mailInex);
+    // console.log(mailIndex);
 
     res = await gmail.users.messages.get({
       userId: 'me',
-      id: mailIdList[mailInex]
+      id: mailIdList[mailIndex]
     });
   
   
     let snippet  = res.data.snippet
   
-  
+    let expense;
   
     if(snippet.includes('E-mandate')){
       console.log('-> E-mandate mail');
@@ -195,13 +225,9 @@ export const listLabels = async function (auth: any) {
       let rsIndex = CREDIT_CARD_MSG_SPLIT.indexOf('XX1');
       let vendorIndex = CREDIT_CARD_MSG_SPLIT.indexOf('XX2');
   
-      let eJson = {
-        date: parseInt(res.data.internalDate)
-      }
+      expense = getExpense(Number(res.data.internalDate));
   
-      let expense = getExpense(eJson);
-  
-      expense.cost = SNIPPET_SPLIT[rsIndex]
+      expense.cost = Number(SNIPPET_SPLIT[rsIndex])
       expense.vendor = SNIPPET_SPLIT[vendorIndex]
 
       expenseList.push(expense);
@@ -218,32 +244,28 @@ export const listLabels = async function (auth: any) {
       let rsIndex = UPI_MSG_SPLIT.indexOf('XX1');
       let vendorIndex = UPI_MSG_SPLIT.indexOf('XX2');
   
-      let eJson = {
-        date: parseInt(res.data.internalDate)
-      }
   
-      let expense = getExpense(eJson);
+      expense = getExpense(Number(res.data.internalDate));
   
-      expense.cost = SNIPPET_SPLIT[rsIndex].replace('Rs.', '')
+      expense.cost = Number(SNIPPET_SPLIT[rsIndex].replace('Rs.', ''))
       expense.vendor = SNIPPET_SPLIT[vendorIndex]
 
       expenseList.push(expense);
 
       console.log('-> UPI trans: ', expense.cost);
-
     }
   
+    ExpenseAPI.addExpense(expense)
+    .then(response => console.log("Updated record"));
+
   }
 
+  // console.log("Final expense list -> ", expenseList);
   console.log("Final expense list -> ", expenseList.length);
     
   
-  ExpenseAPI.addExpenses(updateStartTime.toString(), expenseList)
-  .then(response => console.log("Updated records -> ", response.length));
 
-  ExpenseAPI.getUpdatedTime()
-  .then(response => console.log("Updated timestamp -> ", response));
-
+  ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
 
   console.log("\n\n\n\n");
 
@@ -251,7 +273,7 @@ export const listLabels = async function (auth: any) {
 }
 
 
-authorize().then(listLabels).catch(console.error);
+authorize().then(updateFromGmail).catch(console.error);
 
 
-// setInterval(() => authorize().then(listLabels).catch(console.error), 500000);
+// setInterval(() => authorize().then(updateFromGmail).catch(console.error), 500000);

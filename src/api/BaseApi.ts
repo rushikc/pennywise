@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, getDocs, addDoc, doc, query, where } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDoc, getDocs, addDoc, doc, query, where, setDoc } from 'firebase/firestore/lite';
+import { getDate, getDateFromISO, getDateTimeSecFromISO, getTimeFromISO, getTimeSecFromISO } from '../utility/utility';
 import { Expense } from './Types';
 
 
@@ -33,15 +34,21 @@ export const addUser = async () => {
 
 
 export const addExpense = async (expense: any) => {
-  try {
-    const docRef = await addDoc(collection(db, "expense"), {
+  try { 
+    let key = getDateTimeSecFromISO(expense.e_date).replaceAll('/', '-').replace(',', '')
+    + ' ' +  expense.vendor.slice(0, 10);
+    const docRef = doc(db, "expense", key);
+    await setDoc(docRef,  {
       tag: expense.tag,
       date: new Date(expense.e_date),
       vendor: expense.vendor,
       user: expense.user,
       cost: expense.cost,
     });
-    console.log("Document written with ID: ", docRef.id);
+
+    // console.log("expense : ", expense);
+    // console.log("key : ", key);
+    console.log("Document written with key: ", key);
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -49,43 +56,19 @@ export const addExpense = async (expense: any) => {
 }
 
 
-export const getExpenseList  = async () => {
-  const querySnapshot = await getDocs(collection(db, "expense"));
-  // console.log("docs => ",querySnapshot);
 
-  let docList: any[] = [];
 
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
-    let document = doc.data();
-    document.id = doc.id;
-    docList.push(document)
+
+export const setTagForExpense  = async (tag: string) => {
+
+    // Create an initial document to update.
+  const frankDocRef = doc(db, "users", "frank no");
+  await setDoc(frankDocRef, {
+    name: "Frank",
+    favorites: { food: "Pizza", color: "Blue", subject: "recess" },
+    age: 12
   });
 
-  console.log(docList);
-  
-}
-
-
-export const getUnTaggedExpenseList  = async () => {
-  const q = query(collection(db, "expense"), where("tag", "==", null));
-  const querySnapshot = await getDocs(q);
-
-  // console.log("docs => ",querySnapshot);
-
-  let docList: any[] = [];
-
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
-    let document = doc.data();
-    document.id = doc.id;
-    docList.push(document)
-  });
-
-  console.log(docList);
-  return docList;
 }
 
 

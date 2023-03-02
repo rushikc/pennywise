@@ -9,6 +9,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 import { useNavigate } from 'react-router-dom';
+import { clearStorage } from '../utility/utility';
 
 const actions = [
   { icon: <FileCopyIcon />, name: 'Home' },
@@ -36,7 +37,7 @@ export default function MySpeedDial() {
     <Backdrop open={open} />
     <SpeedDial
         ariaLabel="SpeedDial tooltip example"
-        sx={{ zIndex: '1000', position: 'absolute', bottom: 50, right: 36 }}
+        sx={{ zIndex: '1000', position: 'fixed', bottom: 50, right: 36 }}
         icon={<SpeedDialIcon />}
         onClose={handleClose}
         onOpen={handleOpen}
@@ -44,16 +45,26 @@ export default function MySpeedDial() {
     >
         {actions.map((action) => (
         <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            tooltipOpen
-            onClick={() => {
-                handleClose();
-                onClickNav(action.name)
-            }}
+          key={action.name}
+          icon={action.icon}
+          tooltipTitle={action.name}
+          tooltipOpen
+          onClick={() => {
+              handleClose();
+              onClickNav(action.name)
+          }}
         />
         ))}
+
+        <SpeedDialAction
+          icon={actions[1].icon}
+          tooltipTitle="Clear"
+          tooltipOpen
+          onClick={() => {
+            handleClose();
+            clearStorage();
+          }}
+        />
     </SpeedDial>
     </>
   );
