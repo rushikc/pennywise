@@ -1,13 +1,15 @@
 // src/pages/Home.tsx
 
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import { Box, Chip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import React, {ReactElement, FC, useState, useEffect} from "react";
-import { Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
+import { Avatar } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -45,12 +47,10 @@ const Home: FC<any> = (): ReactElement => {
     }, []);
 
     return (
-      <Box component="main">
-        <DrawerHeader />
-
+      <div>
         {
           isLoading === 'loading' &&
-          <div style={{paddingLeft: '9rem', paddingTop: '4rem'}}>
+          <div style={{paddingLeft: '9rem', paddingTop: '1rem'}}>
             {/* <span>Fetaching Gmail Data</span>
             <br/> */}
             <CircularProgress style={{marginTop: '1rem'}}  />
@@ -60,21 +60,35 @@ const Home: FC<any> = (): ReactElement => {
         {
           isLoading === 'loaded' &&
           expense.map((val: {vendor: string, cost: number, id: number}, ind) => (
-            <Item key={val.id} elevation={16} sx={{margin: 2, height: 100}}>
-              <Row style={{margin: 0, borderRadius: '4px'}}>
-                <Chip 
-                  icon={<CurrencyRupeeIcon sx={{width: 20}} />} 
-                  label={val.cost} 
-                  sx={{fontSize: "18px", borderRadius: 0, backgroundColor: '#27539361'}}
-                  // sx={{fontSize: "18px", borderRadius: 0, backgroundColor: '#0d6efd61'}}
-                />
-              </Row>
-              <span>Vendor: {val.vendor}</span>
-            </Item>
+            <Row key={ind} style={{margin: 30}}>
+
+              <Avatar style={{marginTop: 3}}>
+                <CurrencyRupeeIcon />
+              </Avatar>
+              
+              <Col>
+                <Row>
+                  <Col>
+                    <span>Zomato</span>
+                  </Col>
+                  <Col className='d-flex justify-content-end mr-2'>
+                    <span>₹</span>
+                    <span>1562</span>
+                  </Col>
+                </Row>
+                <Row>
+                  <span className='font-600 font-12'>23 Apr</span>
+                </Row>
+                <Row>
+                  <Col>
+                    <span className='tag-text'>Food & Dining</span>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           ))
         }
-
-      </Box>
+      </div>
     );
 };
 

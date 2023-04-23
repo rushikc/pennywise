@@ -12,11 +12,11 @@ import { Col, Row } from "reactstrap";
 import { JSONObject } from "./Constants";
 import Button from "@mui/material/Button/Button";
 import { DateTime } from "luxon";
-import { getDateTime, sortByTime } from "../Utiliy";
+import { getDateTime, sortByTime, sortByTime2 } from "../Utiliy";
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 import { setTagForExpense } from "../api/BaseApi";
 import { Expense } from "../api/Types";
-import { getDate, getStorage, getTime } from "../utility/utility";
+import { getDate, getISODate, getStorage, getTime, getTimeJs, setStorage, sortBy2Key } from "../utility/utility";
 import { AnyAaaaRecord } from "dns";
 
 
@@ -31,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
-'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'parents', 
+'shopping' , 'rent', 'extra','ironing', 'petrol', 'transport', 'bike', 'parents', 
 'parents-amazon', 'Skin & Hair care',
 'emi', 'medical', 'clothes','noodles', 'fitness', 'alcohol']
 
@@ -44,69 +44,116 @@ const TagExpenses: FC<any> = (): ReactElement => {
         alignItems: 'center',
         justifyContent: 'flex-end',
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
         ...theme.mixins.toolbar,
       }));
 
 
     
     const [expenseIndex, setexpenseIndex] = useState<number>(0);
-    const [expense, setexpense] = useState<Expense[]>([]);
+    const timeOut = 500;
+    const [expense, setExpense] = useState<Expense[]>([]);
     const [selectedExpense, setSelectedExpense] = useState<string[]>([]);
     const [autoTag, setAutoTag] = useState<boolean>(false);
+    const [tagMap, setTagMap] = useState<any[]>([]);
 
 
     
 
     useEffect(() => {
 
-      ExpenseAPI.getUnTaggedExpenseList().then((res) => {
-        res = sortByTime(res, 'date', 'desc');
-        // console.log("Expense List -> ", res[1]);
-        setexpense(res.reverse());
+      ExpenseAPI.getExpenseList().then((res) => {
+        res = res.filter((doc:any) => doc.tag === null);
+        res = sortBy2Key(res, 'date', 'seconds')
+        setExpense(res);
+      });
+
+      ExpenseAPI.getAllDoc('tagMap').then((res) => {
+        setTagMap(res);
       });
 
     }, []);
 
 
+
+
     const handleSelectedTag = (id: string, tag: string) => {
 
-      console.log('Clicked');
-
-      let key = '01-01-2023 10:06:00 q733837202';
 
       setSelectedExpense([tag]);
-      // if(autoTag){
-      //   ExpenseAPI.autoTagExpense(expense[expenseIndex].vendor, tag).then(() => {
-      //     setTimeout(() => {
-      //       setexpenseIndex(expenseIndex+1);
-      //       setSelectedExpense([]);
-      //       setAutoTag(false);
-      //     }, 200);
-      //   })
-      // }else{
-        // ExpenseAPI.tagExpense(id, tag).then(() => {
-        //   setTimeout(() => {
-        //     setexpenseIndex(expenseIndex+1);
-        //     setSelectedExpense([]);
-        //     setAutoTag(false);
-        //   }, 200);
-        // })
-      // }
+
+      let _vendor = expense[expenseIndex].vendor;
+      
+      if(autoTag) {
+        let tagObj = tagMap.find(({vendor}) => vendor === _vendor);
+
+        if(!tagObj){
+          let key = _vendor;
+          tagObj = {
+            vendor: _vendor,
+            tag
+          }
+          ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
+          tagMap.push(tagObj);
+          setStorage('tagMap', tagMap);
+          // console.log('Adding new tagMap  ', expense[expenseIndex]);
+        }
+
+        let expenseList = expense.filter(({vendor}) => vendor === _vendor);
+        let expenseNew = expense.filter(({vendor}) => vendor !== _vendor);
+
+        // console.log('Clicked if expenseList  ', expenseList);
+        // console.log('Clicked if expenseNew  ', expenseNew);
+        
+        
+        expenseList.forEach(_expense => {
+          _expense.tag = tag;
+          ExpenseAPI.addExpense(_expense);
+        })
+
+
+        setTimeout(() => {
+          setexpenseIndex(expenseIndex+1);
+          setSelectedExpense([]);
+          setAutoTag(false);
+        }, timeOut);
+
+      }else{
+
+        expense[expenseIndex].tag = tag;
+        const expenseNew = expense.filter((exp) => exp.tag === null);
+        console.log('Clicked expense ', expense);
+        console.log('Clicked expense ', expense[expenseIndex]);
+        ExpenseAPI.addExpense(expense[expenseIndex]);
+        setTimeout(() => {
+          setexpenseIndex(expenseIndex+1);
+          setSelectedExpense([]);
+          setAutoTag(false);
+        }, timeOut);
+      }
+    }
+
+
+    const handleRevert = () => {
+      
+      setTimeout(() => {
+        setexpenseIndex(expenseIndex-1);
+        setAutoTag(false);
+        window.scroll(0,0);
+      }, timeOut);
+
     }
 
     
     
 
     return (
-      <Box component="main">
-        <DrawerHeader />
-
+      <div>
         {
           expense.length > 0 &&
           <Item elevation={10} sx={{marginTop: 4,margin: 2, height: '120vh'}}>
               <div style={{fontSize: '20px', fontWeight: 600, color: '#26559bcf'}}>
-                  Tag Expenses
+                  Tag Expenses 
+                  ({expense.length})
               </div>
               <Chip 
                   icon={<CurrencyRupeeIcon sx={{width: 25}} />} 
@@ -120,11 +167,18 @@ const TagExpenses: FC<any> = (): ReactElement => {
               </div>
 
               
-              <div style={{fontSize: "18px"}}>
-                  {getDate(expense[expenseIndex].date.seconds)}
-                  {" - "}
-                  <b>{getTime(expense[expenseIndex].date.seconds)}</b>
-              </div>
+              {
+                expense[expenseIndex].date.seconds ?
+                <div style={{fontSize: "18px"}}>
+                    {getDate(expense[expenseIndex].date.seconds)}
+                    {" - "}
+                    <b>{getTimeJs(expense[expenseIndex].date.seconds)}</b>
+                </div>
+                :
+                <div style={{fontSize: "18px"}}>
+                    Loading ...
+                </div>
+              }
 
               <div>
                 <Button 
@@ -175,7 +229,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
                     }}
                     variant={"contained"}
                     onClick={() => 
-                      handleSelectedTag(expense[expenseIndex].id,'ignore')}
+                      handleSelectedTag(expense[expenseIndex].id,'NA')}
                     >
                     skip
                   </Button>
@@ -187,14 +241,14 @@ const TagExpenses: FC<any> = (): ReactElement => {
                     }} 
                     variant="contained" 
                     startIcon={<SettingsBackupRestoreIcon />}
-                    onClick={() => setexpenseIndex(expenseIndex-1)}
+                    onClick={() => handleRevert()}
                   />
                   
                 </Row>
               </div>
           </Item>
         }
-      </Box>
+      </div>
     );
 };
 

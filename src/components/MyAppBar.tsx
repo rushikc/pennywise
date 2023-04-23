@@ -11,21 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { useNavigate } from 'react-router-dom';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
-// const pages = ['Products', 'Pricing', 'Blog'];
-const pages: string[] = [];
-const settings = ['Home', 'Tag Expenses','Update Gmail', 'Dashboard', 'Logout'];
+const pages = ['Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-interface Props {
-  open: boolean,
-};
-
-export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
-
-  const navigate = useNavigate();
-
+function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -40,35 +31,34 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (setting: string) => {
+  const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-    navigate(setting.replace(' ', '_'));
   };
 
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+          {/* <AccountBalanceWalletIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
             component="a"
             href="/"
             sx={{
-              pl: 15,
+              mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: 'arial',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            Techyon
+            Finance
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -103,26 +93,26 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+          </Box> */}
+          {/* <AccountBalanceWalletIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="#"
+            href=""
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'Arial',
-              fontSize: 22,
-              fontWeight: 500,
-              letterSpacing: '.3rem',
+              fontFamily: 'arial',
+              fontWeight: 600,
+              letterSpacing: '.2rem',
               color: 'inherit',
               textDecoration: 'none',
+              alignContent: 'center',
             }}
           >
-            Techyon
+            Finance App
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -139,7 +129,7 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="profile-avatar.jpg" />
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -159,7 +149,7 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -170,3 +160,4 @@ export const PrimarySearchAppBar: React.FC<Props> = ({open}) => {
     </AppBar>
   );
 }
+export default ResponsiveAppBar;

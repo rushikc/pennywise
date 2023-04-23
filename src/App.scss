@@ -1,0 +1,32 @@
+
+.button-class {
+    width: '200px'
+}
+
+
+$red : #e97878;
+
+.tag-text {
+    font-size: 10px;
+    border: solid $red 1px;
+    border-radius: 10px;
+    padding: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    color: $red;
+}
+
+
+
+
+
+//font-weight
+
+.font-600 {
+    font-weight: 600;
+}
+
+.font-12 {
+    font-size: 12px;
+}
+

@@ -1,5 +1,8 @@
 const functions = require('firebase-functions');
-const { DateTime } = require("luxon");
+const  dayjs =  require("dayjs");
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
+
 const { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } = require('firebase/firestore/lite');
 const { initializeApp } = require('firebase/app');
 const { getFirabseConfig } = require('./secrets');
@@ -9,6 +12,7 @@ const firebaseConfig = getFirabseConfig();;
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 
 
 
@@ -37,9 +41,11 @@ exports.addGmailData = functions.https.onRequest((req, res) => {
     try{
       const expense = (req.body) || {};
 
-      let key = DateTime.fromISO(new Date(expense.date).toISOString()).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS).replaceAll('/', '-').replace(',', '') + ' ' +  expense.vendor.slice(0,10);
+      let key = dayjs(expense.date).utcOffset(330).format('DD MMM YY, hh:mm A') + ' ' +  expense.vendor.slice(0, 10);
+      
       const docRef = doc(db, "expense", key);
 
+      expense.date = new Date(expense.date);
       setDoc(docRef, expense).then(() => {
         console.log('Executed setDoc');
       });

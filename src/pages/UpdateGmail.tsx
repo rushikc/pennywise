@@ -9,7 +9,7 @@ import React, { FC, ReactElement, useState } from "react";
 import { Row } from "reactstrap";
 import { addExpense } from "../api/BaseApi";
 import { ExpenseAPI } from "../api/ExpenseAPI";
-import { getDateTimeSecFromISO } from "../utility/utility";
+import { getDateJs, getDateMedJs, getDateTimeSecFromISO } from "../utility/utility";
 
 
 
@@ -43,22 +43,113 @@ const UpdateGmail: FC<any> = (): ReactElement => {
   const updateGmail = () => {
 
     console.log('update G ', getDateTimeSecFromISO('2023-02-26T13:35:05.000Z'));
-    // ExpenseAPI.getConfig("gmailLastUpdated").then((res) => {
-    //   console.log(res);
-    // });
-    // ExpenseAPI.addConfig("gmailLastUpdated", 1677079070).then((res) => {
-    //   console.log(res);
-    // });
+    
 
-    // ExpenseAPI.getExpenseList().then((res) => {
-    //   console.log("Expense List -> ", res[1]);
-    //   // addExpense(res[1]);
-    //   res.forEach((element: any) => {
-    //     addExpense(element);
-    //   });
-
+    // ExpenseAPI.getAllDoc('tagMap').then((res: any) => {
+    //   console.log("Expense List -> ", res);
+    //   console.log("Expense length -> ", res.length);
+      
     // }).catch((res1) => alert(res1))
 
+    let tags = [
+      {
+        "vendor" : "**6319",
+        "tag" : "parents"
+      },
+      {
+        "vendor" : "bharatpe09897685965@yesbankltd",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "BHARATPE90724815332@yesbankltd",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "CORNER",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "EATCLUBBRANDSPRIVATELI",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "GREEN",
+        "tag" : "alcohol"
+      },
+      {
+        "vendor" : "KOBE",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "mab0450001a0061446@yesbank",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "mab0450001a0061447@yesbank",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "paytm-62454355@paytm",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "paytmqr2810050501011dsl76x3njqi@paytm",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "paytmqr2810050501011td33djpjve3@paytm",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "paytmqr2810050501011u8l4cw7fokm@paytm",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "paytmqr281005050101cpbrk2vj6ync@paytm",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "paytmqr281005050101oryv7wq3xw2s@paytm",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "paytmqr281005050101qm3yyqcm91ch@paytm",
+        "tag" : "snacks"
+      },
+      {
+        "vendor" : "q416942075@ybl",
+        "tag" : "veg & fruits"
+      },
+      {
+        "vendor" : "q600813335@ybl",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "q804502121@ybl",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "q980637884@ybl",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "razorpay.2@icici",
+        "tag" : "Amenities"
+      },
+      {
+        "vendor" : "SUBWAY",
+        "tag" : "food"
+      },
+      {
+        "vendor" : "ZOMATO",
+        "tag" : "food"
+      }
+    ]
+
+    tags.forEach(tag => {
+      ExpenseAPI.setOneDoc(tag.vendor, tag, 'tagMap');
+    });
+    
 
   }
 

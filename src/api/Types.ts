@@ -1,7 +1,7 @@
 
 export interface Expense {
     id: string,
-    tag: string [],
+    tag: string,
     cost: number,
     date: {
         seconds: number

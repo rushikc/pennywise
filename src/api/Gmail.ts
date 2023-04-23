@@ -151,8 +151,8 @@ export const updateFromGmail = async function (auth: any) {
 
   let lastUpdateStartTime;
 
-  await ExpenseAPI.getConfig('gmailLastUpdated')
-  .then(response => lastUpdateStartTime = response);
+  // await ExpenseAPI.getConfig('gmailLastUpdated')
+  // .then(response => lastUpdateStartTime = response);
 
 
   let temp = Date.now()/1000;
@@ -167,11 +167,11 @@ export const updateFromGmail = async function (auth: any) {
   console.log(res.data);
   // return;
 
-  if(res.data.resultSizeEstimate === 0){
-    ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
-    console.log("\n\n\n\n");
-    return;
-  }
+  // if(res.data.resultSizeEstimate === 0){
+  //   ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
+  //   console.log("\n\n\n\n");
+  //   return;
+  // }
 
 
   //@ts-ignore
@@ -265,7 +265,7 @@ export const updateFromGmail = async function (auth: any) {
     
   
 
-  ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
+  // ExpenseAPI.addConfig('gmailLastUpdated', updateStartTime);
 
   console.log("\n\n\n\n");
 

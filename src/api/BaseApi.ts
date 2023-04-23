@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDoc, getDocs, addDoc, doc, query, where, setDoc } from 'firebase/firestore/lite';
-import { getDate, getDateFromISO, getDateTimeSecFromISO, getTimeFromISO, getTimeSecFromISO } from '../utility/utility';
+import { getDate, getDateFromISO, getDateMed, getDateMedJs, getDateTimeSecFromISO, getTimeFromISO, getTimeSecFromISO } from '../utility/utility';
 import { Expense } from './Types';
 
 
@@ -35,12 +35,12 @@ export const addUser = async () => {
 
 export const addExpense = async (expense: any) => {
   try { 
-    let key = getDateTimeSecFromISO(expense.e_date).replaceAll('/', '-').replace(',', '')
+    let key = getDateMedJs(expense.date.seconds)
     + ' ' +  expense.vendor.slice(0, 10);
     const docRef = doc(db, "expense", key);
     await setDoc(docRef,  {
       tag: expense.tag,
-      date: new Date(expense.e_date),
+      date: new Date(expense.date.seconds * 1000),
       vendor: expense.vendor,
       user: expense.user,
       cost: expense.cost,
