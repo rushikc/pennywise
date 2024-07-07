@@ -11,12 +11,20 @@ export const getDateJs = (seconds: number) => {
     return dayjs(seconds * 1000);
 }
 
+// export const getDateMonth = (seconds: number) => {
+//     return dayjs(seconds * 1000).format('DD MMM');
+// }
+
+export const getDateMonth = (date: Date) => {
+    return dayjs(date).format('DD MMM');
+}
+
 export const getDateMedJs = (seconds: number) => {
     return dayjs(seconds * 1000).format('DD MMM YY, hh:mm A');
 }
 
-export const getTimeJs = (seconds: number) => {
-    return dayjs(seconds * 1000).format('hh:mm A');
+export const getTimeJs = (date: Date) => {
+    return dayjs(date).format('hh:mm A');
 }
 
 
@@ -27,8 +35,8 @@ export const getISODate = (seconds: number) : Date => {
 }
 
 
-export const getDate = (seconds: number) : string => {
-    return DateTime.fromISO(getISODate(seconds).toISOString()).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+export const getDate = (date: Date) : string => {
+    return DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
 }
 
 /**

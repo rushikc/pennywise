@@ -12,6 +12,7 @@ import UpdateGmail from "./pages/UpdateGmail";
 import MySpeedDial from "./components/MySpeedDial";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyAppBar from "./components/MyAppBar";
+import { FinanceDB } from "./api/FinanceDB";
 
 const StyledFab = styled(MySpeedDial)({
   position: 'absolute',
@@ -25,10 +26,15 @@ const StyledFab = styled(MySpeedDial)({
 
 
 function App() {
-  // define theme
+
+
+  FinanceDB.initDB();
+  // IndexedDB.getExpenseList();
+
+  // define theme1
   const theme = createTheme({
     palette: {
-      mode: 'light',
+      mode: 'dark',
     },
   });
 
@@ -43,16 +49,16 @@ function App() {
         <div style={{marginTop: 80}}></div>
         
         <Routes>
-          <Route path='/Home' element={<Home/>} />
+          <Route path='/Expenses' element={<Home/>} />
           <Route path='/Tag' element={<TagExpenses/>} />
           <Route path='/Update' element={<UpdateGmail/>} />
           <Route path='/' element={<Home/>} />
         </Routes>
 
-        <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+        <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar>
           <MySpeedDial/>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1}} />
         </Toolbar>
       </AppBar>
 

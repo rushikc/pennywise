@@ -4,18 +4,17 @@ import Backdrop from '@mui/material/Backdrop';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+import ListIcon from '@mui/icons-material/List';
+import TagIcon from '@mui/icons-material/Tag';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useNavigate } from 'react-router-dom';
 import { clearStorage } from '../utility/utility';
 
 const actions = [
-  { icon: <FileCopyIcon />, name: 'Home' },
-  { icon: <SaveIcon />, name: 'Tag' },
-  { icon: <PrintIcon />, name: 'Update' },
-  { icon: <ShareIcon />, name: 'Logout' },
+  { icon: <ListIcon />, name: 'Expenses' },
+  { icon: <TagIcon />, name: 'Tag' },
+  { icon: <QueryStatsIcon />, name: 'Analysis' },
 ];
 
 export default function MySpeedDial() {
@@ -34,7 +33,7 @@ export default function MySpeedDial() {
 
   return (
     <>
-    <Backdrop open={open} />
+    <Backdrop sx={{backgroundColor: '#757575bd'}} open={open} />
     <SpeedDial
         ariaLabel="SpeedDial tooltip example"
         sx={{ 
@@ -43,8 +42,9 @@ export default function MySpeedDial() {
           bottom: 30,
           left: 0,
           right: 0,
-          margin: '0 auto' 
+          margin: '0 auto',
         }}
+        color='secondary'
         icon={<SpeedDialIcon />}
         onClose={handleClose}
         onOpen={handleOpen}
@@ -56,6 +56,7 @@ export default function MySpeedDial() {
           icon={action.icon}
           tooltipTitle={action.name}
           tooltipOpen
+          color='purple'
           onClick={() => {
               handleClose();
               onClickNav(action.name)
@@ -64,9 +65,10 @@ export default function MySpeedDial() {
         ))}
 
         <SpeedDialAction
-          icon={actions[1].icon}
+          icon={<HighlightOffIcon/>}
           tooltipTitle="Clear"
           tooltipOpen
+          // sx={{backgroundColor: 'grey'}}
           onClick={() => {
             handleClose();
             clearStorage();
