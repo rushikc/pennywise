@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore/lite';
 import { EXPENSE_LAST_UPDATE } from '../utility/constants';
-import { getFirabseConfig } from '../utility/secrets';
+import { getFirabseConfig } from '../utility/firebase-public';
 import { getDateMedJs, getISODate, setStorage } from "../utility/utility";
 import { FinanceDB } from './FinanceDB';
 

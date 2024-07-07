@@ -2,7 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
-import { getFirabseConfig } from "../utility/secrets";
+import { getFirabseConfig } from "../utility/firebase-public";
 import { getDateTimeSecFromISO } from "../utility/utility";
 import { ExpenseAPI } from "./ExpenseAPI";
 
