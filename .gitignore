@@ -10,9 +10,14 @@ lerna-debug.log*
 #firebase files
 database
 build
+.firebase
+
+#credentials
+*/credentials/*
+*/utility/secrets.ts
 secrets.ts
 secrets.js
-.firebase
+
 
 package-lock.json
 
