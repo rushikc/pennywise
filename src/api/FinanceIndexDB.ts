@@ -7,7 +7,7 @@ const dbVersion = 4;
 
 type TableNames = "expense" | "tagMap" | "config";
 
-export class FinanceDB {
+export class FinanceIndexDB {
 
 
 

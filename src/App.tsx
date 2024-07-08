@@ -1,7 +1,7 @@
 // src/App.tsx
 
 import React from "react";
-import { AppBar, Box, CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
+import { AppBar, BottomNavigation, Box, CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -12,7 +12,8 @@ import UpdateGmail from "./pages/UpdateGmail";
 import MySpeedDial from "./components/MySpeedDial";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyAppBar from "./components/MyAppBar";
-import { FinanceDB } from "./api/FinanceDB";
+import { FinanceIndexDB } from "./api/FinanceIndexDB";
+import BottomNav from "./components/BottomNav";
 
 const StyledFab = styled(MySpeedDial)({
   position: 'absolute',
@@ -28,8 +29,7 @@ const StyledFab = styled(MySpeedDial)({
 function App() {
 
 
-  FinanceDB.initDB();
-  // IndexedDB.getExpenseList();
+  FinanceIndexDB.initDB();
 
   // define theme1
   const theme = createTheme({
@@ -49,17 +49,17 @@ function App() {
         <div style={{marginTop: 80}}></div>
         
         <Routes>
-          <Route path='/Expenses' element={<Home/>} />
-          <Route path='/Tag' element={<TagExpenses/>} />
+          <Route path='/home' element={<Home/>} />
+          <Route path='/dashboard' element={<Home/>} />
+          <Route path='/tag' element={<TagExpenses/>} />
           <Route path='/Update' element={<UpdateGmail/>} />
           <Route path='/' element={<Home/>} />
         </Routes>
 
         <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar>
-          <MySpeedDial/>
-          <Box sx={{ flexGrow: 1}} />
-        </Toolbar>
+        
+        <BottomNav/>
+
       </AppBar>
 
       </ThemeProvider>

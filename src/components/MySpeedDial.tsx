@@ -1,13 +1,12 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import ListIcon from '@mui/icons-material/List';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import TagIcon from '@mui/icons-material/Tag';
 import Backdrop from '@mui/material/Backdrop';
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import ListIcon from '@mui/icons-material/List';
-import TagIcon from '@mui/icons-material/Tag';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearStorage } from '../utility/utility';
 

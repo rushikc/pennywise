@@ -1,19 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, getDocs, addDoc, doc, query, where, setDoc } from 'firebase/firestore/lite';
-import { getDate, getDateFromISO, getDateMed, getDateMedJs, getDateTimeSecFromISO, getTimeFromISO, getTimeSecFromISO } from '../utility/utility';
-import { Expense } from './Types';
+import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore/lite';
+import { getFirabseConfig } from '../utility/firebase-public';
+import { getDateMedJs } from '../utility/utility';
 
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDN8VN5Yemmrip9McWMeLVkhp9m9DAItzA",
-    authDomain: "finance-app-361514.firebaseapp.com",
-    databaseURL: "https://finance-app-361514-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "finance-app-361514",
-    storageBucket: "finance-app-361514.appspot.com",
-    messagingSenderId: "542311218762",
-    appId: "1:542311218762:web:3cec6c2e14b86f61d6f0b3",
-    measurementId: "G-Z4DSGVKBCB"
-  };
+const firebaseConfig = getFirabseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -34,11 +25,11 @@ export const addUser = async () => {
 
 
 export const addExpense = async (expense: any) => {
-  try { 
+  try {
     let key = getDateMedJs(expense.date.seconds)
-    + ' ' +  expense.vendor.slice(0, 10);
+      + ' ' + expense.vendor.slice(0, 10);
     const docRef = doc(db, "expense", key);
-    await setDoc(docRef,  {
+    await setDoc(docRef, {
       tag: expense.tag,
       date: new Date(expense.date.seconds * 1000),
       vendor: expense.vendor,
@@ -59,9 +50,9 @@ export const addExpense = async (expense: any) => {
 
 
 
-export const setTagForExpense  = async (tag: string) => {
+export const setTagForExpense = async (tag: string) => {
 
-    // Create an initial document to update.
+  // Create an initial document to update.
   const frankDocRef = doc(db, "users", "frank no");
   await setDoc(frankDocRef, {
     name: "Frank",

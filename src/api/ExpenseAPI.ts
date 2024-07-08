@@ -3,7 +3,7 @@ import { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setD
 import { EXPENSE_LAST_UPDATE } from '../utility/constants';
 import { getFirabseConfig } from '../utility/firebase-public';
 import { getDateMedJs, getISODate, setStorage } from "../utility/utility";
-import { FinanceDB } from './FinanceDB';
+import { FinanceIndexDB } from './FinanceIndexDB';
 
 const firebaseConfig = getFirabseConfig();
 
@@ -117,7 +117,7 @@ export class ExpenseAPI {
         let isLastUpdateAvailable = false;
 
 
-        await FinanceDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
+        await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
             console.log("index db config ", data);
             if (data) {
                 lastUpdatedDate = new Date(data.value);
@@ -126,7 +126,7 @@ export class ExpenseAPI {
         });
 
         if (isLastUpdateAvailable) {
-            await FinanceDB.getAllData("expense").then(data => indexDocList = data);
+            await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
         }
 
         console.log(" lastUpdatedDate ", lastUpdatedDate);
@@ -147,11 +147,11 @@ export class ExpenseAPI {
                 fireDocList.push(document)
             });
 
-            await FinanceDB.addExpense(fireDocList);
+            await FinanceIndexDB.addExpense(fireDocList);
         }
 
 
-        FinanceDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
+        FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
 
         console.log('IndexDB  query for indexDocList - ', table, indexDocList);
         console.log('Firebase query for fireDocList - ', table, fireDocList);

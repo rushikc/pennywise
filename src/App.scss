@@ -1,7 +1,5 @@
 
-.button-class {
-    width: '200px'
-}
+
 
 
 $red : #e97878;
@@ -29,6 +27,17 @@ $purple-light : rgb(103, 125, 247);
 
 
 
+.button-class {
+    width: '200px'
+}
+
+
+//flex
+
+.d-flex-center {
+    display: flex;
+    justify-content: center;
+}
 
 
 //font-weight
@@ -41,3 +50,8 @@ $purple-light : rgb(103, 125, 247);
     font-size: 12px;
 }
 
+
+//padding
+.pt-10 {
+    padding-top: 10rem;
+}

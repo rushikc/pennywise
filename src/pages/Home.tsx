@@ -1,10 +1,10 @@
 // src/pages/Home.tsx
-import React, {ReactElement, FC, useState, useEffect} from "react";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Avatar } from '@mui/material';
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import { FC, ReactElement, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
 import { getDateMonth, sortBy2Key } from '../utility/utility';
@@ -54,9 +54,7 @@ const Home: FC<any> = (): ReactElement => {
     <div>
       {
         isLoading === 'loading' &&
-        <div style={{ paddingLeft: '9rem', paddingTop: '1rem' }}>
-          {/* <span>Fetaching Gmail Data</span>
-            <br/> */}
+        <div className="d-flex-center pt-10">
           <CircularProgress style={{ marginTop: '1rem' }} />
         </div>
       }
