@@ -1,5 +1,5 @@
 // src/pages/Home.tsx
-import React, { ReactElement, FC, useState, useEffect } from "react";
+import { FC, ReactElement, useEffect, useState } from "react";
 
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
 import { Expense } from "../api/Types";
+import Loading from "../components/Loading";
 import { getDate, getTimeJs, setStorage, sortBy2Key } from "../utility/utility";
 
 
@@ -25,16 +26,11 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
   'shopping', 'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',
-  'parents-amazon', 'Skin & Hair',
-  'emi', 'medical', 'clothes', 'noodles', 'fitness', 'alcohol']
+  'parents-amazon', 'Skin & Hair', 'emi', 'medical', 'clothes', 'noodles', 'fitness', 'alcohol']
 
 
 
 const TagExpenses: FC<any> = (): ReactElement => {
-
-
-
-
 
   const [expenseIndex, setexpenseIndex] = useState<number>(0);
   const timeOut = 500;
@@ -42,8 +38,6 @@ const TagExpenses: FC<any> = (): ReactElement => {
   const [selectedExpense, setSelectedExpense] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
   const [tagMap, setTagMap] = useState<any[]>([]);
-
-
 
 
   useEffect(() => {
@@ -136,102 +130,104 @@ const TagExpenses: FC<any> = (): ReactElement => {
   return (
     <div>
       {
-        expense.length > 0 &&
-        <Item elevation={10} sx={{ marginTop: 4, margin: 2, height: '120vh' }}>
-          <div style={{ fontSize: '20px', fontWeight: 600, color: '#6799e2' }}>
-            Tag Expenses
-            ({expense.length})
-          </div>
-          <Chip
-            icon={<CurrencyRupeeIcon sx={{ width: 25 }} />}
-            label={expense[expenseIndex].cost}
-            sx={{ fontSize: "25px" }}
-          />
-
-
-          <div style={{ fontSize: "18px", overflow: 'hidden' }}>
-            {expense[expenseIndex].vendor}
-          </div>
-
-
-          {
-            expense[expenseIndex].date ?
-              <div style={{ fontSize: "18px" }}>
-                {getDate(expense[expenseIndex].date)}
-                {" - "}
-                <b>{getTimeJs(expense[expenseIndex].date)}</b>
-              </div>
-              :
-              <div style={{ fontSize: "18px" }}>
-                Loading ...
-              </div>
-          }
-
-          <div>
-            <Button
-              style={{
-                width: '110px',
-                height: '35px',
-              }}
-              variant={autoTag ? "contained" : "outlined"}
-              onClick={() => setAutoTag(!autoTag)}
-            >
-              Auto Tag
-            </Button>
-          </div>
-
-
-          <div className="container">
-            <div className="row" >
-
-              {
-                tag_list.map((val, index) => (
-                  <div className="col" key={index} >
-                    <Button
-                      style={{
-                        width: '100px',
-                        height: '50px',
-                      }}
-                      variant={selectedExpense.includes(val) ? "contained" : "outlined"}
-                      onClick={() =>
-                        handleSelectedTag(expense[expenseIndex].id, selectedExpense.includes(val) ? "" : val)}
-                    >
-                      {val}
-                    </Button>
-                  </div>
-                ))
-              }
+        expense.length == 0 ?
+          <Loading />
+          :
+          <Item elevation={10} sx={{ marginTop: 4, margin: 2, height: '120vh' }}>
+            <div style={{ fontSize: '20px', fontWeight: 600, color: '#6799e2' }}>
+              Tag Expenses
+              ({expense.length})
             </div>
-            <Row>
-              <Col>
-                <Button
-                  style={{
+            <Chip
+              icon={<CurrencyRupeeIcon sx={{ width: 25 }} />}
+              label={expense[expenseIndex].cost}
+              sx={{ fontSize: "25px" }}
+            />
+
+
+            <div style={{ fontSize: "18px", overflow: 'hidden' }}>
+              {expense[expenseIndex].vendor}
+            </div>
+
+
+            {
+              expense[expenseIndex].date ?
+                <div style={{ fontSize: "18px" }}>
+                  {getDate(expense[expenseIndex].date)}
+                  {" - "}
+                  <b>{getTimeJs(expense[expenseIndex].date)}</b>
+                </div>
+                :
+                <div style={{ fontSize: "18px" }}>
+                  Loading ...
+                </div>
+            }
+
+            <div>
+              <Button
+                style={{
+                  width: '110px',
+                  height: '35px',
+                }}
+                variant={autoTag ? "contained" : "outlined"}
+                onClick={() => setAutoTag(!autoTag)}
+              >
+                Auto Tag
+              </Button>
+            </div>
+
+
+            <div className="container">
+              <div className="row" >
+
+                {
+                  tag_list.map((val, index) => (
+                    <div className="col" key={index} >
+                      <Button
+                        style={{
+                          width: '100px',
+                          height: '50px',
+                        }}
+                        variant={selectedExpense.includes(val) ? "contained" : "outlined"}
+                        onClick={() =>
+                          handleSelectedTag(expense[expenseIndex].id, selectedExpense.includes(val) ? "" : val)}
+                      >
+                        {val}
+                      </Button>
+                    </div>
+                  ))
+                }
+              </div>
+              <Row>
+                <Col>
+                  <Button
+                    style={{
+                      width: '140px',
+                      height: '40px',
+                      marginTop: '30px',
+                    }}
+                    variant={"contained"}
+                    onClick={() =>
+                      handleSelectedTag(expense[expenseIndex].id, 'NA')}
+                  >
+                    skip
+                  </Button>
+                </Col>
+                <Col>
+                  <Button style={{
                     width: '140px',
                     height: '40px',
                     marginTop: '30px',
                   }}
-                  variant={"contained"}
-                  onClick={() =>
-                    handleSelectedTag(expense[expenseIndex].id, 'NA')}
-                >
-                  skip
-                </Button>
-              </Col>
-              <Col>
-                <Button style={{
-                  width: '140px',
-                  height: '40px',
-                  marginTop: '30px',
-                }}
-                  variant="contained"
-                  startIcon={<SettingsBackupRestoreIcon />}
-                  onClick={() => handleRevert()}
-                />
-              </Col>
+                    variant="contained"
+                    startIcon={<SettingsBackupRestoreIcon />}
+                    onClick={() => handleRevert()}
+                  />
+                </Col>
 
-            </Row>
-          </div>
-        </Item>
+              </Row>
+            </div>
+          </Item>
       }
     </div>
   );

@@ -8,6 +8,7 @@ import { FC, ReactElement, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
 import { getDateMonth, sortBy2Key } from '../utility/utility';
+import Loading from '../components/Loading';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -54,9 +55,7 @@ const Home: FC<any> = (): ReactElement => {
     <div>
       {
         isLoading === 'loading' &&
-        <div className="d-flex-center pt-10">
-          <CircularProgress style={{ marginTop: '1rem' }} />
-        </div>
+        <Loading/>
       }
 
       {
