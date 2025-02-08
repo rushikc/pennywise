@@ -118,7 +118,7 @@ export class ExpenseAPI {
 
 
         await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
-            console.log("index db config ", data);
+            // console.log("index db config ", data);
             if (data) {
                 lastUpdatedDate = new Date(data.value);
                 isLastUpdateAvailable = true;
@@ -129,7 +129,7 @@ export class ExpenseAPI {
             await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
         }
 
-        console.log(" lastUpdatedDate ", lastUpdatedDate);
+        // console.log(" lastUpdatedDate ", lastUpdatedDate);
 
         const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
         const querySnapshot = await getDocs(q);

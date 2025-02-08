@@ -1,13 +1,12 @@
 // src/pages/Home.tsx
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Avatar } from '@mui/material';
-import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { FC, ReactElement, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
-import { getDateMonth, sortBy2Key } from '../utility/utility';
+import { getDateMonth, sortBy2Key, sortByKey } from '../utility/utility';
 import Loading from '../components/Loading';
 
 
@@ -40,13 +39,12 @@ const Home: FC<any> = (): ReactElement => {
     setLoading('loading');
     ExpenseAPI.getExpenseList().then((res) => {
       console.log("Expense List -> ", res);
-      res = sortBy2Key(res, 'date', 'seconds');
+      res = sortByKey(res, 'date');
       setexpense(res);
       setLoading('loaded');
 
-      // FinanceDB.addExpense(res).then(() => {
-      //   console.log("completed adding to index DB");
-      // })
+      console.log("Expense total length -> ", res.length);
+      console.log("Expense sublist -> ", res[2]);
 
     }).catch((res1) => alert(res1))
   }, []);
@@ -55,7 +53,7 @@ const Home: FC<any> = (): ReactElement => {
     <div>
       {
         isLoading === 'loading' &&
-        <Loading/>
+        <Loading />
       }
 
       {
