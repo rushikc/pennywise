@@ -12,14 +12,24 @@ import { ExpenseAPI } from "../api/ExpenseAPI";
 import { Expense } from "../api/Types";
 import Loading from "../components/Loading";
 import { getDate, getTimeJs, setStorage, sortBy2Key } from "../utility/utility";
+import { selectExpense } from "../store/expenseActions";
+import { useSelector } from "react-redux";
 
 
-const Item = styled(Paper)(({ theme }) => ({
+const PaperStyled = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   textAlign: 'center',
   color: theme.palette.text.secondary,
   height: 60,
-  lineHeight: '60px',
+  lineHeight: '40px',
+}));
+
+
+const ButtonStyled = styled(Button)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: 60,
 }));
 
 
@@ -29,30 +39,19 @@ const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
   'parents-amazon', 'Skin & Hair', 'emi', 'medical', 'clothes', 'noodles', 'fitness', 'alcohol']
 
 
+  interface Props {
+    expense: Expense
 
-const TagExpenses: FC<any> = (): ReactElement => {
+  }
 
-  const [expenseIndex, setexpenseIndex] = useState<number>(0);
-  const timeOut = 500;
-  const [expense, setExpense] = useState<Expense[]>([]);
+const TagExpenses: FC<any> = (props: Props): ReactElement => {
+
+  let expense = props.expense;
   const [selectedExpense, setSelectedExpense] = useState<string[]>([]);
+
   const [autoTag, setAutoTag] = useState<boolean>(false);
-  const [tagMap, setTagMap] = useState<any[]>([]);
 
-
-  useEffect(() => {
-
-    ExpenseAPI.getExpenseList().then((res) => {
-      res = res.filter((doc: any) => doc.tag === null);
-      res = sortBy2Key(res, 'date', 'seconds')
-      setExpense(res);
-    });
-
-    ExpenseAPI.getAllDoc('tagMap').then((res) => {
-      setTagMap(res);
-    });
-
-  }, []);
+  const { tagMap } = useSelector(selectExpense);
 
 
 
@@ -60,175 +59,140 @@ const TagExpenses: FC<any> = (): ReactElement => {
   const handleSelectedTag = (id: string, tag: string) => {
 
 
-    setSelectedExpense([tag]);
+    // setSelectedExpense([tag]);
 
-    let _vendor = expense[expenseIndex].vendor;
+    // let _vendor = expense.vendor;
 
-    if (autoTag) {
-      let tagObj = tagMap.find(({ vendor }) => vendor === _vendor);
+    // if (autoTag) {
+    //   let tagObj = tagMap.find(({ vendor }) => vendor === _vendor);
 
-      if (!tagObj) {
-        let key = _vendor;
-        tagObj = {
-          vendor: _vendor,
-          tag
-        }
-        ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
-        tagMap.push(tagObj);
-        setStorage('tagMap', tagMap);
-        // console.log('Adding new tagMap  ', expense[expenseIndex]);
-      }
+    //   if (!tagObj) {
+    //     let key = _vendor;
+    //     tagObj = {
+    //       vendor: _vendor,
+    //       tag
+    //     }
+    //     ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
+    //     tagMap.push(tagObj);
+    //     setStorage('tagMap', tagMap);
+    //     // console.log('Adding new tagMap  ', expense);
+    //   }
 
-      let expenseList = expense.filter(({ vendor }) => vendor === _vendor);
-      let expenseNew = expense.filter(({ vendor }) => vendor !== _vendor);
+    //   let expenseList = expense.filter(({ vendor }) => vendor === _vendor);
 
-      // console.log('Clicked if expenseList  ', expenseList);
-      // console.log('Clicked if expenseNew  ', expenseNew);
+    //   // console.log('Clicked if expenseList  ', expenseList);
 
-
-      expenseList.forEach(_expense => {
-        _expense.tag = tag;
-        ExpenseAPI.addExpense(_expense);
-      })
+    //   expenseList.forEach(_expense => {
+    //     _expense.tag = tag;
+    //     ExpenseAPI.addExpense(_expense);
+    //   })
 
 
-      setTimeout(() => {
-        setexpenseIndex(expenseIndex + 1);
-        setSelectedExpense([]);
-        setAutoTag(false);
-      }, timeOut);
+    //   setTimeout(() => {
+    //     setexpenseIndex(expenseIndex + 1);
+    //     setSelectedExpense([]);
+    //     setAutoTag(false);
+    //   }, timeOut);
 
-    } else {
+    // } else {
 
-      expense[expenseIndex].tag = tag;
-      const expenseNew = expense.filter((exp) => exp.tag === null);
-      console.log('Clicked expense ', expense);
-      console.log('Clicked expense ', expense[expenseIndex]);
-      ExpenseAPI.addExpense(expense[expenseIndex]);
-      setTimeout(() => {
-        setexpenseIndex(expenseIndex + 1);
-        setSelectedExpense([]);
-        setAutoTag(false);
-      }, timeOut);
-    }
+    //   expense.tag = tag;
+    //   console.log('Clicked expense ', expense);
+    //   console.log('Clicked expense ', expense);
+    //   ExpenseAPI.addExpense(expense);
+    //   setTimeout(() => {
+    //     setexpenseIndex(expenseIndex + 1);
+    //     setSelectedExpense([]);
+    //     setAutoTag(false);
+    //   }, timeOut);
+    // }
   }
-
-
-  const handleRevert = () => {
-
-    setTimeout(() => {
-      setexpenseIndex(expenseIndex - 1);
-      setAutoTag(false);
-      window.scroll(0, 0);
-    }, timeOut);
-
-  }
-
 
 
 
   return (
-    <div>
-      {
-        expense.length == 0 ?
-          <Loading />
-          :
-          <Item elevation={10} sx={{ marginTop: 4, margin: 2, height: '120vh' }}>
-            <div style={{ fontSize: '20px', fontWeight: 600, color: '#6799e2' }}>
-              Tag Expenses
-              ({expense.length})
+    <div style={{zIndex: 100, paddingTop: 20}}>
+      <PaperStyled elevation={10} sx={{ marginTop: 4, margin: 2, height: '120vh' }}>
+        
+        <Chip
+          icon={<CurrencyRupeeIcon sx={{ width: 25 }} />}
+          label={expense.cost}
+          sx={{ fontSize: "25px" }}
+        />
+
+
+        <div style={{ fontSize: "18px", overflow: 'hidden' }}>
+          {expense.vendor}
+        </div>
+
+
+        {
+          expense.date ?
+            <div style={{ fontSize: "18px" }}>
+              {getDate(expense.date)}
+              {" - "}
+              <b>{getTimeJs(expense.date)}</b>
             </div>
-            <Chip
-              icon={<CurrencyRupeeIcon sx={{ width: 25 }} />}
-              label={expense[expenseIndex].cost}
-              sx={{ fontSize: "25px" }}
-            />
-
-
-            <div style={{ fontSize: "18px", overflow: 'hidden' }}>
-              {expense[expenseIndex].vendor}
+            :
+            <div style={{ fontSize: "18px" }}>
+              Loading ...
             </div>
+        }
 
+        <div style={{padding: 10}}>
+          <ButtonStyled
+            style={{
+              width: '110px',
+              height: '35px',
+            }}
+            variant={autoTag ? "contained" : "outlined"}
+            onClick={() => setAutoTag(!autoTag)}
+          >
+            Auto Tag
+          </ButtonStyled>
+        </div>
+
+
+        <div className="container">
+          <div className="row" >
 
             {
-              expense[expenseIndex].date ?
-                <div style={{ fontSize: "18px" }}>
-                  {getDate(expense[expenseIndex].date)}
-                  {" - "}
-                  <b>{getTimeJs(expense[expenseIndex].date)}</b>
-                </div>
-                :
-                <div style={{ fontSize: "18px" }}>
-                  Loading ...
-                </div>
-            }
-
-            <div>
-              <Button
-                style={{
-                  width: '110px',
-                  height: '35px',
-                }}
-                variant={autoTag ? "contained" : "outlined"}
-                onClick={() => setAutoTag(!autoTag)}
-              >
-                Auto Tag
-              </Button>
-            </div>
-
-
-            <div className="container">
-              <div className="row" >
-
-                {
-                  tag_list.map((val, index) => (
-                    <div className="col" key={index} >
-                      <Button
-                        style={{
-                          width: '100px',
-                          height: '50px',
-                        }}
-                        variant={selectedExpense.includes(val) ? "contained" : "outlined"}
-                        onClick={() =>
-                          handleSelectedTag(expense[expenseIndex].id, selectedExpense.includes(val) ? "" : val)}
-                      >
-                        {val}
-                      </Button>
-                    </div>
-                  ))
-                }
-              </div>
-              <Row>
-                <Col>
+              tag_list.map((val, index) => (
+                <div className="col" style={{padding: 10}} key={index} >
                   <Button
                     style={{
-                      width: '140px',
-                      height: '40px',
-                      marginTop: '30px',
+                      width: '100px',
+                      height: '45px',
                     }}
-                    variant={"contained"}
+                    variant={selectedExpense.includes(val) ? "contained" : "outlined"}
                     onClick={() =>
-                      handleSelectedTag(expense[expenseIndex].id, 'NA')}
+                      handleSelectedTag(expense.id, selectedExpense.includes(val) ? "" : val)}
                   >
-                    skip
+                    {val}
                   </Button>
-                </Col>
-                <Col>
-                  <Button style={{
-                    width: '140px',
-                    height: '40px',
-                    marginTop: '30px',
-                  }}
-                    variant="contained"
-                    startIcon={<SettingsBackupRestoreIcon />}
-                    onClick={() => handleRevert()}
-                  />
-                </Col>
+                </div>
+              ))
+            }
+          </div>
+          <Row>
+            <Col>
+              <Button
+                style={{
+                  width: '140px',
+                  height: '40px',
+                  marginTop: '30px',
+                }}
+                variant={"contained"}
+                onClick={() =>
+                  handleSelectedTag(expense.id, 'NA')}
+              >
+                skip
+              </Button>
+            </Col>
 
-              </Row>
-            </div>
-          </Item>
-      }
+          </Row>
+        </div>
+      </PaperStyled>
     </div>
   );
 };

@@ -8,6 +8,10 @@ import { Col, Row } from "reactstrap";
 import { ExpenseAPI } from "../api/ExpenseAPI";
 import { getDateMonth, sortBy2Key, sortByKey } from '../utility/utility';
 import Loading from '../components/Loading';
+import { Expense } from '../api/Types';
+import TagExpenses from './TagExpenses';
+import { useSelector } from 'react-redux';
+import { selectExpense } from '../store/expenseActions';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -30,66 +34,66 @@ const Home: FC<any> = (): ReactElement => {
     ...theme.mixins.toolbar,
   }));
 
+  const [expense, setExpense] = useState<Expense | null>(null);
+  const [isTagExpense, setTagExpense] = useState<boolean>(false);
+
+  const { expenseList, isAppLoading } = useSelector(selectExpense);
 
 
-  const [expense, setexpense] = useState<any[]>([]);
-  const [isLoading, setLoading] = useState('ns');
+  const tagExpense = (expense: Expense) => {
+    console.log("clicked tag")
+    setExpense(expense);
+    setTagExpense(true);
+  }
 
-  useEffect(() => {
-    setLoading('loading');
-    ExpenseAPI.getExpenseList().then((res) => {
-      console.log("Expense List -> ", res);
-      res = sortByKey(res, 'date');
-      setexpense(res);
-      setLoading('loaded');
 
-      console.log("Expense total length -> ", res.length);
-      console.log("Expense sublist -> ", res[2]);
-
-    }).catch((res1) => alert(res1))
-  }, []);
 
   return (
-    <div>
-      {
-        isLoading === 'loading' &&
-        <Loading />
-      }
+    <>
+      <div>
+        {
+          isTagExpense && expense &&
+          <TagExpenses expense={expense} />
+        }
+      </div>
+      <div>
+        {
+          isAppLoading ?
+            <Loading />
+            :
+            expenseList.map((val: Expense, ind) => (
+              <Row key={ind} style={{ margin: 30 }} onClick={() => tagExpense(val)}>
 
-      {
-        isLoading === 'loaded' &&
-        expense.map((val: { vendor: string, cost: number, id: number, date: any, tag: string }, ind) => (
-          <Row key={ind} style={{ margin: 30 }}>
+                <Avatar style={{ marginTop: 3 }}>
+                  <CurrencyRupeeIcon />
+                </Avatar>
 
-            <Avatar style={{ marginTop: 3 }}>
-              <CurrencyRupeeIcon />
-            </Avatar>
-
-            <Col>
-              <Row>
                 <Col>
-                  <span>{val.vendor.substring(0, 10).toLowerCase()}</span>
-                </Col>
-                <Col className='d-flex justify-content-end mr-2'>
-                  <span>₹</span>
-                  <span>{val.cost}</span>
+                  <Row>
+                    <Col>
+                      <span>{val.vendor.substring(0, 10).toLowerCase()}</span>
+                    </Col>
+                    <Col className='d-flex justify-content-end mr-2'>
+                      <span>₹</span>
+                      <span>{val.cost}</span>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <span className='font-600 font-12'>{getDateMonth(val.date)}</span>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <span className={val.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
+                        {val.tag ? val.tag : 'untagged'}
+                      </span>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
-              <Row>
-                <span className='font-600 font-12'>{getDateMonth(val.date)}</span>
-              </Row>
-              <Row>
-                <Col>
-                  <span className={val.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
-                    {val.tag ? val.tag : 'untagged'}
-                  </span>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        ))
-      }
-    </div>
+            ))
+        }
+      </div>
+    </>
   );
 };
 

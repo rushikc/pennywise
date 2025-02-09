@@ -156,7 +156,13 @@ export class ExpenseAPI {
         console.log('IndexDB  query for indexDocList - ', table, indexDocList);
         console.log('Firebase query for fireDocList - ', table, fireDocList);
 
-        return fireDocList.concat(indexDocList);
+        const finalList = fireDocList.concat(indexDocList);
+
+        finalList.forEach(val => val.date = String(val.date));
+
+        console.log('FinalList query for - ', table, fireDocList);
+        return finalList;
+
 
     }
 

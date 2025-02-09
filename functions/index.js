@@ -153,7 +153,7 @@ const getExpense = (date, type, mailId) => {
 
 const addExpense = async (expense) => {
 
-  const url = "https://us-central1-finance-app-361514.cloudfunctions.net/addGmailData";
+  const url = "https://us-central1-finance-app-361514.cloudfunctions.net/";
 
   var options = {
     "method": "post",
@@ -186,6 +186,7 @@ const setOneDoc =  (collection, key, value) => {
     const resp = UrlFetchApp.fetch(url, options);
     return resp.getContentText();
 }
+
 
 const getOneDoc =  (collection, key) => {
     const url = "https://us-central1-finance-app-361514.cloudfunctions.net/getOneDoc";

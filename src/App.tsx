@@ -1,6 +1,6 @@
 // src/App.tsx
 
-import React from "react";
+import React, { useEffect } from "react";
 import { AppBar, BottomNavigation, Box, CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -14,6 +14,9 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyAppBar from "./components/MyAppBar";
 import { FinanceIndexDB } from "./api/FinanceIndexDB";
 import BottomNav from "./components/BottomNav";
+import { ExpenseAPI } from "./api/ExpenseAPI";
+import { sortByKey } from "./utility/utility";
+import { setExpenseAndTag, setExpenseList } from "./store/expenseActions";
 
 const StyledFab = styled(MySpeedDial)({
   position: 'absolute',
@@ -38,6 +41,23 @@ function App() {
     },
   });
 
+  useEffect(() => {
+    const tagMapApi = ExpenseAPI.getAllDoc('tagMap');
+    const expenseApi = ExpenseAPI.getExpenseList();
+
+    Promise.all([tagMapApi, expenseApi]).then((res) => {
+        console.log("Expense List -> ", res);
+        const tagResult = res[0];
+        const expenseResult = res[1];
+        const expenseList = sortByKey(expenseResult, 'date');
+        
+        setExpenseAndTag(expenseList, tagResult);
+  
+        console.log("Expense total length -> ", expenseList.length);
+        console.log("Expense sublist -> ", expenseList[2]);
+  
+      }).catch((res1) => alert(res1))
+    }, []);
   
   return (
     <GoogleOAuthProvider 
