@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore/lite';
-import { EXPENSE_LAST_UPDATE } from '../utility/constants';
+import { EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE } from '../utility/constants';
 import { getFirabseConfig } from '../utility/firebase-public';
-import { getDateMedJs, getISODate, setStorage } from "../utility/utility";
+import { getDateMedJs, getISODate } from "../utility/utility";
 import { FinanceIndexDB } from './FinanceIndexDB';
 
 const firebaseConfig = getFirabseConfig();
@@ -17,20 +17,16 @@ export class ExpenseAPI {
     static addExpense = async (expense: any) => {
 
         try {
+
+            expense.date = new Date(expense.date);
+
             let key = getDateMedJs(expense.date.seconds) + ' ' + expense.vendor.slice(0, 10);
 
-            ExpenseAPI.getExpenseList().then((docList: any[]) => {
-                let doc = docList.filter((dc) => docList === expense.id);
-                console.log('doc list ', docList);
-                console.log('doc from storage ', doc);
-                console.log('doc from docList ', docList);
-                console.log('doc from expense.id ', expense.id);
-            });
-
             const docRef = doc(db, "expense", key);
-            expense.date = getISODate(expense.date.seconds);
             delete expense.id;
             await setDoc(docRef, expense);
+
+            FinanceIndexDB.addExpenseList([expense]);
 
             console.log("Document written with key: ", expense);
 
@@ -78,30 +74,31 @@ export class ExpenseAPI {
         }
     }
 
+    static processData = async () => {
 
-    static getAllDoc = async (collectionName: string) => {
-        try {
+        // const q = query(collection(db, 'tagMap'));
+        // const querySnapshot = await getDocs(q);
 
-            let key = collectionName;
+        // const queryResultLen = querySnapshot.docs.length;
 
-            const querySnapshot = await getDocs(collection(db, collectionName));
+        // if (queryResultLen) {
 
-            let docList: any[] = [];
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
-                let document = doc.data();
-                document.id = doc.id;
-                docList.push(document)
-            });
-            console.log('Firebase query for - ', key, docList);
-            setStorage(key, docList);
-            return docList;
+        //     querySnapshot.forEach((doc) => {
+        //         // doc.data() is never undefined for query doc snapshots
+        //         console.log(doc.id, " => ", doc.data());
+        //         let document = doc.data();
+        //         document.date = new Date();
+        //         document.vendor = document.vendor.toUpperCase();
 
-        } catch (e) {
-            console.error("Error getting document: ", e);
-            return [];
-        }
+        //         this.setOneDoc(document.vendor, document, 'tagMap');
+        //         // document.id = doc.id;
+        //         // document.date = String(document.date);
+
+        //     });
+
+        // }
+
+
     }
 
 
@@ -140,29 +137,89 @@ export class ExpenseAPI {
 
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
+                console.log(doc.id, " => ", doc.data());
                 let document = doc.data();
                 document.id = doc.id;
-                document.date = getISODate(document.date.seconds);
+                document.date = (document.date.getISODateseconds);
                 fireDocList.push(document)
             });
 
-            await FinanceIndexDB.addExpense(fireDocList);
+            await FinanceIndexDB.addExpenseList(fireDocList);
         }
 
 
         FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
 
-        console.log('IndexDB  query for indexDocList - ', table, indexDocList);
-        console.log('Firebase query for fireDocList - ', table, fireDocList);
+        console.log('IndexDB  query for expenses - ', table, indexDocList);
+        console.log('Firebase query for expenses - ', table, fireDocList);
 
         const finalList = fireDocList.concat(indexDocList);
 
         finalList.forEach(val => val.date = String(val.date));
 
-        console.log('FinalList query for - ', table, fireDocList);
+        console.log('FinalList query for expenses - ', table, finalList);
         return finalList;
 
+
+    }
+
+    static getTagList = async () => {
+
+        let table = 'tagMap';
+
+
+        let indexDocList: any[] = [];
+        let fireDocList: any[] = [];
+
+        let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
+        let isLastUpdateAvailable = false;
+
+
+        await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
+            // console.log("index db config ", data);
+            if (data) {
+                lastUpdatedDate = new Date(data.value);
+                isLastUpdateAvailable = true;
+            }
+        });
+
+        if (isLastUpdateAvailable) {
+            await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
+        }
+
+        // console.log(" lastUpdatedDate ", lastUpdatedDate);
+
+        const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+        const querySnapshot = await getDocs(q);
+
+        const queryResultLen = querySnapshot.docs.length;
+
+        if (queryResultLen) {
+
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                // console.log(doc.id, " => ", doc.data());
+                let document = doc.data();
+                document.id = doc.id;
+                document.date = String(document.date);
+                fireDocList.push(document)
+            });
+
+            fireDocList.forEach(val => FinanceIndexDB.addTagMap(val));
+        }
+
+
+        FinanceIndexDB.addConfig([{ key: TAG_LAST_UPDATE, value: new Date() }]);
+
+        console.log('IndexDB  query for tagMap - ', table, indexDocList);
+        console.log('Firebase query for tagMap - ', table, fireDocList);
+
+        const finalList = fireDocList.concat(indexDocList);
+
+        finalList.forEach(val => val.date = String(val.date));
+
+        console.log('FinalList query for tagMap- ', table, finalList);
+        return finalList;
 
     }
 

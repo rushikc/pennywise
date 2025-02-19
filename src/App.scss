@@ -50,8 +50,24 @@ $purple-light : rgb(103, 125, 247);
     font-size: 12px;
 }
 
+.font-15 {
+    font-size: 15px;
+}
 
-//padding
+
+//padding & margins
+
 .pt-10 {
     padding-top: 10rem;
+}
+
+
+.no-padding {
+    padding: 0 !important;
+}
+
+
+.no-padding-margin {
+    padding: 0 !important;
+    margin: 0 !important;
 }

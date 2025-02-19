@@ -31,7 +31,9 @@ function App() {
   });
 
   useEffect(() => {
-    const tagMapApi = ExpenseAPI.getAllDoc('tagMap');
+
+    ExpenseAPI.processData();
+    const tagMapApi = ExpenseAPI.getTagList();
     const expenseApi = ExpenseAPI.getExpenseList();
 
     Promise.all([tagMapApi, expenseApi]).then((res) => {
@@ -42,8 +44,8 @@ function App() {
 
       setExpenseAndTag(expenseList, tagResult);
 
-      console.log("Expense List -> ", expenseList);
-      console.log("TagMap List -> ", tagResult);
+      // console.log("Expense List -> ", expenseList);
+      // console.log("TagMap List -> ", tagResult);
 
       console.log("Expense total length -> ", expenseList.length);
       console.log("Expense sublist -> ", expenseList[2]);
@@ -57,6 +59,8 @@ function App() {
         <CssBaseline />
         <MyAppBar />
         <div style={{ marginTop: 80 }}></div>
+
+        <TagExpenses />
 
         <Routes>
           <Route path='/home' element={<Home />} />

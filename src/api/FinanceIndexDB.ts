@@ -1,4 +1,4 @@
-import { Config, Expense } from "./Types";
+import { Config, Expense, TagMap } from "./Types";
 
 
 
@@ -8,9 +8,6 @@ const dbVersion = 4;
 type TableNames = "expense" | "tagMap" | "config";
 
 export class FinanceIndexDB {
-
-
-
 
 
     static initDB = () => {
@@ -59,12 +56,18 @@ export class FinanceIndexDB {
     }
 
 
-    static addExpense = async (expenseList: Expense[]) => {
+    static addExpenseList = async (expenseList: Expense[]) => {
 
         console.log("addExpense IndexedDB");
         const store = await this.getStoreInstance("expense");
         expenseList.forEach(expense => store.put(expense));
 
+    }
+
+    static addTagMap = async (tagMap: TagMap) => {
+        console.log("addTagMap IndexedDB");
+        const store = await this.getStoreInstance("tagMap");
+        store.put(tagMap);
     }
 
 
@@ -106,16 +109,6 @@ export class FinanceIndexDB {
         })
 
     }
-
-
-    static updateData = async (storeName: TableNames, keyPath: string) => {
-
-        console.log("getExpenseList IndexedDB");
-        const store = await this.getStoreInstance(storeName);
-        return store.get(keyPath);
-
-    }
-
 
 
 

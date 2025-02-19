@@ -10,7 +10,8 @@ export interface Expense {
 
 export interface TagMap {
     tag: string,
-    vendor: string
+    vendor: string,
+    date: string
 }
 
 
