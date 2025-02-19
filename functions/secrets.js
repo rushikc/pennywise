@@ -13,5 +13,4 @@ const getFirabseConfig = () => {
     }
 }
 
-
 exports.getFirabseConfig  = getFirabseConfig;

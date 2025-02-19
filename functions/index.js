@@ -1,230 +1,131 @@
+const {onRequest} = require("firebase-functions/v2/https");
+
+const dayjs = require("dayjs");
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
+
+const { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } = require('firebase/firestore/lite');
+const { initializeApp } = require('firebase/app');
+const { getFirabseConfig } = require('./secrets');
 
 
-async function myFunction() {
+const firebaseConfig = getFirabseConfig();;
 
-  const Config = "config";
-  const LastGmailId = "lastGmailId";
-  const TagMap = "tagMap";
-
-  // let inbox = GmailApp.getInboxThreads(0, 20);
-  res = Gmail.Users.Messages.list('me');
-  let mailIdList = res.messages.map((res) => res.id);
-
-  // console.log(setOneDoc("config1", "lastGmailId", "lastMailId"));
-  // return;
-
-  // console.log(mailIdList);
-
-  const tagMap = getAllDoc(TagMap);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 
-  // let CREDIT_CARD_MSG = 'Dear Card Member, Thank you for using your HDFC Bank Credit Card '+
-  // 'ending 2168 for Rs 283.00 at EATCLUBBRANDSPRIVATELI on 04-12-2022 16:42:34.'+
-  // ' After the above transaction'
-  let CREDIT_CARD_MSG = 'Dear Card Member, Thank you for using your HDFC Bank Credit Card '+
-  'ending 5667 for Rs XX1 at XX2 on XX3 XX4'+
-  ' After the above transaction';
+/**
+* Retrieve or store a method in Firestore
+*
+* Responds to any HTTP request.
+*
+* GET = retrieve
+* POST = store (no update)
+*
+* success: returns the document content in JSON format & status=200
+*    else: returns an error:<string> & status=404
+*
+* @param {!express:Request} req HTTP request context.
+* @param {!express:Response} res HTTP response context.
+*/
+exports.addExpenseData = onRequest((req, res) => {
+  if (req.method === 'POST') {
+    try {
+      const expense = (req.body) || {};
 
-  // let UPI_MSG = 'Dear Customer, Rs.20.00 has been debited from account **1811 to VPA ' + 
-  // 'paytmqr2810050501011u8l4cw7fokm@paytm on 06-12-22. Your UPI transaction reference number' + 
-  // ' is 234006737725. Please call on 18002586161'
-  let UPI_MSG_DEBIT = 'Dear Customer, XX1 has been debited from account **1811 to VPA ' + 
-  'XX2 on 06-12-22. Your UPI transaction reference number' + 
-  ' is 234006737725. Please call on 18002586161'
+      let key = dayjs(expense.date).utcOffset(330).format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
 
-  let UPI_MSG_CREDIT = 'Dear Customer, XX1 is successfully credited to your ' + 
-  'account **1811 by VPA XX2 on 13-10-24. Your UPI transaction reference number is 731576487136.'
-  let lastMailId;
+      const docRef = doc(db, "expense", key);
 
-  mailIdList = mailIdList.reverse();
+      expense.date = new Date(expense.date);
+      setDoc(docRef, expense).then(() => {
+        console.log('Executed setDoc');
+      });
 
-  let res_doc = getOneDoc(Config, LastGmailId);
-  let mailId;
+    } catch (err) {
+      res.send('Errorred - ' + err);
+    }
 
-  if(res_doc){
-    mailId = res_doc.value;
-  }else{
-    mailId = "";
+    res.send('Executed setDoc');
+  } else {
+    res.send('Wrong method, use POST');
   }
 
-  console.log(mailId);
-
-  console.log(mailIdList.indexOf(mailId));
-  let lastMailIdIndex = mailIdList.indexOf(mailId); 
-  mailIdList = mailIdList.slice(lastMailIdIndex+1);
-  console.log(mailIdList);
-  
-  // return;
-
-  for (const mailIndex in mailIdList) {    
-    let mailId = mailIdList[mailIndex];
-    res = Gmail.Users.Messages.get('me', mailId);
-  
-    let snippet  = res.snippet.replace('Dear Customer,Dear Customer,', 'Dear Customer,');
-    let expense;
-  
-    if(snippet.includes('E-mandate')){
-      console.log('-> E-mandate mail');
-    }
-    
-    else if(snippet.includes('Thank you for using your HDFC Bank Credit Card ending 5667')){
-  
-      let CREDIT_CARD_MSG_SPLIT = CREDIT_CARD_MSG.split(' ');
-      let SNIPPET_SPLIT = snippet.split(' ');
-  
-      let rsIndex = CREDIT_CARD_MSG_SPLIT.indexOf('XX1');
-      let vendorIndex = CREDIT_CARD_MSG_SPLIT.indexOf('XX2');
-  
-      expense = getExpense(Number(res.internalDate), 'credit', mailId);
-  
-      expense.cost = Number(SNIPPET_SPLIT[rsIndex])
-      expense.vendor = SNIPPET_SPLIT[vendorIndex]
-
-      const obj = tagMap.find(({vendor}) => expense.vendor === vendor);
-
-      if(obj){
-        expense.tag = obj.tag;
-      }
+});
 
 
-      addExpense(expense);
+exports.getOneDoc = onRequest((req, res) => {
 
-      console.log('-> Credit card: ', expense.date);
-      console.log('-> Credit card: ', expense.cost);
-      // console.log('-> Credit card: ', expense.tag);
+  if (req.method === 'POST') {
+    try {
+      const data = (req.body) || {};
 
-    }
-  
-    else if(snippet.includes('Your UPI transaction')){
-      
-      let UPI_MSG_SPLIT = UPI_MSG_DEBIT.split(' ');
-      let SNIPPET_SPLIT = snippet.split(' ');
-  
-      let rsIndex = UPI_MSG_SPLIT.indexOf('XX1');
-      let vendorIndex = UPI_MSG_SPLIT.indexOf('XX2');
-  
-  
-      expense = getExpense(Number(res.internalDate), 'upi', mailId);
-  
-      expense.cost = Number(SNIPPET_SPLIT[rsIndex].replace('Rs.', '').trim())
-      expense.vendor = SNIPPET_SPLIT[vendorIndex]
+      const docRef = doc(db, data.collection, data.key);
+      // const docRef = doc(db, "config", "gmailLastUpdatd");
+      getDoc(docRef).then((resp) => {
+        console.log(resp.data());
+        res.send(resp.data());
+      });
 
-      const obj = tagMap.find(({vendor}) => expense.vendor === vendor)
-
-      if(obj){
-        expense.tag = obj.tag;
-      }
-
-      addExpense(expense);
-
-      console.log('-> UPI trans: ', expense.date);
-      console.log('-> UPI trans: ', expense.cost);
-      console.log('-> UPI snippet: ', snippet);
-
-
+    } catch (err) {
+      res.send('Errorred - ' + err);
     }
 
-    lastMailId = mailId;
-
+  } else {
+    res.send('Wrong method, use POST');
   }
 
+});
 
-  if(lastMailId){
-    console.log('lastMailId ', lastMailId);
-    setOneDoc("config", "lastGmailId", lastMailId);
+
+exports.setOneDoc = onRequest((req, res) => {
+
+  if (req.method === 'POST') {
+    try {
+      const data = (req.body) || {};
+
+      const docRef = doc(db, data.collection, data.key);
+      setDoc(docRef, data.json).then(() => {
+        console.log('Executed setDoc');
+      });
+
+    } catch (err) {
+      res.send('Errorred - ' + err);
+    }
+    res.send('Executed');
+  } else {
+    res.send('Wrong method, use POST');
   }
 
-
-}
-
-
-const getExpense = (date, type, mailId) => {
-  return {
-      cost: 0,
-      vendor: null,
-      tag: null,
-      type,
-      date,
-      user: 'rushi',
-      mailId
-  };
-}
+});
 
 
-const addExpense = async (expense) => {
+exports.getAllDoc = onRequest((req, res) => {
 
-  const url = "https://us-central1-finance-app-361514.cloudfunctions.net/";
+  if (req.method === 'POST') {
+    try {
+      const data = (req.body) || {};
 
-  var options = {
-    "method": "post",
-    "headers": {"Content-Type": "application/json"},
-    "payload": JSON.stringify(expense)
-  };
+      getDocs(collection(db, data.collection)).then((querySnapshot) => {
+        let docList = [];
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data());
+          let document = doc.data();
+          document.id = doc.id;
+          docList.push(document)
+        });
+        // console.log('Firebase query for - ', docList);
+        res.send(docList);
+      });
 
-  UrlFetchApp.fetch(url, options);
-
-}
-
-
-
-
-const setOneDoc =  (collection, key, value) => {
-    const url = "https://us-central1-finance-app-361514.cloudfunctions.net/setOneDoc";
-
-    const data = {
-      key,
-      collection,
-      json: {value}
+    } catch (err) {
+      res.send('Errorred - ' + err);
     }
 
-    var options = {
-      "method": "post",
-      "headers": {"Content-Type": "application/json"},
-      "payload": JSON.stringify(data)
-    };
+  } else {
+    res.send('Wrong method, use POST');
+  }
 
-    const resp = UrlFetchApp.fetch(url, options);
-    return resp.getContentText();
-}
-
-
-const getOneDoc =  (collection, key) => {
-    const url = "https://us-central1-finance-app-361514.cloudfunctions.net/getOneDoc";
-
-    const data = {
-      key,
-      collection
-    }
-
-    var options = {
-      "method": "post",
-      "headers": {"Content-Type": "application/json"},
-      "payload": JSON.stringify(data)
-    };
-
-    const resp = UrlFetchApp.fetch(url, options);
-    return resp.getContentText() ? JSON.parse(resp.getContentText()) : null;
-}
-
-
-
-const getAllDoc = (collection) => {
-    const url = "https://us-central1-finance-app-361514.cloudfunctions.net/getAllDoc";
-
-    const data = {
-      collection
-    }
-
-    var options = {
-      "method": "post",
-      "headers": {"Content-Type": "application/json"},
-      "payload": JSON.stringify(data)
-    };
-
-    const resp = UrlFetchApp.fetch(url, options);
-    return resp.getContentText() ? JSON.parse(resp.getContentText()) : null;
-}
-
-
-
-
+});
