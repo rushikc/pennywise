@@ -1,19 +1,16 @@
 // src/pages/Home.tsx
-import { FC, ReactElement, useEffect, useState } from "react";
+import { FC, ReactElement, useState } from "react";
 
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import { Chip } from "@mui/material";
 import Button from "@mui/material/Button/Button";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { Col, Row } from "reactstrap";
-import { ExpenseAPI } from "../api/ExpenseAPI";
-import { Expense } from "../api/Types";
-import Loading from "../components/Loading";
-import { getDate, getTimeJs, setStorage, sortBy2Key } from "../utility/utility";
-import { selectExpense } from "../store/expenseActions";
 import { useSelector } from "react-redux";
+import { Col, Row } from "reactstrap";
+import { Expense } from "../api/Types";
+import { selectExpense } from "../store/expenseActions";
+import { getDate, getTimeJs } from "../utility/utility";
 
 
 const PaperStyled = styled(Paper)(({ theme }) => ({
@@ -39,10 +36,9 @@ const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
   'parents-amazon', 'Skin & Hair', 'emi', 'medical', 'clothes', 'noodles', 'fitness', 'alcohol']
 
 
-  interface Props {
-    expense: Expense
-
-  }
+interface Props {
+  expense: Expense
+}
 
 const TagExpenses: FC<any> = (props: Props): ReactElement => {
 
@@ -111,9 +107,9 @@ const TagExpenses: FC<any> = (props: Props): ReactElement => {
 
 
   return (
-    <div style={{zIndex: 100, paddingTop: 20}}>
+    <div style={{ zIndex: 100, paddingTop: 20, position: 'absolute' }}>
       <PaperStyled elevation={10} sx={{ marginTop: 4, margin: 2, height: '120vh' }}>
-        
+
         <Chip
           icon={<CurrencyRupeeIcon sx={{ width: 25 }} />}
           label={expense.cost}
@@ -139,7 +135,7 @@ const TagExpenses: FC<any> = (props: Props): ReactElement => {
             </div>
         }
 
-        <div style={{padding: 10}}>
+        <div style={{ padding: 10 }}>
           <ButtonStyled
             style={{
               width: '110px',
@@ -158,7 +154,7 @@ const TagExpenses: FC<any> = (props: Props): ReactElement => {
 
             {
               tag_list.map((val, index) => (
-                <div className="col" style={{padding: 10}} key={index} >
+                <div className="col" style={{ padding: 10 }} key={index} >
                   <Button
                     style={{
                       width: '100px',

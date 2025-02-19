@@ -1,38 +1,18 @@
 // src/pages/Home.tsx
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Avatar } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { FC, ReactElement, useEffect, useState } from "react";
-import { Col, Row } from "reactstrap";
-import { ExpenseAPI } from "../api/ExpenseAPI";
-import { getDateMonth, sortBy2Key, sortByKey } from '../utility/utility';
-import Loading from '../components/Loading';
-import { Expense } from '../api/Types';
-import TagExpenses from './TagExpenses';
+import { FC, ReactElement, useState } from "react";
 import { useSelector } from 'react-redux';
+import { Col, Row } from "reactstrap";
+import { Expense } from '../api/Types';
+import Loading from '../components/Loading';
 import { selectExpense } from '../store/expenseActions';
-
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-  lineHeight: '60px',
-}));
+import { getDateMonth } from '../utility/utility';
+import TagExpenses from './TagExpenses';
 
 
 const Home: FC<any> = (): ReactElement => {
 
-  const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  }));
 
   const [expense, setExpense] = useState<Expense | null>(null);
   const [isTagExpense, setTagExpense] = useState<boolean>(false);
@@ -40,12 +20,13 @@ const Home: FC<any> = (): ReactElement => {
   const { expenseList, isAppLoading } = useSelector(selectExpense);
 
 
+  console.log("home tsx")
+
   const tagExpense = (expense: Expense) => {
     console.log("clicked tag")
     setExpense(expense);
     setTagExpense(true);
   }
-
 
 
   return (

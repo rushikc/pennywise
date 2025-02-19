@@ -2,18 +2,12 @@ import { DateTime } from "luxon";
 import dayjs from "dayjs";
 
 
-
-
-
 //daysjs
 
 export const getDateJs = (seconds: number) => {
     return dayjs(seconds * 1000);
 }
 
-// export const getDateMonth = (seconds: number) => {
-//     return dayjs(seconds * 1000).format('DD MMM');
-// }
 
 export const getDateMonth = (date: Date) => {
     return dayjs(date).format('DD MMM');
@@ -113,6 +107,17 @@ export const sortByKey = (array: any[], key: string) => {
     let arr = array.sort((function (a, b) { 
         //@ts-ignore
         return (b[key] - a[key]) 
+    }));
+
+    return arr;
+}
+
+
+export const sortByKeyDate = (array: any[], key: string) => {
+
+    let arr = array.sort((function (a, b) { 
+        //@ts-ignore
+        return (new Date(b[key]) - new Date(a[key])) 
     }));
 
     return arr;
