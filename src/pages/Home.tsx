@@ -72,7 +72,7 @@ return (
                       {val.vendor.substring(0, 16).toLowerCase()}
                     </span>
                   </Col>
-                  <Col className='d-flex justify-content-end mr-2'>
+                  <Col xs="auto" className='d-flex justify-content-end mr-2'>
                     <span style={{
                       fontWeight: 700,
                       fontSize: 15,
@@ -125,6 +125,7 @@ return (
 };
 
 export default Home;
+
 
 
 
