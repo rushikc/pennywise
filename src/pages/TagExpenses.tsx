@@ -1,8 +1,6 @@
 import {FC, ReactElement, useState} from "react";
 
 import Button from "@mui/material/Button/Button";
-import Paper from '@mui/material/Paper';
-import {styled} from '@mui/material/styles';
 import {useSelector} from "react-redux";
 import {ExpenseAPI} from "../api/ExpenseAPI";
 import {hideTagExpense, selectExpense, setTagMap} from "../store/expenseActions";
@@ -16,19 +14,6 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Chip from '@mui/material/Chip';
 
-const PaperStyled = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  height: 50,
-  fontSize: 12
-}));
 
 const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
   'shopping', 'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',

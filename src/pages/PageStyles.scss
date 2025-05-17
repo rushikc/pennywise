@@ -1,0 +1,72 @@
+.home-root {
+  padding: 32px;
+  background: #181a1b;
+  min-height: 100vh;
+}
+
+.home-list {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.expense-row {
+  background: #23272a;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+  padding: 19px;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  margin: 0;
+  min-height: 0;
+}
+
+.expense-avatar {
+  margin-right: 14px;
+  background: #263238 !important;
+  color: #90caf9 !important;
+  width: 38px !important;
+  height: 38px !important;
+  font-size: 20px !important;
+}
+
+.expense-row-header {
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.vendor-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #e0e0e0;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: inline-block;
+}
+
+.expense-currency {
+  font-weight: 700;
+  font-size: 15px;
+  color: #81c784;
+  margin-right: 2px;
+}
+
+.expense-cost {
+  font-weight: 700;
+  font-size: 15px;
+  color: #81c784;
+}
+
+.expense-date-row {
+  margin-bottom: 4px;
+}
+
+.expense-date {
+  font-weight: 500;
+  font-size: 10px;
+  color: #b0bec5;
+}
+
