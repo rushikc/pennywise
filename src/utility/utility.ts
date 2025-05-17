@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import {DateTime} from "luxon";
 import dayjs from "dayjs";
 
 
@@ -101,24 +101,18 @@ export const getDateTimeSecFromISO = (isoTime: string): string => {
 
 
 export const sortBy2Key = (array: any[], key: string, subKey: string) => {
-
-    let arr = array.sort((function (a, b) {
+    return array.sort((function (a, b) {
         //@ts-ignore
         return (b[key][subKey] - a[key][subKey])
     }));
-
-    return arr;
 }
 
 
 export const sortByKey = (array: any[], key: string) => {
-
-    let arr = array.sort((function (a, b) {
+    return array.sort((function (a, b) {
         //@ts-ignore
         return (b[key] - a[key])
     }));
-
-    return arr;
 }
 
 

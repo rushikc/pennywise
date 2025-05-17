@@ -1,13 +1,12 @@
-// src/pages/Home.tsx
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import { Avatar } from '@mui/material';
-import { FC, ReactElement } from "react";
-import { useSelector } from 'react-redux';
-import { Col, Row } from "reactstrap";
-import { Expense } from '../api/Types';
+import {Avatar} from '@mui/material';
+import {FC, ReactElement} from "react";
+import {useSelector} from 'react-redux';
+import {Col, Row} from "reactstrap";
+import {Expense} from '../api/Types';
 import Loading from '../components/Loading';
-import { selectExpense, setTagExpense } from '../store/expenseActions';
-import { getDateMonth } from '../utility/utility';
+import {selectExpense, setTagExpense} from '../store/expenseActions';
+import {getDateMonth} from '../utility/utility';
 
 
 const Home: FC<any> = (): ReactElement => {

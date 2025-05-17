@@ -1,5 +1,3 @@
-// src/routes.ts
-
 // pages
 import Home from "./pages/Home";
 

@@ -1,5 +1,5 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { expenseSlice } from './expenseSlice'
+import {combineReducers, configureStore} from '@reduxjs/toolkit'
+import {expenseSlice} from './expenseSlice'
 
 
 const rootReducers = combineReducers({
@@ -9,8 +9,8 @@ const rootReducers = combineReducers({
 
 export const store = configureStore({
     reducer: rootReducers,
-    // middleware: (getDefualtMiddleware) => 
-    //     getDefualtMiddleware({
+    // middleware: (getDefaultMiddleware) =>
+    //     getDefaultMiddleware({
     //         serializableCheck: {
     //             ignoredActions: []
     //         }
