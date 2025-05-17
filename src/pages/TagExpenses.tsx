@@ -9,7 +9,6 @@ import {hideTagExpense, selectExpense, setTagMap} from "../store/expenseActions"
 import {getCurrentDate, getDateMonthTime, JSONCopy} from "../utility/utility";
 
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
@@ -80,17 +79,16 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
   return (
     <Dialog open={isTagModal} onClose={hideTagExpense} maxWidth="xs" fullWidth>
-      <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, pb: 1 }}>
-        Tag Transaction
-      </DialogTitle>
       <DialogContent sx={{ pb: 0 }}>
-        <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>{expense.vendor}</Typography>
-          <Typography variant="body2" color="text.secondary">{getDateMonthTime(expense.date)}</Typography>
-          <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 500 }}>
-            <span style={{ color: '#4caf50', fontWeight: 700 }}>₹{expense.cost}</span>
+        <div style={{ textAlign: 'center', marginBottom: 16, background: 'rgb(54 54 54)', borderRadius: 12, padding: '14px 0', boxShadow: '0 2px 12px 0 rgba(0,0,0,0.18)' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 500, fontSize: '0.85rem', color: '#e4e6eb', letterSpacing: 0.2, mb: 0.5 }}>
+            {expense.vendor ? expense.vendor.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
           </Typography>
-          <Typography variant="caption" color={expense.tag ? 'error' : 'primary'} sx={{ display: 'block', mt: 0.5 }}>
+          <Typography variant="body2" sx={{ color: '#a0aec0' }}>{getDateMonthTime(expense.date)}</Typography>
+          <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 500 }}>
+            <span style={{ color: '#7ed957', fontWeight: 700 }}>₹{expense.cost}</span>
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'inline-block', mt: 0.5, px: 1.5, py: 0.5, borderRadius: 1.5, fontWeight: 500, fontSize: 13, background: expense.tag ? 'rgba(239,154,154,0.08)' : 'rgba(179,157,219,0.08)', color: expense.tag ? '#ef9a9a' : '#b39ddb', border: expense.tag ? '1px solid #ef9a9a' : '1px solid #b39ddb', minWidth: 54, textAlign: 'center', textTransform: 'capitalize' }}>
             {expense.tag ? expense.tag : 'untagged'}
           </Typography>
         </div>
@@ -156,7 +154,4 @@ const TagExpenses: FC<any> = (): ReactElement => {
 };
 
 export default TagExpenses;
-
-
-
 
