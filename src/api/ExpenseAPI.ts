@@ -140,7 +140,7 @@ export class ExpenseAPI {
                 console.log(doc.id, " => ", doc.data());
                 let document = doc.data();
                 document.id = doc.id;
-                document.date = (document.date.getISODateseconds);
+                document.date = getISODate(document.date.seconds);
                 fireDocList.push(document)
             });
 
@@ -148,7 +148,8 @@ export class ExpenseAPI {
         }
 
 
-        FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
+        // FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
+        FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date("2025-03-31") }]);
 
         console.log('IndexDB  query for expenses - ', table, indexDocList);
         console.log('Firebase query for expenses - ', table, fireDocList);
