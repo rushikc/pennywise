@@ -1,5 +1,3 @@
-// src/App.tsx
-
 import { AppBar, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { GoogleOAuthProvider } from '@react-oauth/google';
