@@ -7,16 +7,14 @@ import {ExpenseAPI} from "./api/ExpenseAPI";
 import {FinanceIndexDB} from "./api/FinanceIndexDB";
 import './App.scss';
 import BottomNav from "./components/BottomNav";
-import MyAppBar from "./components/MyAppBar";
 import Home from "./pages/Home";
 import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
 import {setExpenseAndTag} from "./store/expenseActions";
 import {sortByKeyDate} from "./utility/utility";
-
+import TagList from "./pages/TagList";
 
 function App() {
-
 
   FinanceIndexDB.initDB();
 
@@ -54,29 +52,25 @@ function App() {
     <GoogleOAuthProvider clientId="542311218762-phbirt127dfih7s96g8j8iq40mqpmr2r.apps.googleusercontent.com">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <MyAppBar />
-        <div style={{ marginTop: 50 }}></div>
 
         <TagExpenses />
 
         <Routes>
           <Route path='/home' element={<Home />} />
           <Route path='/dashboard' element={<Home />} />
-          <Route path='/tag' element={<TagExpenses />} />
+          <Route path='/tag' element={<TagList />} />
           <Route path='/Update' element={<UpdateGmail />} />
           <Route path='/' element={<Home />} />
         </Routes>
 
         <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
-
           <BottomNav />
-
         </AppBar>
 
       </ThemeProvider>
     </GoogleOAuthProvider>
-
   );
 }
 
 export default App;
+
