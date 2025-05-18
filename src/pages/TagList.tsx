@@ -14,10 +14,7 @@ import TagExpenses from "./TagExpenses";
 // Define filter options
 type FilterOption = 'all' | 'untagged';
 
-const filterOptions: {id: FilterOption, label: string}[] = [
-  { id: 'untagged', label: 'Untagged Only' },
-  { id: 'all', label: 'All Expenses' },
-];
+
 
 const TagList: FC<any> = (): ReactElement => {
   const { expenseList, isAppLoading } = useSelector(selectExpense);
