@@ -1,19 +1,18 @@
-import { AppBar, CssBaseline, ThemeProvider } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import { ExpenseAPI } from "./api/ExpenseAPI";
-import { FinanceIndexDB } from "./api/FinanceIndexDB";
+import {AppBar, CssBaseline, ThemeProvider} from "@mui/material";
+import {createTheme} from "@mui/material/styles";
+import {GoogleOAuthProvider} from '@react-oauth/google';
+import {useEffect} from "react";
+import {Route, Routes} from "react-router-dom";
+import {ExpenseAPI} from "./api/ExpenseAPI";
+import {FinanceIndexDB} from "./api/FinanceIndexDB";
 import './App.scss';
 import BottomNav from "./components/BottomNav";
 import MyAppBar from "./components/MyAppBar";
 import Home from "./pages/Home";
 import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
-import { setExpenseAndTag } from "./store/expenseActions";
-import { sortByKeyDate } from "./utility/utility";
-
+import {setExpenseAndTag} from "./store/expenseActions";
+import {sortByKeyDate} from "./utility/utility";
 
 
 function App() {
@@ -56,7 +55,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <MyAppBar />
-        <div style={{ marginTop: 80 }}></div>
+        <div style={{ marginTop: 50 }}></div>
 
         <TagExpenses />
 

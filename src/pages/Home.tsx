@@ -7,7 +7,7 @@ import {Expense} from '../api/Types';
 import Loading from '../components/Loading';
 import {selectExpense, setTagExpense} from '../store/expenseActions';
 import {getDateMonth} from '../utility/utility';
-import './PageStyles.scss';
+import './Home.scss';
 
 const Home: FC<any> = (): ReactElement => {
 
@@ -39,7 +39,7 @@ const Home: FC<any> = (): ReactElement => {
                   <Row className="expense-row-header">
                     <Col>
                       <span className="vendor-name">
-                        {val.vendor.substring(0, 16).toLowerCase()}
+                        {val.vendor.toLowerCase()}
                       </span>
                     </Col>
                     <Col xs="auto" className='d-flex justify-content-end mr-2'>

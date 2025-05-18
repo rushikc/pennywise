@@ -1,9 +1,20 @@
-import { initializeApp } from 'firebase/app';
-import { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore/lite';
-import { EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE } from '../utility/constants';
-import { getFirabseConfig } from '../utility/firebase-public';
-import { getDateMedJs, getISODate } from "../utility/utility";
-import { FinanceIndexDB } from './FinanceIndexDB';
+import {initializeApp} from 'firebase/app';
+import {
+    arrayUnion,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    getFirestore,
+    query,
+    setDoc,
+    updateDoc,
+    where
+} from 'firebase/firestore/lite';
+import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
+import {getFirabseConfig} from '../utility/firebase-public';
+import {getDateMedJs, getISODate} from "../utility/utility";
+import {FinanceIndexDB} from './FinanceIndexDB';
 
 const firebaseConfig = getFirabseConfig();
 
@@ -26,7 +37,7 @@ export class ExpenseAPI {
             delete expense.id;
             await setDoc(docRef, expense);
 
-            FinanceIndexDB.addExpenseList([expense]);
+            await FinanceIndexDB.addExpenseList([expense]);
 
             console.log("Document written with key: ", expense);
 
