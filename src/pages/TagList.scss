@@ -234,45 +234,52 @@
     font-size: 0.9rem;
   }
 
-  // Updated filter buttons container for Button components
-  .filter-buttons-container {
+  .filter-toggle-group {
     display: flex;
     justify-content: center;
-    margin: 10px auto 16px;
-    width: auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    margin: 0 0 18px 0;
 
-    .filter-button {
-      height: 36px;
+    .filter-toggle-btn {
       min-width: 120px;
-      text-transform: none;
-      padding: 6px 16px;
-      font-size: 0.875rem;
-      border-radius: 0;
+      height: 36px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      border: 2px solid #7ed957;
+      background: #f5f5f5;
+      color: #222;
+      transition: background 0.2s, color 0.2s;
+      position: relative;
+      z-index: 1;
+      padding: 0;
 
       &.active {
-        background-color: #7ed957;
-        color: rgba(0, 0, 0, 0.87);
+        background: #7ed957;
+        color: #111;
+        font-weight: 700;
       }
-
-      &:not(.active) {
-        background-color: #262626;
-        color: #ffffff;
-        position: relative;
-      }
-
-      // Add divider line
-      &:not(:first-child)::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 8px;
-        height: 20px;
-        width: 1px;
-        background-color: rgba(255, 255, 255, 0.3);
-      }
+    }
+    .filter-toggle-btn.left {
+      border-top-left-radius: 18px;
+      border-bottom-left-radius: 18px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+    .filter-toggle-btn.right {
+      border-top-right-radius: 18px;
+      border-bottom-right-radius: 18px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: none;
+    }
+    .filter-divider {
+      width: 1px;
+      background: #7ed957;
+      height: 36px;
+      align-self: center;
+      z-index: 2;
     }
   }
 }
@@ -284,5 +291,4 @@
   height: calc(100vh - 56px);
   width: 100%;
 }
-
 

@@ -7,7 +7,7 @@ import "./TagList.scss";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-import { Card, CardContent, Typography, Box, IconButton, CircularProgress, Button } from "@mui/material";
+import { Card, CardContent, Typography, Box, IconButton, CircularProgress } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
 import TagExpenses from "./TagExpenses";
 
@@ -200,19 +200,22 @@ const TagList: FC<any> = (): ReactElement => {
         {renderExpenseCard()}
       </div>
 
-      <div className="filter-buttons-container">
-        {filterOptions.map(option => (
-          <Button
-            key={option.id}
-            variant="contained"
-            color={selectedFilter === option.id ? "primary" : "inherit"}
-            onClick={() => handleFilterChange(option.id)}
-            className={`filter-button ${selectedFilter === option.id ? 'active' : ''}`}
-            disableElevation
-          >
-            {option.label}
-          </Button>
-        ))}
+      <div className="filter-toggle-group">
+        <button
+          type="button"
+          className={`filter-toggle-btn left${selectedFilter === 'untagged' ? ' active' : ''}`}
+          onClick={() => handleFilterChange('untagged')}
+        >
+          Untagged Only
+        </button>
+        <div className="filter-divider" />
+        <button
+          type="button"
+          className={`filter-toggle-btn right${selectedFilter === 'all' ? ' active' : ''}`}
+          onClick={() => handleFilterChange('all')}
+        >
+          All Expenses
+        </button>
       </div>
 
       <Typography variant="body2" className="swipe-instructions">
@@ -225,5 +228,4 @@ const TagList: FC<any> = (): ReactElement => {
 };
 
 export default TagList;
-
 
