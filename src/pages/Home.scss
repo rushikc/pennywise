@@ -2,6 +2,8 @@
   padding: 32px;
   background: #181a1b;
   min-height: 100vh;
+  position: relative;
+  padding-bottom: 80px; /* Add space for the filter button at bottom */
 }
 
 .home-list {
@@ -71,3 +73,76 @@
   color: #b0bec5;
 }
 
+/* Filter styles */
+.no-expenses {
+  color: #aaa;
+  text-align: center;
+  padding: 20px;
+}
+
+.filter-button {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+
+  .MuiChip-root {
+    background-color: #2a3035; /* Match the panel background color */
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
+    height: 40px;
+    padding: 0 15px;
+    border: 1px solid #3a4045; /* Add subtle border for more distinction */
+
+    .MuiChip-icon {
+      color: #90caf9;
+    }
+
+    /* Add hover effect */
+    &:hover {
+      background-color: #323a42;
+    }
+  }
+}
+
+.filter-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  background-color: #2a3035; /* Slightly lighter than the main background for contrast */
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
+  z-index: 100;
+  padding-bottom: 20px;
+  animation: slideUp 0.2s ease-out;
+  border: 1px solid #3a4045; /* Add subtle border for more distinction */
+
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px 20px 10px;
+
+    .filter-chip {
+      margin: 5px;
+      /* Make unselected chips stand out better against the panel background */
+      &.MuiChip-outlined {
+        border-color: #4a5055;
+        background-color: #232729;
+      }
+    }
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
