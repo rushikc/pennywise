@@ -13,6 +13,10 @@ import UpdateGmail from "./pages/UpdateGmail";
 import {setExpenseAndTag} from "./store/expenseActions";
 import {sortByKeyDate} from "./utility/utility";
 import TagList from "./pages/TagList";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Profile from "./pages/profile/Profile";
+import Statistics from "./pages/stats/Statistics";
+import Configuration from "./pages/config/Configuration";
 
 function App() {
 
@@ -27,7 +31,7 @@ function App() {
 
   useEffect(() => {
 
-    ExpenseAPI.processData();
+    void ExpenseAPI.processData();
     const tagMapApi = ExpenseAPI.getTagList();
     const expenseApi = ExpenseAPI.getExpenseList();
 
@@ -57,9 +61,12 @@ function App() {
 
         <Routes>
           <Route path='/home' element={<Home />} />
-          <Route path='/dashboard' element={<Home />} />
+          <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/tag' element={<TagList />} />
           <Route path='/Update' element={<UpdateGmail />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/stats' element={<Statistics />} />
+          <Route path='/config' element={<Configuration />} />
           <Route path='/' element={<Home />} />
         </Routes>
 

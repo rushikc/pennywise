@@ -73,7 +73,7 @@ export class FinanceIndexDB {
 
     static addConfig = async (configList: Config[]) => {
 
-        console.log("addExpense IndexedDB");
+        // console.log("addExpense IndexedDB");
         const store = await this.getStoreInstance("config");
         configList.forEach(config => store.put(config));
 

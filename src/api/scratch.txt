@@ -1,0 +1,10 @@
+I wanna design a dashboard for my mobile finance app,
+The use case for dashboard would be, all the feature of my app will be listed here other than expense list & tag list for which we already have home.tsx & tagList.tsx components
+
+Can you design dashboard in a box tiles kinda design which usually Apple follows in their dashboards &
+- add profile ( which will direct to progile page upon click )
+- add stats ( which will go to stats with all the graphs based on expense list)
+- add config ( which will have page with bank details, job configs)
+- add tags ( which will tag list, tag job runs )
+
+Each tile should a route to another page, design it in a dark theme, user friendly colors & animations, on top do add basic name, email & profile photo before adding box tiles

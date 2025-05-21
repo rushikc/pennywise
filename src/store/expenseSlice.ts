@@ -36,6 +36,11 @@ export const expenseSlice = createSlice({
             state.isTagModal = true;
         },
 
+        addTagExpense: (state, action: PayloadAction<Expense>) => {
+            state.expense = action.payload;
+            state.isTagModal = true;
+        },
+
         setTagMap: (state, action: PayloadAction<TagMap>) => {
             const tag = action.payload;
             const tagIndex = state.tagList.findIndex(t => t.vendor == tag.vendor);
@@ -46,7 +51,7 @@ export const expenseSlice = createSlice({
                 state.tagList.push(tag)
             }
 
-            FinanceIndexDB.addTagMap(tag);
+            void FinanceIndexDB.addTagMap(tag);
 
         },
 

@@ -47,21 +47,6 @@ export class ExpenseAPI {
     }
 
 
-    static tagExpense = async (key: string, tag: string, autoTag: boolean) => {
-        try {
-
-            const docRef = doc(db, "expense", key);
-            await updateDoc(docRef, {
-                tag: arrayUnion(tag)
-            });
-
-            console.log("Document written with key: ", key);
-
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
-
 
     static setOneDoc = async (key: string, val: any, collectionName: string = 'config') => {
         try {
@@ -148,7 +133,7 @@ export class ExpenseAPI {
 
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 let document = doc.data();
                 document.id = doc.id;
                 document.date = getISODate(document.date.seconds);
@@ -160,7 +145,7 @@ export class ExpenseAPI {
 
 
         // FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
-        FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date("2025-03-31") }]);
+        await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: new Date()}]);
 
         console.log('IndexDB  query for expenses - ', table, indexDocList);
         console.log('Firebase query for expenses - ', table, fireDocList);
@@ -221,7 +206,7 @@ export class ExpenseAPI {
         }
 
 
-        FinanceIndexDB.addConfig([{ key: TAG_LAST_UPDATE, value: new Date() }]);
+        await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: new Date()}]);
 
         console.log('IndexDB  query for tagMap - ', table, indexDocList);
         console.log('Firebase query for tagMap - ', table, fireDocList);
