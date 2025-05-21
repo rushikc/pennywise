@@ -149,7 +149,11 @@ const TagList: FC<any> = (): ReactElement => {
             </Box>
 
             <Typography className="expense-vendor" variant="h5">
-              {expense.vendor.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+              {
+                expense.vendor.replace(/_/g, ' ')
+                  .replace(/\b\w/g, c => c.toLowerCase())
+                    .substring(0,25).toLowerCase()
+              }
             </Typography>
 
             <Typography className="expense-date" variant="body1" color="textSecondary">

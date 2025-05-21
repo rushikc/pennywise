@@ -12,11 +12,11 @@ import {
     where
 } from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
-import {getFirabseConfig} from '../utility/firebase-public';
+import {getFirebaseConfig} from '../utility/firebase-public';
 import {getDateMedJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 
-const firebaseConfig = getFirabseConfig();
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

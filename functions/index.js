@@ -6,10 +6,10 @@ dayjs.extend(utc)
 
 const { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } = require('firebase/firestore/lite');
 const { initializeApp } = require('firebase/app');
-const { getFirabseConfig } = require('./secrets');
+const { getFirebaseConfig } = require('./secrets');
 
 
-const firebaseConfig = getFirabseConfig();;
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

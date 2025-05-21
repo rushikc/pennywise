@@ -2,7 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
-import { getFirabseConfig } from "../utility/firebase-public";
+import { getFirebaseConfig } from "../utility/firebase-public";
 import { ExpenseAPI } from "./ExpenseAPI";
 
 const path = require('path');
@@ -22,7 +22,7 @@ const CREDENTIALS_PATH = path.join(processVar.cwd(), '../credentials/credentials
 
 
 
-const firebaseConfig = getFirabseConfig();
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

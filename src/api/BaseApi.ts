@@ -1,10 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore/lite';
-import { getFirabseConfig } from '../utility/firebase-public';
+import { getFirebaseConfig } from '../utility/firebase-public';
 import { getDateMedJs } from '../utility/utility';
 
 
-const firebaseConfig = getFirabseConfig();
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

@@ -1,6 +1,6 @@
 
 
-export const getFirabseConfig = () => {
+export const getFirebaseConfig = () => {
     return {
         apiKey: "AIzaSyDN8VN5Yemmrip9McWMeLVkhp9m9DAItzA",
         authDomain: "finance-app-361514.firebaseapp.com",

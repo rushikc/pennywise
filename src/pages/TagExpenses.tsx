@@ -47,19 +47,22 @@ const TagExpenses: FC<any> = (): ReactElement => {
           tag: selectedTag[0],
           date: getCurrentDate()
         };
-        ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
+        void ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
         setTagMap(tagObj);
       }
     }
 
     const expenseNew = JSONCopy(expense);
     expenseNew.tag = selectedTag[0];
-    ExpenseAPI.addExpense(expenseNew);
+    void ExpenseAPI.addExpense(expenseNew);
     hideTagExpense();
   };
 
   const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '';
+    return vendor ? vendor.substring(0,20)
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .toLowerCase(): '';
   };
 
   return (
