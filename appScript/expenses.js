@@ -131,7 +131,7 @@ async function myFunction() {
       expense.cost = Number(cost)
       expense.vendor = vendor.toUpperCase()
 
-      const obj = tagMap.find(({ vendorVal }) => expense.vendor === vendorVal);
+      const obj = tagMap.find(({ vendor }) => expense.vendor === vendor);
 
       if (obj) {
         expense.tag = obj.tag;

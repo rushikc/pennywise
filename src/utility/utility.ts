@@ -2,7 +2,7 @@ import {DateTime} from "luxon";
 import dayjs from "dayjs";
 
 
-//daysjs
+//daysJs
 
 export const getDateJs = (seconds: number) => {
     return dayjs(seconds * 1000);
@@ -18,7 +18,7 @@ export const getDateMonth = (date: Date) => {
     return dayjs(date).format('DD MMM');
 }
 
-export const getDateMonthTime = (date: Date) => {
+export const getDateMonthTime = (date: Date = new Date()) => {
     return dayjs(date).format('DD MMM YY, hh:mm A');
 }
 
@@ -32,6 +32,10 @@ export const getTimeJs = (date: Date) => {
 
 
 // dates
+
+export const getDateToEpoch = (date: Date): number => {
+    return date.valueOf();
+}
 
 export const getISODate = (seconds: number): Date => {
     return new Date(seconds * 1000)
@@ -118,12 +122,10 @@ export const sortByKey = (array: any[], key: string) => {
 
 export const sortByKeyDate = (array: any[], key: string) => {
 
-    let arr = array.sort((function (a, b) {
+    return array.sort((function (a, b) {
         //@ts-ignore
         return (new Date(b[key]) - new Date(a[key]))
     }));
-
-    return arr;
 }
 
 export const JSONCopy = (Obj: any) => JSON.parse(JSON.stringify(Obj));

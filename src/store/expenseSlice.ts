@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Expense, TagMap } from "../api/Types";
-import { insertAtIndex } from "../utility/utility";
-import { FinanceIndexDB } from "../api/FinanceIndexDB";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Expense, TagMap} from "../api/Types";
+import {insertAtIndex} from "../utility/utility";
+import {FinanceIndexDB} from "../api/FinanceIndexDB";
 
 
 interface InitialState {

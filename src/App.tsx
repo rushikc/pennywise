@@ -10,13 +10,13 @@ import BottomNav from "./components/BottomNav";
 import Home from "./pages/Home";
 import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
-import {setExpenseAndTag} from "./store/expenseActions";
 import {sortByKeyDate} from "./utility/utility";
 import TagList from "./pages/TagList";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Profile from "./pages/profile/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/config/Configuration";
+import {setExpenseAndTag} from "./store/expenseActions";
 
 function App() {
 

@@ -1,13 +1,13 @@
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Avatar, Chip } from '@mui/material';
-import { FC, ReactElement, useState, useEffect, useRef } from "react";
-import { useSelector } from 'react-redux';
-import { Col, Row } from "reactstrap";
-import { Expense } from '../api/Types';
+import {Avatar, Chip} from '@mui/material';
+import {FC, ReactElement, useEffect, useRef, useState} from "react";
+import {useSelector} from 'react-redux';
+import {Col, Row} from "reactstrap";
+import {Expense} from '../api/Types';
 import Loading from '../components/Loading';
-import { selectExpense, setTagExpense } from '../store/expenseActions';
-import { getDateMonth } from '../utility/utility';
+import {selectExpense, setTagExpense} from '../store/expenseActions';
+import {getDateMonth, sortByKeyDate} from '../utility/utility';
 import './Home.scss';
 import dayjs from 'dayjs';
 
@@ -57,7 +57,9 @@ const Home: FC<any> = (): ReactElement => {
       return expenseDate.isAfter(startDate) || expenseDate.isSame(startDate, 'day');
     });
 
-    setFilteredExpenses(filtered);
+    const sortedExpenses = sortByKeyDate(filtered, 'date');
+    setFilteredExpenses(sortedExpenses);
+
   }, [expenseList, selectedRange]);
 
   // Handle clicks outside filter panel and scroll events

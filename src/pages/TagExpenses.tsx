@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import {useSelector} from "react-redux";
 import {ExpenseAPI} from "../api/ExpenseAPI";
 import {hideTagExpense, selectExpense, setTagMap} from "../store/expenseActions";
-import {getCurrentDate, getDateMonthTime, JSONCopy} from "../utility/utility";
+import {getDateMonthTime, JSONCopy} from "../utility/utility";
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -45,7 +45,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
         tagObj = {
           vendor: _vendor,
           tag: selectedTag[0],
-          date: getCurrentDate()
+          date: getDateMonthTime()
         };
         void ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
         setTagMap(tagObj);

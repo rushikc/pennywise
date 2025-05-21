@@ -1,16 +1,5 @@
 import {initializeApp} from 'firebase/app';
-import {
-    arrayUnion,
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    getFirestore,
-    query,
-    setDoc,
-    updateDoc,
-    where
-} from 'firebase/firestore/lite';
+import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../utility/firebase-public';
 import {getDateMedJs, getISODate} from "../utility/utility";
@@ -29,7 +18,7 @@ export class ExpenseAPI {
 
         try {
 
-            expense.date = new Date(expense.date);
+            expense.date = new Date(expense.date).valueOf(); // date to epoch
 
             let key = getDateMedJs(expense.date.seconds) + ' ' + expense.vendor.slice(0, 10);
 
@@ -53,6 +42,7 @@ export class ExpenseAPI {
             const docRef = doc(db, collectionName, key);
             await setDoc(docRef, val);
             console.log("Document written with key: ", key);
+            console.log("Document written with val: ", val);
         } catch (e) {
             console.error("Error adding document: ", e);
         }
