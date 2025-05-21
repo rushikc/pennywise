@@ -1,4 +1,4 @@
-
+// noinspection JSUnresolvedReference,SpellCheckingInspection,JSUnusedGlobalSymbols,DuplicatedCode
 
 async function myFunction() {
 
@@ -6,12 +6,9 @@ async function myFunction() {
   const LastGmailId = "lastGmailId";
   const TagMap = "tagMap";
 
-  // let inbox = GmailApp.getInboxThreads(0, 20);
-  res = Gmail.Users.Messages.list('me');
+  // usually returns last 100 mails
+  let res = Gmail.Users.Messages.list('me');
   let mailIdList = res.messages.map((res) => res.id);
-
-  // console.log(setOneDoc("config1", "lastGmailId", "lastMailId"));
-  // return;
 
   // console.log(mailIdList);
 
@@ -58,9 +55,9 @@ async function myFunction() {
 
     else if (snippet.includes('Thank you for using your HDFC Bank Credit Card ending 5667')) {
 
-      const CREDIT_CARD_MSG = 'Dear Card Member, Thank you for using your HDFC Bank Credit Card \
-      ending 5667 for Rs 858.20 at ZOMATO on 09-02-2025 22:08:17. \
-      Authorization code:- 059556 After the above transaction, the available'
+      // const CREDIT_CARD_MSG = 'Dear Card Member, Thank you for using your HDFC Bank Credit Card \
+      // ending 5667 for Rs 858.20 at ZOMATO on 09-02-2025 22:08:17. \
+      // Authorization code:- 059556 After the above transaction, the available'
 
       type = 'Credit card'
       const creditCardCostRegex = /Rs\b\W\b.+ at/g; // 'Rs 24.00 at'
@@ -85,9 +82,9 @@ async function myFunction() {
 
       if (snippet.includes('successfully credited')) {
 
-        const UPI_MSG_CREDIT = 'Dear Customer, Rs.85.00 is successfully credited to your account \
-        **1811 by VPA aayushXYZ@okaxis AYUSH SHARMA on 09-02-25. Your UPI \
-        transaction reference number is 5048888888. Thank you for';
+        // const UPI_MSG_CREDIT = 'Dear Customer, Rs.85.00 is successfully credited to your account \
+        // **1811 by VPA aayushXYZ@okaxis AYUSH SHARMA on 09-02-25. Your UPI \
+        // transaction reference number is 5048888888. Thank you for';
 
         type = 'UPI Credit';
 
@@ -106,9 +103,9 @@ async function myFunction() {
       } else {
 
 
-        const UPI_MSG_DEBIT = 'Dear Customer, Rs.10.00 has been debited from account **1811 \
-        to VPA yash-1@okicici YASH R ABC on 09-02-25.\
-        Your UPI transaction reference number is 5048888888. If you did not'
+        // const UPI_MSG_DEBIT = 'Dear Customer, Rs.10.00 has been debited from account **1811 \
+        // to VPA yash-1@okicici YASH R ABC on 09-02-25.\
+        // Your UPI transaction reference number is 5048888888. If you did not'
 
         type = 'UPI Debit';
 
@@ -141,7 +138,7 @@ async function myFunction() {
       }
 
 
-      addExpense(expense);
+      await addExpense(expense);
       isExpenseAdded = true;
 
 
@@ -183,9 +180,9 @@ const addExpense = async (expense) => {
 
   const url = "https://us-central1-finance-app-361514.cloudfunctions.net/addExpenseData";
 
-  var options = {
+  const options = {
     "method": "post",
-    "headers": { "Content-Type": "application/json" },
+    "headers": {"Content-Type": "application/json"},
     "payload": JSON.stringify(expense)
   };
 
@@ -205,9 +202,9 @@ const setOneDoc = (collection, key, value) => {
     json: { value }
   }
 
-  var options = {
+  const options = {
     "method": "post",
-    "headers": { "Content-Type": "application/json" },
+    "headers": {"Content-Type": "application/json"},
     "payload": JSON.stringify(data)
   };
 
@@ -224,9 +221,9 @@ const getOneDoc = (collection, key) => {
     collection
   }
 
-  var options = {
+  const options = {
     "method": "post",
-    "headers": { "Content-Type": "application/json" },
+    "headers": {"Content-Type": "application/json"},
     "payload": JSON.stringify(data)
   };
 
@@ -243,9 +240,9 @@ const getAllDoc = (collection) => {
     collection
   }
 
-  var options = {
+  const options = {
     "method": "post",
-    "headers": { "Content-Type": "application/json" },
+    "headers": {"Content-Type": "application/json"},
     "payload": JSON.stringify(data)
   };
 
