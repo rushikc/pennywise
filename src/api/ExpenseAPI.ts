@@ -2,14 +2,14 @@ import {initializeApp} from 'firebase/app';
 import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../utility/firebase-public';
-import {getDateMedJs, getISODate} from "../utility/utility";
+import {getDateJsIdFormat, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
+
 
 const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 
 
 export class ExpenseAPI {
@@ -18,23 +18,23 @@ export class ExpenseAPI {
 
         try {
 
-            expense.date = new Date(expense.date).valueOf(); // date to epoch
+            let key = getDateJsIdFormat(expense.date) + ' ' + expense.vendor.slice(0, 10);
+            // console.log("Document written with key: ", key);
+            // console.log("Document written with expense: ", JSONCopy(expense));
 
-            let key = getDateMedJs(expense.date.seconds) + ' ' + expense.vendor.slice(0, 10);
+            // const expenseNew = JSONCopy(expense);
+            expense.date = new Date(expense.date); // date to epoch
 
             const docRef = doc(db, "expense", key);
-            delete expense.id;
-            await setDoc(docRef, expense);
+            const {id, ...expenseWithoutId} = expense;
+            await setDoc(docRef, expenseWithoutId);
 
             await FinanceIndexDB.addExpenseList([expense]);
-
-            console.log("Document written with key: ", expense);
 
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     }
-
 
 
     static setOneDoc = async (key: string, val: any, collectionName: string = 'config') => {
@@ -209,9 +209,6 @@ export class ExpenseAPI {
         return finalList;
 
     }
-
-
-
 
 
 }

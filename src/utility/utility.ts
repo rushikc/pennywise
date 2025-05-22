@@ -26,6 +26,10 @@ export const getDateMedJs = (seconds: number) => {
     return dayjs(seconds * 1000).format('DD MMM YY, hh:mm A');
 }
 
+export const getDateJsIdFormat = (date: Date) => {
+    return dayjs(date).format('DD MMM YY, hh:mm A');
+}
+
 export const getTimeJs = (date: Date) => {
     return dayjs(date).format('hh:mm A');
 }
@@ -128,7 +132,9 @@ export const sortByKeyDate = (array: any[], key: string) => {
     }));
 }
 
-export const JSONCopy = (Obj: any) => JSON.parse(JSON.stringify(Obj));
+export const JSONCopy = (Obj: any) => {
+    return JSON.parse(JSON.stringify(Obj));
+};
 
 
 export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {

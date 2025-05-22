@@ -1,7 +1,7 @@
 const {onRequest} = require("firebase-functions/v2/https");
 
 const dayjs = require("dayjs");
-var utc = require('dayjs/plugin/utc')
+const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc)
 
 const { arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } = require('firebase/firestore/lite');
@@ -34,7 +34,8 @@ exports.addExpenseData = onRequest((req, res) => {
     try {
       const expense = (req.body) || {};
 
-      let key = dayjs(expense.date).utcOffset(330).format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
+      let key = dayjs(expense.date).utcOffset(330)
+        .format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
 
       const docRef = doc(db, "expense", key);
 
@@ -44,7 +45,7 @@ exports.addExpenseData = onRequest((req, res) => {
       });
 
     } catch (err) {
-      res.send('Errorred - ' + err);
+      res.send('Error - ' + err);
     }
 
     res.send('Executed setDoc');
@@ -62,14 +63,14 @@ exports.getOneDoc = onRequest((req, res) => {
       const data = (req.body) || {};
 
       const docRef = doc(db, data.collection, data.key);
-      // const docRef = doc(db, "config", "gmailLastUpdatd");
+      // const docRef = doc(db, "config", "gmailLastUpdate");
       getDoc(docRef).then((resp) => {
         console.log(resp.data());
         res.send(resp.data());
       });
 
     } catch (err) {
-      res.send('Errorred - ' + err);
+      res.send('Error - ' + err);
     }
 
   } else {
@@ -121,7 +122,7 @@ exports.getAllDoc = onRequest((req, res) => {
       });
 
     } catch (err) {
-      res.send('Errorred - ' + err);
+      res.send('Error - ' + err);
     }
 
   } else {

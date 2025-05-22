@@ -18,9 +18,9 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const tag_list = ['food', 'groceries', 'Amenities', 'veg & fruits', 'snacks',
-  'shopping', 'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',
-  'parents-amazon', 'Skin & Hair', 'emi', 'medical', 'clothes', 'noodles', 'fitness', 'alcohol'];
+const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks',
+  'shopping', 'electronics' ,'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',
+  'parents-amazon', 'Skin & Hair', 'medical', 'clothes', 'fitness', 'invalid'];
 
 const TagExpenses: FC<any> = (): ReactElement => {
 
@@ -52,7 +52,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
       }
     }
 
-    const expenseNew = JSONCopy(expense);
+    let expenseNew = JSONCopy(expense);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);
     hideTagExpense();
