@@ -1,6 +1,8 @@
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {Avatar, Chip} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom} from '@mui/material';
 import {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
@@ -10,6 +12,13 @@ import {selectExpense, setTagExpense} from '../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../utility/utility';
 import './Home.scss';
 import dayjs from 'dayjs';
+
+// Add interface to extend Window type
+declare global {
+  interface Window {
+    scrollTimeout: ReturnType<typeof setTimeout> | undefined;
+  }
+}
 
 // Define date range options
 type DateRange = '1d' | '7d' | '14d' | '30d';
@@ -26,6 +35,9 @@ const Home: FC<any> = (): ReactElement => {
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -34,10 +46,50 @@ const Home: FC<any> = (): ReactElement => {
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
   const toggleFilters = () => setShowFilters(!showFilters);
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Handle scroll events to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button when user scrolls down 300px
+      setShowScrollTop(window.scrollY > 300);
+
+      // Add scrolling class to body during scroll
+      document.body.classList.add('scrolling');
+
+      // Clear previous timeout if it exists
+      if (window.scrollTimeout) {
+        clearTimeout(window.scrollTimeout);
+      }
+
+      // Set timeout to remove scrolling class after scrolling stops
+      window.scrollTimeout = setTimeout(() => {
+        document.body.classList.remove('scrolling');
+      }, 300); // Remove class after 300ms of scroll inactivity
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (window.scrollTimeout) {
+        clearTimeout(window.scrollTimeout);
+      }
+    };
+  }, []);
+
   // Filter expenses based on selected date range
   useEffect(() => {
     if (expenseList.length === 0) {
-      setFilteredExpenses([]);
+      setDateFilteredExpenses([]);
       return;
     }
 
@@ -58,9 +110,34 @@ const Home: FC<any> = (): ReactElement => {
     });
 
     const sortedExpenses = sortByKeyDate(filtered, 'date');
-    setFilteredExpenses(sortedExpenses);
+    setDateFilteredExpenses(sortedExpenses);
 
   }, [expenseList, selectedRange]);
+
+  // Apply search filter after date filtering
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      // If no search term, show all date-filtered expenses
+      setFilteredExpenses(dateFilteredExpenses);
+      return;
+    }
+
+    const searchTermLower = searchTerm.toLowerCase();
+    const searchResults = dateFilteredExpenses.filter(expense => {
+      return (
+        expense.vendor.toLowerCase().includes(searchTermLower) ||
+        expense.cost.toString().includes(searchTermLower) ||
+        (expense.tag && expense.tag.toLowerCase().includes(searchTermLower))
+      );
+    });
+
+    setFilteredExpenses(searchResults);
+  }, [dateFilteredExpenses, searchTerm]);
+
+  // Handle search input changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   // Handle clicks outside filter panel and scroll events
   useEffect(() => {
@@ -130,9 +207,29 @@ const Home: FC<any> = (): ReactElement => {
         <Loading />
       ) : (
         <>
+          <div className="search-container">
+            <TextField
+              fullWidth
+              placeholder="Search expenses..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon className="search-icon" />
+                  </InputAdornment>
+                ),
+                className: "search-input"
+              }}
+            />
+          </div>
+
           <div className="home-list">
             {filteredExpenses.length === 0 ? (
-              <div className="no-expenses">No expenses found for selected period</div>
+              <div className="no-expenses">
+                {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
+              </div>
             ) : (
               filteredExpenses.map(renderExpenseItem)
             )}
@@ -165,6 +262,19 @@ const Home: FC<any> = (): ReactElement => {
               </div>
             </div>
           )}
+
+          {/* Scroll to top button */}
+          <Zoom in={showScrollTop}>
+            <Fab
+              color="primary"
+              size="medium"
+              aria-label="scroll back to top"
+              onClick={scrollToTop}
+              className="scroll-top-button"
+            >
+              <KeyboardArrowUpIcon />
+            </Fab>
+          </Zoom>
         </>
       )}
     </div>

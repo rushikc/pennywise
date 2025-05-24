@@ -137,7 +137,7 @@ export class ExpenseAPI {
         // FinanceIndexDB.addConfig([{ key: EXPENSE_LAST_UPDATE, value: new Date() }]);
         await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: new Date()}]);
 
-        console.log('IndexDB  query for expenses - ', table, indexDocList);
+        console.log('IndexDB query for expenses - ', table, indexDocList);
         console.log('Firebase query for expenses - ', table, fireDocList);
 
         const finalList = fireDocList.concat(indexDocList);
