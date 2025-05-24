@@ -4,8 +4,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import GroupIcon from '@mui/icons-material/ViewModule';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom, IconButton} from '@mui/material';
-import {FC, ReactElement, useEffect, useRef, useState} from "react";
+import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../api/Types';
@@ -17,6 +19,7 @@ import dayjs from 'dayjs';
 
 // Add interface to extend Window type
 declare global {
+  // noinspection JSUnusedGlobalSymbols
   interface Window {
     scrollTimeout: ReturnType<typeof setTimeout> | undefined;
   }
@@ -63,6 +66,7 @@ const Home: FC<any> = (): ReactElement => {
   const [collapsedGroups, setCollapsedGroups] = useState<{[groupKey: string]: boolean}>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
+  const [allCollapsed, setAllCollapsed] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -251,6 +255,35 @@ const Home: FC<any> = (): ReactElement => {
       [groupKey]: !prev[groupKey]
     }));
   };
+
+  // Toggle all groups collapse state
+  const toggleAllGroupsCollapse = () => {
+    const newCollapsedState = !allCollapsed;
+    setAllCollapsed(newCollapsedState);
+
+    // Create a new object with all groups set to the same collapse state
+    const updatedCollapsedGroups: {[key: string]: boolean} = {};
+    Object.keys(groupedExpenses).forEach(key => {
+      updatedCollapsedGroups[key] = newCollapsedState;
+    });
+
+    setCollapsedGroups(updatedCollapsedGroups);
+  };
+
+  // Update allCollapsed state when grouped expenses change
+  useEffect(() => {
+    if (Object.keys(groupedExpenses).length === 0) {
+      setAllCollapsed(false);
+      return;
+    }
+
+    // Check if all groups are currently collapsed
+    const areAllCollapsed = Object.keys(groupedExpenses).every(
+      key => collapsedGroups[key]
+    );
+
+    setAllCollapsed(areAllCollapsed);
+  }, [groupedExpenses, collapsedGroups]);
 
   // Handle search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -498,6 +531,19 @@ const Home: FC<any> = (): ReactElement => {
               <KeyboardArrowUpIcon />
             </Fab>
           </Zoom>
+
+          {/* Collapse all button - only show when we have expenses */}
+          {filteredExpenses.length > 0 && (
+            <Fab
+              color="primary"
+              size="medium"
+              aria-label={allCollapsed ? "expand all groups" : "collapse all groups"}
+              onClick={toggleAllGroupsCollapse}
+              className="collapse-all-button"
+            >
+              {allCollapsed ? <UnfoldMoreIcon /> : <UnfoldLessIcon />}
+            </Fab>
+          )}
         </>
       )}
     </div>

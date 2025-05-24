@@ -295,14 +295,13 @@
 /* Scroll to top button */
 .scroll-top-button {
   position: fixed !important;
-  bottom: 140px; /* Position above the filter button */
+  bottom: 195px; /* Position above the filter button */
   right: 25px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
   z-index: 90;
   background-color: #2a3035 !important;
   color: white !important;
   transition: background-color 0.3s ease, transform 0.3s ease !important;
-  /* Remove continuous animation */
 
   &:hover {
     background-color: #3a4045 !important;
@@ -310,6 +309,44 @@
 
   .MuiSvgIcon-root {
     color: #90caf9;
+  }
+}
+
+/* Collapse all button */
+.collapse-all-button {
+  position: fixed !important;
+  bottom: 140px; /* Position below the scroll to top button */
+  right: 25px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+  z-index: 90;
+  background-color: #2a3035 !important;
+  color: white !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+
+  &:hover {
+    background-color: #3a4045 !important;
+  }
+
+  .MuiSvgIcon-root {
+    color: #90caf9;
+  }
+
+  /* Add subtle pulse animation when state changes */
+  &.state-changed {
+    animation: buttonPulse 0.4s ease;
+  }
+}
+
+/* Animation for the collapse all button when state changes */
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
