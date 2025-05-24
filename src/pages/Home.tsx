@@ -44,8 +44,8 @@ const groupByOptions: {id: GroupByOption, label: string}[] = [
 
 // Interface for grouped expenses
 interface GroupedExpenses {
-  [date: string]: {
-    dateLabel: string;
+  [groupKey: string]: {
+    groupLabel: string;
     expenses: Expense[];
     totalAmount: number;
   }
@@ -60,7 +60,7 @@ const Home: FC<any> = (): ReactElement => {
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
-  const [collapsedDates, setCollapsedDates] = useState<{[date: string]: boolean}>({});
+  const [collapsedGroups, setCollapsedGroups] = useState<{[groupKey: string]: boolean}>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
 
@@ -75,7 +75,6 @@ const Home: FC<any> = (): ReactElement => {
     setShowFilters(!showFilters);
     if (showGroupByOptions) setShowGroupByOptions(false);
   };
-
 
   const toggleGroupByOptions = () => {
     setShowGroupByOptions(!showGroupByOptions);
@@ -228,13 +227,13 @@ const Home: FC<any> = (): ReactElement => {
 
       if (!grouped[groupKey]) {
         grouped[groupKey] = {
-          dateLabel: groupLabel,
+          groupLabel,
           expenses: [],
           totalAmount: 0
         };
         // Initialize as expanded
-        if (collapsedDates[groupKey] === undefined) {
-          setCollapsedDates(prev => ({ ...prev, [groupKey]: false }));
+        if (collapsedGroups[groupKey] === undefined) {
+          setCollapsedGroups(prev => ({ ...prev, [groupKey]: false }));
         }
       }
 
@@ -245,11 +244,11 @@ const Home: FC<any> = (): ReactElement => {
     setGroupedExpenses(grouped);
   }, [filteredExpenses, selectedGroupBy]);
 
-  // Toggle collapse state for a date group
-  const toggleDateCollapse = (dateKey: string) => {
-    setCollapsedDates(prev => ({
+  // Toggle collapse state for a group
+  const toggleGroupCollapse = (groupKey: string) => {
+    setCollapsedGroups(prev => ({
       ...prev,
-      [dateKey]: !prev[dateKey]
+      [groupKey]: !prev[groupKey]
     }));
   };
 
@@ -352,18 +351,18 @@ const Home: FC<any> = (): ReactElement => {
     </Row>
   );
 
-  // Render a date group section
-  const renderDateGroup = (groupKey: string, groupData: GroupedExpenses[string]) => {
-    const isCollapsed = collapsedDates[groupKey] || false;
+  // Render a group section
+  const renderGroupSection = (groupKey: string, groupData: GroupedExpenses[string]) => {
+    const isCollapsed = collapsedGroups[groupKey] || false;
 
     return (
-      <div key={groupKey} className={`date-group ${isCollapsed ? 'collapsed' : ''}`}>
-        <div className="date-header" onClick={() => toggleDateCollapse(groupKey)}>
-          <div className="date-title">
-            <span className="date-label">{groupData.dateLabel}</span>
+      <div key={groupKey} className={`group-box ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="group-header" onClick={() => toggleGroupCollapse(groupKey)}>
+          <div className="group-title">
+            <span className="group-label">{groupData.groupLabel}</span>
             <span className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
           </div>
-          <div className="date-summary">
+          <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
             <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
               {isCollapsed ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
@@ -371,7 +370,7 @@ const Home: FC<any> = (): ReactElement => {
           </div>
         </div>
 
-        <div className={`date-expenses ${isCollapsed ? 'collapsing' : ''}`}>
+        <div className={`group-expenses ${isCollapsed ? 'collapsing' : ''}`}>
           {!isCollapsed && groupData.expenses.map((expense, index) => renderExpenseItem(expense, index))}
         </div>
       </div>
@@ -409,25 +408,22 @@ const Home: FC<any> = (): ReactElement => {
               </div>
             ) : (
               Object.entries(groupedExpenses)
-                .sort(([keyA], [keyB]) => {
+                .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
                   // Custom sorting based on grouping type
                   if (selectedGroupBy === 'days') {
                     return keyB.localeCompare(keyA); // Sort dates newest first
                   } else if (selectedGroupBy === 'cost') {
-                    // Sort cost ranges in descending order
-                    const costRangeOrder: { [key: string]: number } = {
-                      'range_1000_plus': 1,
-                      'range_500_1000': 2,
-                      'range_100_500': 3,
-                      'range_0_100': 4
-                    };
-                    return costRangeOrder[keyA] - costRangeOrder[keyB];
+                    // For cost ranges, sort by total amount highest to lowest
+                    return groupDataB.totalAmount - groupDataA.totalAmount;
+                  } else if (selectedGroupBy === 'vendor' || selectedGroupBy === 'tags') {
+                    // For vendor and tags, sort by total amount highest to lowest
+                    return groupDataB.expenses.length - groupDataA.expenses.length;
                   } else {
-                    // For vendor and tags, sort alphabetically
+                    // Default alphabetical sorting
                     return keyA.localeCompare(keyB);
                   }
                 })
-                .map(([groupKey, groupData]) => renderDateGroup(groupKey, groupData))
+                .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
             )}
           </div>
 

@@ -53,8 +53,8 @@
   gap: 22px; /* Increased from 20px by 10% */
 }
 
-/* Date group styles */
-.date-group {
+/* Group box styles */
+.group-box {
   display: flex;
   flex-direction: column;
   background: #23272a;
@@ -68,7 +68,7 @@
   }
 }
 
-.date-header {
+.group-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,12 +82,12 @@
   }
 }
 
-.date-title {
+.group-title {
   display: flex;
   flex-direction: column;
 }
 
-.date-label {
+.group-label {
   font-weight: 700;
   font-size: 16px;
   color: #e0e0e0;
@@ -99,7 +99,7 @@
   margin-top: 2px;
 }
 
-.date-summary {
+.group-summary {
   display: flex;
   align-items: center;
 }
@@ -121,7 +121,7 @@
   }
 }
 
-.date-expenses {
+.group-expenses {
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -137,7 +137,7 @@
   }
 }
 
-/* Expense row within date group */
+/* Expense row within group */
 .expense-row {
   background: #23272a;
   border-radius: 0; /* Remove border radius for items inside group */
@@ -160,12 +160,12 @@
 }
 
 /* First and last items in group get rounded corners */
-.date-expenses .expense-row:first-child {
+.group-expenses .expense-row:first-child {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-.date-expenses .expense-row:last-child {
+.group-expenses .expense-row:last-child {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
