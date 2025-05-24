@@ -53,16 +53,121 @@
   gap: 22px; /* Increased from 20px by 10% */
 }
 
+/* Date group styles */
+.date-group {
+  display: flex;
+  flex-direction: column;
+  background: #23272a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.5s ease-in-out; /* Slower transform */
+
+  &.collapsed {
+    transform: scale(0.99);
+  }
+}
+
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #2a3035;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #323a42;
+  }
+}
+
+.date-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+.expense-count {
+  font-size: 13px;
+  color: #b0bec5;
+  margin-top: 2px;
+}
+
+.date-summary {
+  display: flex;
+  align-items: center;
+}
+
+.total-amount {
+  font-weight: 700;
+  font-size: 18px;
+  color: #81c784;
+  margin-right: 8px;
+}
+
+.collapse-button {
+  padding: 6px !important;
+  color: #90caf9 !important;
+  transition: transform 0.6s ease; /* Slower rotation */
+
+  &.collapsed {
+    transform: rotate(-180deg);
+  }
+}
+
+.date-expenses {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: #212529;
+  overflow: hidden;
+  transition: max-height 0.8s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.6s ease; /* Slower transitions with smoother easing */
+  opacity: 1;
+  transform-origin: top;
+
+  &.collapsing {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
+/* Expense row within date group */
 .expense-row {
   background: #23272a;
-  border-radius: 14px; /* Increased from 13px by ~10% */
-  box-shadow: 0 1px 6px rgba(0,0,0,0.18);
-  padding: 22px; /* Increased from 20px by 10% */
+  border-radius: 0; /* Remove border radius for items inside group */
+  box-shadow: none; /* Remove individual shadow */
+  padding: 18px 22px; /* Slightly reduced padding */
   align-items: center;
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  transition: background-color 0.2s;
   margin: 0;
   min-height: 0;
+  border-bottom: 1px solid #212529;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #2a3035;
+  }
+}
+
+/* First and last items in group get rounded corners */
+.date-expenses .expense-row:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.date-expenses .expense-row:last-child {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .expense-avatar {
@@ -121,33 +226,41 @@
   padding: 20px;
 }
 
-.filter-button {
+/* Buttons container for Filter and Group By buttons */
+.buttons-container {
   position: fixed;
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 90;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
 
+.filter-button, .group-by-button {
   .MuiChip-root {
-    background-color: #2a3035; /* Match the panel background color */
-    color: white;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
+    background-color: #2a3242; /* Subtle blue-gray that's still visible but not too bright */
+    color: #e0e0e0; /* Softer white text */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Moderate shadow */
     height: 40px;
     padding: 0 15px;
-    border: 1px solid #3a4045; /* Add subtle border for more distinction */
+    border: 1px solid #475366; /* Subtle border that provides definition */
+    font-weight: 400; /* Standard weight */
 
     .MuiChip-icon {
       color: #90caf9;
     }
 
-    /* Add hover effect */
+    /* Subtle hover effect */
     &:hover {
-      background-color: #323a42;
+      background-color: #384256; /* Slightly lighter on hover */
+      border-color: #5d77a6; /* Slightly brighter border on hover */
     }
   }
 }
 
-.filter-panel {
+.filter-panel, .group-by-panel {
   position: fixed;
   left: 0;
   right: 0;
@@ -161,7 +274,7 @@
   animation: slideUp 0.2s ease-out;
   border: 1px solid #3a4045; /* Add subtle border for more distinction */
 
-  .filter-options {
+  .filter-options, .group-by-options {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -182,7 +295,7 @@
 /* Scroll to top button */
 .scroll-top-button {
   position: fixed !important;
-  bottom: 100px; /* Position above the filter button */
+  bottom: 140px; /* Position above the filter button */
   right: 25px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
   z-index: 90;

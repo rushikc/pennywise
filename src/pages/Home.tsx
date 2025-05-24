@@ -2,7 +2,9 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import GroupIcon from '@mui/icons-material/ViewModule';
+import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom, IconButton} from '@mui/material';
 import {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
@@ -30,6 +32,25 @@ const filterOptions: {id: DateRange, label: string}[] = [
   { id: '30d', label: '1 Month' },
 ];
 
+// Define group by options
+type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
+
+const groupByOptions: {id: GroupByOption, label: string}[] = [
+  { id: 'days', label: 'Days' },
+  { id: 'vendor', label: 'Vendor' },
+  { id: 'cost', label: 'Cost Range' },
+  { id: 'tags', label: 'Tags' },
+];
+
+// Interface for grouped expenses
+interface GroupedExpenses {
+  [date: string]: {
+    dateLabel: string;
+    expenses: Expense[];
+    totalAmount: number;
+  }
+}
+
 const Home: FC<any> = (): ReactElement => {
   const { expenseList, isAppLoading } = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
@@ -38,13 +59,28 @@ const Home: FC<any> = (): ReactElement => {
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
+  const [collapsedDates, setCollapsedDates] = useState<{[date: string]: boolean}>({});
+  const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
+  const [showGroupByOptions, setShowGroupByOptions] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
+  const groupByPanelRef = useRef<HTMLDivElement>(null);
+  const groupByButtonRef = useRef<HTMLDivElement>(null);
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
-  const toggleFilters = () => setShowFilters(!showFilters);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    if (showGroupByOptions) setShowGroupByOptions(false);
+  };
+
+
+  const toggleGroupByOptions = () => {
+    setShowGroupByOptions(!showGroupByOptions);
+    if (showFilters) setShowFilters(false);
+  };
 
   // Scroll to top function
   const scrollToTop = () => {
@@ -134,6 +170,89 @@ const Home: FC<any> = (): ReactElement => {
     setFilteredExpenses(searchResults);
   }, [dateFilteredExpenses, searchTerm]);
 
+  // Group expenses based on selected grouping option
+  useEffect(() => {
+    if (filteredExpenses.length === 0) {
+      setGroupedExpenses({});
+      return;
+    }
+
+    const grouped: GroupedExpenses = {};
+
+    filteredExpenses.forEach(expense => {
+      let groupKey: string;
+      let groupLabel: string;
+
+      // Group by different criteria based on selectedGroupBy
+      switch (selectedGroupBy) {
+        case 'days':
+          // Use date as key (without time part)
+          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+          groupLabel = getDateMonth(expense.date);
+          break;
+
+        case 'vendor':
+          // Use vendor name as key
+          groupKey = expense.vendor.toLowerCase();
+          groupLabel = expense.vendor;
+          break;
+
+        case 'cost':
+          // Create cost ranges (0-100, 100-500, 500-1000, 1000+)
+          const cost = Number(expense.cost);
+          if (cost <= 100) {
+            groupKey = 'range_0_100';
+            groupLabel = '₹0 - ₹100';
+          } else if (cost <= 500) {
+            groupKey = 'range_100_500';
+            groupLabel = '₹100 - ₹500';
+          } else if (cost <= 1000) {
+            groupKey = 'range_500_1000';
+            groupLabel = '₹500 - ₹1000';
+          } else {
+            groupKey = 'range_1000_plus';
+            groupLabel = '₹1000+';
+          }
+          break;
+
+        case 'tags':
+          // Use tag as key, or "untagged" for null tags
+          groupKey = expense.tag ? expense.tag.toLowerCase() : 'untagged';
+          groupLabel = expense.tag ? expense.tag : 'Untagged';
+          break;
+
+        default:
+          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+          groupLabel = getDateMonth(expense.date);
+      }
+
+      if (!grouped[groupKey]) {
+        grouped[groupKey] = {
+          dateLabel: groupLabel,
+          expenses: [],
+          totalAmount: 0
+        };
+        // Initialize as expanded
+        if (collapsedDates[groupKey] === undefined) {
+          setCollapsedDates(prev => ({ ...prev, [groupKey]: false }));
+        }
+      }
+
+      grouped[groupKey].expenses.push(expense);
+      grouped[groupKey].totalAmount += Number(expense.cost);
+    });
+
+    setGroupedExpenses(grouped);
+  }, [filteredExpenses, selectedGroupBy]);
+
+  // Toggle collapse state for a date group
+  const toggleDateCollapse = (dateKey: string) => {
+    setCollapsedDates(prev => ({
+      ...prev,
+      [dateKey]: !prev[dateKey]
+    }));
+  };
+
   // Handle search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -165,10 +284,42 @@ const Home: FC<any> = (): ReactElement => {
     };
   }, [showFilters]);
 
+  // Handle clicks outside group by panel and scroll events
+  useEffect(() => {
+    if (!showGroupByOptions) return; // Skip if options not shown
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        groupByPanelRef.current &&
+        groupByButtonRef.current &&
+        !groupByPanelRef.current.contains(event.target as Node) &&
+        !groupByButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowGroupByOptions(false);
+      }
+    };
+
+    const handleScroll = () => setShowGroupByOptions(false);
+
+    // Add and clean up event listeners
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [showGroupByOptions]);
+
   // Handle range selection
   const handleRangeChange = (range: DateRange) => {
     setSelectedRange(range);
     setShowFilters(false);
+  };
+
+  // Handle group by option selection
+  const handleGroupByChange = (option: GroupByOption) => {
+    setSelectedGroupBy(option);
+    setShowGroupByOptions(false);
   };
 
   // Render expense item
@@ -201,6 +352,32 @@ const Home: FC<any> = (): ReactElement => {
     </Row>
   );
 
+  // Render a date group section
+  const renderDateGroup = (groupKey: string, groupData: GroupedExpenses[string]) => {
+    const isCollapsed = collapsedDates[groupKey] || false;
+
+    return (
+      <div key={groupKey} className={`date-group ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="date-header" onClick={() => toggleDateCollapse(groupKey)}>
+          <div className="date-title">
+            <span className="date-label">{groupData.dateLabel}</span>
+            <span className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="date-summary">
+            <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
+            <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
+              {isCollapsed ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+            </IconButton>
+          </div>
+        </div>
+
+        <div className={`date-expenses ${isCollapsed ? 'collapsing' : ''}`}>
+          {!isCollapsed && groupData.expenses.map((expense, index) => renderExpenseItem(expense, index))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="home-root">
       {isAppLoading ? (
@@ -231,18 +408,50 @@ const Home: FC<any> = (): ReactElement => {
                 {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
               </div>
             ) : (
-              filteredExpenses.map(renderExpenseItem)
+              Object.entries(groupedExpenses)
+                .sort(([keyA], [keyB]) => {
+                  // Custom sorting based on grouping type
+                  if (selectedGroupBy === 'days') {
+                    return keyB.localeCompare(keyA); // Sort dates newest first
+                  } else if (selectedGroupBy === 'cost') {
+                    // Sort cost ranges in descending order
+                    const costRangeOrder: { [key: string]: number } = {
+                      'range_1000_plus': 1,
+                      'range_500_1000': 2,
+                      'range_100_500': 3,
+                      'range_0_100': 4
+                    };
+                    return costRangeOrder[keyA] - costRangeOrder[keyB];
+                  } else {
+                    // For vendor and tags, sort alphabetically
+                    return keyA.localeCompare(keyB);
+                  }
+                })
+                .map(([groupKey, groupData]) => renderDateGroup(groupKey, groupData))
             )}
           </div>
 
-          {/* Filter button */}
-          <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
-            <Chip
-              icon={<FilterListIcon />}
-              label={filterOptions.find(option => option.id === selectedRange)?.label}
-              color="primary"
-              clickable
-            />
+          {/* Filter button & Group by button container */}
+          <div className="buttons-container">
+            {/* Filter button */}
+            <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+              <Chip
+                icon={<FilterListIcon />}
+                label={filterOptions.find(option => option.id === selectedRange)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
+
+            {/* Group by button */}
+            <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
+              <Chip
+                icon={<GroupIcon />}
+                label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
           </div>
 
           {/* Filter panel */}
@@ -256,6 +465,24 @@ const Home: FC<any> = (): ReactElement => {
                     color="primary"
                     variant={selectedRange === option.id ? "filled" : "outlined"}
                     onClick={() => handleRangeChange(option.id)}
+                    className="filter-chip"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Group by panel */}
+          {showGroupByOptions && (
+            <div className="group-by-panel" ref={groupByPanelRef}>
+              <div className="group-by-options">
+                {groupByOptions.map(option => (
+                  <Chip
+                    key={option.id}
+                    label={option.label}
+                    color="primary"
+                    variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+                    onClick={() => handleGroupByChange(option.id)}
                     className="filter-chip"
                   />
                 ))}
