@@ -2,7 +2,67 @@
 
 
 async function tagExpenses() {
+    const Config = "config";
+    const LastAccessedTime = "lastTaggedTime";
+    const TagMap = "tagMap";
+    const Expenses = "expenses";
 
+    // Get the last tagged time from config
+    let lastTaggedTimeDoc = getOneDoc(Config, LastAccessedTime);
+    let lastTaggedTime = 0;
+
+    if (lastTaggedTimeDoc) {
+        lastTaggedTime = lastTaggedTimeDoc.value;
+        console.log("Last tagged time: ", new Date(lastTaggedTime).toLocaleString());
+    } else {
+        // If no last tagged time, use a default time (e.g., 7 days ago)
+        lastTaggedTime = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        console.log("No last tagged time found. Using default: ", new Date(lastTaggedTime).toLocaleString());
+    }
+
+    // Fetch all expenses since last tagged time
+    const url = "https://us-central1-finance-app-361514.cloudfunctions.net/getExpensesSinceDate";
+    const data = {
+        timestamp: lastTaggedTime
+    };
+
+    const options = {
+        "method": "post",
+        "headers": {"Content-Type": "application/json"},
+        "payload": JSON.stringify(data)
+    };
+
+    const resp = UrlFetchApp.fetch(url, options);
+    const expenses = JSON.parse(resp.getContentText());
+
+    console.log("Found " + expenses.length + " expenses to process");
+
+    // Get all tag mappings
+    const tagMap = getAllDoc(TagMap);
+    console.log("Loaded " + tagMap.length + " tag mappings");
+
+    // Tag each expense
+    let updatedCount = 0;
+    for (const expense of expenses) {
+        if (!expense.tag && expense.vendor) {
+            const vendorUpper = expense.vendor.toUpperCase();
+            const matchingTag = tagMap.find(mapping => vendorUpper.includes(mapping.vendor.toUpperCase()));
+
+            if (matchingTag) {
+                expense.tag = matchingTag.tag;
+                await addExpense(expense); // Update the expense with the new tag
+                updatedCount++;
+                console.log(`Tagged "${expense.vendor}" with "${matchingTag.tag}"`);
+            }
+        }
+    }
+
+    console.log(`Tagged ${updatedCount} out of ${expenses.length} expenses`);
+
+    // Update the last tagged time
+    const currentTime = Date.now();
+    setOneDoc(Config, LastAccessedTime, currentTime);
+    console.log("Updated last tagged time to: " + new Date(currentTime).toLocaleString());
 }
 
 
@@ -78,7 +138,4 @@ const getAllDoc = (collection) => {
     const resp = UrlFetchApp.fetch(url, options);
     return resp.getContentText() ? JSON.parse(resp.getContentText()) : null;
 }
-
-
-
 

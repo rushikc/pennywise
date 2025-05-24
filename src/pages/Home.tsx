@@ -1,7 +1,13 @@
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {Avatar, Chip} from '@mui/material';
-import {FC, ReactElement, useEffect, useRef, useState} from "react";
+import SearchIcon from '@mui/icons-material/Search';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import GroupIcon from '@mui/icons-material/ViewModule';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom, IconButton} from '@mui/material';
+import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../api/Types';
@@ -10,6 +16,14 @@ import {selectExpense, setTagExpense} from '../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../utility/utility';
 import './Home.scss';
 import dayjs from 'dayjs';
+
+// Add interface to extend Window type
+declare global {
+  // noinspection JSUnusedGlobalSymbols
+  interface Window {
+    scrollTimeout: ReturnType<typeof setTimeout> | undefined;
+  }
+}
 
 // Define date range options
 type DateRange = '1d' | '7d' | '14d' | '30d';
@@ -21,23 +35,100 @@ const filterOptions: {id: DateRange, label: string}[] = [
   { id: '30d', label: '1 Month' },
 ];
 
+// Define group by options
+type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
+
+const groupByOptions: {id: GroupByOption, label: string}[] = [
+  { id: 'days', label: 'Days' },
+  { id: 'vendor', label: 'Vendor' },
+  { id: 'cost', label: 'Cost Range' },
+  { id: 'tags', label: 'Tags' },
+];
+
+// Interface for grouped expenses
+interface GroupedExpenses {
+  [groupKey: string]: {
+    groupLabel: string;
+    expenses: Expense[];
+    totalAmount: number;
+  }
+}
+
 const Home: FC<any> = (): ReactElement => {
   const { expenseList, isAppLoading } = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
+  const [collapsedGroups, setCollapsedGroups] = useState<{[groupKey: string]: boolean}>({});
+  const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
+  const [showGroupByOptions, setShowGroupByOptions] = useState(false);
+  const [allCollapsed, setAllCollapsed] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
+  const groupByPanelRef = useRef<HTMLDivElement>(null);
+  const groupByButtonRef = useRef<HTMLDivElement>(null);
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
-  const toggleFilters = () => setShowFilters(!showFilters);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    if (showGroupByOptions) setShowGroupByOptions(false);
+  };
+
+  const toggleGroupByOptions = () => {
+    setShowGroupByOptions(!showGroupByOptions);
+    if (showFilters) setShowFilters(false);
+  };
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Handle scroll events to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button when user scrolls down 300px
+      setShowScrollTop(window.scrollY > 300);
+
+      // Add scrolling class to body during scroll
+      document.body.classList.add('scrolling');
+
+      // Clear previous timeout if it exists
+      if (window.scrollTimeout) {
+        clearTimeout(window.scrollTimeout);
+      }
+
+      // Set timeout to remove scrolling class after scrolling stops
+      window.scrollTimeout = setTimeout(() => {
+        document.body.classList.remove('scrolling');
+      }, 300); // Remove class after 300ms of scroll inactivity
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (window.scrollTimeout) {
+        clearTimeout(window.scrollTimeout);
+      }
+    };
+  }, []);
 
   // Filter expenses based on selected date range
   useEffect(() => {
     if (expenseList.length === 0) {
-      setFilteredExpenses([]);
+      setDateFilteredExpenses([]);
       return;
     }
 
@@ -58,9 +149,146 @@ const Home: FC<any> = (): ReactElement => {
     });
 
     const sortedExpenses = sortByKeyDate(filtered, 'date');
-    setFilteredExpenses(sortedExpenses);
+    setDateFilteredExpenses(sortedExpenses);
 
   }, [expenseList, selectedRange]);
+
+  // Apply search filter after date filtering
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      // If no search term, show all date-filtered expenses
+      setFilteredExpenses(dateFilteredExpenses);
+      return;
+    }
+
+    const searchTermLower = searchTerm.toLowerCase();
+    const searchResults = dateFilteredExpenses.filter(expense => {
+      return (
+        expense.vendor.toLowerCase().includes(searchTermLower) ||
+        expense.cost.toString().includes(searchTermLower) ||
+        (expense.tag && expense.tag.toLowerCase().includes(searchTermLower))
+      );
+    });
+
+    setFilteredExpenses(searchResults);
+  }, [dateFilteredExpenses, searchTerm]);
+
+  // Group expenses based on selected grouping option
+  useEffect(() => {
+    if (filteredExpenses.length === 0) {
+      setGroupedExpenses({});
+      return;
+    }
+
+    const grouped: GroupedExpenses = {};
+
+    filteredExpenses.forEach(expense => {
+      let groupKey: string;
+      let groupLabel: string;
+
+      // Group by different criteria based on selectedGroupBy
+      switch (selectedGroupBy) {
+        case 'days':
+          // Use date as key (without time part)
+          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+          groupLabel = getDateMonth(expense.date);
+          break;
+
+        case 'vendor':
+          // Use vendor name as key
+          groupKey = expense.vendor.toLowerCase();
+          groupLabel = expense.vendor;
+          break;
+
+        case 'cost':
+          // Create cost ranges (0-100, 100-500, 500-1000, 1000+)
+          const cost = Number(expense.cost);
+          if (cost <= 100) {
+            groupKey = 'range_0_100';
+            groupLabel = '₹0 - ₹100';
+          } else if (cost <= 500) {
+            groupKey = 'range_100_500';
+            groupLabel = '₹100 - ₹500';
+          } else if (cost <= 1000) {
+            groupKey = 'range_500_1000';
+            groupLabel = '₹500 - ₹1000';
+          } else {
+            groupKey = 'range_1000_plus';
+            groupLabel = '₹1000+';
+          }
+          break;
+
+        case 'tags':
+          // Use tag as key, or "untagged" for null tags
+          groupKey = expense.tag ? expense.tag.toLowerCase() : 'untagged';
+          groupLabel = expense.tag ? expense.tag : 'Untagged';
+          break;
+
+        default:
+          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+          groupLabel = getDateMonth(expense.date);
+      }
+
+      if (!grouped[groupKey]) {
+        grouped[groupKey] = {
+          groupLabel,
+          expenses: [],
+          totalAmount: 0
+        };
+        // Initialize as expanded
+        if (collapsedGroups[groupKey] === undefined) {
+          setCollapsedGroups(prev => ({ ...prev, [groupKey]: false }));
+        }
+      }
+
+      grouped[groupKey].expenses.push(expense);
+      grouped[groupKey].totalAmount += Number(expense.cost);
+    });
+
+    setGroupedExpenses(grouped);
+  }, [filteredExpenses, selectedGroupBy]);
+
+  // Toggle collapse state for a group
+  const toggleGroupCollapse = (groupKey: string) => {
+    setCollapsedGroups(prev => ({
+      ...prev,
+      [groupKey]: !prev[groupKey]
+    }));
+  };
+
+  // Toggle all groups collapse state
+  const toggleAllGroupsCollapse = () => {
+    const newCollapsedState = !allCollapsed;
+    setAllCollapsed(newCollapsedState);
+
+    // Create a new object with all groups set to the same collapse state
+    const updatedCollapsedGroups: {[key: string]: boolean} = {};
+    Object.keys(groupedExpenses).forEach(key => {
+      updatedCollapsedGroups[key] = newCollapsedState;
+    });
+
+    setCollapsedGroups(updatedCollapsedGroups);
+  };
+
+  // Update allCollapsed state when grouped expenses change
+  useEffect(() => {
+    if (Object.keys(groupedExpenses).length === 0) {
+      setAllCollapsed(false);
+      return;
+    }
+
+    // Check if all groups are currently collapsed
+    const areAllCollapsed = Object.keys(groupedExpenses).every(
+      key => collapsedGroups[key]
+    );
+
+    setAllCollapsed(areAllCollapsed);
+  }, [groupedExpenses, collapsedGroups]);
+
+  // Handle search input changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   // Handle clicks outside filter panel and scroll events
   useEffect(() => {
@@ -88,10 +316,42 @@ const Home: FC<any> = (): ReactElement => {
     };
   }, [showFilters]);
 
+  // Handle clicks outside group by panel and scroll events
+  useEffect(() => {
+    if (!showGroupByOptions) return; // Skip if options not shown
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        groupByPanelRef.current &&
+        groupByButtonRef.current &&
+        !groupByPanelRef.current.contains(event.target as Node) &&
+        !groupByButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowGroupByOptions(false);
+      }
+    };
+
+    const handleScroll = () => setShowGroupByOptions(false);
+
+    // Add and clean up event listeners
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [showGroupByOptions]);
+
   // Handle range selection
   const handleRangeChange = (range: DateRange) => {
     setSelectedRange(range);
     setShowFilters(false);
+  };
+
+  // Handle group by option selection
+  const handleGroupByChange = (option: GroupByOption) => {
+    setSelectedGroupBy(option);
+    setShowGroupByOptions(false);
   };
 
   // Render expense item
@@ -124,28 +384,103 @@ const Home: FC<any> = (): ReactElement => {
     </Row>
   );
 
+  // Render a group section
+  const renderGroupSection = (groupKey: string, groupData: GroupedExpenses[string]) => {
+    const isCollapsed = collapsedGroups[groupKey] || false;
+
+    return (
+      <div key={groupKey} className={`group-box ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="group-header" onClick={() => toggleGroupCollapse(groupKey)}>
+          <div className="group-title">
+            <span className="group-label">{groupData.groupLabel}</span>
+            <span className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="group-summary">
+            <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
+            <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
+              {isCollapsed ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+            </IconButton>
+          </div>
+        </div>
+
+        <div className={`group-expenses ${isCollapsed ? 'collapsing' : ''}`}>
+          {!isCollapsed && groupData.expenses.map((expense, index) => renderExpenseItem(expense, index))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="home-root">
       {isAppLoading ? (
         <Loading />
       ) : (
         <>
+          <div className="search-container">
+            <TextField
+              fullWidth
+              placeholder="Search expenses..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon className="search-icon" />
+                  </InputAdornment>
+                ),
+                className: "search-input"
+              }}
+            />
+          </div>
+
           <div className="home-list">
             {filteredExpenses.length === 0 ? (
-              <div className="no-expenses">No expenses found for selected period</div>
+              <div className="no-expenses">
+                {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
+              </div>
             ) : (
-              filteredExpenses.map(renderExpenseItem)
+              Object.entries(groupedExpenses)
+                .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
+                  // Custom sorting based on grouping type
+                  if (selectedGroupBy === 'days') {
+                    return keyB.localeCompare(keyA); // Sort dates newest first
+                  } else if (selectedGroupBy === 'cost') {
+                    // For cost ranges, sort by total amount highest to lowest
+                    return groupDataB.totalAmount - groupDataA.totalAmount;
+                  } else if (selectedGroupBy === 'vendor' || selectedGroupBy === 'tags') {
+                    // For vendor and tags, sort by total amount highest to lowest
+                    return groupDataB.expenses.length - groupDataA.expenses.length;
+                  } else {
+                    // Default alphabetical sorting
+                    return keyA.localeCompare(keyB);
+                  }
+                })
+                .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
             )}
           </div>
 
-          {/* Filter button */}
-          <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
-            <Chip
-              icon={<FilterListIcon />}
-              label={filterOptions.find(option => option.id === selectedRange)?.label}
-              color="primary"
-              clickable
-            />
+          {/* Filter button & Group by button container */}
+          <div className="buttons-container">
+            {/* Filter button */}
+            <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+              <Chip
+                icon={<FilterListIcon />}
+                label={filterOptions.find(option => option.id === selectedRange)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
+
+            {/* Group by button */}
+            <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
+              <Chip
+                icon={<GroupIcon />}
+                label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
           </div>
 
           {/* Filter panel */}
@@ -164,6 +499,50 @@ const Home: FC<any> = (): ReactElement => {
                 ))}
               </div>
             </div>
+          )}
+
+          {/* Group by panel */}
+          {showGroupByOptions && (
+            <div className="group-by-panel" ref={groupByPanelRef}>
+              <div className="group-by-options">
+                {groupByOptions.map(option => (
+                  <Chip
+                    key={option.id}
+                    label={option.label}
+                    color="primary"
+                    variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+                    onClick={() => handleGroupByChange(option.id)}
+                    className="filter-chip"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Scroll to top button */}
+          <Zoom in={showScrollTop}>
+            <Fab
+              color="primary"
+              size="medium"
+              aria-label="scroll back to top"
+              onClick={scrollToTop}
+              className="scroll-top-button"
+            >
+              <KeyboardArrowUpIcon />
+            </Fab>
+          </Zoom>
+
+          {/* Collapse all button - only show when we have expenses */}
+          {filteredExpenses.length > 0 && (
+            <Fab
+              color="primary"
+              size="medium"
+              aria-label={allCollapsed ? "expand all groups" : "collapse all groups"}
+              onClick={toggleAllGroupsCollapse}
+              className="collapse-all-button"
+            >
+              {allCollapsed ? <UnfoldMoreIcon /> : <UnfoldLessIcon />}
+            </Fab>
           )}
         </>
       )}
