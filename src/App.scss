@@ -1,7 +1,3 @@
-
-
-
-
 $red : #e97878;
 $purple-light : rgb(103, 125, 247);
 
@@ -25,22 +21,14 @@ $purple-light : rgb(103, 125, 247);
     color: $purple-light;
 }
 
-
-
 .button-class {
     width: '200px'
 }
-
-
-//flex
 
 .d-flex-center {
     display: flex;
     justify-content: center;
 }
-
-
-//font-weight
 
 .font-600 {
     font-weight: 600;
@@ -54,20 +42,16 @@ $purple-light : rgb(103, 125, 247);
     font-size: 15px;
 }
 
-
-//padding & margins
-
 .pt-10 {
     padding-top: 10rem;
 }
-
 
 .no-padding {
     padding: 0 !important;
 }
 
-
 .no-padding-margin {
     padding: 0 !important;
     margin: 0 !important;
 }
+

@@ -66,7 +66,7 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
-  text-align: center; /* Ensure text is centered */
+  text-align: center;
 }
 
 .dashboard-tile-avatar {
@@ -74,10 +74,10 @@
   width: 56px !important;
   height: 56px !important;
   margin-bottom: 16px;
-  margin-left: auto; /* Center horizontally */
-  margin-right: auto; /* Center horizontally */
+  margin-left: auto;
+  margin-right: auto;
   transition: all 0.3s ease;
-  display: flex; /* Center icon inside avatar */
+  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -90,7 +90,7 @@
   color: #e0e0e0;
   font-size: 16px;
   font-weight: 500;
-  width: 100%; /* Ensure title takes full width of container */
-  text-align: center; /* Center text */
+  width: 100%;
+  text-align: center;
 }
 

@@ -1,29 +1,14 @@
 import React from 'react';
+import {Avatar, Box, Card, CardActionArea, Container, Grid, Paper, Typography, useTheme} from '@mui/material';
 import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Avatar,
-  useTheme,
-  Paper,
-  CardActionArea,
-  Container,
-  Divider
-} from '@mui/material';
-import {
-  Person as ProfileIcon,
   BarChart as StatsIcon,
-  Settings as ConfigIcon,
-  LocalOffer as TagsIcon
+  LocalOffer as TagsIcon,
+  Person as ProfileIcon,
+  Settings as ConfigIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import {useNavigate} from 'react-router-dom';
+import {motion} from 'framer-motion';
 import './dashboard.scss';
-
-// If you don't have framer-motion, you'll need to install it:
-// npm install framer-motion
 
 interface DashboardTile {
   id: string;
@@ -37,11 +22,10 @@ const Dashboard: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  // Mock user data - replace with your actual user data from auth/state
   const user = {
     name: 'John Doe',
     email: 'john.doe@example.com',
-    photoUrl: '/profile-avatar.jpg' // This uses the image in your public folder
+    photoUrl: '/profile-avatar.jpg'
   };
 
   const dashboardTiles: DashboardTile[] = [
@@ -50,28 +34,28 @@ const Dashboard: React.FC = () => {
       title: 'Profile',
       icon: <ProfileIcon />,
       route: '/profile',
-      color: '#90caf9' // Updated to match theme
+      color: '#90caf9'
     },
     {
       id: 'stats',
       title: 'Statistics',
       icon: <StatsIcon />,
       route: '/stats',
-      color: '#81c784' // Updated to match theme
+      color: '#81c784'
     },
     {
       id: 'config',
       title: 'Configuration',
       icon: <ConfigIcon />,
       route: '/config',
-      color: '#f48fb1' // Updated to match theme
+      color: '#f48fb1'
     },
     {
       id: 'tags',
       title: 'Tags',
       icon: <TagsIcon />,
       route: '/tag',
-      color: '#ce93d8' // Updated to match theme
+      color: '#ce93d8'
     }
   ];
 
@@ -79,7 +63,6 @@ const Dashboard: React.FC = () => {
     navigate(route);
   };
 
-  // Animation variants for framer-motion
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -104,7 +87,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="sm" className="dashboard-main-container">
-      {/* User Profile Section */}
       <Paper
         component={motion.div}
         initial={{ opacity: 0, y: -20 }}
@@ -129,7 +111,6 @@ const Dashboard: React.FC = () => {
         </Box>
       </Paper>
 
-      {/* Dashboard Tiles */}
       <Typography
         variant="h6"
         component={motion.div}
@@ -139,8 +120,6 @@ const Dashboard: React.FC = () => {
       >
         Dashboard
       </Typography>
-
-      {/*<Divider className="dashboard-divider" />*/}
 
       <motion.div
         variants={containerVariants}

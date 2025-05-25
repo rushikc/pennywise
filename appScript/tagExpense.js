@@ -7,7 +7,6 @@ async function tagExpenses() {
     const TagMap = "tagMap";
     const Expenses = "expenses";
 
-    // Get the last tagged time from config
     let lastTaggedTimeDoc = getOneDoc(Config, LastAccessedTime);
     let lastTaggedTime = 0;
 
@@ -15,12 +14,10 @@ async function tagExpenses() {
         lastTaggedTime = lastTaggedTimeDoc.value;
         console.log("Last tagged time: ", new Date(lastTaggedTime).toLocaleString());
     } else {
-        // If no last tagged time, use a default time (e.g., 7 days ago)
         lastTaggedTime = Date.now() - (7 * 24 * 60 * 60 * 1000);
         console.log("No last tagged time found. Using default: ", new Date(lastTaggedTime).toLocaleString());
     }
 
-    // Fetch all expenses since last tagged time
     const url = "https://us-central1-finance-app-361514.cloudfunctions.net/getExpensesSinceDate";
     const data = {
         timestamp: lastTaggedTime
@@ -37,11 +34,9 @@ async function tagExpenses() {
 
     console.log("Found " + expenses.length + " expenses to process");
 
-    // Get all tag mappings
     const tagMap = getAllDoc(TagMap);
     console.log("Loaded " + tagMap.length + " tag mappings");
 
-    // Tag each expense
     let updatedCount = 0;
     for (const expense of expenses) {
         if (!expense.tag && expense.vendor) {
@@ -50,7 +45,7 @@ async function tagExpenses() {
 
             if (matchingTag) {
                 expense.tag = matchingTag.tag;
-                await addExpense(expense); // Update the expense with the new tag
+                await addExpense(expense);
                 updatedCount++;
                 console.log(`Tagged "${expense.vendor}" with "${matchingTag.tag}"`);
             }
@@ -59,7 +54,6 @@ async function tagExpenses() {
 
     console.log(`Tagged ${updatedCount} out of ${expenses.length} expenses`);
 
-    // Update the last tagged time
     const currentTime = Date.now();
     setOneDoc(Config, LastAccessedTime, currentTime);
     console.log("Updated last tagged time to: " + new Date(currentTime).toLocaleString());
