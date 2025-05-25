@@ -4,7 +4,7 @@ import './TagExpenses.scss';
 import Button from "@mui/material/Button";
 import {useSelector} from "react-redux";
 import {ExpenseAPI} from "../api/ExpenseAPI";
-import {hideTagExpense, selectExpense, setTagMap} from "../store/expenseActions";
+import {hideTagExpense, selectExpense, setTagMap, updateExpense} from "../store/expenseActions";
 import {getDateMonthTime, JSONCopy} from "../utility/utility";
 
 import Dialog from '@mui/material/Dialog';
@@ -18,9 +18,9 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks',
+const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'sports',
   'shopping', 'electronics' ,'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',
-  'parents-amazon', 'Skin & Hair', 'medical', 'clothes', 'fitness', 'invalid'];
+  'Skin & Hair', 'medical', 'clothes', 'fitness', 'invalid'];
 
 const TagExpenses: FC<any> = (): ReactElement => {
 
@@ -53,8 +53,10 @@ const TagExpenses: FC<any> = (): ReactElement => {
     }
 
     let expenseNew = JSONCopy(expense);
+    console.log("Saving expense with tag:", expenseNew);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);
+    updateExpense(expenseNew);
     hideTagExpense();
   };
 
