@@ -48,30 +48,30 @@ const Dashboard: React.FC = () => {
     {
       id: 'profile',
       title: 'Profile',
-      icon: <ProfileIcon fontSize="large" />,
+      icon: <ProfileIcon />,
       route: '/profile',
-      color: theme.palette.primary.main
+      color: '#90caf9' // Updated to match theme
     },
     {
       id: 'stats',
       title: 'Statistics',
-      icon: <StatsIcon fontSize="large" />,
+      icon: <StatsIcon />,
       route: '/stats',
-      color: theme.palette.secondary.main
+      color: '#81c784' // Updated to match theme
     },
     {
       id: 'config',
       title: 'Configuration',
-      icon: <ConfigIcon fontSize="large" />,
+      icon: <ConfigIcon />,
       route: '/config',
-      color: theme.palette.error.main
+      color: '#f48fb1' // Updated to match theme
     },
     {
       id: 'tags',
       title: 'Tags',
-      icon: <TagsIcon fontSize="large" />,
+      icon: <TagsIcon />,
       route: '/tag',
-      color: theme.palette.success.main
+      color: '#ce93d8' // Updated to match theme
     }
   ];
 
@@ -112,17 +112,14 @@ const Dashboard: React.FC = () => {
         transition={{ duration: 0.5 }}
         elevation={3}
         className="user-profile-paper"
-        style={{
-          background: `linear-gradient(45deg, ${theme.palette.primary.dark} 30%, ${theme.palette.primary.main} 90%)`
-        }}
       >
         <Box className="user-profile-box">
           <Avatar
             src={user.photoUrl}
-            className="user-avatar user-avatar-border"
+            className="user-avatar"
           />
           <Box className="user-info-box">
-            <Typography variant="h5" fontWeight="bold" color="white">
+            <Typography variant="h5">
               {user.name}
             </Typography>
             <Typography variant="body2" className="user-email">
@@ -143,7 +140,7 @@ const Dashboard: React.FC = () => {
         Dashboard
       </Typography>
 
-      <Divider className="dashboard-divider" />
+      {/*<Divider className="dashboard-divider" />*/}
 
       <motion.div
         variants={containerVariants}
@@ -157,32 +154,25 @@ const Dashboard: React.FC = () => {
                 <Card
                   elevation={4}
                   className="dashboard-tile-card"
-                  style={{
-                    background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`
-                  }}
                 >
                   <CardActionArea
                     onClick={() => handleTileClick(tile.route)}
                     className="dashboard-tile-action-area"
                   >
-                    <Box className="dashboard-tile-icon-box">
-                      <Avatar
-                        className="dashboard-tile-avatar"
-                        style={{ color: tile.color }}
-                      >
-                        {tile.icon}
-                      </Avatar>
-                    </Box>
-                    <CardContent className="dashboard-tile-content">
-                      <Typography
-                        variant="h6"
-                        component="div"
-                        className="dashboard-tile-title"
-                        style={{ color: tile.color }}
-                      >
-                        {tile.title}
-                      </Typography>
-                    </CardContent>
+                    <Avatar
+                      className="dashboard-tile-avatar"
+                      style={{ color: tile.color }}
+                    >
+                      {tile.icon}
+                    </Avatar>
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      className="dashboard-tile-title"
+                      style={{ color: tile.color }}
+                    >
+                      {tile.title}
+                    </Typography>
                   </CardActionArea>
                 </Card>
               </motion.div>

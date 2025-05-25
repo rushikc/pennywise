@@ -1,206 +1,61 @@
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.dashboard-title {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.add-transaction-button {
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.add-transaction-button:hover {
-  background-color: #45a049;
-}
-
-.cards-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 30%;
-}
-
-.card-income {
-  background-color: rgba(76, 175, 80, 0.1);
-}
-
-.card-expense {
-  background-color: rgba(244, 67, 54, 0.1);
-}
-
-.card-balance {
-  background-color: rgba(33, 150, 243, 0.1);
-}
-
-.card-title {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.card-amount {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.income-amount {
-  color: #4caf50;
-}
-
-.expense-amount {
-  color: #f44336;
-}
-
-.balance-amount {
-  color: #2196f3;
-}
-
-.transactions-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.transactions-table th,
-.transactions-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.transactions-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-.transactions-table tr:hover {
-  background-color: #f5f5f5;
-}
-
-.amount-income {
-  color: #4caf50;
-}
-
-.amount-expense {
-  color: #f44336;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.edit-button,
-.delete-button {
-  padding: 4px 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.edit-button {
-  background-color: #2196f3;
-  color: white;
-}
-
-.edit-button:hover {
-  background-color: #0b7dda;
-}
-
-.delete-button {
-  background-color: #f44336;
-  color: white;
-}
-
-.delete-button:hover {
-  background-color: #d32f2f;
-}
-
 .dashboard-main-container {
-  padding-bottom: 10px;
-  padding-top: 2px;
-  height: 100vh;
+  background: #181a1b;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .user-profile-paper {
-  padding: 3px;
-  margin-bottom: 3px;
-  border-radius: 2px;
+  background: #23272a !important;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .user-profile-box {
   display: flex;
   align-items: center;
-  margin-bottom: 2px;
+  gap: 16px;
 }
 
 .user-avatar {
-  width: 64px;
-  height: 64px;
-}
-
-.user-avatar-border {
-  border: 2px solid white;
+  width: 64px !important;
+  height: 64px !important;
+  background-color: #2a3035 !important;
+  color: #90caf9 !important;
 }
 
 .user-info-box {
-  margin-left: 2px;
+  .MuiTypography-h5 {
+    color: #e0e0e0;
+    font-weight: 600;
+  }
 }
 
 .user-email {
-  color: rgba(255,255,255,0.8);
+  color: #b0bec5;
 }
 
 .dashboard-title-text {
-  margin-bottom: 2px;
-  margin-left: 1px;
+  color: #e0e0e0;
+  margin: 20px 0 10px;
 }
 
 .dashboard-divider {
-  margin-bottom: 3px;
+  background-color: #3a4045;
+  margin-bottom: 20px;
 }
 
 .dashboard-tile-card {
+  background: #23272a !important;
+  border-radius: 16px;
   height: 160px;
-  border-radius: 2px;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
 
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30%;
-    height: 30%;
-    opacity: 0.2;
-    border-radius: 0 0 0 100%;
+  &:hover {
+    transform: scale(1.02);
+    background: #2a3035 !important;
   }
 }
 
@@ -208,38 +63,34 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 2px;
-}
-
-.dashboard-tile-icon-box {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2px;
+  padding: 16px;
+  text-align: center; /* Ensure text is centered */
 }
 
 .dashboard-tile-avatar {
-  background-color: rgba(255,255,255,0.1);
-  width: 56px;
-  height: 56px;
+  background-color: #2a3035 !important;
+  width: 56px !important;
+  height: 56px !important;
+  margin-bottom: 16px;
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
   transition: all 0.3s ease;
+  display: flex; /* Center icon inside avatar */
+  align-items: center;
+  justify-content: center;
 
-  &:hover {
-    transform: scale(1.1);
-    background-color: rgba(255,255,255,0.2);
+  svg {
+    font-size: 28px;
   }
-}
-
-.dashboard-tile-content {
-  padding: 0;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  text-align: center;
 }
 
 .dashboard-tile-title {
-  font-weight: medium;
+  color: #e0e0e0;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%; /* Ensure title takes full width of container */
+  text-align: center; /* Center text */
 }
+
