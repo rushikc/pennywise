@@ -1,57 +1,53 @@
-$red : #e97878;
-$purple-light : rgb(103, 125, 247);
+$red: #e97878;
+$purple-light: rgb(103, 125, 247);
 
 .tag-text-red {
-    font-size: 10px;
-    border: solid $red 1px;
-    border-radius: 10px;
-    padding: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-    color: $red;
+  font-size: 10px;
+  border: solid $red 1px;
+  border-radius: 10px;
+  padding: 2px 4px;
+  color: $red;
 }
 
 .tag-text-purple-light {
-    font-size: 10px;
-    border: solid $purple-light 1px;
-    border-radius: 10px;
-    padding: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-    color: $purple-light;
+  font-size: 10px;
+  border: solid $purple-light 1px;
+  border-radius: 10px;
+  padding: 2px 4px;
+  color: $purple-light;
 }
 
 .button-class {
-    width: '200px'
+  width: 200px
 }
 
 .d-flex-center {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .font-600 {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .font-12 {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .font-15 {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .pt-10 {
-    padding-top: 10rem;
+  padding-top: 10rem;
 }
 
 .no-padding {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .no-padding-margin {
-    padding: 0 !important;
-    margin: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 

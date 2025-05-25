@@ -13,6 +13,10 @@ export const getCurrentDate = () => {
     return dayjs().format('DD-MM-YY');
 }
 
+export const getDateFormat = (date = new Date()) => {
+    return dayjs(date).format('YYYY-MM-DD');
+}
+
 
 export const getDateMonth = (date: Date) => {
     return dayjs(date).format('DD MMM');
