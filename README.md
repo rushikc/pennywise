@@ -1,7 +1,20 @@
+# Expense Tracker [MyExpense]
+
+Expense tracker is a web application designed to help users manage their personal finances by tracking expenses.
+It provides a user-friendly interface for adding, editing, and deleting transactions, as well as generating graphs to visualize spending patterns.
+
+## License
+
+This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+**Disclaimer:** This license allows you to use, share, and adapt the software for non-commercial purposes, with attribution, and requires that any derivatives are also licensed under the same terms. For commercial use, please contact
+Rushi - [LinkedIn](www.linkedin.com/in/rushikc) or [Email](rushilc.dev@gmail.com).
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 
 
 ## Available Scripts
