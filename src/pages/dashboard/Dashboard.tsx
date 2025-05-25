@@ -20,6 +20,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import './dashboard.scss';
 
 // If you don't have framer-motion, you'll need to install it:
 // npm install framer-motion
@@ -102,12 +103,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{
-      pb: 10, // Add padding at bottom to accommodate the bottom nav bar
-      pt: 2,
-      height: '100vh',
-      bgcolor: theme.palette.background.default
-    }}>
+    <Container maxWidth="sm" className="dashboard-main-container">
       {/* User Profile Section */}
       <Paper
         component={motion.div}
@@ -115,27 +111,21 @@ const Dashboard: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         elevation={3}
-        sx={{
-          p: 3,
-          mb: 3,
-          borderRadius: 2,
-          background: `linear-gradient(45deg, ${theme.palette.primary.dark} 30%, ${theme.palette.primary.main} 90%)`,
+        className="user-profile-paper"
+        style={{
+          background: `linear-gradient(45deg, ${theme.palette.primary.dark} 30%, ${theme.palette.primary.main} 90%)`
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box className="user-profile-box">
           <Avatar
             src={user.photoUrl}
-            sx={{
-              width: 64,
-              height: 64,
-              border: `2px solid ${theme.palette.common.white}`
-            }}
+            className="user-avatar user-avatar-border"
           />
-          <Box sx={{ ml: 2 }}>
+          <Box className="user-info-box">
             <Typography variant="h5" fontWeight="bold" color="white">
               {user.name}
             </Typography>
-            <Typography variant="body2" color="rgba(255,255,255,0.8)">
+            <Typography variant="body2" className="user-email">
               {user.email}
             </Typography>
           </Box>
@@ -148,12 +138,12 @@ const Dashboard: React.FC = () => {
         component={motion.div}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        sx={{ mb: 2, ml: 1 }}
+        className="dashboard-title-text"
       >
         Dashboard
       </Typography>
 
-      <Divider sx={{ mb: 3 }} />
+      <Divider className="dashboard-divider" />
 
       <motion.div
         variants={containerVariants}
@@ -166,72 +156,29 @@ const Dashboard: React.FC = () => {
               <motion.div variants={itemVariants}>
                 <Card
                   elevation={4}
-                  sx={{
-                    height: 160,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`,
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      width: '30%',
-                      height: '30%',
-                      backgroundColor: tile.color,
-                      opacity: 0.2,
-                      borderRadius: '0 0 0 100%'
-                    }
+                  className="dashboard-tile-card"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`
                   }}
                 >
                   <CardActionArea
                     onClick={() => handleTileClick(tile.route)}
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      p: 2
-                    }}
+                    className="dashboard-tile-action-area"
                   >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        mb: 2
-                      }}
-                    >
+                    <Box className="dashboard-tile-icon-box">
                       <Avatar
-                        sx={{
-                          bgcolor: 'rgba(255,255,255,0.1)',
-                          color: tile.color,
-                          width: 56,
-                          height: 56,
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            transform: 'scale(1.1)',
-                            bgcolor: 'rgba(255,255,255,0.2)'
-                          }
-                        }}
+                        className="dashboard-tile-avatar"
+                        style={{ color: tile.color }}
                       >
                         {tile.icon}
                       </Avatar>
                     </Box>
-                    <CardContent
-                      sx={{
-                        p: 0,
-                        '&:last-child': { pb: 0 },
-                        textAlign: 'center'
-                      }}
-                    >
+                    <CardContent className="dashboard-tile-content">
                       <Typography
                         variant="h6"
                         component="div"
-                        sx={{
-                          fontWeight: 'medium',
-                          color: tile.color
-                        }}
+                        className="dashboard-tile-title"
+                        style={{ color: tile.color }}
                       >
                         {tile.title}
                       </Typography>
