@@ -6,7 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import GroupIcon from '@mui/icons-material/ViewModule';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import {Avatar, Chip, InputAdornment, TextField, Fab, Zoom, IconButton} from '@mui/material';
+import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
@@ -366,6 +366,9 @@ const Home: FC<any> = (): ReactElement => {
             <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
           </Col>
           <Col xs="auto" className='d-flex justify-content-end mr-2'>
+            <span className='expense-type'>
+              {expense.type.includes('debit') ? '-' : '+'}
+            </span>
             <span className="expense-currency">₹</span>
             <span className="expense-cost">{expense.cost}</span>
           </Col>

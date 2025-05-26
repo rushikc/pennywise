@@ -1,379 +1,387 @@
 .home-root {
-  background: #181a1b;
-  min-height: 100vh;
-  position: relative;
-  /* Add space for the filter button at bottom */
-  padding: 20px 20px 80px;
+    background: #181a1b;
+    min-height: 100vh;
+    position: relative;
+    /* Add space for the filter button at bottom */
+    padding: 20px 20px 80px;
 }
 
 /* Search styles */
 .search-container {
-  position: sticky;
-  top: 0;
-  z-index: 101; /* Higher than the filter panel z-index */
-  /* Offset the padding */
-  margin: -10px -10px 20px;
-  padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 101; /* Higher than the filter panel z-index */
+    /* Offset the padding */
+    margin: -10px -10px 20px;
+    padding: 10px;
 
-  .MuiOutlinedInput-root {
-    border-radius: 12px;
-    background-color: #23272a;
+    .MuiOutlinedInput-root {
+        border-radius: 12px;
+        background-color: #23272a;
 
-    &:hover .MuiOutlinedInput-notchedOutline {
-      border-color: #3a4045;
+        &:hover .MuiOutlinedInput-notchedOutline {
+            border-color: #3a4045;
+        }
+
+        &.Mui-focused .MuiOutlinedInput-notchedOutline {
+            border-color: #90caf9;
+            border-width: 1px;
+        }
     }
 
-    &.Mui-focused .MuiOutlinedInput-notchedOutline {
-      border-color: #90caf9;
-      border-width: 1px;
+    .search-input {
+        color: #e0e0e0;
+
+        &::placeholder {
+            color: #9e9e9e;
+            opacity: 0.8;
+        }
     }
-  }
 
-  .search-input {
-    color: #e0e0e0;
-
-    &::placeholder {
-      color: #9e9e9e;
-      opacity: 0.8;
+    .search-icon {
+        color: #90caf9;
     }
-  }
 
-  .search-icon {
-    color: #90caf9;
-  }
-
-  .MuiOutlinedInput-notchedOutline {
-    border-color: #3a4045;
-  }
+    .MuiOutlinedInput-notchedOutline {
+        border-color: #3a4045;
+    }
 }
 
 .home-list {
-  display: flex;
-  flex-direction: column;
-  gap: 22px; /* Increased from 20px by 10% */
+    display: flex;
+    flex-direction: column;
+    gap: 22px; /* Increased from 20px by 10% */
 }
 
 /* Group box styles */
 .group-box {
-  display: flex;
-  flex-direction: column;
-  background: #23272a;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: transform 0.5s ease-in-out; /* Slower transform */
+    display: flex;
+    flex-direction: column;
+    background: #23272a;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.5s ease-in-out; /* Slower transform */
 
-  &.collapsed {
-    transform: scale(0.99);
-  }
+    &.collapsed {
+        transform: scale(0.99);
+    }
 }
 
 .group-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  background: #2a3035;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #2a3035;
+    cursor: pointer;
+    transition: background-color 0.2s;
 
-  &:hover {
-    background: #323a42;
-  }
+    &:hover {
+        background: #323a42;
+    }
 }
 
 .group-title {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .group-label {
-  font-weight: 700;
-  font-size: 16px;
-  color: #e0e0e0;
+    font-weight: 700;
+    font-size: 16px;
+    color: #e0e0e0;
 }
 
 .expense-count {
-  font-size: 13px;
-  color: #b0bec5;
-  margin-top: 2px;
+    font-size: 13px;
+    color: #b0bec5;
+    margin-top: 2px;
 }
 
 .group-summary {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .total-amount {
-  font-weight: 700;
-  font-size: 18px;
-  color: #81c784;
-  margin-right: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    color: #81c784;
+    margin-right: 8px;
 }
 
 .collapse-button {
-  padding: 6px !important;
-  color: #90caf9 !important;
-  transition: transform 0.6s ease; /* Slower rotation */
+    padding: 6px !important;
+    color: #90caf9 !important;
+    transition: transform 0.6s ease; /* Slower rotation */
 
-  &.collapsed {
-    transform: rotate(-180deg);
-  }
+    &.collapsed {
+        transform: rotate(-180deg);
+    }
 }
 
 .group-expenses {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: #212529;
-  overflow: hidden;
-  transition: max-height 0.8s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.6s ease; /* Slower transitions with smoother easing */
-  opacity: 1;
-  transform-origin: top;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: #212529;
+    overflow: hidden;
+    transition: max-height 0.8s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.6s ease; /* Slower transitions with smoother easing */
+    opacity: 1;
+    transform-origin: top;
 
-  &.collapsing {
-    max-height: 0;
-    opacity: 0;
-  }
+    &.collapsing {
+        max-height: 0;
+        opacity: 0;
+    }
 }
 
 /* Expense row within group */
 .expense-row {
-  background: #23272a;
-  border-radius: 0; /* Remove border radius for items inside group */
-  box-shadow: none; /* Remove individual shadow */
-  padding: 18px 22px; /* Slightly reduced padding */
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin: 0;
-  min-height: 0;
-  border-bottom: 1px solid #212529;
+    background: #23272a;
+    border-radius: 0; /* Remove border radius for items inside group */
+    box-shadow: none; /* Remove individual shadow */
+    padding: 18px 22px; /* Slightly reduced padding */
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin: 0;
+    min-height: 0;
+    border-bottom: 1px solid #212529;
 
-  &:last-child {
-    border-bottom: none;
-  }
+    &:last-child {
+        border-bottom: none;
+    }
 
-  &:hover {
-    background: #2a3035;
-  }
+    &:hover {
+        background: #2a3035;
+    }
 }
 
 /* First and last items in group get rounded corners */
 .group-expenses .expense-row:first-child {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .group-expenses .expense-row:last-child {
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .expense-avatar {
-  margin: 0 5px;
-  background: #263238 !important;
-  color: #90caf9 !important;
-  width: 43px !important; /* Increased from 39px by ~10% */
-  height: 43px !important; /* Increased from 39px by ~10% */
-  font-size: 23px !important; /* Increased from 21px by ~10% */
+    margin: 0 5px;
+    background: #263238 !important;
+    color: #90caf9 !important;
+    width: 43px !important; /* Increased from 39px by ~10% */
+    height: 43px !important; /* Increased from 39px by ~10% */
+    font-size: 23px !important; /* Increased from 21px by ~10% */
 }
 
 .expense-row-header {
-  align-items: center;
-  margin-bottom: 4px; /* Keep as is, 4px is small enough */
+    align-items: center;
+    margin-bottom: 4px; /* Keep as is, 4px is small enough */
 }
 
 .vendor-name {
-  font-weight: 600;
-  font-size: 15px; /* Increased from 14px by ~10% */
-  color: #e0e0e0;
-  letter-spacing: 0.1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 161px; /* Increased from 146px by 10% */
-  display: inline-block;
+    font-weight: 600;
+    font-size: 15px; /* Increased from 14px by ~10% */
+    color: #e0e0e0;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 161px; /* Increased from 146px by 10% */
+    display: inline-block;
 }
 
+.expense-type {
+    font-weight: 700;
+    font-size: 18px;
+    margin-right: 5px;
+    color: #81c784;
+}
+
+
 .expense-currency {
-  font-weight: 700;
-  font-size: 18px; /* Increased from 16px by ~10% */
-  color: #81c784;
-  margin-right: 2px;
+    font-weight: 700;
+    font-size: 18px; /* Increased from 16px by ~10% */
+    color: #81c784;
+    margin-right: 2px;
 }
 
 .expense-cost {
-  font-weight: 700;
-  font-size: 18px; /* Increased from 16px by ~10% */
-  color: #81c784;
+    font-weight: 700;
+    font-size: 18px; /* Increased from 16px by ~10% */
+    color: #81c784;
 }
 
 .expense-date-row {
-  margin-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 .expense-date {
-  font-weight: 500;
-  font-size: 11px; /* Increased from 10px by 10% */
-  color: #b0bec5;
+    font-weight: 500;
+    font-size: 11px; /* Increased from 10px by 10% */
+    color: #b0bec5;
 }
 
 /* Filter styles */
 .no-expenses {
-  color: #aaa;
-  text-align: center;
-  padding: 20px;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
 }
 
 /* Buttons container for Filter and Group By buttons */
 .buttons-container {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 90;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
 .filter-button, .group-by-button {
-  .MuiChip-root {
-    background-color: #2a3242; /* Subtle blue-gray that's still visible but not too bright */
-    color: #e0e0e0; /* Softer white text */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Moderate shadow */
-    height: 40px;
-    padding: 0 15px;
-    border: 1px solid #475366; /* Subtle border that provides definition */
-    font-weight: 400; /* Standard weight */
+    .MuiChip-root {
+        background-color: #2a3242; /* Subtle blue-gray that's still visible but not too bright */
+        color: #e0e0e0; /* Softer white text */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Moderate shadow */
+        height: 40px;
+        padding: 0 15px;
+        border: 1px solid #475366; /* Subtle border that provides definition */
+        font-weight: 400; /* Standard weight */
 
-    .MuiChip-icon {
-      color: #90caf9;
-    }
+        .MuiChip-icon {
+            color: #90caf9;
+        }
 
-    /* Subtle hover effect */
-    &:hover {
-      background-color: #384256; /* Slightly lighter on hover */
-      border-color: #5d77a6; /* Slightly brighter border on hover */
+        /* Subtle hover effect */
+        &:hover {
+            background-color: #384256; /* Slightly lighter on hover */
+            border-color: #5d77a6; /* Slightly brighter border on hover */
+        }
     }
-  }
 }
 
 .filter-panel, .group-by-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 56px;
-  background-color: #2a3035; /* Slightly lighter than the main background for contrast */
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
-  z-index: 100;
-  padding-bottom: 20px;
-  animation: slideUp 0.2s ease-out;
-  border: 1px solid #3a4045; /* Add subtle border for more distinction */
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    background-color: #2a3035; /* Slightly lighter than the main background for contrast */
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
+    z-index: 100;
+    padding-bottom: 20px;
+    animation: slideUp 0.2s ease-out;
+    border: 1px solid #3a4045; /* Add subtle border for more distinction */
 
-  .filter-options, .group-by-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 30px 20px 10px;
+    .filter-options, .group-by-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 30px 20px 10px;
 
-    .filter-chip {
-      margin: 5px;
-      /* Make unselected chips stand out better against the panel background */
-      &.MuiChip-outlined {
-        border-color: #4a5055;
-        background-color: #232729;
-      }
+        .filter-chip {
+            margin: 5px;
+            /* Make unselected chips stand out better against the panel background */
+            &.MuiChip-outlined {
+                border-color: #4a5055;
+                background-color: #232729;
+            }
+        }
     }
-  }
 }
 
 /* Scroll to top button */
 .scroll-top-button {
-  position: fixed !important;
-  bottom: 195px; /* Position above the filter button */
-  right: 25px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
-  z-index: 90;
-  background-color: #2a3035 !important;
-  color: white !important;
-  transition: background-color 0.3s ease, transform 0.3s ease !important;
+    position: fixed !important;
+    bottom: 195px; /* Position above the filter button */
+    right: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+    z-index: 90;
+    background-color: #2a3035 !important;
+    color: white !important;
+    transition: background-color 0.3s ease, transform 0.3s ease !important;
 
-  &:hover {
-    background-color: #3a4045 !important;
-  }
+    &:hover {
+        background-color: #3a4045 !important;
+    }
 
-  .MuiSvgIcon-root {
-    color: #90caf9;
-  }
+    .MuiSvgIcon-root {
+        color: #90caf9;
+    }
 }
 
 /* Collapse all button */
 .collapse-all-button {
-  position: fixed !important;
-  bottom: 140px; /* Position below the scroll to top button */
-  right: 25px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
-  z-index: 90;
-  background-color: #2a3035 !important;
-  color: white !important;
-  transition: background-color 0.3s ease, transform 0.3s ease !important;
+    position: fixed !important;
+    bottom: 140px; /* Position below the scroll to top button */
+    right: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+    z-index: 90;
+    background-color: #2a3035 !important;
+    color: white !important;
+    transition: background-color 0.3s ease, transform 0.3s ease !important;
 
-  &:hover {
-    background-color: #3a4045 !important;
-  }
+    &:hover {
+        background-color: #3a4045 !important;
+    }
 
-  .MuiSvgIcon-root {
-    color: #90caf9;
-  }
+    .MuiSvgIcon-root {
+        color: #90caf9;
+    }
 
-  /* Add subtle pulse animation when state changes */
-  &.state-changed {
-    animation: buttonPulse 0.4s ease;
-  }
+    /* Add subtle pulse animation when state changes */
+    &.state-changed {
+        animation: buttonPulse 0.4s ease;
+    }
 }
 
 /* Animation for the collapse all button when state changes */
 @keyframes buttonPulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Add scrolling class to be applied when user is scrolling */
 .scrolling .scroll-top-button {
-  animation: pulseButton 0.5s ease;
+    animation: pulseButton 0.5s ease;
 }
 
 /* Animation for the scroll-to-top button when scrolling */
 @keyframes pulseButton {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 
 /* Animation for the filter panel */
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
