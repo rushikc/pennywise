@@ -61,7 +61,8 @@ function App() {
 
         <Routes>
           <Route path='/home' element={<Home />} />
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/profile' element={<Dashboard />} />
+          <Route path='/stats' element={<Statistics />} />
           <Route path='/tag' element={<TagList />} />
           <Route path='/Update' element={<UpdateGmail />} />
           <Route path='/profile' element={<Profile />} />

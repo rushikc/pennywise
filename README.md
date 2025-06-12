@@ -5,11 +5,7 @@ It provides a user-friendly interface for adding, editing, and deleting transact
 
 ## License
 
-This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-
-**Disclaimer:** This license allows you to use, share, and adapt the software for non-commercial purposes, with attribution, and requires that any derivatives are also licensed under the same terms. For commercial use, please contact
-Rushi - [LinkedIn](www.linkedin.com/in/rushikc) or [Email](rushilc.dev@gmail.com).
-
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 
 # Getting Started with Create React App

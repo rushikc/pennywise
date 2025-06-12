@@ -306,7 +306,7 @@
     bottom: 195px; /* Position above the filter button */
     right: 25px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
-    z-index: 90;
+    z-index: 90 !important;
     background-color: #2a3035 !important;
     color: white !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;
@@ -326,7 +326,7 @@
     bottom: 140px; /* Position below the scroll to top button */
     right: 25px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
-    z-index: 90;
+    z-index: 90 !important;
     background-color: #2a3035 !important;
     color: white !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;

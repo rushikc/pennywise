@@ -1,56 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Container,
   Box,
-  Typography,
-  Paper,
-  Grid,
-  useTheme,
-  IconButton,
   Button,
   ButtonGroup,
-  Divider,
-  MenuItem,
-  Select,
+  Container,
   FormControl,
-  InputLabel,
-  SelectChangeEvent
+  Grid,
+  IconButton,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Typography,
+  useTheme
 } from '@mui/material';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion';
 import {
   ArrowBack as BackIcon,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
   DateRange as DateRangeIcon,
   PieChart as PieChartIcon,
-  Timeline as TimelineIcon
+  Timeline as TimelineIcon,
+  TrendingDown as TrendingDownIcon,
+  TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { ExpenseAPI } from '../../api/ExpenseAPI';
-import { sortByKeyDate } from '../../utility/utility';
+import {useNavigate} from 'react-router-dom';
+import {ExpenseAPI} from '../../api/ExpenseAPI';
+import {sortByKeyDate} from '../../utility/utility';
 
 // You'll need to install recharts:
 // npm install recharts --save
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend
-} from 'recharts';
+import Loading from "../../components/Loading";
 
 // Interface for expense data
 interface Expense {
   id: string;
-  amount: number;
+  cost: number;
   date: string;
   category: string;
   description: string;
@@ -61,7 +45,7 @@ const Statistics: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('month');
   const [chartType, setChartType] = useState('spending');
 
@@ -97,7 +81,7 @@ const Statistics: React.FC = () => {
   // Filter expenses based on selected time range
   const getFilteredExpenses = () => {
     const now = new Date();
-    const filtered = expenses.filter(expense => {
+    return expenses.filter(expense => {
       const expenseDate = new Date(expense.date);
       if (timeRange === 'week') {
         const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -111,7 +95,6 @@ const Statistics: React.FC = () => {
       }
       return true; // Show all if 'all' is selected
     });
-    return filtered;
   };
 
   // Generate spending by category data for pie chart
@@ -122,7 +105,7 @@ const Statistics: React.FC = () => {
     filtered.forEach(expense => {
       const category = expense.category || 'Uncategorized';
       const currentAmount = categoryMap.get(category) || 0;
-      categoryMap.set(category, currentAmount + expense.amount);
+      categoryMap.set(category, currentAmount + expense.cost);
     });
 
     const categoryData = Array.from(categoryMap.entries()).map(([name, value]) => ({
@@ -141,13 +124,13 @@ const Statistics: React.FC = () => {
     filtered.forEach(expense => {
       const dateStr = new Date(expense.date).toLocaleDateString();
       const currentAmount = dailyMap.get(dateStr) || 0;
-      dailyMap.set(dateStr, currentAmount + expense.amount);
+      dailyMap.set(dateStr, currentAmount + expense.cost);
     });
 
     const dailyData = Array.from(dailyMap.entries())
-      .map(([date, amount]) => ({
+      .map(([date, cost]) => ({
         date,
-        amount
+        cost
       }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -162,7 +145,8 @@ const Statistics: React.FC = () => {
   // Calculate total spending
   const getTotalSpending = () => {
     const filtered = getFilteredExpenses();
-    return filtered.reduce((sum, expense) => sum + Number(expense.amount), 0).toFixed(2);
+    // console.log("Filtered Expenses: ", filtered);
+    return filtered.reduce((sum, expense) => sum + Number(expense.cost), 0).toFixed(2);
   };
 
   // Calculate average daily spending
@@ -170,7 +154,7 @@ const Statistics: React.FC = () => {
     const filtered = getFilteredExpenses();
     if (filtered.length === 0) return '0.00';
 
-    const totalAmount = filtered.reduce((sum, expense) => sum + Number(expense.amount), 0);
+    const totalAmount = filtered.reduce((sum, expense) => sum + Number(expense.cost), 0);
     const uniqueDates = new Set(filtered.map(expense =>
       new Date(expense.date).toLocaleDateString()
     ));
@@ -186,6 +170,10 @@ const Statistics: React.FC = () => {
   const handleChartTypeChange = (type: string) => {
     setChartType(type);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container maxWidth="sm" sx={{ pb: 10, pt: 2 }}>
@@ -247,8 +235,8 @@ const Statistics: React.FC = () => {
                 Total Spending
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
-                <Typography variant="h4" fontWeight="bold" color="white">
-                  ${getTotalSpending()}
+                <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
+                  ₹{getTotalSpending()}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
@@ -281,7 +269,7 @@ const Statistics: React.FC = () => {
                 Daily Average
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
-                <Typography variant="h4" fontWeight="bold" color="white">
+                <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
                   ${getAverageDailySpending()}
                 </Typography>
               </Box>
@@ -316,88 +304,7 @@ const Statistics: React.FC = () => {
         </ButtonGroup>
       </Box>
 
-      {/* Charts */}
-      <Paper
-        component={motion.div}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        elevation={3}
-        sx={{
-          p: 3,
-          mb: 3,
-          borderRadius: 2,
-          height: 400,
-          background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`,
-        }}
-      >
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <Typography>Loading data...</Typography>
-          </Box>
-        ) : (
-          chartType === 'spending' ? (
-            <Box sx={{ width: '100%', height: '100%' }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Daily Spending Trend
-              </Typography>
-              <ResponsiveContainer width="100%" height="80%">
-                <BarChart
-                  data={getDailySpendingData()}
-                  margin={{ top: 10, right: 10, left: 0, bottom: 30 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="date"
-                    angle={-45}
-                    textAnchor="end"
-                    height={70}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis />
-                  <Tooltip
-                    formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Amount']}
-                  />
-                  <Bar
-                    dataKey="amount"
-                    name="Spending"
-                    fill={theme.palette.primary.main}
-                    animationDuration={1500}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-          ) : (
-            <Box sx={{ width: '100%', height: '100%' }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Spending by Category
-              </Typography>
-              <ResponsiveContainer width="100%" height="80%">
-                <PieChart>
-                  <Pie
-                    data={getCategoryData()}
-                    innerRadius={60}
-                    outerRadius={120}
-                    paddingAngle={5}
-                    dataKey="value"
-                    nameKey="name"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    labelLine={false}
-                    animationDuration={1500}
-                  >
-                    {getCategoryData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Amount']}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </Box>
-          )
-        )}
-      </Paper>
+
     </Container>
   );
 };

@@ -26,13 +26,16 @@ declare global {
 }
 
 // Define date range options
-type DateRange = '1d' | '7d' | '14d' | '30d';
+type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
 
 const filterOptions: {id: DateRange, label: string}[] = [
   { id: '1d', label: '1 Day' },
   { id: '7d', label: '7 Days' },
   { id: '14d', label: '2 Weeks' },
   { id: '30d', label: '1 Month' },
+  { id: '90d', label: '3 Month' },
+  { id: '180d', label: '6 Month' },
+  { id: '366d', label: '1 year' },
 ];
 
 // Define group by options
@@ -55,9 +58,10 @@ interface GroupedExpenses {
 }
 
 const Home: FC<any> = (): ReactElement => {
-  const { expenseList, isAppLoading } = useSelector(selectExpense);
+  const { expenseList } = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [isLoading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
@@ -140,6 +144,9 @@ const Home: FC<any> = (): ReactElement => {
       case '7d': startDate = now.subtract(7, 'day'); break;
       case '14d': startDate = now.subtract(14, 'day'); break;
       case '30d': startDate = now.subtract(30, 'day'); break;
+      case '90d': startDate = now.subtract(90, 'day'); break;
+      case '180d': startDate = now.subtract(180, 'day'); break;
+      case '366d': startDate = now.subtract(366, 'day'); break;
       default: startDate = now.subtract(7, 'day');
     }
 
@@ -175,6 +182,7 @@ const Home: FC<any> = (): ReactElement => {
 
   // Group expenses based on selected grouping option
   useEffect(() => {
+
     if (filteredExpenses.length === 0) {
       setGroupedExpenses({});
       return;
@@ -236,9 +244,10 @@ const Home: FC<any> = (): ReactElement => {
           totalAmount: 0
         };
         // Initialize as expanded
-        if (collapsedGroups[groupKey] === undefined) {
-          setCollapsedGroups(prev => ({ ...prev, [groupKey]: false }));
-        }
+        // if (collapsedGroups[groupKey] === undefined) {
+        //   setCollapsedGroups(prev => ({ ...prev, [groupKey]: groupKey !== 'days' }));
+        // }
+        setCollapsedGroups(prev => ({ ...prev, [groupKey]: selectedGroupBy !== 'days' }));
       }
 
       grouped[groupKey].expenses.push(expense);
@@ -246,6 +255,8 @@ const Home: FC<any> = (): ReactElement => {
     });
 
     setGroupedExpenses(grouped);
+    setLoading(false);
+
   }, [filteredExpenses, selectedGroupBy]);
 
   // Toggle collapse state for a group
@@ -350,6 +361,7 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle group by option selection
   const handleGroupByChange = (option: GroupByOption) => {
+    setLoading(true);
     setSelectedGroupBy(option);
     setShowGroupByOptions(false);
   };
@@ -395,7 +407,7 @@ const Home: FC<any> = (): ReactElement => {
       <div key={groupKey} className={`group-box ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="group-header" onClick={() => toggleGroupCollapse(groupKey)}>
           <div className="group-title">
-            <span className="group-label">{groupData.groupLabel}</span>
+            <span className="group-label">{groupData.groupLabel.toLowerCase()}</span>
             <span className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
           </div>
           <div className="group-summary">
@@ -413,141 +425,139 @@ const Home: FC<any> = (): ReactElement => {
     );
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className="home-root">
-      {isAppLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <div className="search-container">
-            <TextField
-              fullWidth
-              placeholder="Search expenses..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon className="search-icon" />
-                  </InputAdornment>
-                ),
-                className: "search-input"
-              }}
-            />
-          </div>
+      <div className="search-container">
+        <TextField
+          fullWidth
+          placeholder="Search expenses..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input"
+          }}
+        />
+      </div>
 
-          <div className="home-list">
-            {filteredExpenses.length === 0 ? (
-              <div className="no-expenses">
-                {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
-              </div>
-            ) : (
-              Object.entries(groupedExpenses)
-                .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
-                  // Custom sorting based on grouping type
-                  if (selectedGroupBy === 'days') {
-                    return keyB.localeCompare(keyA); // Sort dates newest first
-                  } else if (selectedGroupBy === 'cost') {
-                    // For cost ranges, sort by total amount highest to lowest
-                    return groupDataB.totalAmount - groupDataA.totalAmount;
-                  } else if (selectedGroupBy === 'vendor' || selectedGroupBy === 'tags') {
-                    // For vendor and tags, sort by total amount highest to lowest
-                    return groupDataB.expenses.length - groupDataA.expenses.length;
-                  } else {
-                    // Default alphabetical sorting
-                    return keyA.localeCompare(keyB);
-                  }
-                })
-                .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
-            )}
+      <div className="home-list">
+        {filteredExpenses.length === 0 ? (
+          <div className="no-expenses">
+            {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
           </div>
+        ) : (
+          Object.entries(groupedExpenses)
+            .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
+              // Custom sorting based on grouping type
+              if (selectedGroupBy === 'days') {
+                return keyB.localeCompare(keyA); // Sort dates newest first
+              } else if (selectedGroupBy === 'cost') {
+                // For cost ranges, sort by total amount highest to lowest
+                return groupDataB.totalAmount - groupDataA.totalAmount;
+              } else if (selectedGroupBy === 'vendor' || selectedGroupBy === 'tags') {
+                // For vendor and tags, sort by total amount highest to lowest
+                return groupDataB.expenses.length - groupDataA.expenses.length;
+              } else {
+                // Default alphabetical sorting
+                return keyA.localeCompare(keyB);
+              }
+            })
+            .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
+        )}
+      </div>
 
-          {/* Filter button & Group by button container */}
-          <div className="buttons-container">
-            {/* Filter button */}
-            <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+      {/* Filter button & Group by button container */}
+      <div className="buttons-container">
+        {/* Filter button */}
+        <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+          <Chip
+            icon={<FilterListIcon />}
+            label={filterOptions.find(option => option.id === selectedRange)?.label}
+            color="primary"
+            clickable
+          />
+        </div>
+
+        {/* Group by button */}
+        <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
+          <Chip
+            icon={<GroupIcon />}
+            label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
+            color="primary"
+            clickable
+          />
+        </div>
+      </div>
+
+      {/* Filter panel */}
+      {showFilters && (
+        <div className="filter-panel" ref={filterPanelRef}>
+          <div className="filter-options">
+            {filterOptions.map(option => (
               <Chip
-                icon={<FilterListIcon />}
-                label={filterOptions.find(option => option.id === selectedRange)?.label}
+                key={option.id}
+                label={option.label}
                 color="primary"
-                clickable
+                variant={selectedRange === option.id ? "filled" : "outlined"}
+                onClick={() => handleRangeChange(option.id)}
+                className="filter-chip"
               />
-            </div>
-
-            {/* Group by button */}
-            <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
-              <Chip
-                icon={<GroupIcon />}
-                label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
-                color="primary"
-                clickable
-              />
-            </div>
+            ))}
           </div>
+        </div>
+      )}
 
-          {/* Filter panel */}
-          {showFilters && (
-            <div className="filter-panel" ref={filterPanelRef}>
-              <div className="filter-options">
-                {filterOptions.map(option => (
-                  <Chip
-                    key={option.id}
-                    label={option.label}
-                    color="primary"
-                    variant={selectedRange === option.id ? "filled" : "outlined"}
-                    onClick={() => handleRangeChange(option.id)}
-                    className="filter-chip"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+      {/* Group by panel */}
+      {showGroupByOptions && (
+        <div className="group-by-panel" ref={groupByPanelRef}>
+          <div className="group-by-options">
+            {groupByOptions.map(option => (
+              <Chip
+                key={option.id}
+                label={option.label}
+                color="primary"
+                variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+                onClick={() => handleGroupByChange(option.id)}
+                className="filter-chip"
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
-          {/* Group by panel */}
-          {showGroupByOptions && (
-            <div className="group-by-panel" ref={groupByPanelRef}>
-              <div className="group-by-options">
-                {groupByOptions.map(option => (
-                  <Chip
-                    key={option.id}
-                    label={option.label}
-                    color="primary"
-                    variant={selectedGroupBy === option.id ? "filled" : "outlined"}
-                    onClick={() => handleGroupByChange(option.id)}
-                    className="filter-chip"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+      {/* Scroll to top button */}
+      <Zoom in={showScrollTop}>
+        <Fab
+          color="primary"
+          size="medium"
+          aria-label="scroll back to top"
+          onClick={scrollToTop}
+          className="scroll-top-button"
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Zoom>
 
-          {/* Scroll to top button */}
-          <Zoom in={showScrollTop}>
-            <Fab
-              color="primary"
-              size="medium"
-              aria-label="scroll back to top"
-              onClick={scrollToTop}
-              className="scroll-top-button"
-            >
-              <KeyboardArrowUpIcon />
-            </Fab>
-          </Zoom>
-
-          {/* Collapse all button - only show when we have expenses */}
-          {filteredExpenses.length > 0 && (
-            <Fab
-              color="primary"
-              size="medium"
-              aria-label={allCollapsed ? "expand all groups" : "collapse all groups"}
-              onClick={toggleAllGroupsCollapse}
-              className="collapse-all-button"
-            >
-              {allCollapsed ? <UnfoldMoreIcon /> : <UnfoldLessIcon />}
-            </Fab>
-          )}
-        </>
+      {/* Collapse all button - only show when we have expenses */}
+      {filteredExpenses.length > 0 && (
+        <Fab
+          color="primary"
+          size="medium"
+          aria-label={allCollapsed ? "expand all groups" : "collapse all groups"}
+          onClick={toggleAllGroupsCollapse}
+          className="collapse-all-button"
+        >
+          {allCollapsed ? <UnfoldMoreIcon /> : <UnfoldLessIcon />}
+        </Fab>
       )}
     </div>
   );

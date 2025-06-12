@@ -1,10 +1,10 @@
 import HomeIcon from '@mui/icons-material/Home';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 export default function BottomNav() {
   const [value, setValue] = React.useState('home');
@@ -23,14 +23,14 @@ export default function BottomNav() {
         icon={<HomeIcon />}
       />
       <BottomNavigationAction
-        label="Tag"
-        value="tag"
-        icon={<PlaylistAddCheckIcon />}
+        label="Stats"
+        value="stats"
+        icon={<SpaceDashboardIcon />}
       />
       <BottomNavigationAction
-        label="Dashboard"
-        value="dashboard"
-        icon={<SpaceDashboardIcon />}
+        label="Profile"
+        value="profile"
+        icon={<AccountCircleIcon />}
       />
     </BottomNavigation>
   );
