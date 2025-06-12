@@ -52,7 +52,7 @@ const groupByOptions: { id: GroupByOption, label: string }[] = [
 ];
 
 // Define sort by options
-type SortByOption = 'cost' | 'count';
+type SortByOption = 'cost' | 'count' | 'date' | null;
 
 const sortByOptions: { id: SortByOption, label: string }[] = [
   {id: 'cost', label: 'Total Cost'},
@@ -81,7 +81,7 @@ const Home: FC<any> = (): ReactElement => {
   const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
   const [collapsedGroups, setCollapsedGroups] = useState<{ [groupKey: string]: boolean }>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
-  const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>('cost');
+  const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>(null);
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
   const [allCollapsed, setAllCollapsed] = useState(false);
 
@@ -271,10 +271,6 @@ const Home: FC<any> = (): ReactElement => {
           expenses: [],
           totalAmount: 0
         };
-        // Initialize as expanded
-        // if (collapsedGroups[groupKey] === undefined) {
-        //   setCollapsedGroups(prev => ({ ...prev, [groupKey]: groupKey !== 'days' }));
-        // }
         setCollapsedGroups(prev => ({...prev, [groupKey]: selectedGroupBy !== 'days'}));
       }
 
@@ -394,7 +390,13 @@ const Home: FC<any> = (): ReactElement => {
   // Handle group by option selection
   const handleGroupByChange = (option: GroupByOption) => {
     setIsRegrouping(true);
-    setSelectedGroupBy(option);
+    if (option === "days" && selectedSortBy !== null) {
+      setSelectedGroupBy(option);
+      setSelectedSortBy("date");
+    } else {
+      setSelectedGroupBy(option);
+      setSelectedSortBy("count");
+    }
     setShowGroupByOptions(false);
   };
 
@@ -507,7 +509,12 @@ const Home: FC<any> = (): ReactElement => {
           </div>
         ) : (
           Object.entries(groupedExpenses)
-            .sort(([, groupDataA], [, groupDataB]) => {
+            .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
+
+              if (selectedGroupBy === 'days' &&
+                (selectedSortBy === 'date' || selectedSortBy == null))
+                return keyB.localeCompare(keyA);
+
               return selectedSortBy === "cost" ?
                 groupDataB.totalAmount - groupDataA.totalAmount :
                 groupDataB.expenses.length - groupDataA.expenses.length;
