@@ -282,12 +282,47 @@
     animation: slideUp 0.2s ease-out;
     border: 1px solid #3a4045; /* Add subtle border for more distinction */
 
+    /* Panel header with title and close button */
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        .close-button {
+            color: #90caf9;
+            background-color: rgba(144, 202, 249, 0.12);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(144, 202, 249, 0.3);
+            padding: 4px;
+            margin-right: -4px;
+
+            &:hover {
+                transform: scale(1.1);
+                color: #fff;
+                background-color: rgba(144, 202, 249, 0.25);
+                border-color: rgba(144, 202, 249, 0.5);
+            }
+
+            .MuiSvgIcon-root {
+                font-size: 20px;
+            }
+        }
+    }
+
     .filter-options, .group-by-options {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
-        padding: 30px 20px 10px;
+        padding: 15px 20px 10px;
 
         .filter-chip {
             margin: 5px;
@@ -400,4 +435,3 @@
     z-index: 1000; /* Higher than other UI elements */
     backdrop-filter: blur(2px); /* Add blur effect for smoother visual transition */
 }
-

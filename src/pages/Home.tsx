@@ -6,6 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import GroupIcon from '@mui/icons-material/ViewModule';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import CloseIcon from '@mui/icons-material/Close';
 import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -142,15 +143,30 @@ const Home: FC<any> = (): ReactElement => {
     const now = dayjs();
     let startDate: dayjs.Dayjs;
 
-    switch(selectedRange) {
-      case '1d': startDate = now.subtract(1, 'day'); break;
-      case '7d': startDate = now.subtract(7, 'day'); break;
-      case '14d': startDate = now.subtract(14, 'day'); break;
-      case '30d': startDate = now.subtract(30, 'day'); break;
-      case '90d': startDate = now.subtract(90, 'day'); break;
-      case '180d': startDate = now.subtract(180, 'day'); break;
-      case '366d': startDate = now.subtract(366, 'day'); break;
-      default: startDate = now.subtract(7, 'day');
+    switch (selectedRange) {
+      case '1d':
+        startDate = now.subtract(1, 'day');
+        break;
+      case '7d':
+        startDate = now.subtract(7, 'day');
+        break;
+      case '14d':
+        startDate = now.subtract(14, 'day');
+        break;
+      case '30d':
+        startDate = now.subtract(30, 'day');
+        break;
+      case '90d':
+        startDate = now.subtract(90, 'day');
+        break;
+      case '180d':
+        startDate = now.subtract(180, 'day');
+        break;
+      case '366d':
+        startDate = now.subtract(366, 'day');
+        break;
+      default:
+        startDate = now.subtract(7, 'day');
     }
 
     const filtered = expenseList.filter(expense => {
@@ -520,6 +536,16 @@ const Home: FC<any> = (): ReactElement => {
       {/* Filter panel */}
       {showFilters && (
         <div className="filter-panel" ref={filterPanelRef}>
+          <div className="panel-header">
+            <span className="panel-title">Filter by date range</span>
+            <IconButton
+              size="small"
+              className="close-button"
+              onClick={() => setShowFilters(false)}
+            >
+              <CloseIcon/>
+            </IconButton>
+          </div>
           <div className="filter-options">
             {filterOptions.map(option => (
               <Chip
@@ -538,6 +564,16 @@ const Home: FC<any> = (): ReactElement => {
       {/* Group by panel */}
       {showGroupByOptions && (
         <div className="group-by-panel" ref={groupByPanelRef}>
+          <div className="panel-header">
+            <span className="panel-title">Group by</span>
+            <IconButton
+              size="small"
+              className="close-button"
+              onClick={() => setShowGroupByOptions(false)}
+            >
+              <CloseIcon/>
+            </IconButton>
+          </div>
           <div className="group-by-options">
             {groupByOptions.map(option => (
               <Chip
