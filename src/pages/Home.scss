@@ -273,14 +273,14 @@
     left: 0;
     right: 0;
     bottom: 56px;
-    background-color: #2a3035; /* Slightly lighter than the main background for contrast */
+    background-color: #2a3035;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
-    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better distinction */
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
     z-index: 100;
     padding-bottom: 20px;
     animation: slideUp 0.2s ease-out;
-    border: 1px solid #3a4045; /* Add subtle border for more distinction */
+    border: 1px solid #3a4045;
 
     /* Panel header with title and close button */
     .panel-header {
@@ -317,7 +317,25 @@
         }
     }
 
-    .filter-options, .group-by-options {
+    /* Panel sections for Group by and Sort by */
+    .panel-section {
+        padding: 0 20px;
+        margin-top: 15px;
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #b0bec5;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        &:first-of-type {
+            margin-top: 5px;
+        }
+    }
+
+    .filter-options {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -326,6 +344,23 @@
 
         .filter-chip {
             margin: 5px;
+            /* Make unselected chips stand out better against the panel background */
+            &.MuiChip-outlined {
+                border-color: #4a5055;
+                background-color: #232729;
+            }
+        }
+    }
+
+    .group-by-options, .sort-by-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 5px 0;
+
+        .filter-chip {
+            margin: 0;
             /* Make unselected chips stand out better against the panel background */
             &.MuiChip-outlined {
                 border-color: #4a5055;

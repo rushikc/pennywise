@@ -51,6 +51,14 @@ const groupByOptions: { id: GroupByOption, label: string }[] = [
   {id: 'tags', label: 'Tags'},
 ];
 
+// Define sort by options
+type SortByOption = 'cost' | 'count';
+
+const sortByOptions: { id: SortByOption, label: string }[] = [
+  {id: 'cost', label: 'Total Cost'},
+  {id: 'count', label: 'Expenses Count'},
+];
+
 // Interface for grouped expenses
 interface GroupedExpenses {
   [groupKey: string]: {
@@ -73,6 +81,7 @@ const Home: FC<any> = (): ReactElement => {
   const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
   const [collapsedGroups, setCollapsedGroups] = useState<{ [groupKey: string]: boolean }>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
+  const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>('cost');
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
   const [allCollapsed, setAllCollapsed] = useState(false);
 
@@ -280,7 +289,7 @@ const Home: FC<any> = (): ReactElement => {
       setIsRegrouping(false);
     }, 300);
 
-  }, [filteredExpenses, selectedGroupBy]);
+  }, [filteredExpenses, selectedGroupBy, selectedSortBy]);
 
   // Toggle collapse state for a group
   const toggleGroupCollapse = (groupKey: string) => {
@@ -384,8 +393,15 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle group by option selection
   const handleGroupByChange = (option: GroupByOption) => {
-    setIsRegrouping(true); // Use regrouping state instead of loading
+    setIsRegrouping(true);
     setSelectedGroupBy(option);
+    setShowGroupByOptions(false);
+  };
+
+  // Handle sort by option selection
+  const handleSortByChange = (option: SortByOption) => {
+    setIsRegrouping(true);
+    setSelectedSortBy(option);
     setShowGroupByOptions(false);
   };
 
@@ -491,20 +507,10 @@ const Home: FC<any> = (): ReactElement => {
           </div>
         ) : (
           Object.entries(groupedExpenses)
-            .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
-              // Custom sorting based on grouping type
-              if (selectedGroupBy === 'days') {
-                return keyB.localeCompare(keyA); // Sort dates newest first
-              } else if (selectedGroupBy === 'cost') {
-                // For cost ranges, sort by total amount highest to lowest
-                return groupDataB.totalAmount - groupDataA.totalAmount;
-              } else if (selectedGroupBy === 'vendor' || selectedGroupBy === 'tags') {
-                // For vendor and tags, sort by total amount highest to lowest
-                return groupDataB.expenses.length - groupDataA.expenses.length;
-              } else {
-                // Default alphabetical sorting
-                return keyA.localeCompare(keyB);
-              }
+            .sort(([, groupDataA], [, groupDataB]) => {
+              return selectedSortBy === "cost" ?
+                groupDataB.totalAmount - groupDataA.totalAmount :
+                groupDataB.expenses.length - groupDataA.expenses.length;
             })
             .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
         )}
@@ -574,17 +580,39 @@ const Home: FC<any> = (): ReactElement => {
               <CloseIcon/>
             </IconButton>
           </div>
-          <div className="group-by-options">
-            {groupByOptions.map(option => (
-              <Chip
-                key={option.id}
-                label={option.label}
-                color="primary"
-                variant={selectedGroupBy === option.id ? "filled" : "outlined"}
-                onClick={() => handleGroupByChange(option.id)}
-                className="filter-chip"
-              />
-            ))}
+
+          {/* Group by section */}
+          <div className="panel-section">
+            <div className="section-title">Group by</div>
+            <div className="group-by-options">
+              {groupByOptions.map(option => (
+                <Chip
+                  key={option.id}
+                  label={option.label}
+                  color="primary"
+                  variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+                  onClick={() => handleGroupByChange(option.id)}
+                  className="filter-chip"
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Sort by section */}
+          <div className="panel-section">
+            <div className="section-title">Sort by</div>
+            <div className="sort-by-options">
+              {sortByOptions.map(option => (
+                <Chip
+                  key={option.id}
+                  label={option.label}
+                  color="primary"
+                  variant={selectedSortBy === option.id ? "filled" : "outlined"}
+                  onClick={() => handleSortByChange(option.id)}
+                  className="filter-chip"
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}
