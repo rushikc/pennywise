@@ -30,24 +30,24 @@ declare global {
 // Define date range options
 type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
 
-const filterOptions: {id: DateRange, label: string}[] = [
-  { id: '1d', label: '1 Day' },
-  { id: '7d', label: '7 Days' },
-  { id: '14d', label: '2 Weeks' },
-  { id: '30d', label: '1 Month' },
-  { id: '90d', label: '3 Month' },
-  { id: '180d', label: '6 Month' },
-  { id: '366d', label: '1 year' },
+const filterOptions: { id: DateRange, label: string }[] = [
+  {id: '1d', label: '1 Day'},
+  {id: '7d', label: '7 Days'},
+  {id: '14d', label: '2 Weeks'},
+  {id: '30d', label: '1 Month'},
+  {id: '90d', label: '3 Month'},
+  {id: '180d', label: '6 Month'},
+  {id: '366d', label: '1 year'},
 ];
 
 // Define group by options
 type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 
-const groupByOptions: {id: GroupByOption, label: string}[] = [
-  { id: 'days', label: 'Days' },
-  { id: 'vendor', label: 'Vendor' },
-  { id: 'cost', label: 'Cost Range' },
-  { id: 'tags', label: 'Tags' },
+const groupByOptions: { id: GroupByOption, label: string }[] = [
+  {id: 'days', label: 'Days'},
+  {id: 'vendor', label: 'Vendor'},
+  {id: 'cost', label: 'Cost Range'},
+  {id: 'tags', label: 'Tags'},
 ];
 
 // Interface for grouped expenses
@@ -60,7 +60,7 @@ interface GroupedExpenses {
 }
 
 const Home: FC<any> = (): ReactElement => {
-  const { expenseList } = useSelector(selectExpense);
+  const {expenseList} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ const Home: FC<any> = (): ReactElement => {
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [groupedExpenses, setGroupedExpenses] = useState<GroupedExpenses>({});
-  const [collapsedGroups, setCollapsedGroups] = useState<{[groupKey: string]: boolean}>({});
+  const [collapsedGroups, setCollapsedGroups] = useState<{ [groupKey: string]: boolean }>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
   const [allCollapsed, setAllCollapsed] = useState(false);
@@ -250,7 +250,7 @@ const Home: FC<any> = (): ReactElement => {
         // if (collapsedGroups[groupKey] === undefined) {
         //   setCollapsedGroups(prev => ({ ...prev, [groupKey]: groupKey !== 'days' }));
         // }
-        setCollapsedGroups(prev => ({ ...prev, [groupKey]: selectedGroupBy !== 'days' }));
+        setCollapsedGroups(prev => ({...prev, [groupKey]: selectedGroupBy !== 'days'}));
       }
 
       grouped[groupKey].expenses.push(expense);
@@ -280,7 +280,7 @@ const Home: FC<any> = (): ReactElement => {
     setAllCollapsed(newCollapsedState);
 
     // Create a new object with all groups set to the same collapse state
-    const updatedCollapsedGroups: {[key: string]: boolean} = {};
+    const updatedCollapsedGroups: { [key: string]: boolean } = {};
     Object.keys(groupedExpenses).forEach(key => {
       updatedCollapsedGroups[key] = newCollapsedState;
     });
@@ -377,7 +377,7 @@ const Home: FC<any> = (): ReactElement => {
   const renderExpenseItem = (expense: Expense, index: number) => (
     <Row key={index} className="expense-row" onClick={() => onSetExpense(expense)}>
       <Avatar className="expense-avatar">
-        <CurrencyRupeeIcon fontSize="inherit" />
+        <CurrencyRupeeIcon fontSize="inherit"/>
       </Avatar>
       <Col>
         <Row className="expense-row-header">
@@ -414,13 +414,18 @@ const Home: FC<any> = (): ReactElement => {
       <div key={groupKey} className={`group-box ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="group-header" onClick={() => toggleGroupCollapse(groupKey)}>
           <div className="group-title">
-            <span className="group-label">{groupData.groupLabel.toLowerCase()}</span>
-            <span className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
+            <span className="group-label">
+              {
+                selectedGroupBy === 'days' ? groupData.groupLabel : groupData.groupLabel.toLowerCase()
+              }
+            </span>
+            <span
+              className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>
           </div>
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
             <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
-              {isCollapsed ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
             </IconButton>
           </div>
         </div>
@@ -433,7 +438,7 @@ const Home: FC<any> = (): ReactElement => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading/>;
   }
 
   return (
@@ -441,7 +446,7 @@ const Home: FC<any> = (): ReactElement => {
       {/* Loading overlay for regrouping */}
       <Fade in={isRegrouping} timeout={100} unmountOnExit>
         <div className="regrouping-overlay">
-          <CircularProgress color="primary" />
+          <CircularProgress color="primary"/>
         </div>
       </Fade>
 
@@ -455,7 +460,7 @@ const Home: FC<any> = (): ReactElement => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon className="search-icon" />
+                <SearchIcon className="search-icon"/>
               </InputAdornment>
             ),
             className: "search-input"
@@ -494,7 +499,7 @@ const Home: FC<any> = (): ReactElement => {
         {/* Filter button */}
         <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
           <Chip
-            icon={<FilterListIcon />}
+            icon={<FilterListIcon/>}
             label={filterOptions.find(option => option.id === selectedRange)?.label}
             color="primary"
             clickable
@@ -504,7 +509,7 @@ const Home: FC<any> = (): ReactElement => {
         {/* Group by button */}
         <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
           <Chip
-            icon={<GroupIcon />}
+            icon={<GroupIcon/>}
             label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
             color="primary"
             clickable
@@ -557,7 +562,7 @@ const Home: FC<any> = (): ReactElement => {
           onClick={scrollToTop}
           className="scroll-top-button"
         >
-          <KeyboardArrowUpIcon />
+          <KeyboardArrowUpIcon/>
         </Fab>
       </Zoom>
 
@@ -570,7 +575,7 @@ const Home: FC<any> = (): ReactElement => {
           onClick={toggleAllGroupsCollapse}
           className="collapse-all-button"
         >
-          {allCollapsed ? <UnfoldMoreIcon /> : <UnfoldLessIcon />}
+          {allCollapsed ? <UnfoldMoreIcon/> : <UnfoldLessIcon/>}
         </Fab>
       )}
     </div>
