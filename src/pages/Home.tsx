@@ -7,6 +7,8 @@ import GroupIcon from '@mui/icons-material/ViewModule';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
@@ -62,6 +64,7 @@ const Home: FC<any> = (): ReactElement => {
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
+  const [isRegrouping, setIsRegrouping] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
@@ -182,9 +185,9 @@ const Home: FC<any> = (): ReactElement => {
 
   // Group expenses based on selected grouping option
   useEffect(() => {
-
     if (filteredExpenses.length === 0) {
       setGroupedExpenses({});
+      setIsRegrouping(false); // Reset regrouping state
       return;
     }
 
@@ -256,6 +259,10 @@ const Home: FC<any> = (): ReactElement => {
 
     setGroupedExpenses(grouped);
     setLoading(false);
+
+    setTimeout(() => {
+      setIsRegrouping(false);
+    }, 300);
 
   }, [filteredExpenses, selectedGroupBy]);
 
@@ -361,7 +368,7 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle group by option selection
   const handleGroupByChange = (option: GroupByOption) => {
-    setLoading(true);
+    setIsRegrouping(true); // Use regrouping state instead of loading
     setSelectedGroupBy(option);
     setShowGroupByOptions(false);
   };
@@ -431,6 +438,13 @@ const Home: FC<any> = (): ReactElement => {
 
   return (
     <div className="home-root">
+      {/* Loading overlay for regrouping */}
+      <Fade in={isRegrouping} timeout={100} unmountOnExit>
+        <div className="regrouping-overlay">
+          <CircularProgress color="primary" />
+        </div>
+      </Fade>
+
       <div className="search-container">
         <TextField
           fullWidth

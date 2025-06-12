@@ -385,3 +385,19 @@
         transform: translateY(0);
     }
 }
+
+// Add overlay for regrouping
+.regrouping-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(24, 26, 27, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Higher than other UI elements */
+    backdrop-filter: blur(2px); /* Add blur effect for smoother visual transition */
+}
+
