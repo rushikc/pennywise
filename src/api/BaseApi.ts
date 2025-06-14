@@ -24,7 +24,7 @@ export const addUser = async () => {
 }
 
 
-export const addExpense = async (expense: any) => {
+export const addExpenseAPI = async (expense: any) => {
   try {
     let key = getDateMedJs(expense.date.seconds)
       + ' ' + expense.vendor.slice(0, 10);

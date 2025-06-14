@@ -14,10 +14,10 @@ export class FinanceIndexDB {
 
         if (!indexedDB) {
             alert("IndexedDB is not available on this browser, this might increase firebase billing")
-            console.log("IndexedDB could not be found in this browser.");
+            console.debug("IndexedDB could not be found in this browser.");
         } else {
 
-            console.log("Initiating IndexedDB");
+            console.debug("Initiating IndexedDB");
 
             const financeDB = indexedDB.open(dbName, dbVersion);
 
@@ -32,7 +32,7 @@ export class FinanceIndexDB {
                 db.createObjectStore("tagMap", { keyPath: "vendor" });
                 db.createObjectStore("config", { keyPath: "key" });
 
-                console.log("Created finance IndexedDB");
+                console.debug("Created finance IndexedDB");
 
             };
         }
@@ -58,14 +58,14 @@ export class FinanceIndexDB {
 
     static addExpenseList = async (expenseList: Expense[]) => {
 
-        console.log("addExpense IndexedDB");
+        console.debug("addExpense IndexedDB");
         const store = await this.getStoreInstance("expense");
         expenseList.forEach(expense => store.put(expense));
 
     }
 
     static addTagMap = async (tagMap: TagMap) => {
-        console.log("addTagMap IndexedDB");
+        console.debug("addTagMap IndexedDB");
         const store = await this.getStoreInstance("tagMap");
         store.put(tagMap);
     }
@@ -73,7 +73,7 @@ export class FinanceIndexDB {
 
     static addConfig = async (configList: Config[]) => {
 
-        // console.log("addExpense IndexedDB");
+        // console.debug("addExpense IndexedDB");
         const store = await this.getStoreInstance("config");
         configList.forEach(config => store.put(config));
 
@@ -82,7 +82,7 @@ export class FinanceIndexDB {
 
     static getData = async (storeName: TableNames, keyPath: string): Promise<any> => {
 
-        console.log("getData IndexedDB - ", storeName, keyPath);
+        console.debug("getData IndexedDB - ", storeName, keyPath);
 
         return new Promise((resolve) => {
             const storePromise = this.getStoreInstance(storeName);
@@ -97,7 +97,7 @@ export class FinanceIndexDB {
 
     static getAllData = async (storeName: TableNames): Promise<any[]> => {
 
-        console.log("getAllData IndexedDB - ", storeName);
+        console.debug("getAllData IndexedDB - ", storeName);
 
         return new Promise((resolve) => {
             const storePromise = this.getStoreInstance(storeName);

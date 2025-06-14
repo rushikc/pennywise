@@ -152,3 +152,12 @@ export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {
 
     return newArr;
 }
+
+/**
+ * Custom development warning function (clone of console.warn)
+ * @param message Primary message to display
+ * @param optionalParams Additional parameters to log
+ */
+export const devWarn = (message?: any, ...optionalParams: any[]): void => {
+    console.warn(message, ...optionalParams);
+};

@@ -3,7 +3,6 @@ import axios, { Method } from "axios";
 export default class API {
 
 
-
     static _get(url: string) {
         return this._withPayLoad(url, 'GET', {})
     }

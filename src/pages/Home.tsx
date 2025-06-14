@@ -420,7 +420,7 @@ const Home: FC<any> = (): ReactElement => {
           </Col>
           <Col xs="auto" className='d-flex justify-content-end mr-2'>
             <span className='expense-type'>
-              {expense.type.includes('debit') ? '-' : '+'}
+              {expense.costType === 'debit' ? '-' : '+'}
             </span>
             <span className="expense-currency">₹</span>
             <span className="expense-cost">{expense.cost}</span>

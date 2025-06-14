@@ -3,6 +3,7 @@ export interface Expense {
     tag: string,
     mailId: string,
     cost: number,
+    costType: string,
     date: Date,
     user: string,
     type: 'credit' | 'debit',

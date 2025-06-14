@@ -46,9 +46,6 @@ function App() {
       // console.log("Expense List -> ", expenseList);
       // console.log("TagMap List -> ", tagResult);
 
-      console.log("Expense total length -> ", expenseList.length);
-      console.log("Expense sublist -> ", expenseList[2]);
-
     }).catch((res1) => alert(res1))
   }, []);
 
