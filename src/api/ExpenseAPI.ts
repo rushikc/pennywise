@@ -79,6 +79,7 @@ export class ExpenseAPI {
             // console.log("index db config ", getDateFormat(data.value));
             if (data) {
                 lastUpdatedDate = new Date(getDateFormat(data.value));
+                // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
                 isLastUpdateAvailable = true;
             }
         });
@@ -138,6 +139,7 @@ export class ExpenseAPI {
             // console.log("index db config ", data);
             if (data) {
                 lastUpdatedDate = new Date(data.value);
+                // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
                 isLastUpdateAvailable = true;
             }
         });

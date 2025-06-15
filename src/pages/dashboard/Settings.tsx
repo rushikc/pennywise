@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Box, Card, CardActionArea, Container, Grid, Paper, Typography, useTheme} from '@mui/material';
+import {Avatar, Box, Container, Paper, Typography, useTheme} from '@mui/material';
 import {
   BarChart as StatsIcon,
   LocalOffer as TagsIcon,
@@ -18,7 +18,7 @@ interface DashboardTile {
   color: string;
 }
 
-const Dashboard: React.FC = () => {
+const Settings: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -118,49 +118,46 @@ const Dashboard: React.FC = () => {
         animate={{ opacity: 1 }}
         className="dashboard-title-text"
       >
-        Dashboard
+        Setting
       </Typography>
 
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="dashboard-options-container"
       >
-        <Grid container spacing={2}>
-          {dashboardTiles.map((tile) => (
-            <Grid item xs={6} key={tile.id}>
-              <motion.div variants={itemVariants}>
-                <Card
-                  elevation={4}
-                  className="dashboard-tile-card"
-                >
-                  <CardActionArea
-                    onClick={() => handleTileClick(tile.route)}
-                    className="dashboard-tile-action-area"
-                  >
-                    <Avatar
-                      className="dashboard-tile-avatar"
-                      style={{ color: tile.color }}
-                    >
-                      {tile.icon}
-                    </Avatar>
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      className="dashboard-tile-title"
-                      style={{ color: tile.color }}
-                    >
-                      {tile.title}
-                    </Typography>
-                  </CardActionArea>
-                </Card>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
+        {dashboardTiles.map((tile, index) => (
+          <React.Fragment key={tile.id}>
+            <motion.div
+              variants={itemVariants}
+              className="dashboard-option-row"
+              onClick={() => handleTileClick(tile.route)}
+            >
+              <Avatar
+                className="dashboard-option-icon"
+                style={{ color: tile.color }}
+              >
+                {tile.icon}
+              </Avatar>
+              <Box className="dashboard-option-text">
+                <Typography variant="body1" className="dashboard-option-title">
+                  {tile.title}
+                </Typography>
+                <Typography variant="caption" className="dashboard-option-subtitle">
+                  {tile.id === 'profile' && 'Manage your account settings'}
+                  {tile.id === 'stats' && 'View your financial analytics'}
+                  {tile.id === 'config' && 'Configure app preferences'}
+                  {tile.id === 'tags' && 'Manage your expense categories'}
+                </Typography>
+              </Box>
+            </motion.div>
+            {index < dashboardTiles.length - 1 && <div className="dashboard-option-divider" />}
+          </React.Fragment>
+        ))}
       </motion.div>
     </Container>
   );
 };
 
-export default Dashboard;
+export default Settings;

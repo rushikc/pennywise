@@ -12,7 +12,7 @@ import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
 import {sortByKeyDate} from "./utility/utility";
 import TagList from "./pages/TagList";
-import Dashboard from "./pages/dashboard/Dashboard";
+import Settings from "./pages/dashboard/Settings";
 import Profile from "./pages/profile/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/config/Configuration";
@@ -58,7 +58,7 @@ function App() {
 
         <Routes>
           <Route path='/home' element={<Home />} />
-          <Route path='/profile' element={<Dashboard />} />
+          <Route path='/profile' element={<Settings />} />
           <Route path='/stats' element={<Statistics />} />
           <Route path='/tag' element={<TagList />} />
           <Route path='/Update' element={<UpdateGmail />} />

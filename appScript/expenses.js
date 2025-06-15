@@ -95,7 +95,7 @@ async function myFunction() {
                 cost = snippet.match(upiCreditCostRegex)[0].replace('Rs.', '').replace(' is successfully', '');
                 vendor = snippet.match(upiCreditVendorRegex)[0].replace('VPA ', '').slice(0, -9);
 
-                expense = getExpense(Number(res.internalDate), 'upi-credit', mailId);
+                expense = getExpense(Number(res.internalDate), 'upi', mailId);
                 expense.costType = 'credit';
 
             } else {
@@ -117,7 +117,7 @@ async function myFunction() {
                 cost = snippet.match(upiDebitCostRegex)[0].replace('Rs.', '').replace(' has been', '');
                 vendor = snippet.match(upiDebitVendorRegex)[0].replace('VPA ', '').slice(0, -9);
 
-                expense = getExpense(Number(res.internalDate), 'upi-debit', mailId);
+                expense = getExpense(Number(res.internalDate), 'upi', mailId);
                 expense.costType = 'debit';
             }
 
