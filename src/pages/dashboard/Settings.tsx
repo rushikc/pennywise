@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Box, Container, Paper, Typography, useTheme} from '@mui/material';
+import {Avatar, Box, Container, Paper, Typography} from '@mui/material';
 import {
   BarChart as StatsIcon,
   LocalOffer as TagsIcon,
@@ -8,18 +8,18 @@ import {
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
-import './dashboard.scss';
+import './settings.scss';
 
 interface DashboardTile {
   id: string;
   title: string;
+  subtitle: string;
   icon: React.ReactNode;
   route: string;
   color: string;
 }
 
 const Settings: React.FC = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const user = {
@@ -32,28 +32,32 @@ const Settings: React.FC = () => {
     {
       id: 'profile',
       title: 'Profile',
-      icon: <ProfileIcon />,
+      subtitle: 'Manage your account settings',
+      icon: <ProfileIcon/>,
       route: '/profile',
       color: '#90caf9'
     },
     {
       id: 'stats',
       title: 'Statistics',
-      icon: <StatsIcon />,
+      subtitle: 'View your financial analytics',
+      icon: <StatsIcon/>,
       route: '/stats',
       color: '#81c784'
     },
     {
       id: 'config',
       title: 'Configuration',
-      icon: <ConfigIcon />,
+      subtitle: 'Configure app preferences',
+      icon: <ConfigIcon/>,
       route: '/config',
       color: '#f48fb1'
     },
     {
       id: 'tags',
       title: 'Tags',
-      icon: <TagsIcon />,
+      subtitle: 'Manage your expense categories',
+      icon: <TagsIcon/>,
       route: '/tag',
       color: '#ce93d8'
     }
@@ -64,7 +68,7 @@ const Settings: React.FC = () => {
   };
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: {opacity: 0},
     visible: {
       opacity: 1,
       transition: {
@@ -74,13 +78,14 @@ const Settings: React.FC = () => {
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: {y: 20, opacity: 0},
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: 'spring',
-        stiffness: 100
+        stiffness: 120,
+        damping: 12
       }
     }
   };
@@ -89,9 +94,9 @@ const Settings: React.FC = () => {
     <Container maxWidth="sm" className="dashboard-main-container">
       <Paper
         component={motion.div}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{opacity: 0, y: -20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
         elevation={3}
         className="user-profile-paper"
       >
@@ -114,11 +119,11 @@ const Settings: React.FC = () => {
       <Typography
         variant="h6"
         component={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
         className="dashboard-title-text"
       >
-        Setting
+        Settings
       </Typography>
 
       <motion.div
@@ -136,7 +141,7 @@ const Settings: React.FC = () => {
             >
               <Avatar
                 className="dashboard-option-icon"
-                style={{ color: tile.color }}
+                style={{color: tile.color}}
               >
                 {tile.icon}
               </Avatar>
@@ -145,14 +150,11 @@ const Settings: React.FC = () => {
                   {tile.title}
                 </Typography>
                 <Typography variant="caption" className="dashboard-option-subtitle">
-                  {tile.id === 'profile' && 'Manage your account settings'}
-                  {tile.id === 'stats' && 'View your financial analytics'}
-                  {tile.id === 'config' && 'Configure app preferences'}
-                  {tile.id === 'tags' && 'Manage your expense categories'}
+                  {tile.subtitle}
                 </Typography>
               </Box>
             </motion.div>
-            {index < dashboardTiles.length - 1 && <div className="dashboard-option-divider" />}
+            {index < dashboardTiles.length - 1 && <div className="dashboard-option-divider"/>}
           </React.Fragment>
         ))}
       </motion.div>
