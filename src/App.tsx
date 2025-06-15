@@ -1,5 +1,4 @@
-import {AppBar, CssBaseline, ThemeProvider} from "@mui/material";
-import {createTheme} from "@mui/material/styles";
+import {AppBar, CssBaseline, ThemeProvider, createTheme} from "@mui/material";
 import {GoogleOAuthProvider} from '@react-oauth/google';
 import {useEffect} from "react";
 import {Route, Routes} from "react-router-dom";
@@ -12,10 +11,10 @@ import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
 import {sortByKeyDate} from "./utility/utility";
 import TagList from "./pages/TagList";
-import Settings from "./pages/dashboard/Settings";
-import Profile from "./pages/profile/Profile";
+import Settings from "./pages/setting/Settings";
+import Profile from "./pages/setting/setting-views/Profile";
 import Statistics from "./pages/stats/Statistics";
-import Configuration from "./pages/config/Configuration";
+import Configuration from "./pages/setting/setting-views/Configuration";
 import {setExpenseAndTag} from "./store/expenseActions";
 
 function App() {

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Avatar, Box, Container, Paper, Typography} from '@mui/material';
 import {
   BarChart as StatsIcon,
   LocalOffer as TagsIcon,
   Person as ProfileIcon,
-  Settings as ConfigIcon
+  Settings as ConfigIcon,
+  Refresh as ReloadIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import './settings.scss';
+import ReloadExpense from './setting-views/ReloadExpense';
 
 interface DashboardTile {
   id: string;
@@ -21,6 +23,7 @@ interface DashboardTile {
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
+  const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
 
   const user = {
     name: 'John Doe',
@@ -60,10 +63,23 @@ const Settings: React.FC = () => {
       icon: <TagsIcon/>,
       route: '/tag',
       color: '#ce93d8'
+    },
+    {
+      id: 'reload',
+      title: 'Reload Expense',
+      subtitle: 'Reload your expense data',
+      icon: <ReloadIcon/>,
+      route: '/reload',
+      color: '#ffa726'
     }
   ];
 
   const handleTileClick = (route: string) => {
+    // Special case for reload expense
+    if (route === '/reload') {
+      setReloadExpenseModalOpen(true);
+      return;
+    }
     navigate(route);
   };
 
@@ -158,6 +174,11 @@ const Settings: React.FC = () => {
           </React.Fragment>
         ))}
       </motion.div>
+
+      <ReloadExpense
+        open={reloadExpenseModalOpen}
+        onClose={() => setReloadExpenseModalOpen(false)}
+      />
     </Container>
   );
 };

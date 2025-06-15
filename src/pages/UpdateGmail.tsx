@@ -2,50 +2,33 @@ import {Box} from "@mui/material";
 import Button from "@mui/material/Button/Button";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Paper from '@mui/material/Paper';
-import {styled} from '@mui/material/styles';
 import React, {FC, ReactElement, useState} from "react";
 import {Row} from "reactstrap";
 import {ExpenseAPI} from "../api/ExpenseAPI";
 import {getDateTimeSecFromISO} from "../utility/utility";
 
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
+// Define styles as objects instead of using styled API
+const itemStyles = {
   textAlign: 'center',
-  color: theme.palette.text.secondary,
   height: 60,
   lineHeight: '60px',
-}));
+};
 
-
+const drawerHeaderStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: '0 8px',
+  // necessary for content to be below app bar
+  minHeight: '64px', // Equivalent to theme.mixins.toolbar
+};
 
 const UpdateGmail: FC<any> = (): ReactElement => {
-
-  const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  }));
-
-
-
   const [response, setResponse] = useState([]);
   const [isLoading, setLoading] = useState('ns');
 
-
   const updateGmail = () => {
-
     console.log('update G ', getDateTimeSecFromISO('2023-02-26T13:35:05.000Z'));
-    
-
-    // ExpenseAPI.getAllDoc('tagMap').then((res: any) => {
-    //   console.log("Expense List -> ", res);
-    //   console.log("Expense length -> ", res.length);
-      
-    // }).catch((res1) => alert(res1))
 
     let tags = [
       {
@@ -145,16 +128,11 @@ const UpdateGmail: FC<any> = (): ReactElement => {
     tags.forEach(tag => {
       ExpenseAPI.setOneDoc(tag.vendor, tag, 'tagMap');
     });
-    
-
   }
-
-
 
   return (
     <Box component="main">
-      <DrawerHeader />
-
+      <div style={drawerHeaderStyles} />
 
       <Row style={{ paddingTop: '4rem' }}>
         {
@@ -175,7 +153,6 @@ const UpdateGmail: FC<any> = (): ReactElement => {
               Update
             </Button>
           </div>
-
         }
 
         {
@@ -193,10 +170,7 @@ const UpdateGmail: FC<any> = (): ReactElement => {
             <span key={index}>{val}</span>
           ))
         }
-
       </Row>
-
-
     </Box>
   );
 };
