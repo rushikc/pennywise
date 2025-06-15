@@ -2,7 +2,7 @@ import {initializeApp} from 'firebase/app';
 import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../utility/firebase-public';
-import {getDateFormat, getDateJsIdFormat, getISODate, JSONCopy} from "../utility/utility";
+import {getDateFormat, getDateJsIdFormat, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 
 
@@ -63,7 +63,7 @@ export class ExpenseAPI {
     }
 
 
-    static getExpenseList = async () => {
+    static getExpenseList = async (overrideLastDate: string | undefined = undefined) => {
 
         let table = 'expense';
 
@@ -72,7 +72,6 @@ export class ExpenseAPI {
         let fireDocList: any[] = [];
 
         let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
-        let isLastUpdateAvailable = false;
 
 
         await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
@@ -80,11 +79,16 @@ export class ExpenseAPI {
             if (data) {
                 lastUpdatedDate = new Date(getDateFormat(data.value));
                 // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
-                isLastUpdateAvailable = true;
             }
         });
 
-        // console.log("lastUpdatedDate ", lastUpdatedDate);
+        if (overrideLastDate) {
+            lastUpdatedDate = new Date(overrideLastDate);
+        }
+
+        console.log("lastUpdatedDate ", lastUpdatedDate);
+
+        // return null;
 
         const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
         const querySnapshot = await getDocs(q);
