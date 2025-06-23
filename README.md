@@ -1,61 +1,175 @@
-# Expense Tracker [MyExpense]
+# MyExpense: Personal Finance Tracker
 
-Expense tracker is a web application designed to help users manage their personal finances by tracking expenses.
-It provides a user-friendly interface for adding, editing, and deleting transactions, as well as generating graphs to visualize spending patterns.
+MyExpense is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
+
+## Features
+
+- 📊 **Expense Tracking**: Add, edit, and manage your daily expenses
+- 🏷️ **Tagging System**: Categorize expenses with custom tags
+- 📅 **Date Filtering**: Filter expenses by different time periods (1 day, 7 days, 2 weeks, etc.)
+- 📊 **Visualization**: View spending patterns through statistical analysis
+- 📱 **Responsive Design**: Works on both desktop and mobile devices
+- 🔄 **Offline Support**: Uses IndexedDB for offline data access
+- 🔒 **Google Authentication**: Secure login via Google OAuth
+
+## Architecture
+
+MyExpense is built using a modern front-end architecture with the following key components:
+
+### Technology Stack
+
+- **Frontend**: React, TypeScript, Material-UI
+- **State Management**: Redux (with Redux Toolkit)
+- **Database**:
+  - Firebase Firestore (cloud storage)
+  - IndexedDB (local storage for offline capability)
+- **Authentication**: Google OAuth
+
+### Data Flow
+
+1. **User Authentication**: Users authenticate using Google OAuth
+2. **Data Fetching**:
+   - On app initialization, data is fetched from Firebase Firestore
+   - Data is stored locally in IndexedDB for offline access
+   - Redux store is populated with expense and tag data
+3. **User Interactions**:
+   - Users can view, filter, and group expenses
+   - New expenses can be added manually or imported
+   - Expenses can be tagged for categorization
+4. **Data Persistence**:
+   - Changes are saved to both IndexedDB and Firebase
+   - Data synchronization happens automatically when online
+
+### Data Flow Diagram
+
+```
+┌─────────────┐     ┌───────────────┐     ┌───────────────┐
+│             │     │               │     │               │
+│  User Input ├────►│ React UI/Views├────►│ Redux Actions │
+│             │     │               │     │               │
+└─────────────┘     └───────┬───────┘     └───────┬───────┘
+                            │                     │
+                            │                     ▼
+┌─────────────┐     ┌───────▼───────┐     ┌───────────────┐
+│             │     │               │     │               │
+│    Google   │     │  Redux Store  │◄────┤ Redux Reducers│
+│    OAuth    │     │               │     │               │
+│             │     └───────┬───────┘     └───────────────┘
+└──────┬──────┘             │
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌───────────────┐     ┌────────────────┐
+│             │     │               │     │                │
+│ App.tsx     ├────►│  ExpenseAPI   ├────►│ FinanceIndexDB │
+│Initial Load │     │               │     │ (Local Cache)  │
+└─────────────┘     └───────┬───────┘     └───────┬────────┘
+                            │                     │
+                            ▼                     │
+                    ┌───────────────┐             │
+                    │               │             │
+                    │   Firebase    │◄────────────┘
+                    │  Firestore    │  (Sync when online)
+                    │               │
+                    └───────────────┘
+```
+
+### Core Components
+
+- **Home**: Main dashboard showing expense list with filtering and grouping options
+- **TagExpenses**: Interface for tagging and categorizing expenses
+- **Statistics**: Visualizations and charts of spending patterns
+- **Settings**: Application configuration and user profile management
+
+## Data Models
+
+### Expense
+
+The core data model representing a financial transaction:
+
+```typescript
+interface Expense {
+    id: string,
+    tag: string,
+    mailId: string,
+    cost: number,
+    costType: string,
+    date: Date,
+    user: string,
+    type: 'credit' | 'debit',
+    vendor: string
+}
+```
+
+### TagMap
+
+Maps vendors to expense categories:
+
+```typescript
+interface TagMap {
+    tag: string,
+    vendor: string,
+    date: string
+}
+```
+
+## Application Structure
+
+The application follows a modular structure:
+
+- `/api`: API clients for Firebase and IndexedDB
+- `/components`: Reusable UI components
+- `/pages`: Application screens and views
+- `/store`: Redux store configuration and slices
+- `/utility`: Helper functions and constants
+
+## Data Storage
+
+MyExpense uses a dual storage strategy:
+
+1. **Firebase Firestore**: Cloud database for persistent storage
+2. **IndexedDB**: Local browser database for offline access and performance
+
+Data synchronization between these two storage systems ensures that:
+- Users can access their data offline
+- Changes are persisted to the cloud when connectivity is restored
+- Application performance is optimized by reducing network requests
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```
+git clone https://github.com/yourusername/finance.git
+```
+
+2. Install dependencies:
+```
+cd finance
+npm install
+```
+
+3. Start the development server:
+```
+npm start
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
+
+### Build for Production
+
+To create an optimized production build:
+```
+npm run build
+```
+
+The build files will be located in the `build` folder.
 
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-
-## Available Scripts
-
-In the project directory, to run single file:
-
-### `npx ts-node filename.ts`
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
