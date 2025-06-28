@@ -18,16 +18,12 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
-  'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
-  'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid'];
-
 const TagExpenses: FC<any> = (): ReactElement => {
 
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
 
-  const { tagMapList, expense, isTagModal } = useSelector(selectExpense);
+  const { tagMapList, expense, isTagModal, tagList } = useSelector(selectExpense);
 
   if (expense == null || !isTagModal) {
     return <></>;
@@ -121,7 +117,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
               Select a category
             </Typography>
             <div className="tag-expense-chip-list">
-              {tag_list.map((val, index) => (
+              {tagList.map((val, index) => (
                 <Chip
                   key={index}
                   label={val}
@@ -160,4 +156,3 @@ const TagExpenses: FC<any> = (): ReactElement => {
 };
 
 export default TagExpenses;
-
