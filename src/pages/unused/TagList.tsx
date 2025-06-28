@@ -1,15 +1,15 @@
 import { FC, ReactElement, useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Expense } from "../api/Types";
-import { selectExpense, setTagExpense } from "../store/expenseActions";
-import { getDateMonth } from "../utility/utility";
+import { Expense } from "../../Types";
+import { selectExpense, setTagExpense } from "../../store/expenseActions";
+import { getDateMonth } from "../../utility/utility";
 import "./TagList.scss";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import { Card, CardContent, Typography, Box, IconButton, CircularProgress } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
-import TagExpenses from "./TagExpenses";
+import TagExpenses from "../TagExpenses";
 
 // Define filter options
 type FilterOption = 'all' | 'untagged';

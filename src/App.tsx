@@ -10,12 +10,13 @@ import Home from "./pages/Home";
 import TagExpenses from "./pages/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
 import {sortByKeyDate} from "./utility/utility";
-import TagList from "./pages/TagList";
+import TagList from "./pages/unused/TagList";
 import Settings from "./pages/setting/Settings";
 import Profile from "./pages/setting/setting-views/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/setting/setting-views/Configuration";
 import {setExpenseAndTag} from "./store/expenseActions";
+import ManageTags from "./pages/setting/setting-views/ManageTags";
 
 function App() {
 
@@ -31,7 +32,7 @@ function App() {
   useEffect(() => {
 
     void ExpenseAPI.processData();
-    const tagMapApi = ExpenseAPI.getTagList();
+    const tagMapApi = ExpenseAPI.getTagMapList();
     const expenseApi = ExpenseAPI.getExpenseList();
 
     Promise.all([tagMapApi, expenseApi]).then((res) => {
@@ -64,6 +65,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/stats' element={<Statistics />} />
           <Route path='/config' element={<Configuration />} />
+          <Route path='/setting-tags' element={<ManageTags/>} />
           <Route path='/' element={<Home />} />
         </Routes>
 

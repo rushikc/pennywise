@@ -61,7 +61,7 @@ const Settings: React.FC = () => {
       title: 'Tags',
       subtitle: 'Manage your expense categories',
       icon: <TagsIcon/>,
-      route: '/tag',
+      route: '/setting-tags',
       color: '#ce93d8'
     },
     {

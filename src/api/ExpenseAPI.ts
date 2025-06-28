@@ -4,6 +4,7 @@ import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../utility/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
+import {tab} from "@testing-library/user-event/dist/tab";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -51,7 +52,7 @@ export class ExpenseAPI {
             const docRef = doc(db, collectionName, key);
             const docSnap = await getDoc(docRef);
             // @ts-ignore
-            return docSnap.data().value;
+            return docSnap.data();
 
         } catch (e) {
             console.error("Error adding document: ", e);
@@ -128,6 +129,28 @@ export class ExpenseAPI {
     }
 
     static getTagList = async () => {
+        let table = 'config';
+
+        const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
+        const tagList: string[] = tagObject.tagList;
+
+        console.log('tagList ', tagList);
+
+        return tagList;
+    }
+
+    static updateTagList = async (tags: string[]) => {
+        let table = 'config';
+
+        await ExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
+        // const tagObject : any = await ExpenseAPI.getOneDoc('tags', table);
+        // const tagList: string[] = tagObject.tagList;
+
+        console.log('set tagList ', tags);
+
+    }
+
+    static getTagMapList = async () => {
 
         let table = 'tagMap';
 

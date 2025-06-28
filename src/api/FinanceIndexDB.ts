@@ -1,4 +1,4 @@
-import { Config, Expense, TagMap } from "./Types";
+import { Config, Expense, TagMap } from "../Types";
 
 
 

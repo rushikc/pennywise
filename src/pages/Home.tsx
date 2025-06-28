@@ -13,7 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
-import {Expense} from '../api/Types';
+import {Expense} from '../Types';
 import Loading from '../components/Loading';
 import {selectExpense, setTagExpense} from '../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../utility/utility';

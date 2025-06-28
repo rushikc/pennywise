@@ -19,7 +19,7 @@ import Fade from '@mui/material/Fade';
 
 
 const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
-  'travel', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
+  'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
   'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid'];
 
 const TagExpenses: FC<any> = (): ReactElement => {
@@ -27,7 +27,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
 
-  const { tagList, expense, isTagModal } = useSelector(selectExpense);
+  const { tagMapList, expense, isTagModal } = useSelector(selectExpense);
 
   if (expense == null || !isTagModal) {
     return <></>;
@@ -38,7 +38,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
       let _vendor = expense.vendor;
       let _tag = expense.tag;
 
-      let tagObj = tagList.find(({ vendor, tag }) => vendor === _vendor && tag === _tag);
+      let tagObj = tagMapList.find(({ vendor, tag }) => vendor === _vendor && tag === _tag);
 
       if (!tagObj) {
         let key = _vendor;

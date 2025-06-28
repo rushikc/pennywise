@@ -16,6 +16,7 @@ export interface TagMap {
     date: string
 }
 
+export type TagList = string[];
 
 export interface Config {
     key: string,
