@@ -15,8 +15,9 @@ import Settings from "./pages/setting/Settings";
 import Profile from "./pages/setting/setting-views/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/setting/setting-views/Configuration";
-import {setExpenseAndTag, setTagList} from "./store/expenseActions";
+import {selectExpense, setExpenseAndTag, setTagList} from "./store/expenseActions";
 import ManageTags from "./pages/setting/setting-views/ManageTags";
+import {useSelector} from "react-redux";
 
 function App() {
 
@@ -53,12 +54,16 @@ function App() {
     }).catch((res1) => alert(res1))
   }, []);
 
+  const { isTagModal } = useSelector(selectExpense);
+
+
   return (
     <GoogleOAuthProvider clientId="542311218762-phbirt127dfih7s96g8j8iq40mqpmr2r.apps.googleusercontent.com">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-
-        <TagExpenses />
+        {
+          isTagModal && <TagExpenses />
+        }
 
         <Routes>
           <Route path='/home' element={<Home />} />
