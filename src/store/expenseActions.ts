@@ -13,3 +13,7 @@ export const setExpenseAndTag = (expenseList: Expense[], tagMapList: TagMap[]) =
     expenseList,
     tagMapList
 }));
+
+export const setTagList = (tags: string[]) => store.dispatch(expenseSlice.actions.setTagList(tags));
+export const addTag = (tag: string) => store.dispatch(expenseSlice.actions.addTag(tag));
+export const deleteTag = (tag: string) => store.dispatch(expenseSlice.actions.deleteTag(tag));

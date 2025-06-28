@@ -19,15 +19,20 @@ import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import {RemoveCircleOutline} from "@mui/icons-material";
+import {useSelector} from 'react-redux';
+import {selectExpense, setTagList, addTag, deleteTag} from '../../../store/expenseActions';
+import './settingViews.scss';
 
 const ManageTags: React.FC = () => {
-  const [tagList, setTagList] = useState<string[]>([]);
+  const {tagList} = useSelector(selectExpense);
   const [newTagName, setNewTagName] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<boolean>(false);
   const [tagToDelete, setTagToDelete] = useState<string>('');
 
+
   useEffect(() => {
+    // Initialize the tag list in Redux store
     ExpenseAPI.getTagList().then((tags: string[]) => {
       setTagList(tags);
     });
@@ -52,11 +57,9 @@ const ManageTags: React.FC = () => {
   };
 
   const confirmDeleteTag = () => {
-    const updatedTags = tagList.filter(t => t !== tagToDelete);
-    setTagList(updatedTags);
-    void ExpenseAPI.updateTagList(updatedTags);
+    deleteTag(tagToDelete);
+    void ExpenseAPI.updateTagList(tagList.filter(t => t !== tagToDelete));
     setDeleteConfirmDialog(false);
-    // Here you would update your backend/database
   };
 
   const handleOpenAddDialog = () => {
@@ -70,23 +73,23 @@ const ManageTags: React.FC = () => {
 
   const handleAddTag = () => {
     if (newTagName && !tagList.includes(newTagName)) {
-      setTagList([...tagList, newTagName]);
+      addTag(newTagName);
       handleCloseAddDialog();
       void ExpenseAPI.updateTagList([...tagList, newTagName]);
     }
   };
 
   return (
-    <Container maxWidth="sm" sx={{mt: 4, mb: 4}}>
-      <Paper elevation={3} sx={{p: 2, borderRadius: 2}}>
-        <Typography variant="h5" gutterBottom sx={{mb: 2}}>
+    <Container className="manage-tags-container">
+      <Paper elevation={3} className="manage-tags-paper">
+        <Typography variant="h5" className="manage-tags-title">
           Manage Tags
         </Typography>
 
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="tags">
             {(provided) => (
-              <List {...provided.droppableProps} ref={provided.innerRef}>
+              <List {...provided.droppableProps} ref={provided.innerRef} className="tag-list">
                 {tagList.map((tag, index) => (
                   <Draggable key={tag} draggableId={tag} index={index}>
                     {(provided, snapshot) => (
@@ -94,14 +97,7 @@ const ManageTags: React.FC = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        sx={{
-                          mb: 1,
-                          borderRadius: 1,
-                          bgcolor: snapshot.isDragging ? 'action.hover' : 'background.paper',
-                          boxShadow: snapshot.isDragging ? 3 : 1,
-                          transition: 'background-color 0.2s ease, box-shadow 0.2s ease',
-                          pr: 1, // Add padding for the delete button
-                        }}
+                        className={`tag-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
                         secondaryAction={
                           <IconButton
                             edge="end"
@@ -131,9 +127,8 @@ const ManageTags: React.FC = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon/>}
-          fullWidth
           onClick={handleOpenAddDialog}
-          sx={{mt: 2}}
+          className="add-tag-button"
         >
           Add New Tag
         </Button>
@@ -142,7 +137,7 @@ const ManageTags: React.FC = () => {
       {/* Add New Tag Dialog */}
       <Dialog open={openDialog} onClose={handleCloseAddDialog}>
         <DialogTitle>Add New Tag</DialogTitle>
-        <DialogContent>
+        <DialogContent className="tag-dialog-content">
           <DialogContentText>
             Enter the name for your new tag.
           </DialogContentText>

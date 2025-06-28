@@ -1,0 +1,43 @@
+// ManageTags styling
+
+.manage-tags-container {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.manage-tags-paper {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 5rem;
+}
+
+.manage-tags-title {
+    margin-bottom: 1rem;
+}
+
+.tag-list {
+    width: 100%;
+}
+
+.tag-item {
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    padding-right: 4px;
+    background-color: #0b0d0e; /* Dark mode background color */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+    &.is-dragging {
+        background-color: rgba(80, 80, 80, 1); /* Slightly lighter when dragging */
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+.add-tag-button {
+    width: 100%;
+}
+
+.tag-dialog-content {
+    min-width: 300px;
+}

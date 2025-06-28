@@ -61,6 +61,9 @@ export class ExpenseAPI {
 
     static processData = async () => {
         console.debug("Process Data Init");
+        // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
+        //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
+        //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
     }
 
 

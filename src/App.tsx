@@ -15,7 +15,7 @@ import Settings from "./pages/setting/Settings";
 import Profile from "./pages/setting/setting-views/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/setting/setting-views/Configuration";
-import {setExpenseAndTag} from "./store/expenseActions";
+import {setExpenseAndTag, setTagList} from "./store/expenseActions";
 import ManageTags from "./pages/setting/setting-views/ManageTags";
 
 function App() {
@@ -34,14 +34,18 @@ function App() {
     void ExpenseAPI.processData();
     const tagMapApi = ExpenseAPI.getTagMapList();
     const expenseApi = ExpenseAPI.getExpenseList();
+    const tagListApi = ExpenseAPI.getTagList();
 
-    Promise.all([tagMapApi, expenseApi]).then((res) => {
+    Promise.all([tagMapApi, expenseApi, tagListApi]).then((res) => {
 
       const tagResult = res[0];
       const expenseResult = res[1];
+      const tagList = res[2];
       const expenseList = sortByKeyDate(expenseResult, 'date');
 
       setExpenseAndTag(expenseList, tagResult);
+      setTagList(tagList);
+
 
       // console.log("Expense List -> ", expenseList);
       // console.log("TagMap List -> ", tagResult);

@@ -9,6 +9,7 @@ interface InitialState {
     tagMapList: TagMap[],
     isAppLoading: boolean,
     isTagModal: boolean,
+    tagList: string[],
 }
 
 const initialState: InitialState = {
@@ -16,7 +17,8 @@ const initialState: InitialState = {
     expense: null,
     tagMapList: [],
     isAppLoading: true,
-    isTagModal: false
+    isTagModal: false,
+    tagList: [],
 }
 
 
@@ -73,6 +75,20 @@ export const expenseSlice = createSlice({
             state.expenseList = action.payload.expenseList;
             state.tagMapList = action.payload.tagMapList;
             state.isAppLoading = false;
+        },
+
+        setTagList: (state, action: PayloadAction<string[]>) => {
+            state.tagList = action.payload;
+        },
+
+        addTag: (state, action: PayloadAction<string>) => {
+            if (!state.tagList.includes(action.payload)) {
+                state.tagList.push(action.payload);
+            }
+        },
+
+        deleteTag: (state, action: PayloadAction<string>) => {
+            state.tagList = state.tagList.filter(tag => tag !== action.payload);
         }
     }
 })
