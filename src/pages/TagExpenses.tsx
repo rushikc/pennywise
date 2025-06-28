@@ -18,9 +18,9 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'sports',
-  'shopping', 'electronics' ,'rent', 'extra', 'ironing', 'petrol', 'transport', 'bike', 'parents',
-  'Skin & Hair', 'medical', 'clothes', 'fitness', 'invalid'];
+const tag_list = ['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
+  'travel', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
+  'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid'];
 
 const TagExpenses: FC<any> = (): ReactElement => {
 
