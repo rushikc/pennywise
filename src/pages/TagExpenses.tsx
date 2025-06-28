@@ -127,6 +127,11 @@ const TagExpenses: FC<any> = (): ReactElement => {
                   onClick={() => setSelectedTag([val])}
                   className={`tag-expense-chip${selectedTag.includes(val) ? ' selected' : ''}`}
                   aria-label={`Select tag ${val}`}
+                  size="medium"
+                  sx={{
+                    minWidth: '80px',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
                 />
               ))}
             </div>
