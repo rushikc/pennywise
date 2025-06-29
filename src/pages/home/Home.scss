@@ -157,6 +157,17 @@
     &:hover {
         background: #2a3035;
     }
+
+    &.selected {
+        background-color: rgba(63, 81, 181, 0.1);
+    }
+
+    .expense-avatar {
+        &.selected {
+            background-color: #3f51b5;
+            color: white;
+        }
+    }
 }
 
 /* First and last items in group get rounded corners */
@@ -469,4 +480,68 @@
     align-items: center;
     z-index: 1000; /* Higher than other UI elements */
     backdrop-filter: blur(2px); /* Add blur effect for smoother visual transition */
+}
+
+// Selection mode styles
+.expense-row {
+  &.selected {
+    background-color: rgba(63, 81, 181, 0.1);
+  }
+
+  .expense-avatar {
+    &.selected {
+      background-color: #3f51b5;
+      color: white;
+    }
+  }
+}
+
+// Selected count display
+.selected-count-display {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 10px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(144, 202, 249, 0.5);
+  animation: fadeIn 0.3s ease;
+  min-width: 150px;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Action buttons in selection mode
+.action-button {
+  .MuiChip-root {
+    font-weight: 500;
+
+    &[disabled] {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+}
+
+// Cancel selection button
+.cancel-selection-button {
+  position: fixed !important;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 5px 15px;
 }

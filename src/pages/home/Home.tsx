@@ -7,7 +7,10 @@ import GroupIcon from '@mui/icons-material/ViewModule';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import CloseIcon from '@mui/icons-material/Close';
-import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MergeIcon from '@mui/icons-material/Merge';
+import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom, Button} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
@@ -30,6 +33,7 @@ import {
   sortByOptions
 } from './validations';
 import './Home.scss';
+import {Close} from "@mui/icons-material";
 
 // Add interface to extend Window type
 declare global {
@@ -55,6 +59,8 @@ const Home: FC<any> = (): ReactElement => {
   const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>(null);
   const [showGroupByOptions, setShowGroupByOptions] = useState(false);
   const [allCollapsed, setAllCollapsed] = useState(false);
+  const [selectedExpenses, setSelectedExpenses] = useState<Expense[]>([]);
+  const [selectionMode, setSelectionMode] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -64,13 +70,68 @@ const Home: FC<any> = (): ReactElement => {
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
   const toggleFilters = () => {
+    if (selectionMode) return; // Don't show filters in selection mode
     setShowFilters(!showFilters);
     if (showGroupByOptions) setShowGroupByOptions(false);
   };
 
   const toggleGroupByOptions = () => {
+    if (selectionMode) return; // Don't show group options in selection mode
     setShowGroupByOptions(!showGroupByOptions);
     if (showFilters) setShowFilters(false);
+  };
+
+  // Toggle expense selection
+  const toggleExpenseSelection = (expense: Expense, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent opening the expense details
+
+    if (!selectionMode) {
+      // Enter selection mode and select this expense
+      setSelectionMode(true);
+      setSelectedExpenses([expense]);
+      // Hide any open panels
+      setShowFilters(false);
+      setShowGroupByOptions(false);
+    } else {
+      // Already in selection mode
+      const isSelected = selectedExpenses.some(e => e.id === expense.id);
+
+      if (isSelected) {
+        // Deselect this expense
+        const newSelected = selectedExpenses.filter(e => e.id !== expense.id);
+        setSelectedExpenses(newSelected);
+
+        // If no expenses remain selected, exit selection mode
+        if (newSelected.length === 0) {
+          setSelectionMode(false);
+        }
+      } else {
+        // Add this expense to selection
+        setSelectedExpenses([...selectedExpenses, expense]);
+      }
+    }
+  };
+
+  // Cancel selection mode
+  const cancelSelection = () => {
+    setSelectedExpenses([]);
+    setSelectionMode(false);
+  };
+
+  // Handle delete selected expenses
+  const handleDeleteSelected = () => {
+    // Implement delete logic here
+    console.log('Deleting', selectedExpenses);
+    // After deletion is complete:
+    cancelSelection();
+  };
+
+  // Handle merge selected expenses
+  const handleMergeSelected = () => {
+    // Implement merge logic here
+    console.log('Merging', selectedExpenses);
+    // After merge is complete:
+    cancelSelection();
   };
 
   // Scroll to top function
@@ -157,6 +218,13 @@ const Home: FC<any> = (): ReactElement => {
     }, 300);
 
   }, [filteredExpenses, selectedGroupBy, selectedSortBy]);
+
+  // Exit selection mode when search term changes
+  useEffect(() => {
+    if (searchTerm && selectionMode) {
+      cancelSelection();
+    }
+  }, [searchTerm]);
 
   // Toggle collapse state for a group
   const toggleGroupCollapse = (groupKey: string) => {
@@ -279,37 +347,52 @@ const Home: FC<any> = (): ReactElement => {
   };
 
   // Render expense item
-  const renderExpenseItem = (expense: Expense, index: number) => (
-    <Row key={index} className="expense-row" onClick={() => onSetExpense(expense)}>
-      <Avatar className="expense-avatar">
-        <CurrencyRupeeIcon fontSize="inherit"/>
-      </Avatar>
-      <Col>
-        <Row className="expense-row-header">
-          <Col>
-            <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
-          </Col>
-          <Col xs="auto" className='d-flex justify-content-end mr-2'>
-            <span className='expense-type'>
-              {expense.costType === 'debit' ? '-' : '+'}
-            </span>
-            <span className="expense-currency">₹</span>
-            <span className="expense-cost">{expense.cost}</span>
-          </Col>
-        </Row>
-        <Row className="expense-date-row">
-          <span className="expense-date">{getDateMonth(expense.date)}</span>
-        </Row>
-        <Row>
-          <Col>
-            <span className={expense.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
-              {expense.tag ? expense.tag : 'untagged'}
-            </span>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
-  );
+  const renderExpenseItem = (expense: Expense, index: number) => {
+    const isSelected = selectedExpenses.some(e => e.id === expense.id);
+
+    return (
+      <Row
+        key={index}
+        className={`expense-row ${isSelected ? 'selected' : ''}`}
+        onClick={(e) => selectionMode ? toggleExpenseSelection(expense, e) : onSetExpense(expense)}
+        onLongPress={(e: React.MouseEvent<Element, MouseEvent>) => toggleExpenseSelection(expense, e)}
+      >
+        <Avatar
+          className={`expense-avatar ${isSelected ? 'selected' : ''}`}
+          onClick={(e) => toggleExpenseSelection(expense, e)}
+        >
+          {isSelected ?
+            <CheckCircleIcon fontSize="inherit"/> :
+            <CurrencyRupeeIcon fontSize="inherit"/>
+          }
+        </Avatar>
+        <Col>
+          <Row className="expense-row-header">
+            <Col>
+              <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
+            </Col>
+            <Col xs="auto" className='d-flex justify-content-end mr-2'>
+              <span className='expense-type'>
+                {expense.costType === 'debit' ? '-' : '+'}
+              </span>
+              <span className="expense-currency">₹</span>
+              <span className="expense-cost">{expense.cost}</span>
+            </Col>
+          </Row>
+          <Row className="expense-date-row">
+            <span className="expense-date">{getDateMonth(expense.date)}</span>
+          </Row>
+          <Row>
+            <Col>
+              <span className={expense.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
+                {expense.tag ? expense.tag : 'untagged'}
+              </span>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    );
+  };
 
   // Render a group section
   const renderGroupSection = (groupKey: string, groupData: GroupedExpenses[string]) => {
@@ -395,32 +478,77 @@ const Home: FC<any> = (): ReactElement => {
         )}
       </div>
 
-      {/* Filter button & Group by button container */}
+      {/* Button containers */}
       <div className="buttons-container">
-        {/* Filter button */}
-        <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
-          <Chip
-            icon={<FilterListIcon/>}
-            label={filterOptions.find(option => option.id === selectedRange)?.label}
-            color="primary"
-            clickable
-          />
-        </div>
+        {!selectionMode ? (
+          <>
+            {/* Filter button */}
+            <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+              <Chip
+                icon={<FilterListIcon/>}
+                label={filterOptions.find(option => option.id === selectedRange)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
 
-        {/* Group by button */}
-        <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
-          <Chip
-            icon={<GroupIcon/>}
-            label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
-            color="primary"
-            clickable
-          />
-        </div>
+            {/* Group by button */}
+            <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
+              <Chip
+                icon={<GroupIcon/>}
+                label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
+                color="primary"
+                clickable
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Selected count display */}
+            <div className="selected-count-display">
+              <span>{selectedExpenses.length} {selectedExpenses.length === 1 ? 'expense' : 'expenses'} selected</span>
+            </div>
+
+            {/* Cancel button */}
+            <div className="action-button">
+              <Chip
+                icon={<CloseIcon fontSize="small"/>}
+                label="Clear"
+                color="warning"
+                clickable
+                onClick={cancelSelection}
+              />
+            </div>
+
+            {/* Delete button */}
+            <div className="action-button">
+              <Chip
+                icon={<DeleteIcon fontSize="small"/>}
+                label="Delete"
+                color="error"
+                clickable
+                onClick={handleDeleteSelected}
+              />
+            </div>
+
+            {/* Merge button */}
+            <div className="action-button">
+              <Chip
+                icon={<MergeIcon fontSize="small"/>}
+                label="Merge"
+                color="primary"
+                clickable
+                onClick={handleMergeSelected}
+                disabled={selectedExpenses.length < 2}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Filter panel */}
       <FilterPanel
-        show={showFilters}
+        show={showFilters && !selectionMode}
         onClose={() => setShowFilters(false)}
         selectedRange={selectedRange}
         onRangeChange={handleRangeChange}
@@ -429,7 +557,7 @@ const Home: FC<any> = (): ReactElement => {
 
       {/* Group by panel */}
       <GroupByPanel
-        show={showGroupByOptions}
+        show={showGroupByOptions && !selectionMode}
         onClose={() => setShowGroupByOptions(false)}
         selectedGroupBy={selectedGroupBy}
         selectedSortBy={selectedSortBy}
@@ -451,8 +579,8 @@ const Home: FC<any> = (): ReactElement => {
         </Fab>
       </Zoom>
 
-      {/* Collapse all button - only show when we have expenses */}
-      {filteredExpenses.length > 0 && (
+      {/* Collapse all button - only show when we have expenses and not in selection mode */}
+      {filteredExpenses.length > 0 && !selectionMode && (
         <Fab
           color="primary"
           size="medium"
@@ -467,6 +595,10 @@ const Home: FC<any> = (): ReactElement => {
   );
 };
 
+
+
+
+
 // Filter Panel Component
 const FilterPanel: FC<{
   show: boolean;
@@ -474,7 +606,7 @@ const FilterPanel: FC<{
   selectedRange: DateRange;
   onRangeChange: (range: DateRange) => void;
   panelRef: React.RefObject<HTMLDivElement>;
-}> = ({ show, onClose, selectedRange, onRangeChange, panelRef }) => {
+}> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
   if (!show) return null;
 
   return (
@@ -514,7 +646,7 @@ const GroupByPanel: FC<{
   onGroupByChange: (option: GroupByOption) => void;
   onSortByChange: (option: SortByOption) => void;
   panelRef: React.RefObject<HTMLDivElement>;
-}> = ({ show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef }) => {
+}> = ({show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef}) => {
   if (!show) return null;
 
   return (
