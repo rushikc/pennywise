@@ -419,82 +419,24 @@ const Home: FC<any> = (): ReactElement => {
       </div>
 
       {/* Filter panel */}
-      {showFilters && (
-        <div className="filter-panel" ref={filterPanelRef}>
-          <div className="panel-header">
-            <span className="panel-title">Filter by date range</span>
-            <IconButton
-              size="small"
-              className="close-button"
-              onClick={() => setShowFilters(false)}
-            >
-              <CloseIcon/>
-            </IconButton>
-          </div>
-          <div className="filter-options">
-            {filterOptions.map(option => (
-              <Chip
-                key={option.id}
-                label={option.label}
-                color="primary"
-                variant={selectedRange === option.id ? "filled" : "outlined"}
-                onClick={() => handleRangeChange(option.id)}
-                className="filter-chip"
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <FilterPanel
+        show={showFilters}
+        onClose={() => setShowFilters(false)}
+        selectedRange={selectedRange}
+        onRangeChange={handleRangeChange}
+        panelRef={filterPanelRef}
+      />
 
       {/* Group by panel */}
-      {showGroupByOptions && (
-        <div className="group-by-panel" ref={groupByPanelRef}>
-          <div className="panel-header">
-            <span className="panel-title">Group by</span>
-            <IconButton
-              size="small"
-              className="close-button"
-              onClick={() => setShowGroupByOptions(false)}
-            >
-              <CloseIcon/>
-            </IconButton>
-          </div>
-
-          {/* Group by section */}
-          <div className="panel-section">
-            <div className="section-title">Group by</div>
-            <div className="group-by-options">
-              {groupByOptions.map(option => (
-                <Chip
-                  key={option.id}
-                  label={option.label}
-                  color="primary"
-                  variant={selectedGroupBy === option.id ? "filled" : "outlined"}
-                  onClick={() => handleGroupByChange(option.id)}
-                  className="filter-chip"
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Sort by section */}
-          <div className="panel-section">
-            <div className="section-title">Sort by</div>
-            <div className="sort-by-options">
-              {sortByOptions.map(option => (
-                <Chip
-                  key={option.id}
-                  label={option.label}
-                  color="primary"
-                  variant={selectedSortBy === option.id ? "filled" : "outlined"}
-                  onClick={() => handleSortByChange(option.id)}
-                  className="filter-chip"
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <GroupByPanel
+        show={showGroupByOptions}
+        onClose={() => setShowGroupByOptions(false)}
+        selectedGroupBy={selectedGroupBy}
+        selectedSortBy={selectedSortBy}
+        onGroupByChange={handleGroupByChange}
+        onSortByChange={handleSortByChange}
+        panelRef={groupByPanelRef}
+      />
 
       {/* Scroll to top button */}
       <Zoom in={showScrollTop}>
@@ -521,6 +463,106 @@ const Home: FC<any> = (): ReactElement => {
           {allCollapsed ? <UnfoldMoreIcon/> : <UnfoldLessIcon/>}
         </Fab>
       )}
+    </div>
+  );
+};
+
+// Filter Panel Component
+const FilterPanel: FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedRange: DateRange;
+  onRangeChange: (range: DateRange) => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({ show, onClose, selectedRange, onRangeChange, panelRef }) => {
+  if (!show) return null;
+
+  return (
+    <div className="filter-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Filter by date range</span>
+        <IconButton
+          size="small"
+          className="close-button"
+          onClick={onClose}
+        >
+          <CloseIcon/>
+        </IconButton>
+      </div>
+      <div className="filter-options">
+        {filterOptions.map(option => (
+          <Chip
+            key={option.id}
+            label={option.label}
+            color="primary"
+            variant={selectedRange === option.id ? "filled" : "outlined"}
+            onClick={() => onRangeChange(option.id)}
+            className="filter-chip"
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Group By Panel Component
+const GroupByPanel: FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedGroupBy: GroupByOption;
+  selectedSortBy: SortByOption;
+  onGroupByChange: (option: GroupByOption) => void;
+  onSortByChange: (option: SortByOption) => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({ show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef }) => {
+  if (!show) return null;
+
+  return (
+    <div className="group-by-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Group by</span>
+        <IconButton
+          size="small"
+          className="close-button"
+          onClick={onClose}
+        >
+          <CloseIcon/>
+        </IconButton>
+      </div>
+
+      {/* Group by section */}
+      <div className="panel-section">
+        <div className="section-title">Group by</div>
+        <div className="group-by-options">
+          {groupByOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              color="primary"
+              variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+              onClick={() => onGroupByChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Sort by section */}
+      <div className="panel-section">
+        <div className="section-title">Sort by</div>
+        <div className="sort-by-options">
+          {sortByOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              color="primary"
+              variant={selectedSortBy === option.id ? "filled" : "outlined"}
+              onClick={() => onSortByChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
