@@ -22,6 +22,10 @@ This is a financial web application built with React and TypeScript. The project
 - Look within existing style & design concepts to create similar styles for new components
 - Always create dark mode styles for components, unless specified otherwise
 
+## Github commit messages
+- Use clear and descriptive commit messages
+- commit message should be within 50 letters
+
 
 ## Naming Conventions
 - PascalCase for React components
