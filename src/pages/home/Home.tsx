@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MergeIcon from '@mui/icons-material/Merge';
-import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom, Button} from '@mui/material';
+import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
@@ -33,7 +33,7 @@ import {
   sortByOptions
 } from './validations';
 import './Home.scss';
-import {Close} from "@mui/icons-material";
+import MergeExpenses from './MergeExpenses'; // Import the new MergeExpenses component
 
 // Add interface to extend Window type
 declare global {
@@ -44,7 +44,7 @@ declare global {
 }
 
 const Home: FC<any> = (): ReactElement => {
-  const {expenseList} = useSelector(selectExpense);
+  const {expenseList, tagList} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -61,6 +61,7 @@ const Home: FC<any> = (): ReactElement => {
   const [allCollapsed, setAllCollapsed] = useState(false);
   const [selectedExpenses, setSelectedExpenses] = useState<Expense[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [showMergeDialog, setShowMergeDialog] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -128,10 +129,16 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle merge selected expenses
   const handleMergeSelected = () => {
-    // Implement merge logic here
-    console.log('Merging', selectedExpenses);
-    // After merge is complete:
-    cancelSelection();
+    if (selectedExpenses.length < 2) return;
+    setShowMergeDialog(true); // Show the merge dialog
+  };
+
+  // Handle merge completion
+  const handleMergeComplete = () => {
+    setShowMergeDialog(false);
+    cancelSelection(); // Exit selection mode
+    // The ExpenseAPI in the MergeExpenses component will update the database
+    // React will re-render the component with updated expenses from the store
   };
 
   // Scroll to top function
@@ -591,6 +598,14 @@ const Home: FC<any> = (): ReactElement => {
           {allCollapsed ? <UnfoldMoreIcon/> : <UnfoldLessIcon/>}
         </Fab>
       )}
+
+      {/* Merge expenses dialog - only show in selection mode and when merge dialog is triggered */}
+      <MergeExpenses
+        open={showMergeDialog}
+        onClose={() => setShowMergeDialog(false)}
+        expenses={selectedExpenses}
+        onMergeComplete={handleMergeComplete}
+      />
     </div>
   );
 };

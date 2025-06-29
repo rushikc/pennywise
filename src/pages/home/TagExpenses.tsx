@@ -23,7 +23,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
 
-  const { tagMapList, expense, isTagModal, tagList } = useSelector(selectExpense);
+  const {tagMapList, expense, isTagModal, tagList} = useSelector(selectExpense);
 
   if (expense == null || !isTagModal) {
     return <></>;
@@ -34,7 +34,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
       let _vendor = expense.vendor;
       let _tag = expense.tag;
 
-      let tagObj = tagMapList.find(({ vendor, tag }) => vendor === _vendor && tag === _tag);
+      let tagObj = tagMapList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
       if (!tagObj) {
         let key = _vendor;
@@ -57,10 +57,10 @@ const TagExpenses: FC<any> = (): ReactElement => {
   };
 
   const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.substring(0,20)
-        .replace(/_/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase())
-        .toLowerCase(): '';
+    return vendor ? vendor.substring(0, 20)
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase())
+      .toLowerCase() : '';
   };
 
   return (
@@ -104,8 +104,8 @@ const TagExpenses: FC<any> = (): ReactElement => {
                   />
                 }
                 label="Auto Tag future transactions"
-                sx={{ mb: 0, width: '100%', justifyContent: 'center', ml: 0 }}
-                style={{ margin: 0, width: '100%' }}
+                sx={{mb: 0, width: '100%', justifyContent: 'center', ml: 0}}
+                style={{margin: 0, width: '100%'}}
               />
             </div>
           </div>
@@ -113,7 +113,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
         <Fade in={isTagModal} timeout={600}>
           <div>
-            <Typography variant="subtitle2" className="tag-expense-category-label">
+            <Typography variant="subtitle1" className="tag-expense-category-label">
               Select a category
             </Typography>
             <div className="tag-expense-chip-list">
@@ -161,5 +161,3 @@ const TagExpenses: FC<any> = (): ReactElement => {
 };
 
 export default TagExpenses;
-
-
