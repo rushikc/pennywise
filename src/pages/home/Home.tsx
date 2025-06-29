@@ -362,13 +362,14 @@ const Home: FC<any> = (): ReactElement => {
           value={searchTerm}
           onChange={handleSearchChange}
           variant="outlined"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon className="search-icon"/>
-              </InputAdornment>
-            ),
-            className: "search-input"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            },
           }}
         />
       </div>
