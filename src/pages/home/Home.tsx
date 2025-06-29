@@ -13,58 +13,29 @@ import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
-import {Expense} from '../Types';
-import Loading from '../components/Loading';
-import {selectExpense, setTagExpense} from '../store/expenseActions';
-import {getDateMonth, sortByKeyDate} from '../utility/utility';
+import {Expense} from '../../Types';
+import Loading from '../../components/Loading';
+import {selectExpense, setTagExpense} from '../../store/expenseActions';
+import {getDateMonth, sortByKeyDate} from '../../utility/utility';
+import {
+  DateRange,
+  filterExpensesByDate,
+  filterOptions,
+  GroupByOption,
+  groupByOptions,
+  GroupedExpenses,
+  groupExpenses,
+  searchExpenses,
+  SortByOption,
+  sortByOptions
+} from './validations';
 import './Home.scss';
-import dayjs from 'dayjs';
 
 // Add interface to extend Window type
 declare global {
   // noinspection JSUnusedGlobalSymbols
   interface Window {
     scrollTimeout: ReturnType<typeof setTimeout> | undefined;
-  }
-}
-
-// Define date range options
-type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
-
-const filterOptions: { id: DateRange, label: string }[] = [
-  {id: '1d', label: '1 Day'},
-  {id: '7d', label: '7 Days'},
-  {id: '14d', label: '2 Weeks'},
-  {id: '30d', label: '1 Month'},
-  {id: '90d', label: '3 Month'},
-  {id: '180d', label: '6 Month'},
-  {id: '366d', label: '1 year'},
-];
-
-// Define group by options
-type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
-
-const groupByOptions: { id: GroupByOption, label: string }[] = [
-  {id: 'days', label: 'Days'},
-  {id: 'vendor', label: 'Vendor'},
-  {id: 'cost', label: 'Cost Range'},
-  {id: 'tags', label: 'Tags'},
-];
-
-// Define sort by options
-type SortByOption = 'cost' | 'count' | 'date' | null;
-
-const sortByOptions: { id: SortByOption, label: string }[] = [
-  {id: 'cost', label: 'Total Cost'},
-  {id: 'count', label: 'Expenses Count'},
-];
-
-// Interface for grouped expenses
-interface GroupedExpenses {
-  [groupKey: string]: {
-    groupLabel: string;
-    expenses: Expense[];
-    totalAmount: number;
   }
 }
 
@@ -149,62 +120,14 @@ const Home: FC<any> = (): ReactElement => {
       return;
     }
 
-    const now = dayjs();
-    let startDate: dayjs.Dayjs;
-
-    switch (selectedRange) {
-      case '1d':
-        startDate = now.subtract(1, 'day');
-        break;
-      case '7d':
-        startDate = now.subtract(7, 'day');
-        break;
-      case '14d':
-        startDate = now.subtract(14, 'day');
-        break;
-      case '30d':
-        startDate = now.subtract(30, 'day');
-        break;
-      case '90d':
-        startDate = now.subtract(90, 'day');
-        break;
-      case '180d':
-        startDate = now.subtract(180, 'day');
-        break;
-      case '366d':
-        startDate = now.subtract(366, 'day');
-        break;
-      default:
-        startDate = now.subtract(7, 'day');
-    }
-
-    const filtered = expenseList.filter(expense => {
-      const expenseDate = dayjs(expense.date);
-      return expenseDate.isAfter(startDate) || expenseDate.isSame(startDate, 'day');
-    });
-
+    const filtered = filterExpensesByDate(expenseList, selectedRange);
     const sortedExpenses = sortByKeyDate(filtered, 'date');
     setDateFilteredExpenses(sortedExpenses);
-
   }, [expenseList, selectedRange]);
 
   // Apply search filter after date filtering
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      // If no search term, show all date-filtered expenses
-      setFilteredExpenses(dateFilteredExpenses);
-      return;
-    }
-
-    const searchTermLower = searchTerm.toLowerCase();
-    const searchResults = dateFilteredExpenses.filter(expense => {
-      return (
-        expense.vendor.toLowerCase().includes(searchTermLower) ||
-        expense.cost.toString().includes(searchTermLower) ||
-        (expense.tag && expense.tag.toLowerCase().includes(searchTermLower))
-      );
-    });
-
+    const searchResults = searchExpenses(dateFilteredExpenses, searchTerm);
     setFilteredExpenses(searchResults);
   }, [dateFilteredExpenses, searchTerm]);
 
@@ -216,66 +139,14 @@ const Home: FC<any> = (): ReactElement => {
       return;
     }
 
-    const grouped: GroupedExpenses = {};
+    const grouped = groupExpenses(filteredExpenses, selectedGroupBy);
 
-    filteredExpenses.forEach(expense => {
-      let groupKey: string;
-      let groupLabel: string;
-
-      // Group by different criteria based on selectedGroupBy
-      switch (selectedGroupBy) {
-        case 'days':
-          // Use date as key (without time part)
-          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
-          groupLabel = getDateMonth(expense.date);
-          break;
-
-        case 'vendor':
-          // Use vendor name as key
-          groupKey = expense.vendor.toLowerCase();
-          groupLabel = expense.vendor;
-          break;
-
-        case 'cost':
-          // Create cost ranges (0-100, 100-500, 500-1000, 1000+)
-          const cost = Number(expense.cost);
-          if (cost <= 100) {
-            groupKey = 'range_0_100';
-            groupLabel = '₹0 - ₹100';
-          } else if (cost <= 500) {
-            groupKey = 'range_100_500';
-            groupLabel = '₹100 - ₹500';
-          } else if (cost <= 1000) {
-            groupKey = 'range_500_1000';
-            groupLabel = '₹500 - ₹1000';
-          } else {
-            groupKey = 'range_1000_plus';
-            groupLabel = '₹1000+';
-          }
-          break;
-
-        case 'tags':
-          // Use tag as key, or "untagged" for null tags
-          groupKey = expense.tag ? expense.tag.toLowerCase() : 'untagged';
-          groupLabel = expense.tag ? expense.tag : 'Untagged';
-          break;
-
-        default:
-          groupKey = dayjs(expense.date).format('YYYY-MM-DD');
-          groupLabel = getDateMonth(expense.date);
-      }
-
-      if (!grouped[groupKey]) {
-        grouped[groupKey] = {
-          groupLabel,
-          expenses: [],
-          totalAmount: 0
-        };
-        setCollapsedGroups(prev => ({...prev, [groupKey]: selectedGroupBy !== 'days'}));
-      }
-
-      grouped[groupKey].expenses.push(expense);
-      grouped[groupKey].totalAmount += Number(expense.cost);
+    // Initialize collapsed state for new groups
+    Object.keys(grouped).forEach(groupKey => {
+      setCollapsedGroups(prev => ({
+        ...prev,
+        [groupKey]: selectedGroupBy !== 'days'
+      }));
     });
 
     setGroupedExpenses(grouped);
