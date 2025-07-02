@@ -44,7 +44,7 @@ declare global {
 }
 
 const Home: FC<any> = (): ReactElement => {
-  const {expenseList, tagList} = useSelector(selectExpense);
+  const {expenseList} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);

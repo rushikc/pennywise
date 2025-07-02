@@ -1,11 +1,17 @@
 import {DateTime} from "luxon";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 
 
 //daysJs
 
-export const getDateJs = (seconds: number) => {
-    return dayjs(seconds * 1000);
+
+
+export const getDayJs = (date: Date = new Date()) => {
+    return dayjs(date);
+}
+
+export const getDayJsToDate = (date: Dayjs) => {
+    return dayjs().toDate();
 }
 
 
