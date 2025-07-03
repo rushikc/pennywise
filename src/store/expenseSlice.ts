@@ -89,6 +89,21 @@ export const expenseSlice = createSlice({
 
         deleteTag: (state, action: PayloadAction<string>) => {
             state.tagList = state.tagList.filter(tag => tag !== action.payload);
-        }
+        },
+
+        mergeSaveExpense: (state, action: PayloadAction<{originalExpenses: Expense[], mergedExpense: Expense}>) => {
+            const { originalExpenses, mergedExpense } = action.payload;
+
+            // Get the IDs of expenses to be removed
+            const expenseIdsToRemove = originalExpenses.map(exp => exp.id);
+
+            // Filter out the original expenses
+            state.expenseList = state.expenseList.filter(expense =>
+                !expenseIdsToRemove.includes(expense.id)
+            );
+
+            // Add the merged expense
+            state.expenseList.push(mergedExpense);
+        },
     }
 })

@@ -144,4 +144,27 @@ export class FinanceIndexDB {
         });
     }
 
+    static deleteExpense = async (mailId: string): Promise<void> => {
+        console.debug("deleteExpense IndexedDB - mailId:", mailId);
+
+        return new Promise<void>((resolve, reject) => {
+            this.getStoreInstance("expense").then(store => {
+                const deleteRequest = store.delete(mailId);
+
+                deleteRequest.onsuccess = () => {
+                    console.debug("Successfully deleted expense with mailId:", mailId);
+                    resolve();
+                };
+
+                deleteRequest.onerror = (event) => {
+                    console.error("Error deleting expense:", event);
+                    reject(new Error("Failed to delete expense"));
+                };
+            }).catch(error => {
+                console.error("Error accessing expense store:", error);
+                reject(error);
+            });
+        });
+    }
+
 }

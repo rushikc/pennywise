@@ -17,3 +17,5 @@ export const setExpenseAndTag = (expenseList: Expense[], tagMapList: TagMap[]) =
 export const setTagList = (tags: string[]) => store.dispatch(expenseSlice.actions.setTagList(tags));
 export const addTag = (tag: string) => store.dispatch(expenseSlice.actions.addTag(tag));
 export const deleteTag = (tag: string) => store.dispatch(expenseSlice.actions.deleteTag(tag));
+export const mergeSaveExpense = (originalExpenses: Expense[], mergedExpense: Expense) =>
+  store.dispatch(expenseSlice.actions.mergeSaveExpense({ originalExpenses, mergedExpense }));

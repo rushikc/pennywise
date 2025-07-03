@@ -18,7 +18,7 @@ import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
-import {selectExpense, setExpenseAndTag, setTagExpense, setTagList} from '../../store/expenseActions';
+import {selectExpense, setExpenseAndTag, setTagExpense, setTagList, mergeSaveExpense} from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
@@ -159,11 +159,13 @@ const Home: FC<any> = (): ReactElement => {
   };
 
   // Handle merge completion
-  const handleMergeComplete = () => {
+  const handleMergeComplete = (mergedExpense: Expense) => {
     setShowMergeDialog(false);
-    cancelSelection(); // Exit selection mode
-    // The ExpenseAPI in the MergeExpenses component will update the database
-    // React will re-render the component with updated expenses from the store
+
+    mergeSaveExpense(selectedExpenses, mergedExpense);
+
+    // Exit selection mode
+    cancelSelection();
   };
 
   // Scroll to top function

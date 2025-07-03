@@ -20,7 +20,7 @@ interface MergeExpensesProps {
   expenses: Expense[];
   open: boolean;
   onClose: () => void;
-  onMergeComplete?: () => void;
+  onMergeComplete?: (mergedExpense: Expense) => void;
 }
 
 const ZoomTransition = React.forwardRef(function ZoomTransition(
@@ -72,11 +72,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       return;
     }
 
-    if (!selectedTag) {
-      setErrorMessage("Please select a category");
-      setShowError(true);
-      return;
-    }
 
     // Find the expense object that corresponds to the selected vendor
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
@@ -86,26 +81,26 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       id: vendorExpense.id,
       vendor: selectedVendor,
       tag: selectedTag || vendorExpense.tag,
-      cost: Math.abs(totalCost).toString(),
+      cost: Math.abs(totalCost),
       date: vendorExpense.date, // Borrow date from the selected vendor's expense
       costType: totalCost < 0 ? 'debit' : 'credit', // Keep original cost type logic
-      mailId: vendorExpense.mailId
+      mailId: vendorExpense.mailId,
+      user: vendorExpense.user, // Keep user from the selected vendor's expense
+      type: vendorExpense.type
     };
 
 
     console.log("Merged Expense: ", mergedExpense);
 
-    // // Add the merged expense and delete the original ones
-    // void ExpenseAPI.addExpense(mergedExpense);
-    //
-    // // Delete original expenses
-    // expenses.forEach(exp => {
-    //   // void ExpenseAPI.deleteExpense(exp.id);
-    // });
+    expenses.forEach(exp => {
+      void ExpenseAPI.deleteExpense(exp);
+    });
 
-    // Call the onMergeComplete callback if provided
+    void ExpenseAPI.addExpense(mergedExpense);
+
+    // Call the onMergeComplete callback if provided, passing the merged expense
     if (onMergeComplete) {
-      onMergeComplete();
+      onMergeComplete(mergedExpense);
     } else {
       onClose();
     }

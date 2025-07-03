@@ -258,4 +258,27 @@ export class ExpenseAPI {
             return [];
         }
     }
+
+    static deleteExpense = async (expense: any): Promise<boolean> => {
+        try {
+            // First, delete from Firebase
+            const docRef = doc(db, "expense", expense.id);
+            await deleteDoc(docRef);
+            console.debug("Expense deleted from Firebase with key: ", expense.id);
+
+            // Then, delete from IndexedDB
+            if (expense.mailId) {
+                await FinanceIndexDB.deleteExpense(expense.mailId);
+                console.debug("Expense deleted from IndexedDB with mailId: ", expense.mailId);
+            } else {
+                console.warn("No mailId found for expense, skipping IndexedDB deletion");
+            }
+
+            return true;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error deleting expense: ", e);
+            return false;
+        }
+    }
 }
