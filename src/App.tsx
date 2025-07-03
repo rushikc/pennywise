@@ -17,7 +17,7 @@ import {selectExpense, setExpenseAndTag, setTagList} from "./store/expenseAction
 import ManageTags from "./pages/setting/setting-views/ManageTags";
 import {useSelector} from "react-redux";
 import Login from "./pages/login/Login";
-import {AuthProvider, useAuth} from "./auth/AuthContext";
+import {AuthProvider, useAuth} from "./pages/login/AuthContext";
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
