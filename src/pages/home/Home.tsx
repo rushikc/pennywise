@@ -77,6 +77,7 @@ const Home: FC<any> = (): ReactElement => {
   useEffect(() => {
 
     void ExpenseAPI.processData();
+
     const tagMapApi = ExpenseAPI.getTagMapList();
     const expenseApi = ExpenseAPI.getExpenseList();
     const tagListApi = ExpenseAPI.getTagList();

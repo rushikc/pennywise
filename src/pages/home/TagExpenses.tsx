@@ -103,7 +103,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
                     color="primary"
                   />
                 }
-                label="Auto Tag future transactions"
+                label="Auto tag future transactions"
                 sx={{mb: 0, width: '100%', justifyContent: 'center', ml: 0}}
                 style={{margin: 0, width: '100%'}}
               />

@@ -1,5 +1,5 @@
 import {initializeApp} from 'firebase/app';
-import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
+import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where, deleteDoc} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
@@ -62,9 +62,23 @@ export class ExpenseAPI {
         }
     }
 
+    static deleteOneDoc = async (key: string, collectionName: string = 'config') => {
+        try {
+            const docRef = doc(db, collectionName, key);
+            await deleteDoc(docRef);
+            console.debug("Document deleted with key: ", key);
+            return true;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error deleting document: ", e);
+            return false;
+        }
+    }
+
     static processData = async () => {
         try {
             console.debug("Process Data Init");
+            console.debug("expense list ", await ExpenseAPI.getExpenseList());
             // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
             //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
             //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
@@ -223,8 +237,11 @@ export class ExpenseAPI {
                 fireDocList.forEach(val => FinanceIndexDB.addTagMap(val));
             }
 
+            const lastDateJS = getDayJs();
+            lastDateJS.add(-1, 'days');
+            const lastDate = lastDateJS.toDate();
 
-            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: new Date()}]);
+            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
 
             console.debug('IndexDB  query for tagMap - ', table, indexDocList);
             console.debug('Firebase query for tagMap - ', table, fireDocList);

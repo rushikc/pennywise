@@ -6,12 +6,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
-import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import {useSelector} from "react-redux";
 import {Expense} from '../../Types';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 import {selectExpense} from "../../store/expenseActions";
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Zoom from '@mui/material/Zoom';
+import {TransitionProps} from '@mui/material/transitions';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -19,6 +22,16 @@ interface MergeExpensesProps {
   onClose: () => void;
   onMergeComplete?: () => void;
 }
+
+const ZoomTransition = React.forwardRef(function ZoomTransition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Zoom ref={ref} {...props} />;
+});
+
 
 const MergeExpenses: FC<MergeExpensesProps> = ({
                                                  expenses,
@@ -29,6 +42,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [selectedVendor, setSelectedVendor] = useState<string>("");
   const [totalCost, setTotalCost] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showError, setShowError] = useState<boolean>(false);
 
   // Get tagList from Redux store instead of props
   const {tagList} = useSelector(selectExpense);
@@ -50,7 +65,13 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   }, [expenses, open]);
 
   const onSaveMergedExpense = () => {
-    if (!selectedVendor || !selectedTag) return;
+
+    if (!selectedVendor) {
+      setErrorMessage("Please select a vendor first");
+      setShowError(true);
+      return;
+    }
+
 
     // Create a new merged expense
     const mergedExpense = {
@@ -80,6 +101,10 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     }
   };
 
+  const handleCloseError = () => {
+    setShowError(false);
+  };
+
   const formatVendorName = (vendor: string) => {
     return vendor ? vendor.substring(0, 20)
       .replace(/_/g, ' ')
@@ -96,18 +121,20 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       onClose={onClose}
       maxWidth="xs"
       fullWidth
-      TransitionComponent={Zoom}
-      transitionDuration={350}
+      slotProps={{
+        transition: {
+          timeout: 350,
+        },
+      }}
+      slots={{
+        transition: ZoomTransition
+      }}
     >
       <DialogContent className="tag-expense-dialog-content">
         <Fade in={open} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-title">
               Merge {expenses.length} Expenses
-            </Typography>
-
-            <Typography variant="body2" className="tag-expense-date">
-              {/*{getDateMonthTime(expense.date)}*/}
             </Typography>
 
             <Typography variant="h5">
@@ -171,12 +198,12 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
             </div>
           </div>
         </Fade>
+
       </DialogContent>
 
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={!selectedVendor || !selectedTag}
           onClick={onSaveMergedExpense}
           className="tag-save-btn"
         >
@@ -190,6 +217,17 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
           Cancel
         </Button>
       </DialogActions>
+
+      <Snackbar
+        open={showError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{width: '100%'}}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };
