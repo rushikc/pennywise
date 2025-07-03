@@ -1,10 +1,9 @@
 import {initializeApp} from 'firebase/app';
 import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
-import {getFirebaseConfig} from '../utility/firebase-public';
-import {getDateFormat, getDateJsIdFormat, getDayJs, getDayJsToDate, getISODate} from "../utility/utility";
+import {getFirebaseConfig} from '../firebase/firebase-public';
+import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
-import {tab} from "@testing-library/user-event/dist/tab";
 
 
 const firebaseConfig = getFirebaseConfig();

@@ -2,8 +2,8 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
-import { getFirebaseConfig } from "../utility/firebase-public";
-import { ExpenseAPI } from "./ExpenseAPI";
+import { getFirebaseConfig } from "../src/firebase/firebase-public";
+import { ExpenseAPI } from "../src/api/ExpenseAPI";
 
 const path = require('path');
 const processVar = require('process');
@@ -188,8 +188,8 @@ export const updateFromGmail = async function (auth: any) {
     'ending 8566 for Rs XX1 at XX2 on XX3 XX4' +
     ' After the above transaction';
 
-  // let UPI_MSG = 'Dear Customer, Rs.20.00 has been debited from account **1811 to VPA ' + 
-  // 'paytmqr2810050501011u8l4cw7fokm@paytm on 06-12-22. Your UPI transaction reference number' + 
+  // let UPI_MSG = 'Dear Customer, Rs.20.00 has been debited from account **1811 to VPA ' +
+  // 'paytmqr2810050501011u8l4cw7fokm@paytm on 06-12-22. Your UPI transaction reference number' +
   // ' is 234006737725. Please call on 18002586161'
   let UPI_MSG = 'Dear Customer, XX1 has been debited from account **1811 to VPA ' +
     'XX2 on 06-12-22. Your UPI transaction reference number' +

@@ -1,7 +1,6 @@
-import {AppBar, CssBaseline, ThemeProvider, createTheme} from "@mui/material";
-import {GoogleOAuthProvider} from '@react-oauth/google';
-import {useEffect} from "react";
-import {Route, Routes} from "react-router-dom";
+import {AppBar, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import React, {useEffect} from "react";
+import {Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {ExpenseAPI} from "./api/ExpenseAPI";
 import {FinanceIndexDB} from "./api/FinanceIndexDB";
 import './App.scss';
@@ -12,15 +11,42 @@ import UpdateGmail from "./pages/UpdateGmail";
 import {sortByKeyDate} from "./utility/utility";
 import TagList from "./pages/unused/TagList";
 import Settings from "./pages/setting/Settings";
-import Profile from "./pages/setting/setting-views/Profile";
 import Statistics from "./pages/stats/Statistics";
 import Configuration from "./pages/setting/setting-views/Configuration";
 import {selectExpense, setExpenseAndTag, setTagList} from "./store/expenseActions";
 import ManageTags from "./pages/setting/setting-views/ManageTags";
 import {useSelector} from "react-redux";
+import Login from "./pages/login/Login";
+import {AuthProvider, useAuth} from "./auth/AuthContext";
+
+// Protected route component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
+  const {currentUser, loading} = useAuth();
+  const location = useLocation();
+
+  if (loading) return null;
+
+  if (!currentUser) {
+    return <Navigate to="/login" state={{from: location}} replace/>;
+  }
+
+  return <>{children}</>;
+};
+
+// Bottom navigation wrapper that uses auth context
+const BottomNavAuth = () => {
+  const {currentUser} = useAuth();
+
+  if (!currentUser) return null;
+
+  return (
+    <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
+      <BottomNav/>
+    </AppBar>
+  );
+};
 
 function App() {
-
   FinanceIndexDB.initDB();
 
   // define theme1
@@ -54,38 +80,33 @@ function App() {
     }).catch((res1) => alert(res1))
   }, []);
 
-  const { isTagModal } = useSelector(selectExpense);
-
+  const {isTagModal} = useSelector(selectExpense);
 
   return (
-    <GoogleOAuthProvider clientId="542311218762-phbirt127dfih7s96g8j8iq40mqpmr2r.apps.googleusercontent.com">
+    <AuthProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
+        <CssBaseline/>
         {
-          isTagModal && <TagExpenses />
+          isTagModal && <TagExpenses/>
         }
 
         <Routes>
-          <Route path='/home' element={<Home />} />
-          <Route path='/profile' element={<Settings />} />
-          <Route path='/stats' element={<Statistics />} />
-          <Route path='/tag' element={<TagList />} />
-          <Route path='/Update' element={<UpdateGmail />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/stats' element={<Statistics />} />
-          <Route path='/config' element={<Configuration />} />
-          <Route path='/setting-tags' element={<ManageTags/>} />
-          <Route path='/' element={<Home />} />
+          <Route path="/login" element={<Login/>}/>
+          <Route path='/home' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
+          <Route path='/profile' element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
+          <Route path='/stats' element={<ProtectedRoute><Statistics/></ProtectedRoute>}/>
+          <Route path='/tag' element={<ProtectedRoute><TagList/></ProtectedRoute>}/>
+          <Route path='/Update' element={<ProtectedRoute><UpdateGmail/></ProtectedRoute>}/>
+          <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
+          <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
+          <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         </Routes>
 
-        <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
-          <BottomNav />
-        </AppBar>
-
+        {/* Using the bottom nav component that safely uses useAuth hook */}
+        <BottomNavAuth/>
       </ThemeProvider>
-    </GoogleOAuthProvider>
+    </AuthProvider>
   );
 }
 
 export default App;
-
