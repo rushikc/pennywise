@@ -72,26 +72,36 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       return;
     }
 
+    if (!selectedTag) {
+      setErrorMessage("Please select a category");
+      setShowError(true);
+      return;
+    }
+
+    // Find the expense object that corresponds to the selected vendor
+    const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
 
     // Create a new merged expense
     const mergedExpense = {
-      id: `merged_${Date.now()}`,
+      id: vendorExpense.id,
       vendor: selectedVendor,
-      tag: selectedTag,
+      tag: selectedTag || vendorExpense.tag,
       cost: Math.abs(totalCost).toString(),
-      date: new Date().toISOString(), // Use current date for the merged expense
-      costType: totalCost < 0 ? 'debit' : 'credit',
-      description: `Merged expense from ${expenses.length} transactions`,
-      mailId: `merged_${Date.now()}`
+      date: vendorExpense.date, // Borrow date from the selected vendor's expense
+      costType: totalCost < 0 ? 'debit' : 'credit', // Keep original cost type logic
+      mailId: vendorExpense.mailId
     };
 
-    // Add the merged expense and delete the original ones
-    void ExpenseAPI.addExpense(mergedExpense);
 
-    // Delete original expenses
-    expenses.forEach(exp => {
-      // void ExpenseAPI.deleteExpense(exp.id);
-    });
+    console.log("Merged Expense: ", mergedExpense);
+
+    // // Add the merged expense and delete the original ones
+    // void ExpenseAPI.addExpense(mergedExpense);
+    //
+    // // Delete original expenses
+    // expenses.forEach(exp => {
+    //   // void ExpenseAPI.deleteExpense(exp.id);
+    // });
 
     // Call the onMergeComplete callback if provided
     if (onMergeComplete) {

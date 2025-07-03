@@ -1,132 +1,137 @@
-const {onRequest} = require("firebase-functions/v2/https");
+// noinspection JSUnresolvedReference
 
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc)
 
-const { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } = require('firebase/firestore/lite');
-const { initializeApp } = require('firebase/app');
-const { getFirebaseConfig } = require('./secrets');
+// Add these imports for Firebase Admin SDK
 
+const admin = require('firebase-admin'); // Import the admin SDK
+const { getFirestore } = require('firebase-admin/firestore'); // Import Firestore from admin SDK
 
-const firebaseConfig = getFirebaseConfig();
+// Initialize the Admin SDK
+// When deployed to Cloud Functions, it automatically picks up credentials
+// from the service account associated with the function.
+admin.initializeApp();
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Get the Firestore instance from the Admin SDK
+const db = getFirestore(); // No need to pass 'app' here
 
+// --- Keep your existing onRequest functions ---
+// For the 'onRequest' functions, the core logic of interacting with 'db'
+// will now use the Admin SDK's capabilities.
 
-/**
-* Retrieve or store a method in Firestore
-*
-* Responds to any HTTP request.
-*
-* GET = retrieve
-* POST = store (no update)
-*
-* success: returns the document content in JSON format & status=200
-*    else: returns an error:<string> & status=404
-*
-* @param {!express:Request} req HTTP request context.
-* @param {!express:Response} res HTTP response context.
-*/
 exports.addExpenseData = onRequest((req, res) => {
-  if (req.method === 'POST') {
-    try {
-      const expense = (req.body) || {};
+    if (req.method === 'POST') {
+        try {
+            const expense = (req.body) || {};
 
-      let key = dayjs(expense.date).utcOffset(330)
-        .format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
+            let key = dayjs(expense.date).utcOffset(330)
+                .format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
 
-      const docRef = doc(db, "expense", key);
+            const docRef = doc(db, "expense", key);
 
-      expense.date = new Date(expense.date);
-      setDoc(docRef, expense).then(() => {
-        console.log('Executed setDoc');
-      });
+            expense.date = new Date(expense.date);
+            // setDoc is now using the admin SDK's db instance
+            setDoc(docRef, expense).then(() => {
+                console.log('Executed setDoc');
+                res.send('Executed setDoc'); // Make sure to send response after async operation
+            }).catch(err => {
+                console.error('Error in addExpenseData setDoc:', err);
+                res.status(500).send('Error - ' + err.message);
+            });
 
-    } catch (err) {
-      res.send('Error - ' + err);
+        } catch (err) {
+            console.error('Error in addExpenseData:', err);
+            res.status(500).send('Error - ' + err.message);
+        }
+
+    } else {
+        res.status(405).send('Wrong method, use POST'); // Use appropriate status code
     }
-
-    res.send('Executed setDoc');
-  } else {
-    res.send('Wrong method, use POST');
-  }
 
 });
 
 
 exports.getOneDoc = onRequest((req, res) => {
 
-  if (req.method === 'POST') {
-    try {
-      const data = (req.body) || {};
+    if (req.method === 'POST') {
+        try {
+            const data = (req.body) || {};
 
-      const docRef = doc(db, data.collection, data.key);
-      // const docRef = doc(db, "config", "gmailLastUpdate");
-      getDoc(docRef).then((resp) => {
-        console.log(resp.data());
-        res.send(resp.data());
-      });
+            const docRef = doc(db, data.collection, data.key);
+            getDoc(docRef).then((resp) => {
+                console.log(resp.data());
+                res.send(resp.data());
+            }).catch(err => {
+                console.error('Error in getOneDoc getDoc:', err);
+                res.status(500).send('Error - ' + err.message);
+            });
 
-    } catch (err) {
-      res.send('Error - ' + err);
+        } catch (err) {
+            console.error('Error in getOneDoc:', err);
+            res.status(500).send('Error - ' + err.message);
+        }
+
+    } else {
+        res.status(405).send('Wrong method, use POST');
     }
-
-  } else {
-    res.send('Wrong method, use POST');
-  }
 
 });
 
 
 exports.setOneDoc = onRequest((req, res) => {
 
-  if (req.method === 'POST') {
-    try {
-      const data = (req.body) || {};
+    if (req.method === 'POST') {
+        try {
+            const data = (req.body) || {};
 
-      const docRef = doc(db, data.collection, data.key);
-      setDoc(docRef, data.json).then(() => {
-        console.log('Executed setDoc');
-      });
+            const docRef = doc(db, data.collection, data.key);
+            setDoc(docRef, data.json).then(() => {
+                console.log('Executed setDoc');
+                res.send('Executed'); // Make sure to send response after async operation
+            }).catch(err => {
+                console.error('Error in setOneDoc setDoc:', err);
+                res.status(500).send('Error - ' + err.message);
+            });
 
-    } catch (err) {
-      res.send('Errorred - ' + err);
+        } catch (err) {
+            console.error('Error in setOneDoc:', err);
+            res.status(500).send('Error - ' + err.message);
+        }
+    } else {
+        res.status(405).send('Wrong method, use POST');
     }
-    res.send('Executed');
-  } else {
-    res.send('Wrong method, use POST');
-  }
 
 });
 
 
 exports.getAllDoc = onRequest((req, res) => {
 
-  if (req.method === 'POST') {
-    try {
-      const data = (req.body) || {};
+    if (req.method === 'POST') {
+        try {
+            const data = (req.body) || {};
 
-      getDocs(collection(db, data.collection)).then((querySnapshot) => {
-        let docList = [];
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          let document = doc.data();
-          document.id = doc.id;
-          docList.push(document)
-        });
-        // console.log('Firebase query for - ', docList);
-        res.send(docList);
-      });
+            getDocs(collection(db, data.collection)).then((querySnapshot) => {
+                let docList = [];
+                querySnapshot.forEach((doc) => {
+                    let document = doc.data();
+                    document.id = doc.id;
+                    docList.push(document)
+                });
+                res.send(docList);
+            }).catch(err => {
+                console.error('Error in getAllDoc getDocs:', err);
+                res.status(500).send('Error - ' + err.message);
+            });
 
-    } catch (err) {
-      res.send('Error - ' + err);
+        } catch (err) {
+            console.error('Error in getAllDoc:', err);
+            res.status(500).send('Error - ' + err.message);
+        }
+
+    } else {
+        res.status(405).send('Wrong method, use POST');
     }
-
-  } else {
-    res.send('Wrong method, use POST');
-  }
 
 });
