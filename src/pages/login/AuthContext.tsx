@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {User} from 'firebase/auth';
 import {AuthService} from "./AuthService";
+import {FinanceIndexDB} from "../../api/FinanceIndexDB";
 
 interface AuthContextType {
   currentUser: User | null;

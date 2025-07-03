@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { FinanceIndexDB } from '../api/FinanceIndexDB';
 
 export interface UserProfile {
   name: string;
@@ -61,6 +62,10 @@ export const useAuth = (redirectToLogin = true) => {
   // Sign out function
   const signOut = async () => {
     try {
+      // Clear IndexedDB data before signing out using the method from FinanceIndexDB
+      await FinanceIndexDB.clearIndexedDBData();
+
+      // Then sign out from Firebase
       await auth.signOut();
       return { success: true };
     } catch (error) {

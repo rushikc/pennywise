@@ -110,8 +110,38 @@ export class FinanceIndexDB {
 
     }
 
+    /**
+     * Clears all IndexedDB data by deleting the entire database
+     * @returns Promise that resolves when the database is deleted or rejects on error
+     */
+    static clearIndexedDBData = async (): Promise<void> => {
+        return new Promise<void>((resolve, reject) => {
+            try {
+                // Request to delete the entire database
+                const deleteRequest = indexedDB.deleteDatabase(dbName);
 
+                deleteRequest.onsuccess = () => {
+                    console.log("IndexedDB data cleared successfully");
+                    resolve();
+                };
 
+                deleteRequest.onerror = (event) => {
+                    console.error("Error clearing IndexedDB data:", event);
+                    reject(new Error("Failed to clear IndexedDB data"));
+                };
 
+                // Handle if the database is being blocked (e.g., by other connections)
+                deleteRequest.onblocked = () => {
+                    console.warn("Clearing IndexedDB was blocked. Please close other tabs with this app.");
+                    // Try to continue anyway
+                    resolve();
+                };
+            } catch (error) {
+                console.error("Exception when clearing IndexedDB:", error);
+                // Don't fail the process if clearing DB fails
+                resolve();
+            }
+        });
+    }
 
 }

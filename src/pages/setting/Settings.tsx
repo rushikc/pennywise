@@ -97,7 +97,7 @@ const Settings: React.FC = () => {
       color: '#ffa726'
     },
     {
-      id: 'signout',
+      id: 'sign out',
       title: 'Sign Out',
       subtitle: 'Log out of your account',
       icon: <LogoutIcon />,
@@ -113,7 +113,7 @@ const Settings: React.FC = () => {
     }
 
     if (route === '/signout') {
-      handleSignOut();
+      void handleSignOut();
       return;
     }
 

@@ -1,6 +1,7 @@
-import { Modal, Box, Typography } from '@mui/material';
+import { Modal, Box, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { auth } from '../firebase/firebaseConfig';
 
 interface ErrorModalProps {
   open: boolean;
@@ -10,6 +11,16 @@ interface ErrorModalProps {
 
 // Modal component to display error messages
 const ErrorModal: React.FC<ErrorModalProps> = ({ open, onClose, message }) => {
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+      window.location.href = '/login';
+      onClose();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -46,7 +57,23 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ open, onClose, message }) => {
         >
           {message}
         </Typography>
-        {/* No buttons - modal will automatically close after timeout */}
+
+        {/* Sign Out Button */}
+        <Button
+          variant="contained"
+          color="error"
+          fullWidth
+          onClick={handleSignOut}
+          sx={{
+            mt: 2,
+            bgcolor: '#ff5252',
+            '&:hover': {
+              bgcolor: '#ff1744',
+            }
+          }}
+        >
+          Sign In Again
+        </Button>
       </Box>
     </Modal>
   );
@@ -94,11 +121,7 @@ export const ErrorHandlers = {
     const root = createRoot(modalContainer);
 
     const handleClose = () => {
-      // Auto-close after showing the message
-      setTimeout(() => {
-        root.unmount();
-        modalRoot?.removeChild(modalContainer);
-      }, 5000); // Close after 5 seconds
+      // Auto-close after showing the messageeconds
     };
 
     // Render the modal
@@ -110,7 +133,5 @@ export const ErrorHandlers = {
       />
     );
 
-    // Start the auto-close timer
-    handleClose();
   }
 };

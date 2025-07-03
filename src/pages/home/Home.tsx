@@ -18,7 +18,7 @@ import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
-import {selectExpense, setTagExpense} from '../../store/expenseActions';
+import {selectExpense, setExpenseAndTag, setTagExpense, setTagList} from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
@@ -33,7 +33,8 @@ import {
   sortByOptions
 } from './validations';
 import './Home.scss';
-import MergeExpenses from './MergeExpenses'; // Import the new MergeExpenses component
+import MergeExpenses from './MergeExpenses';
+import {ExpenseAPI} from "../../api/ExpenseAPI"; // Import the new MergeExpenses component
 
 // Add interface to extend Window type
 declare global {
@@ -42,6 +43,8 @@ declare global {
     scrollTimeout: ReturnType<typeof setTimeout> | undefined;
   }
 }
+
+
 
 const Home: FC<any> = (): ReactElement => {
   const {expenseList} = useSelector(selectExpense);
@@ -70,6 +73,27 @@ const Home: FC<any> = (): ReactElement => {
   const groupByButtonRef = useRef<HTMLDivElement>(null);
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
+
+  useEffect(() => {
+
+    void ExpenseAPI.processData();
+    const tagMapApi = ExpenseAPI.getTagMapList();
+    const expenseApi = ExpenseAPI.getExpenseList();
+    const tagListApi = ExpenseAPI.getTagList();
+
+    Promise.all([tagMapApi, expenseApi, tagListApi]).then((res) => {
+
+      const tagResult = res[0];
+      const expenseResult = res[1];
+      const tagList = res[2];
+      const expenseList = sortByKeyDate(expenseResult, 'date');
+
+      setExpenseAndTag(expenseList, tagResult);
+      setTagList(tagList);
+
+    }).catch((res1) => alert(res1))
+  }, []);
+
   const toggleFilters = () => {
     if (selectionMode) return; // Don't show filters in selection mode
     setShowFilters(!showFilters);
