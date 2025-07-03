@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import {Avatar, Box, Container, Paper, Typography} from '@mui/material';
+import {Avatar, Box, Container, Paper, Typography, Snackbar, Alert, CircularProgress} from '@mui/material';
 import {
   BarChart as StatsIcon,
   LocalOffer as TagsIcon,
   Person as ProfileIcon,
   Settings as ConfigIcon,
-  Refresh as ReloadIcon
+  Refresh as ReloadIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import './settings.scss';
 import ReloadExpense from './setting-views/ReloadExpense';
+import { auth } from '../../firebase/firebaseConfig';
 
 interface DashboardTile {
   id: string;
@@ -24,11 +26,30 @@ interface DashboardTile {
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
+
+  // Get current user info from Firebase auth
+  const currentUser = auth.currentUser;
 
   const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    photoUrl: '/profile-avatar.jpg'
+    name: currentUser?.displayName || 'User',
+    email: currentUser?.email || 'Not signed in',
+    photoUrl: currentUser?.photoURL || '/profile-avatar.jpg'
+  };
+
+  // Handle sign out
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      setSignOutError('Failed to sign out. Please try again.');
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
   const dashboardTiles: DashboardTile[] = [
@@ -71,6 +92,14 @@ const Settings: React.FC = () => {
       icon: <ReloadIcon/>,
       route: '/reload',
       color: '#ffa726'
+    },
+    {
+      id: 'signout',
+      title: 'Sign Out',
+      subtitle: 'Log out of your account',
+      icon: <LogoutIcon/>,
+      route: '/signout',
+      color: '#f44336' // Red color for sign out
     }
   ];
 
@@ -80,6 +109,13 @@ const Settings: React.FC = () => {
       setReloadExpenseModalOpen(true);
       return;
     }
+
+    // Special case for sign out
+    if (route === '/signout') {
+      handleSignOut();
+      return;
+    }
+
     navigate(route);
   };
 
@@ -179,6 +215,28 @@ const Settings: React.FC = () => {
         open={reloadExpenseModalOpen}
         onClose={() => setReloadExpenseModalOpen(false)}
       />
+
+      {/* Sign out progress and error handling */}
+      <Snackbar
+        open={isSigningOut}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        autoHideDuration={6000}
+        onClose={() => setSignOutError(null)}
+      >
+        <Alert onClose={() => setSignOutError(null)} severity="info" sx={{ width: '100%' }}>
+          Signing out...
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={Boolean(signOutError)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        autoHideDuration={6000}
+        onClose={() => setSignOutError(null)}
+      >
+        <Alert onClose={() => setSignOutError(null)} severity="error" sx={{ width: '100%' }}>
+          {signOutError}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
