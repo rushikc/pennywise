@@ -4,6 +4,7 @@ import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
+import {ErrorHandlers} from '../components/ErrorHandlers';
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -30,6 +31,7 @@ export class ExpenseAPI {
             await FinanceIndexDB.addExpenseList([expense]);
 
         } catch (e) {
+            ErrorHandlers.handleApiError(e);
             console.error("Error adding document: ", e);
         }
     }
@@ -42,6 +44,7 @@ export class ExpenseAPI {
             console.debug("Document written with key: ", key);
             console.debug("Document written with val: ", val);
         } catch (e) {
+            ErrorHandlers.handleApiError(e);
             console.error("Error adding document: ", e);
         }
     }
@@ -52,170 +55,190 @@ export class ExpenseAPI {
             const docSnap = await getDoc(docRef);
             // @ts-ignore
             return docSnap.data();
-
         } catch (e) {
-            console.error("Error adding document: ", e);
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting document: ", e);
+            return null;
         }
     }
 
     static processData = async () => {
-        console.debug("Process Data Init");
-        // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
-        //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
-        //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
+        try {
+            console.debug("Process Data Init");
+            // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
+            //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
+            //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error processing data: ", e);
+        }
     }
 
 
     static getExpenseList = async (overrideLastDate: string | undefined = undefined) => {
+        try {
+            let table = 'expense';
 
-        let table = 'expense';
+            let indexDocList: any[] = [];
+            let fireDocList: any[] = [];
+
+            let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
 
 
-        let indexDocList: any[] = [];
-        let fireDocList: any[] = [];
-
-        let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
-
-
-        await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
-            // console.log("index db config ", getDateFormat(data.value));
-            if (data) {
-                lastUpdatedDate = new Date(getDateFormat(data.value));
-                // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
-            }
-        });
-
-        if (overrideLastDate) {
-            lastUpdatedDate = new Date(overrideLastDate);
-        }
-
-        console.log("lastUpdatedDate ", lastUpdatedDate);
-
-        // return null;
-
-        const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
-        const querySnapshot = await getDocs(q);
-
-        const queryResultLen = querySnapshot.docs.length;
-
-        if (queryResultLen) {
-
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
-                let document = doc.data();
-                document.id = doc.id;
-                document.date = getISODate(document.date.seconds);
-                fireDocList.push(document)
+            await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
+                // console.log("index db config ", getDateFormat(data.value));
+                if (data) {
+                    lastUpdatedDate = new Date(getDateFormat(data.value));
+                    // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
+                }
             });
 
-            await FinanceIndexDB.addExpenseList(fireDocList);
+            if (overrideLastDate) {
+                lastUpdatedDate = new Date(overrideLastDate);
+            }
+
+            console.log("lastUpdatedDate ", lastUpdatedDate);
+
+            // return null;
+
+            const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            const querySnapshot = await getDocs(q);
+
+            const queryResultLen = querySnapshot.docs.length;
+
+            if (queryResultLen) {
+
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    let document = doc.data();
+                    document.id = doc.id;
+                    document.date = getISODate(document.date.seconds);
+                    fireDocList.push(document)
+                });
+
+                await FinanceIndexDB.addExpenseList(fireDocList);
+            }
+
+
+            const lastDateJS = getDayJs();
+            lastDateJS.add(-1, 'days');
+            const lastDate = lastDateJS.toDate();
+
+            await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: lastDate}]);
+
+            await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
+
+
+            console.debug('Firebase query for expenses - ', table, fireDocList);
+            console.debug('IndexDB query for expenses - ', table, indexDocList);
+
+
+            indexDocList.forEach(val => val.date = String(val.date));
+
+            console.debug('FinalList query for expenses - ', table, indexDocList);
+            return indexDocList;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error fetching expense list: ", e);
+            return [];
         }
-
-
-        const lastDateJS = getDayJs();
-        lastDateJS.add( -1, 'days');
-        const lastDate = lastDateJS.toDate();
-
-        await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: lastDate}]);
-
-        await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
-
-
-        console.debug('Firebase query for expenses - ', table, fireDocList);
-        console.debug('IndexDB query for expenses - ', table, indexDocList);
-
-
-        indexDocList.forEach(val => val.date = String(val.date));
-
-        console.debug('FinalList query for expenses - ', table, indexDocList);
-        return indexDocList;
-
-
     }
 
     static getTagList = async () => {
-        let table = 'config';
+        try {
+            let table = 'config';
 
-        const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
-        const tagList: string[] = tagObject.tagList;
+            const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
+            const tagList: string[] = tagObject?.tagList || [];
 
-        console.log('tagList ', tagList);
+            console.log('tagList ', tagList);
 
-        return tagList;
+            return tagList;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting tag list: ", e);
+            return [];
+        }
     }
 
     static updateTagList = async (tags: string[]) => {
-        let table = 'config';
+        try {
+            let table = 'config';
 
-        await ExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
-        // const tagObject : any = await ExpenseAPI.getOneDoc('tags', table);
-        // const tagList: string[] = tagObject.tagList;
+            await ExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
+            // const tagObject : any = await ExpenseAPI.getOneDoc('tags', table);
+            // const tagList: string[] = tagObject.tagList;
 
-        console.log('set tagList ', tags);
-
+            console.log('set tagList ', tags);
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error updating tag list: ", e);
+        }
     }
 
     static getTagMapList = async () => {
-
-        let table = 'tagMap';
-
-
-        let indexDocList: any[] = [];
-        let fireDocList: any[] = [];
-
-        let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
-        let isLastUpdateAvailable = false;
+        try {
+            let table = 'tagMap';
 
 
-        await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
-            // console.log("index db config ", data);
-            if (data) {
-                lastUpdatedDate = new Date(data.value);
-                // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
-                isLastUpdateAvailable = true;
-            }
-        });
+            let indexDocList: any[] = [];
+            let fireDocList: any[] = [];
 
-        if (isLastUpdateAvailable) {
-            await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
-        }
+            let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
+            let isLastUpdateAvailable = false;
 
-        // console.log(" lastUpdatedDate ", lastUpdatedDate);
 
-        const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
-        const querySnapshot = await getDocs(q);
-
-        const queryResultLen = querySnapshot.docs.length;
-
-        if (queryResultLen) {
-
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
-                let document = doc.data();
-                document.id = doc.id;
-                document.date = String(document.date);
-                fireDocList.push(document)
+            await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
+                // console.log("index db config ", data);
+                if (data) {
+                    lastUpdatedDate = new Date(data.value);
+                    // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
+                    isLastUpdateAvailable = true;
+                }
             });
 
-            fireDocList.forEach(val => FinanceIndexDB.addTagMap(val));
+            if (isLastUpdateAvailable) {
+                await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
+            }
+
+            // console.log(" lastUpdatedDate ", lastUpdatedDate);
+
+            const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            const querySnapshot = await getDocs(q);
+
+            const queryResultLen = querySnapshot.docs.length;
+
+            if (queryResultLen) {
+
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    let document = doc.data();
+                    document.id = doc.id;
+                    document.date = String(document.date);
+                    fireDocList.push(document)
+                });
+
+                fireDocList.forEach(val => FinanceIndexDB.addTagMap(val));
+            }
+
+
+            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: new Date()}]);
+
+            console.debug('IndexDB  query for tagMap - ', table, indexDocList);
+            console.debug('Firebase query for tagMap - ', table, fireDocList);
+
+            const finalList = fireDocList.concat(indexDocList);
+
+            finalList.forEach(val => val.date = String(val.date));
+
+            console.debug('FinalList query for tagMap- ', table, finalList);
+            return finalList;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting tag map list: ", e);
+            return [];
         }
-
-
-        await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: new Date()}]);
-
-        console.debug('IndexDB  query for tagMap - ', table, indexDocList);
-        console.debug('Firebase query for tagMap - ', table, fireDocList);
-
-        const finalList = fireDocList.concat(indexDocList);
-
-        finalList.forEach(val => val.date = String(val.date));
-
-        console.debug('FinalList query for tagMap- ', table, finalList);
-        return finalList;
-
     }
-
-
 }
