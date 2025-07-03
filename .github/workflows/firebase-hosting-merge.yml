@@ -18,18 +18,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINANCE_APP_361514 }}'
           channelId: live
           projectId: finance-app-361514
-
-  deploy_functions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Functions Dependencies
-        run: npm ci
-        working-directory: ./functions
-      - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINANCE_APP_361514 }}'
-          projectId: finance-app-361514
-          target: functions
