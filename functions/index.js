@@ -1,5 +1,6 @@
 // noinspection JSUnresolvedReference
 
+const {onRequest} = require("firebase-functions/v2/https");
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc)
@@ -29,11 +30,11 @@ exports.addExpenseData = onRequest((req, res) => {
             let key = dayjs(expense.date).utcOffset(330)
                 .format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
 
-            const docRef = doc(db, "expense", key);
+            const docRef = db.collection("expense").doc(key);
 
             expense.date = new Date(expense.date);
             // setDoc is now using the admin SDK's db instance
-            setDoc(docRef, expense).then(() => {
+            docRef.set(expense).then(() => {
                 console.log('Executed setDoc');
                 res.send('Executed setDoc'); // Make sure to send response after async operation
             }).catch(err => {
@@ -59,8 +60,8 @@ exports.getOneDoc = onRequest((req, res) => {
         try {
             const data = (req.body) || {};
 
-            const docRef = doc(db, data.collection, data.key);
-            getDoc(docRef).then((resp) => {
+            const docRef = db.collection(data.collection).doc(data.key);
+            docRef.get().then((resp) => {
                 console.log(resp.data());
                 res.send(resp.data());
             }).catch(err => {
@@ -86,8 +87,8 @@ exports.setOneDoc = onRequest((req, res) => {
         try {
             const data = (req.body) || {};
 
-            const docRef = doc(db, data.collection, data.key);
-            setDoc(docRef, data.json).then(() => {
+            const docRef = db.collection(data.collection).doc(data.key);
+            docRef.set(data.json).then(() => {
                 console.log('Executed setDoc');
                 res.send('Executed'); // Make sure to send response after async operation
             }).catch(err => {
@@ -112,7 +113,7 @@ exports.getAllDoc = onRequest((req, res) => {
         try {
             const data = (req.body) || {};
 
-            getDocs(collection(db, data.collection)).then((querySnapshot) => {
+            db.collection(data.collection).get().then((querySnapshot) => {
                 let docList = [];
                 querySnapshot.forEach((doc) => {
                     let document = doc.data();
@@ -135,3 +136,4 @@ exports.getAllDoc = onRequest((req, res) => {
     }
 
 });
+
