@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2 }}>
           <Typography component="h1" variant="h4" align="center" gutterBottom>
-            Finance App Login
+            My Expense Login
           </Typography>
 
           {error && (
