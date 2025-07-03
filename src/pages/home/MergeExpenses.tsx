@@ -56,6 +56,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
         const costValue = exp.cost;
         return sum + (exp.costType === 'debit' ? -costValue : costValue);
       }, 0);
+
       setTotalCost(total);
 
       // Reset selected values when modal opens
@@ -65,42 +66,43 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   }, [expenses, open]);
 
   const onSaveMergedExpense = () => {
-
+    // Validate vendor selection
     if (!selectedVendor) {
       setErrorMessage("Please select a vendor first");
       setShowError(true);
       return;
     }
 
-
-    // Find the expense object that corresponds to the selected vendor
+    // Find the expense object that corresponds to the selected vendor or use first expense as fallback
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
 
-    // Create a new merged expense
-    const mergedExpense = {
+    // Create a new merged expense with properties from the selected vendor's expense
+    const mergedExpense: Expense = {
       id: vendorExpense.id,
       vendor: selectedVendor,
-      tag: selectedTag || vendorExpense.tag,
+      tag: selectedTag || vendorExpense.tag, // Use selected tag or keep original
       cost: Math.abs(totalCost),
-      date: vendorExpense.date, // Borrow date from the selected vendor's expense
-      costType: totalCost < 0 ? 'debit' : 'credit', // Keep original cost type logic
+      date: vendorExpense.date,
+      costType: totalCost < 0 ? 'debit' : 'credit',
       mailId: vendorExpense.mailId,
-      user: vendorExpense.user, // Keep user from the selected vendor's expense
+      user: vendorExpense.user,
       type: vendorExpense.type
     };
 
+    // Log the merged expense for debugging
+    console.log("Merged Expense:", mergedExpense);
 
-    console.log("Merged Expense: ", mergedExpense);
-
+    // Delete all original expenses from the database
     expenses.forEach(exp => {
       void ExpenseAPI.deleteExpense(exp);
     });
 
+    // Add the new merged expense to the database
     void ExpenseAPI.addExpense(mergedExpense);
 
-    // Call the onMergeComplete callback if provided, passing the merged expense
+    // Complete the merge process
     if (onMergeComplete) {
-      onMergeComplete(mergedExpense);
+      onMergeComplete(mergedExpense); // Update Redux store via callback
     } else {
       onClose();
     }

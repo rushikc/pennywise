@@ -160,8 +160,10 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle merge completion
   const handleMergeComplete = (mergedExpense: Expense) => {
+    // Close the merge dialog
     setShowMergeDialog(false);
 
+    // Update the Redux store directly - more efficient than API call
     mergeSaveExpense(selectedExpenses, mergedExpense);
 
     // Exit selection mode
