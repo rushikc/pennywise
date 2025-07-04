@@ -41,3 +41,163 @@
 .tag-dialog-content {
     min-width: 300px;
 }
+
+// Configuration styling
+
+.config-container {
+  padding-bottom: 10rem;
+  padding-top: 2rem;
+}
+
+.config-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.back-button {
+  margin-right: 1rem;
+  color: var(--primary-color);
+}
+
+.section-paper {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: #23272a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  &.bank-section {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.section-title {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.add-card-button {
+  border-radius: 8px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.loading-indicator {
+  color: #90caf9;
+
+  &.mini {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.card-list-item {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background-color: #2a3035;
+
+  &:hover {
+    background-color: #323a42;
+  }
+}
+
+.card-icon {
+  margin-right: 1rem;
+  color: #90caf9;
+}
+
+.delete-button {
+  color: #ef5350;
+
+  svg {
+    color: #ef5350;
+    fill: #ef5350;
+  }
+}
+
+.card-text {
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.empty-cards-message {
+  text-align: center;
+  padding: 1rem 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+// Dialog styling
+.card-dialog {
+  .MuiPaper-root {
+    background-color: #23272a;
+    border-radius: 16px;
+  }
+}
+
+.dialog-title {
+  color: #e0e0e0;
+}
+
+.dialog-text {
+  color: #b0bec5;
+  margin-bottom: 1rem;
+}
+
+.text-field {
+  .MuiOutlinedInput-root {
+    color: #e0e0e0;
+
+    fieldset {
+      border-color: #3a4045;
+    }
+
+    &:hover fieldset {
+      border-color: #90caf9;
+    }
+
+    &.Mui-focused fieldset {
+      border-color: #90caf9;
+    }
+  }
+
+  .MuiFormLabel-root {
+    color: #90caf9;
+  }
+
+  .MuiFormHelperText-root {
+    color: #ef5350;
+  }
+}
+
+.dialog-actions {
+  padding: 0 1.5rem 1rem;
+}
+
+.cancel-button {
+  color: #90caf9;
+}
+
+.save-button {
+  background-color: #2a3035;
+
+  &:hover {
+    background-color: #323a42;
+  }
+}

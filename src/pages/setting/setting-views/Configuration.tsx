@@ -26,7 +26,7 @@ import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {BankConfig} from "../../../Types";
-
+import './settingViews.scss';
 
 const Configuration: React.FC = () => {
   const theme = useTheme();
@@ -159,11 +159,11 @@ const Configuration: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{pb: 10, pt: 2}}>
-      <Box sx={{display: 'flex', alignItems: 'center', mb: 3}}>
+    <Container className="config-container" maxWidth="sm">
+      <Box className="config-header">
         <IconButton
           onClick={() => navigate('/dashboard')}
-          sx={{mr: 2, color: theme.palette.primary.main}}
+          className="back-button"
         >
           <BackIcon/>
         </IconButton>
@@ -178,22 +178,15 @@ const Configuration: React.FC = () => {
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.5}}
         elevation={3}
-        sx={{
-          p: 3,
-          borderRadius: '16px',
-          background: '#23272a',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-          mb: 3,
-          position: 'relative',
-        }}
+        className="section-paper bank-section"
       >
         {isLoading ? (
-          <Box sx={{display: 'flex', justifyContent: 'center', py: 2}}>
-            <CircularProgress size={28} sx={{color: '#90caf9'}}/>
+          <Box className="loading-container">
+            <CircularProgress size={28} className="loading-indicator" />
           </Box>
         ) : (
           <>
-            <Typography variant="h6" sx={{mb: 2, fontWeight: 'medium'}}>
+            <Typography variant="h6" className="section-title">
               Bank Account Settings
             </Typography>
 
@@ -213,12 +206,7 @@ const Configuration: React.FC = () => {
             {isSaving && (
               <CircularProgress
                 size={16}
-                sx={{
-                  color: '#90caf9',
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px'
-                }}
+                className="loading-indicator mini"
               />
             )}
           </>
@@ -232,16 +220,10 @@ const Configuration: React.FC = () => {
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.5, delay: 0.1}}
         elevation={3}
-        sx={{
-          p: 3,
-          borderRadius: '16px',
-          background: '#23272a',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-          position: 'relative',
-        }}
+        className="section-paper"
       >
-        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
-          <Typography variant="h6" sx={{fontWeight: 'medium'}}>
+        <Box className="section-header">
+          <Typography variant="h6" className="section-title">
             Credit Cards
           </Typography>
           <Button
@@ -250,7 +232,7 @@ const Configuration: React.FC = () => {
             color="primary"
             size="small"
             onClick={handleAddCreditCard}
-            sx={{borderRadius: 2}}
+            className="add-card-button"
             disabled={isLoading || isSaving}
           >
             Add Credit Card
@@ -260,45 +242,39 @@ const Configuration: React.FC = () => {
         <Divider sx={{mb: 2}}/>
 
         {isLoading ? (
-          <Box sx={{display: 'flex', justifyContent: 'center', py: 2}}>
-            <CircularProgress size={28} sx={{color: '#90caf9'}}/>
+          <Box className="loading-container">
+            <CircularProgress size={28} className="loading-indicator" />
           </Box>
         ) : (
           <List>
             {bankConfig.creditCards.map((cardDigits, index) => (
               <ListItem
                 key={index}
-                sx={{
-                  py: 1,
-                  borderRadius: 1,
-                  mb: 1,
-                  bgcolor: '#2a3035',
-                  '&:hover': {bgcolor: '#323a42'}
-                }}
+                className="card-list-item"
                 secondaryAction={
                   <IconButton
                     edge="end"
                     aria-label="delete"
                     onClick={() => handleRemoveCard(cardDigits)}
                     disabled={isSaving}
-                    sx={{color: '#ef5350'}}
+                    className="delete-button"
                   >
                     <RemoveCircleOutline />
                   </IconButton>
                 }
               >
-                <CreditCardIcon sx={{mr: 2, color: '#90caf9'}}/>
+                <CreditCardIcon className="card-icon" />
                 <ListItemText
                   primary={`HDFC ****${cardDigits}`}
                   primaryTypographyProps={{
-                    sx: {color: '#e0e0e0', fontWeight: 500}
+                    className: "card-text"
                   }}
                 />
               </ListItem>
             ))}
 
             {bankConfig.creditCards.length === 0 && (
-              <Typography variant="body2" color="text.secondary" sx={{textAlign: 'center', py: 2}}>
+              <Typography variant="body2" className="empty-cards-message">
                 No credit cards added yet
               </Typography>
             )}
@@ -308,12 +284,7 @@ const Configuration: React.FC = () => {
         {isSaving && (
           <CircularProgress
             size={16}
-            sx={{
-              color: '#90caf9',
-              position: 'absolute',
-              top: '16px',
-              right: '16px'
-            }}
+            className="loading-indicator mini"
           />
         )}
       </Paper>
@@ -322,16 +293,11 @@ const Configuration: React.FC = () => {
       <Dialog
         open={cardDialogOpen}
         onClose={handleCloseCardDialog}
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: '#23272a',
-            borderRadius: '16px',
-          }
-        }}
+        className="card-dialog"
       >
-        <DialogTitle sx={{color: '#e0e0e0'}}>Add HDFC Credit Card</DialogTitle>
+        <DialogTitle className="dialog-title">Add HDFC Credit Card</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{color: '#b0bec5', mb: 2}}>
+          <DialogContentText className="dialog-text">
             Please enter the last 4 digits of your HDFC credit card.
           </DialogContentText>
 
@@ -353,38 +319,20 @@ const Configuration: React.FC = () => {
             error={!!cardError}
             helperText={cardError}
             inputProps={{inputMode: 'numeric', pattern: '[0-9]*'}}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                color: '#e0e0e0',
-                '& fieldset': {
-                  borderColor: '#3a4045',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#90caf9',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#90caf9',
-                },
-              },
-              '& .MuiFormLabel-root': {
-                color: '#90caf9',
-              },
-              '& .MuiFormHelperText-root': {
-                color: '#ef5350',
-              },
-            }}
+            className="text-field"
           />
         </DialogContent>
-        <DialogActions sx={{px: 3, pb: 2}}>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCloseCardDialog}
-            sx={{color: '#90caf9'}}
+            className="cancel-button"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSaveCard}
             variant="contained"
+            className="save-button"
           >
             Save
           </Button>
