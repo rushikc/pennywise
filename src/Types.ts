@@ -23,5 +23,9 @@ export interface Config {
     value: string | Date
 }
 
+export interface BankConfig {
+    enableUpi: boolean;
+    creditCards: string[];
+}
 
 

@@ -1,56 +1,84 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  Box,
-  Button,
   Container,
+  Box,
+  Typography,
+  Paper,
+  FormControlLabel,
+  Switch,
+  IconButton,
+  useTheme,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Divider,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
-  FormControlLabel,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Switch,
   TextField,
-  Typography,
-  useTheme
+  CircularProgress
 } from '@mui/material';
-import {Add as AddIcon, ArrowBack as BackIcon, CreditCard as CreditCardIcon} from '@mui/icons-material';
+import {ArrowBack as BackIcon, CreditCard as CreditCardIcon, Add as AddIcon, RemoveCircleOutline} from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {BankConfig} from "../../../Types";
 
-// Credit card interface
-interface CreditCard {
-  id: string;
-  bank: string;
-  lastFourDigits: string;
-}
 
 const Configuration: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [enableHdfcUpi, setEnableHdfcUpi] = useState<boolean>(false);
 
-  // Sample credit cards data
-  const [creditCards, setCreditCards] = useState<CreditCard[]>([
-    { id: '1', bank: 'HDFC', lastFourDigits: '4567' },
-    { id: '2', bank: 'ICICI', lastFourDigits: '8901' },
-    { id: '3', bank: 'SBI', lastFourDigits: '2345' }
-  ]);
+  // State for bank configuration
+  const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: []});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // States for the add credit card modal
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [newCardDigits, setNewCardDigits] = useState('');
   const [cardError, setCardError] = useState('');
 
-  const handleHdfcUpiToggle = () => {
-    setEnableHdfcUpi(!enableHdfcUpi);
-    // Here you would typically save the setting to your backend or local storage
+  // Fetch bank configuration on component mount
+  useEffect(() => {
+    const fetchBankConfig = async () => {
+      setIsLoading(true);
+      try {
+        const config = await ExpenseAPI.getBankConfig();
+        setBankConfig(config);
+      } catch (error) {
+        console.error('Error fetching bank configuration:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchBankConfig();
+
+  }, []);
+
+  const handleHdfcUpiToggle = async () => {
+    setIsSaving(true);
+    const updatedConfig = {
+      ...bankConfig,
+      enableUpi: !bankConfig.enableUpi
+    };
+
+    try {
+      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      if (success) {
+        setBankConfig(updatedConfig);
+      } else {
+        console.error('Failed to update UPI setting');
+      }
+    } catch (error) {
+      console.error('Error updating UPI setting:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleAddCreditCard = () => {
@@ -66,7 +94,7 @@ const Configuration: React.FC = () => {
     setCardDialogOpen(false);
   };
 
-  const handleSaveCard = () => {
+  const handleSaveCard = async () => {
     // Validate input
     if (!newCardDigits) {
       setCardError('Please enter the last 4 digits');
@@ -78,25 +106,66 @@ const Configuration: React.FC = () => {
       return;
     }
 
-    // Create new card and add to state
-    const newCard: CreditCard = {
-      id: Date.now().toString(), // Simple ID generation
-      bank: 'HDFC', // Fixed bank as HDFC
-      lastFourDigits: newCardDigits
+    // Check for duplicates
+    if (bankConfig.creditCards.includes(newCardDigits)) {
+      setCardError('This card has already been added');
+      return;
+    }
+
+    setIsSaving(true);
+
+    // Add the new card to the existing cards
+    const updatedConfig = {
+      ...bankConfig,
+      creditCards: [...bankConfig.creditCards, newCardDigits]
     };
 
-    setCreditCards([...creditCards, newCard]);
-    setCardDialogOpen(false);
+    try {
+      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      if (success) {
+        setBankConfig(updatedConfig);
+        setCardDialogOpen(false);
+      } else {
+        setCardError('Failed to add credit card');
+      }
+    } catch (error) {
+      console.error('Error adding credit card:', error);
+      setCardError('Error saving credit card');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleRemoveCard = async (cardDigits: string) => {
+    setIsSaving(true);
+
+    const updatedConfig = {
+      ...bankConfig,
+      creditCards: bankConfig.creditCards.filter(card => card !== cardDigits)
+    };
+
+    try {
+      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      if (success) {
+        setBankConfig(updatedConfig);
+      } else {
+        console.error('Failed to remove credit card');
+      }
+    } catch (error) {
+      console.error('Error removing credit card:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ pb: 10, pt: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+    <Container maxWidth="sm" sx={{pb: 10, pt: 2}}>
+      <Box sx={{display: 'flex', alignItems: 'center', mb: 3}}>
         <IconButton
           onClick={() => navigate('/dashboard')}
-          sx={{ mr: 2, color: theme.palette.primary.main }}
+          sx={{mr: 2, color: theme.palette.primary.main}}
         >
-          <BackIcon />
+          <BackIcon/>
         </IconButton>
         <Typography variant="h5" fontWeight="bold">
           Configuration
@@ -105,9 +174,9 @@ const Configuration: React.FC = () => {
 
       <Paper
         component={motion.div}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
         elevation={3}
         sx={{
           p: 3,
@@ -115,82 +184,138 @@ const Configuration: React.FC = () => {
           background: '#23272a',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
           mb: 3,
+          position: 'relative',
         }}
       >
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 'medium' }}>
-          Bank Account
-        </Typography>
+        {isLoading ? (
+          <Box sx={{display: 'flex', justifyContent: 'center', py: 2}}>
+            <CircularProgress size={28} sx={{color: '#90caf9'}}/>
+          </Box>
+        ) : (
+          <>
+            <Typography variant="h6" sx={{mb: 2, fontWeight: 'medium'}}>
+              Bank Account Settings
+            </Typography>
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={enableHdfcUpi}
-              onChange={handleHdfcUpiToggle}
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={bankConfig.enableUpi}
+                  onChange={handleHdfcUpiToggle}
+                  color="primary"
+                  disabled={isSaving}
+                />
+              }
+              label="Enable HDFC UPI"
+              sx={{width: '100%'}}
             />
-          }
-          label="Enable HDFC UPI"
-          sx={{ width: '100%' }}
-        />
+
+            {isSaving && (
+              <CircularProgress
+                size={16}
+                sx={{
+                  color: '#90caf9',
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px'
+                }}
+              />
+            )}
+          </>
+        )}
       </Paper>
 
       {/* Credit Cards Section */}
       <Paper
         component={motion.div}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5, delay: 0.1}}
         elevation={3}
         sx={{
           p: 3,
           borderRadius: '16px',
           background: '#23272a',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+          position: 'relative',
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
+          <Typography variant="h6" sx={{fontWeight: 'medium'}}>
             Credit Cards
           </Typography>
           <Button
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon/>}
             variant="contained"
             color="primary"
             size="small"
             onClick={handleAddCreditCard}
-            sx={{ borderRadius: 2 }}
+            sx={{borderRadius: 2}}
+            disabled={isLoading || isSaving}
           >
             Add Credit Card
           </Button>
         </Box>
 
-        <Divider sx={{ mb: 2 }} />
+        <Divider sx={{mb: 2}}/>
 
-        <List>
-          {creditCards.map((card) => (
-            <ListItem key={card.id} sx={{
-              py: 1,
-              borderRadius: 1,
-              mb: 1,
-              bgcolor: '#2a3035',
-              '&:hover': { bgcolor: '#323a42' }
-            }}>
-              <CreditCardIcon sx={{ mr: 2, color: '#90caf9' }} />
-              <ListItemText
-                primary={`${card.bank} ****${card.lastFourDigits}`}
-                primaryTypographyProps={{
-                  sx: { color: '#e0e0e0', fontWeight: 500 }
+        {isLoading ? (
+          <Box sx={{display: 'flex', justifyContent: 'center', py: 2}}>
+            <CircularProgress size={28} sx={{color: '#90caf9'}}/>
+          </Box>
+        ) : (
+          <List>
+            {bankConfig.creditCards.map((cardDigits, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  py: 1,
+                  borderRadius: 1,
+                  mb: 1,
+                  bgcolor: '#2a3035',
+                  '&:hover': {bgcolor: '#323a42'}
                 }}
-              />
-            </ListItem>
-          ))}
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleRemoveCard(cardDigits)}
+                    disabled={isSaving}
+                    sx={{color: '#ef5350'}}
+                  >
+                    <RemoveCircleOutline />
+                  </IconButton>
+                }
+              >
+                <CreditCardIcon sx={{mr: 2, color: '#90caf9'}}/>
+                <ListItemText
+                  primary={`HDFC ****${cardDigits}`}
+                  primaryTypographyProps={{
+                    sx: {color: '#e0e0e0', fontWeight: 500}
+                  }}
+                />
+              </ListItem>
+            ))}
 
-          {creditCards.length === 0 && (
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-              No credit cards added yet
-            </Typography>
-          )}
-        </List>
+            {bankConfig.creditCards.length === 0 && (
+              <Typography variant="body2" color="text.secondary" sx={{textAlign: 'center', py: 2}}>
+                No credit cards added yet
+              </Typography>
+            )}
+          </List>
+        )}
+
+        {isSaving && (
+          <CircularProgress
+            size={16}
+            sx={{
+              color: '#90caf9',
+              position: 'absolute',
+              top: '16px',
+              right: '16px'
+            }}
+          />
+        )}
       </Paper>
 
       {/* Credit Card Dialog */}
@@ -204,9 +329,9 @@ const Configuration: React.FC = () => {
           }
         }}
       >
-        <DialogTitle sx={{ color: '#e0e0e0' }}>Add HDFC Credit Card</DialogTitle>
+        <DialogTitle sx={{color: '#e0e0e0'}}>Add HDFC Credit Card</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: '#b0bec5', mb: 2 }}>
+          <DialogContentText sx={{color: '#b0bec5', mb: 2}}>
             Please enter the last 4 digits of your HDFC credit card.
           </DialogContentText>
 
@@ -227,7 +352,7 @@ const Configuration: React.FC = () => {
             }}
             error={!!cardError}
             helperText={cardError}
-            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            inputProps={{inputMode: 'numeric', pattern: '[0-9]*'}}
             sx={{
               '& .MuiOutlinedInput-root': {
                 color: '#e0e0e0',
@@ -250,20 +375,16 @@ const Configuration: React.FC = () => {
             }}
           />
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
+        <DialogActions sx={{px: 3, pb: 2}}>
           <Button
             onClick={handleCloseCardDialog}
-            sx={{ color: '#90caf9' }}
+            sx={{color: '#90caf9'}}
           >
             Cancel
           </Button>
           <Button
             onClick={handleSaveCard}
             variant="contained"
-            sx={{
-              bgcolor: '#2a3035',
-              '&:hover': { bgcolor: '#323a42' }
-            }}
           >
             Save
           </Button>

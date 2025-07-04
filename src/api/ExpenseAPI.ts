@@ -5,6 +5,7 @@ import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
+import {BankConfig} from "../Types";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -194,7 +195,7 @@ export class ExpenseAPI {
 
     static getBankConfig = async () => {
         try {
-            const bankConfig = await ExpenseAPI.getOneDoc('bank', 'config');
+            const bankConfig: any = await ExpenseAPI.getOneDoc('bank', 'config');
 
             // Return default config if not found
             if (!bankConfig) {
