@@ -1,274 +1,92 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-  Container,
   Box,
-  Typography,
-  Paper,
-  TextField,
   Button,
-  Divider,
-  IconButton,
-  useTheme,
-  Grid,
-  Switch,
-  FormControlLabel,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction,
-  Snackbar,
-  Alert,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Divider,
+  FormControlLabel,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Switch,
+  TextField,
+  Typography,
+  useTheme
 } from '@mui/material';
-import { motion } from 'framer-motion';
-import {
-  ArrowBack as BackIcon,
-  AccountBalance as BankIcon,
-  Work as JobIcon,
-  Add as AddIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  Save as SaveIcon
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import {Add as AddIcon, ArrowBack as BackIcon, CreditCard as CreditCardIcon} from '@mui/icons-material';
+import {useNavigate} from 'react-router-dom';
+import {motion} from 'framer-motion';
 
-// Define interfaces for bank account and job configuration
-interface BankAccount {
+// Credit card interface
+interface CreditCard {
   id: string;
-  name: string;
-  accountNumber: string;
-  bankName: string;
-  isActive: boolean;
-}
-
-interface JobConfig {
-  id: string;
-  name: string;
-  schedule: string;
-  lastRun: string;
-  isActive: boolean;
+  bank: string;
+  lastFourDigits: string;
 }
 
 const Configuration: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [enableHdfcUpi, setEnableHdfcUpi] = useState<boolean>(false);
 
-  // Mock data for bank accounts and job configurations
-  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([
-    {
-      id: 'bank1',
-      name: 'Primary Checking',
-      accountNumber: '****4567',
-      bankName: 'Chase Bank',
-      isActive: true
-    },
-    {
-      id: 'bank2',
-      name: 'Savings Account',
-      accountNumber: '****7890',
-      bankName: 'Bank of America',
-      isActive: true
-    }
+  // Sample credit cards data
+  const [creditCards, setCreditCards] = useState<CreditCard[]>([
+    { id: '1', bank: 'HDFC', lastFourDigits: '4567' },
+    { id: '2', bank: 'ICICI', lastFourDigits: '8901' },
+    { id: '3', bank: 'SBI', lastFourDigits: '2345' }
   ]);
 
-  const [jobConfigs, setJobConfigs] = useState<JobConfig[]>([
-    {
-      id: 'job1',
-      name: 'Daily Expense Sync',
-      schedule: 'Daily at 9:00 AM',
-      lastRun: '2023-05-20 09:00:00',
-      isActive: true
-    },
-    {
-      id: 'job2',
-      name: 'Monthly Report Generation',
-      schedule: 'Monthly on 1st at 12:00 AM',
-      lastRun: '2023-05-01 00:00:00',
-      isActive: true
+  // States for the add credit card modal
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+  const [newCardDigits, setNewCardDigits] = useState('');
+  const [cardError, setCardError] = useState('');
+
+  const handleHdfcUpiToggle = () => {
+    setEnableHdfcUpi(!enableHdfcUpi);
+    // Here you would typically save the setting to your backend or local storage
+  };
+
+  const handleAddCreditCard = () => {
+    // Open the modal dialog
+    setCardDialogOpen(true);
+
+    // Reset form fields
+    setNewCardDigits('');
+    setCardError('');
+  };
+
+  const handleCloseCardDialog = () => {
+    setCardDialogOpen(false);
+  };
+
+  const handleSaveCard = () => {
+    // Validate input
+    if (!newCardDigits) {
+      setCardError('Please enter the last 4 digits');
+      return;
     }
-  ]);
 
-  // State for dialogs
-  const [bankDialogOpen, setBankDialogOpen] = useState(false);
-  const [jobDialogOpen, setJobDialogOpen] = useState(false);
-  const [currentBank, setCurrentBank] = useState<BankAccount | null>(null);
-  const [currentJob, setCurrentJob] = useState<JobConfig | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-
-  // Notification state
-  const [notification, setNotification] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
-
-  // Handle bank toggle
-  const handleBankToggle = (id: string) => {
-    setBankAccounts(
-      bankAccounts.map(account =>
-        account.id === id ? { ...account, isActive: !account.isActive } : account
-      )
-    );
-    setNotification({
-      open: true,
-      message: 'Bank account status updated',
-      severity: 'success'
-    });
-  };
-
-  // Handle job toggle
-  const handleJobToggle = (id: string) => {
-    setJobConfigs(
-      jobConfigs.map(job =>
-        job.id === id ? { ...job, isActive: !job.isActive } : job
-      )
-    );
-    setNotification({
-      open: true,
-      message: 'Job configuration status updated',
-      severity: 'success'
-    });
-  };
-
-  // Open bank dialog
-  const handleOpenBankDialog = (bank?: BankAccount) => {
-    if (bank) {
-      setCurrentBank(bank);
-      setIsEditing(true);
-    } else {
-      setCurrentBank({
-        id: `bank${bankAccounts.length + 1}`,
-        name: '',
-        accountNumber: '',
-        bankName: '',
-        isActive: true
-      });
-      setIsEditing(false);
+    if (!/^\d{4}$/.test(newCardDigits)) {
+      setCardError('Please enter exactly 4 digits');
+      return;
     }
-    setBankDialogOpen(true);
-  };
 
-  // Open job dialog
-  const handleOpenJobDialog = (job?: JobConfig) => {
-    if (job) {
-      setCurrentJob(job);
-      setIsEditing(true);
-    } else {
-      setCurrentJob({
-        id: `job${jobConfigs.length + 1}`,
-        name: '',
-        schedule: '',
-        lastRun: new Date().toISOString(),
-        isActive: true
-      });
-      setIsEditing(false);
-    }
-    setJobDialogOpen(true);
-  };
+    // Create new card and add to state
+    const newCard: CreditCard = {
+      id: Date.now().toString(), // Simple ID generation
+      bank: 'HDFC', // Fixed bank as HDFC
+      lastFourDigits: newCardDigits
+    };
 
-  // Save bank
-  const handleSaveBank = () => {
-    if (currentBank) {
-      if (isEditing) {
-        setBankAccounts(
-          bankAccounts.map(account =>
-            account.id === currentBank.id ? currentBank : account
-          )
-        );
-        setNotification({
-          open: true,
-          message: 'Bank account updated successfully',
-          severity: 'success'
-        });
-      } else {
-        setBankAccounts([...bankAccounts, currentBank]);
-        setNotification({
-          open: true,
-          message: 'Bank account added successfully',
-          severity: 'success'
-        });
-      }
-      setBankDialogOpen(false);
-    }
-  };
-
-  // Save job
-  const handleSaveJob = () => {
-    if (currentJob) {
-      if (isEditing) {
-        setJobConfigs(
-          jobConfigs.map(job =>
-            job.id === currentJob.id ? currentJob : job
-          )
-        );
-        setNotification({
-          open: true,
-          message: 'Job configuration updated successfully',
-          severity: 'success'
-        });
-      } else {
-        setJobConfigs([...jobConfigs, currentJob]);
-        setNotification({
-          open: true,
-          message: 'Job configuration added successfully',
-          severity: 'success'
-        });
-      }
-      setJobDialogOpen(false);
-    }
-  };
-
-  // Delete bank
-  const handleDeleteBank = (id: string) => {
-    setBankAccounts(bankAccounts.filter(account => account.id !== id));
-    setNotification({
-      open: true,
-      message: 'Bank account removed',
-      severity: 'success'
-    });
-  };
-
-  // Delete job
-  const handleDeleteJob = (id: string) => {
-    setJobConfigs(jobConfigs.filter(job => job.id !== id));
-    setNotification({
-      open: true,
-      message: 'Job configuration removed',
-      severity: 'success'
-    });
-  };
-
-  // Update bank field
-  const handleBankFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (currentBank) {
-      setCurrentBank({
-        ...currentBank,
-        [e.target.name]: e.target.value
-      });
-    }
-  };
-
-  // Update job field
-  const handleJobFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (currentJob) {
-      setCurrentJob({
-        ...currentJob,
-        [e.target.name]: e.target.value
-      });
-    }
-  };
-
-  // Close notification
-  const handleCloseNotification = () => {
-    setNotification({
-      ...notification,
-      open: false
-    });
+    setCreditCards([...creditCards, newCard]);
+    setCardDialogOpen(false);
   };
 
   return (
@@ -285,7 +103,6 @@ const Configuration: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Bank Accounts Section */}
       <Paper
         component={motion.div}
         initial={{ opacity: 0, y: 20 }}
@@ -294,289 +111,164 @@ const Configuration: React.FC = () => {
         elevation={3}
         sx={{
           p: 3,
+          borderRadius: '16px',
+          background: '#23272a',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
           mb: 3,
-          borderRadius: 2,
-          background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`,
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <BankIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
-            <Typography variant="h6">Bank Accounts</Typography>
-          </Box>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => handleOpenBankDialog()}
-            sx={{ borderRadius: 2 }}
-          >
-            Add Account
-          </Button>
-        </Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 'medium' }}>
+          Bank Account
+        </Typography>
 
-        <Divider sx={{ mb: 2 }} />
-
-        <List sx={{ width: '100%' }}>
-          {bankAccounts.map((account) => (
-            <ListItem
-              key={account.id}
-              sx={{
-                bgcolor: theme.palette.action.hover,
-                borderRadius: 1,
-                mb: 1,
-                transition: 'background-color 0.3s',
-                '&:hover': {
-                  bgcolor: theme.palette.action.selected,
-                }
-              }}
-            >
-              <ListItemIcon>
-                <BankIcon color={account.isActive ? "primary" : "disabled"} />
-              </ListItemIcon>
-              <ListItemText
-                primary={account.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography component="span" variant="body2" color="text.primary">
-                      {account.bankName}
-                    </Typography>
-                    {` — ${account.accountNumber}`}
-                  </React.Fragment>
-                }
-              />
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  onClick={() => handleOpenBankDialog(account)}
-                  sx={{ mr: 1 }}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDeleteBank(account.id)}
-                  sx={{ mr: 1 }}
-                >
-                  <DeleteIcon fontSize="small" color="error" />
-                </IconButton>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={account.isActive}
-                      onChange={() => handleBankToggle(account.id)}
-                      color="primary"
-                      size="small"
-                    />
-                  }
-                  label=""
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={enableHdfcUpi}
+              onChange={handleHdfcUpiToggle}
+              color="primary"
+            />
+          }
+          label="Enable HDFC UPI"
+          sx={{ width: '100%' }}
+        />
       </Paper>
 
-      {/* Job Configurations Section */}
+      {/* Credit Cards Section */}
       <Paper
         component={motion.div}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
         elevation={3}
         sx={{
           p: 3,
-          mb: 3,
-          borderRadius: 2,
-          background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(66,66,66,0.8) 100%)`,
+          borderRadius: '16px',
+          background: '#23272a',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <JobIcon sx={{ mr: 1, color: theme.palette.secondary.main }} />
-            <Typography variant="h6">Job Configurations</Typography>
-          </Box>
+          <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+            Credit Cards
+          </Typography>
           <Button
-            variant="contained"
-            color="secondary"
             startIcon={<AddIcon />}
-            onClick={() => handleOpenJobDialog()}
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleAddCreditCard}
             sx={{ borderRadius: 2 }}
           >
-            Add Job
+            Add Credit Card
           </Button>
         </Box>
 
         <Divider sx={{ mb: 2 }} />
 
-        <List sx={{ width: '100%' }}>
-          {jobConfigs.map((job) => (
-            <ListItem
-              key={job.id}
-              sx={{
-                bgcolor: theme.palette.action.hover,
-                borderRadius: 1,
-                mb: 1,
-                transition: 'background-color 0.3s',
-                '&:hover': {
-                  bgcolor: theme.palette.action.selected,
-                }
-              }}
-            >
-              <ListItemIcon>
-                <JobIcon color={job.isActive ? "secondary" : "disabled"} />
-              </ListItemIcon>
+        <List>
+          {creditCards.map((card) => (
+            <ListItem key={card.id} sx={{
+              py: 1,
+              borderRadius: 1,
+              mb: 1,
+              bgcolor: '#2a3035',
+              '&:hover': { bgcolor: '#323a42' }
+            }}>
+              <CreditCardIcon sx={{ mr: 2, color: '#90caf9' }} />
               <ListItemText
-                primary={job.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography component="span" variant="body2" color="text.primary">
-                      {job.schedule}
-                    </Typography>
-                    {` — Last run: ${new Date(job.lastRun).toLocaleString()}`}
-                  </React.Fragment>
-                }
+                primary={`${card.bank} ****${card.lastFourDigits}`}
+                primaryTypographyProps={{
+                  sx: { color: '#e0e0e0', fontWeight: 500 }
+                }}
               />
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  onClick={() => handleOpenJobDialog(job)}
-                  sx={{ mr: 1 }}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDeleteJob(job.id)}
-                  sx={{ mr: 1 }}
-                >
-                  <DeleteIcon fontSize="small" color="error" />
-                </IconButton>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={job.isActive}
-                      onChange={() => handleJobToggle(job.id)}
-                      color="secondary"
-                      size="small"
-                    />
-                  }
-                  label=""
-                />
-              </ListItemSecondaryAction>
             </ListItem>
           ))}
+
+          {creditCards.length === 0 && (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+              No credit cards added yet
+            </Typography>
+          )}
         </List>
       </Paper>
 
-      {/* Bank Account Dialog */}
-      <Dialog open={bankDialogOpen} onClose={() => setBankDialogOpen(false)}>
-        <DialogTitle>
-          {isEditing ? 'Edit Bank Account' : 'Add Bank Account'}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="Account Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentBank?.name || ''}
-            onChange={handleBankFieldChange}
-            sx={{ mb: 2, mt: 1 }}
-          />
-          <TextField
-            margin="dense"
-            name="bankName"
-            label="Bank Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentBank?.bankName || ''}
-            onChange={handleBankFieldChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            margin="dense"
-            name="accountNumber"
-            label="Account Number"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentBank?.accountNumber || ''}
-            onChange={handleBankFieldChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setBankDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSaveBank} color="primary" variant="contained" startIcon={<SaveIcon />}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Job Configuration Dialog */}
-      <Dialog open={jobDialogOpen} onClose={() => setJobDialogOpen(false)}>
-        <DialogTitle>
-          {isEditing ? 'Edit Job Configuration' : 'Add Job Configuration'}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="Job Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentJob?.name || ''}
-            onChange={handleJobFieldChange}
-            sx={{ mb: 2, mt: 1 }}
-          />
-          <TextField
-            margin="dense"
-            name="schedule"
-            label="Schedule (e.g., Daily at 9:00 AM)"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentJob?.schedule || ''}
-            onChange={handleJobFieldChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setJobDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSaveJob} color="primary" variant="contained" startIcon={<SaveIcon />}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Notification */}
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={6000}
-        onClose={handleCloseNotification}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      {/* Credit Card Dialog */}
+      <Dialog
+        open={cardDialogOpen}
+        onClose={handleCloseCardDialog}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: '#23272a',
+            borderRadius: '16px',
+          }
+        }}
       >
-        <Alert
-          onClose={handleCloseNotification}
-          severity={notification.severity as 'success' | 'info' | 'warning' | 'error'}
-          sx={{ width: '100%' }}
-        >
-          {notification.message}
-        </Alert>
-      </Snackbar>
+        <DialogTitle sx={{ color: '#e0e0e0' }}>Add HDFC Credit Card</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ color: '#b0bec5', mb: 2 }}>
+            Please enter the last 4 digits of your HDFC credit card.
+          </DialogContentText>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            id="last-digits"
+            label="Last 4 Digits"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={newCardDigits}
+            onChange={(e) => {
+              // Allow only digits and limit to 4 characters
+              const input = e.target.value.replace(/\D/g, '').slice(0, 4);
+              setNewCardDigits(input);
+              setCardError('');
+            }}
+            error={!!cardError}
+            helperText={cardError}
+            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                color: '#e0e0e0',
+                '& fieldset': {
+                  borderColor: '#3a4045',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#90caf9',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#90caf9',
+                },
+              },
+              '& .MuiFormLabel-root': {
+                color: '#90caf9',
+              },
+              '& .MuiFormHelperText-root': {
+                color: '#ef5350',
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={handleCloseCardDialog}
+            sx={{ color: '#90caf9' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveCard}
+            variant="contained"
+            sx={{
+              bgcolor: '#2a3035',
+              '&:hover': { bgcolor: '#323a42' }
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

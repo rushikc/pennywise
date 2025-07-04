@@ -391,7 +391,6 @@ const Home: FC<any> = (): ReactElement => {
         key={index}
         className={`expense-row ${isSelected ? 'selected' : ''}`}
         onClick={(e) => selectionMode ? toggleExpenseSelection(expense, e) : onSetExpense(expense)}
-        onLongPress={(e: React.MouseEvent<Element, MouseEvent>) => toggleExpenseSelection(expense, e)}
       >
         <Avatar
           className={`expense-avatar ${isSelected ? 'selected' : ''}`}

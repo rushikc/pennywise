@@ -77,8 +77,9 @@ export class ExpenseAPI {
 
     static processData = async () => {
         try {
-            console.debug("Process Data Init");
-            console.debug("expense list ", await ExpenseAPI.getExpenseList());
+            console.log("Process Data Init");
+            const bank = await ExpenseAPI.getOneDoc('bank');
+            console.log("expense list ", bank);
             // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
             //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
             //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
@@ -188,6 +189,42 @@ export class ExpenseAPI {
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error updating tag list: ", e);
+        }
+    }
+
+    static getBankConfig = async () => {
+        try {
+            const bankConfig = await ExpenseAPI.getOneDoc('bank', 'config');
+
+            // Return default config if not found
+            if (!bankConfig) {
+                return {
+                    enableUpi: false,
+                    creditCards: []
+                };
+            }
+
+            console.log('Retrieved bank config:', bankConfig);
+            return bankConfig;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting bank config:", e);
+            return {
+                enableUpi: false,
+                creditCards: []
+            };
+        }
+    }
+
+    static updateBankConfig = async (config: { enableUpi: boolean, creditCards: string[] }) => {
+        try {
+            await ExpenseAPI.setOneDoc('bank', config, 'config');
+            console.log('Updated bank config:', config);
+            return true;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error updating bank config:", e);
+            return false;
         }
     }
 

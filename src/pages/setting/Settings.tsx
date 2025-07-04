@@ -65,14 +65,6 @@ const Settings: React.FC = () => {
       color: '#90caf9'
     },
     {
-      id: 'stats',
-      title: 'Statistics',
-      subtitle: 'View your financial analytics',
-      icon: <StatsIcon />,
-      route: '/stats',
-      color: '#81c784'
-    },
-    {
       id: 'config',
       title: 'Configuration',
       subtitle: 'Configure app preferences',
