@@ -37,13 +37,12 @@ const TagExpenses: FC<any> = (): ReactElement => {
       let tagObj = tagMapList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
       if (!tagObj) {
-        let key = _vendor;
         tagObj = {
+          id: _vendor,
           vendor: _vendor,
           tag: selectedTag[0],
-          date: getDateMonthTime()
         };
-        void ExpenseAPI.setOneDoc(key, tagObj, 'tagMap');
+        void ExpenseAPI.updateTagMap(tagObj);
         setTagMap(tagObj);
       }
     }

@@ -1,4 +1,4 @@
-# MyExpense: Personal Finance Tracker
+# MyExpense: Personal Expense Tracker
 
 MyExpense is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
 

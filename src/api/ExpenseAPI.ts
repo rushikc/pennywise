@@ -1,11 +1,11 @@
 import {initializeApp} from 'firebase/app';
-import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where, deleteDoc} from 'firebase/firestore/lite';
+import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig} from "../Types";
+import {TagMap} from "../Types";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -79,11 +79,9 @@ export class ExpenseAPI {
     static processData = async () => {
         try {
             console.log("Process Data Init");
-            const bank = await ExpenseAPI.getOneDoc('bank');
-            console.log("expense list ", bank);
-            // ExpenseAPI.updateTagList(['food', 'groceries', 'amenities', 'veg & fruits', 'snacks', 'drinks', 'sports',
-            //     'travel', 'cab', 'shopping', 'gadgets' , 'petrol', 'transport', 'bike', 'parents',
-            //     'skin & hair', 'medical', 'clothes', 'rent', 'fitness', 'invalid']);
+
+            const tags =await ExpenseAPI.getTagMaps();
+            console.log("expense list ", tags);
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error processing data: ", e);
@@ -168,8 +166,6 @@ export class ExpenseAPI {
             const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
             const tagList: string[] = tagObject?.tagList || [];
 
-            console.log('tagList ', tagList);
-
             return tagList;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -181,12 +177,8 @@ export class ExpenseAPI {
     static updateTagList = async (tags: string[]) => {
         try {
             let table = 'config';
-
             await ExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
-            // const tagObject : any = await ExpenseAPI.getOneDoc('tags', table);
-            // const tagList: string[] = tagObject.tagList;
 
-            console.log('set tagList ', tags);
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error updating tag list: ", e);
@@ -294,6 +286,73 @@ export class ExpenseAPI {
             ErrorHandlers.handleApiError(e);
             console.error("Error getting tag map list: ", e);
             return [];
+        }
+    }
+
+    static getTagMaps = async () => {
+        try {
+
+            const q = query(collection(db, 'tagMap'));
+            const querySnapshot = await getDocs(q);
+
+            const queryResultLen = querySnapshot.docs.length;
+            console.log("expense list length ", queryResultLen);
+            const fireDocList: TagMap[] = [];
+
+            querySnapshot.forEach((doc) => {
+                let document = doc.data();
+                let newDoc = {
+                    id: '',
+                    tag: '',
+                    vendor: '',
+                };
+                newDoc.tag = document.tag;
+                newDoc.vendor = document.vendor;
+                newDoc.id = doc.id;
+                fireDocList.push(newDoc);
+            });
+
+            return fireDocList;
+
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting tagMap:", e);
+            return null;
+        }
+    }
+
+    static updateTagMap = async (tagMap: any) => {
+        try {
+
+
+            // Extract ID for use as the document key
+            const {id, ...tagMapWithoutId} = tagMap;
+
+            // Update in Firestore
+            const docRef = doc(db, "tagMap", id);
+            await setDoc(docRef, tagMapWithoutId);
+            console.debug("TagMap updated in Firestore with ID:", id);
+            return true;
+
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error updating tagMap:", e);
+            return false;
+        }
+    }
+
+    static deleteTagMap = async (tagMapId: string): Promise<boolean> => {
+        try {
+            // Delete from Firestore
+            const docRef = doc(db, "tagMap", tagMapId);
+            await deleteDoc(docRef);
+            console.debug("TagMap deleted from Firestore with ID:", tagMapId);
+
+            return true;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error deleting tagMap:", e);
+            return false;
         }
     }
 

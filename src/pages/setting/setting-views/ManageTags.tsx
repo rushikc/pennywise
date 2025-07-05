@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Box,
   Button,
   Container,
   Dialog,
@@ -18,12 +19,15 @@ import {
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
-import {RemoveCircleOutline} from "@mui/icons-material";
+import {ArrowBack as BackIcon, RemoveCircleOutline} from "@mui/icons-material";
 import {useSelector} from 'react-redux';
-import {selectExpense, setTagList, addTag, deleteTag} from '../../../store/expenseActions';
+import {addTag, deleteTag, selectExpense, setTagList} from '../../../store/expenseActions';
 import './settingViews.scss';
+import {useNavigate} from "react-router-dom";
 
 const ManageTags: React.FC = () => {
+  const navigate = useNavigate();
+
   const {tagList} = useSelector(selectExpense);
   const [newTagName, setNewTagName] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -81,6 +85,17 @@ const ManageTags: React.FC = () => {
 
   return (
     <Container className="manage-tags-container">
+      <Box className="config-header">
+        <IconButton
+          onClick={() => navigate('/profile')}
+          className="back-button"
+        >
+          <BackIcon/>
+        </IconButton>
+        <Typography variant="h5" fontWeight="bold">
+          Configuration
+        </Typography>
+      </Box>
       <Paper elevation={3} className="manage-tags-paper">
         <Typography variant="h5" className="manage-tags-title">
           Manage Tags

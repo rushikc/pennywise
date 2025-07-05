@@ -1,27 +1,31 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Container,
   Box,
-  Typography,
-  Paper,
-  FormControlLabel,
-  Switch,
-  IconButton,
-  useTheme,
-  List,
-  ListItem,
-  ListItemText,
   Button,
-  Divider,
+  CircularProgress,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
+  FormControlLabel,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Switch,
   TextField,
-  CircularProgress
+  Typography
 } from '@mui/material';
-import {ArrowBack as BackIcon, CreditCard as CreditCardIcon, Add as AddIcon, RemoveCircleOutline} from '@mui/icons-material';
+import {
+  Add as AddIcon,
+  ArrowBack as BackIcon,
+  CreditCard as CreditCardIcon,
+  RemoveCircleOutline
+} from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
@@ -29,7 +33,6 @@ import {BankConfig} from "../../../Types";
 import './settingViews.scss';
 
 const Configuration: React.FC = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   // State for bank configuration
@@ -162,7 +165,7 @@ const Configuration: React.FC = () => {
     <Container className="config-container" maxWidth="sm">
       <Box className="config-header">
         <IconButton
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/profile')}
           className="back-button"
         >
           <BackIcon/>
