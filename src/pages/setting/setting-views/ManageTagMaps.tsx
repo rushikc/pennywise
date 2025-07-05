@@ -46,27 +46,30 @@ const ManageTagMaps: React.FC = () => {
     filterTagMaps();
   }, [searchTerm, tagMaps]);
 
-  const loadTagMaps = async () => {
+  const loadTagMaps = () => {
     setLoading(true);
-    try {
-      const maps = await ExpenseAPI.getTagMapList();
-      setTagMaps(maps);
-      setFilteredTagMaps(maps);
-    } catch (err) {
-      setError('Failed to load tag maps');
-      console.error('Error loading tag maps:', err);
-    } finally {
-      setLoading(false);
-    }
+    ExpenseAPI.getTagMapList()
+      .then(maps => {
+        setTagMaps(maps);
+        setFilteredTagMaps(maps);
+      })
+      .catch(err => {
+        setError('Failed to load tag maps');
+        console.error('Error loading tag maps:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const loadTags = async () => {
-    try {
-      const tags = await ExpenseAPI.getTagList();
-      setAvailableTags(tags);
-    } catch (err) {
-      console.error('Error loading tags:', err);
-    }
+  const loadTags = () => {
+    ExpenseAPI.getTagList()
+      .then(tags => {
+        setAvailableTags(tags);
+      })
+      .catch(err => {
+        console.error('Error loading tags:', err);
+      });
   };
 
   const filterTagMaps = () => {
@@ -88,9 +91,6 @@ const ManageTagMaps: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const clearSearch = () => {
-    setSearchTerm('');
-  };
 
   const handleEditClick = (tagMap: TagMap) => {
     setSelectedTagMap(tagMap);
@@ -98,58 +98,57 @@ const ManageTagMaps: React.FC = () => {
     setEditDialogOpen(true);
   };
 
-  const handleDeleteClick = async (tagMapId: string) => {
-    try {
-      const result = await ExpenseAPI.deleteTagMap(tagMapId);
-      if (result) {
-        setSuccess('Tag map deleted successfully');
-        // Remove the deleted item from the list
-        setTagMaps(tagMaps.filter(tm => tm.id !== tagMapId));
-        setFilteredTagMaps(filteredTagMaps.filter(tm => tm.id !== tagMapId));
-      } else {
-        setError('Failed to delete tag map');
-      }
-    } catch (err) {
-      setError('Error deleting tag map');
-      console.error('Error deleting tag map:', err);
-    }
+  const handleDeleteClick = (tagMapId: string) => {
+    ExpenseAPI.deleteTagMap(tagMapId)
+      .then(result => {
+        if (result) {
+          setSuccess('Tag map deleted successfully');
+          // Remove the deleted item from the list
+          setTagMaps(tagMaps.filter(tm => tm.id !== tagMapId));
+          setFilteredTagMaps(filteredTagMaps.filter(tm => tm.id !== tagMapId));
+        } else {
+          setError('Failed to delete tag map');
+        }
+      })
+      .catch(err => {
+        setError('Error deleting tag map');
+        console.error('Error deleting tag map:', err);
+      });
   };
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = () => {
     if (!selectedTagMap) return;
 
-    try {
-      const updatedTagMap: TagMap = {
-        ...selectedTagMap,
-        tag: selectedTag,
-        date: new Date()
-      };
+    const updatedTagMap: TagMap = {
+      ...selectedTagMap,
+      tag: selectedTag,
+      date: new Date()
+    };
 
-      const result = await ExpenseAPI.updateTagMap(updatedTagMap);
-      if (result) {
-        setSuccess('Tag map updated successfully');
-        // Update the item in the list
-        setTagMaps(tagMaps.map(tm =>
-          tm.id === updatedTagMap.id ? updatedTagMap : tm
-        ));
-        setFilteredTagMaps(filteredTagMaps.map(tm =>
-          tm.id === updatedTagMap.id ? updatedTagMap : tm
-        ));
-      } else {
-        setError('Failed to update tag map');
-      }
-    } catch (err) {
-      setError('Error updating tag map');
-      console.error('Error updating tag map:', err);
-    } finally {
-      setEditDialogOpen(false);
-    }
+    ExpenseAPI.updateTagMap(updatedTagMap)
+      .then(result => {
+        if (result) {
+          setSuccess('Tag map updated successfully');
+          // Update the item in the list
+          setTagMaps(tagMaps.map(tm =>
+            tm.id === updatedTagMap.id ? updatedTagMap : tm
+          ));
+          setFilteredTagMaps(filteredTagMaps.map(tm =>
+            tm.id === updatedTagMap.id ? updatedTagMap : tm
+          ));
+        } else {
+          setError('Failed to update tag map');
+        }
+      })
+      .catch(err => {
+        setError('Error updating tag map');
+        console.error('Error updating tag map:', err);
+      })
+      .finally(() => {
+        setEditDialogOpen(false);
+      });
   };
 
-  const clearMessages = () => {
-    setError(null);
-    setSuccess(null);
-  };
 
   return (
     <Container className="manage-tags-container">
@@ -169,16 +168,7 @@ const ManageTagMaps: React.FC = () => {
           Manage Tag Maps
         </Typography>
 
-        {error && (
-          <Typography color="error" variant="body2" className="message-text">
-            {error}
-          </Typography>
-        )}
-        {success && (
-          <Typography color="primary" variant="body2" className="message-text">
-            {success}
-          </Typography>
-        )}
+
 
         <div>
           <TextField
@@ -196,16 +186,27 @@ const ManageTagMaps: React.FC = () => {
                 ),
               },
             }}
-            sx={{ mb: 2, mt: 2}}
+            className="search-field"
           />
         </div>
 
+        {error && (
+          <Typography color="error" variant="body2" className="message-text">
+            {error}
+          </Typography>
+        )}
+        {success && (
+          <Typography color="primary" variant="body2" className="message-text">
+            {success}
+          </Typography>
+        )}
+
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-            <CircularProgress />
+          <Box className="loading-container">
+            <CircularProgress className="loading-indicator" />
           </Box>
         ) : filteredTagMaps.length === 0 ? (
-          <Typography variant="body1" sx={{ p: 2, textAlign: 'center' }}>
+          <Typography variant="body1" className="empty-cards-message">
             No vendor-tag mappings found.
           </Typography>
         ) : (
@@ -231,7 +232,7 @@ const ManageTagMaps: React.FC = () => {
                 }
               >
                 <ListItemText
-                  primary={tagMap.vendor.toLowerCase().substring(0,25)}
+                  primary={tagMap.vendor.toLowerCase().substring(0, 25)}
                   secondary={`Tag: ${tagMap.tag}`}
                 />
               </ListItem>
@@ -250,30 +251,18 @@ const ManageTagMaps: React.FC = () => {
         <DialogTitle>Edit Vendor Tag</DialogTitle>
         <DialogContent>
           {selectedTagMap && (
-            <Box sx={{ pt: 1 }}>
+            <Box sx={{pt: 1}}>
               <Typography
                 variant="subtitle1"
-                sx={{
-                  mb: 2,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  padding: '10px 15px',
-                  backgroundColor: '#5b5b61',
-                  borderRadius: '8px',
-                  width: '100%',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
-                  wordBreak: 'break-word',
-                  overflowWrap: 'break-word',
-                  color: 'white'
-                }}
+                className="vendor-name-display"
               >
                 {selectedTagMap.vendor.toLowerCase()}
               </Typography>
 
-              <Typography variant="subtitle1" className="tag-expense-category-label" sx={{ mt: 2, mb: 1 }}>
+              <Typography variant="subtitle1" className="tag-expense-category-label">
                 Select a category
               </Typography>
-              <Box className="tag-expense-chip-list" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+              <Box className="tag-expense-chip-list">
                 {availableTags.map((tag) => (
                   <Chip
                     key={tag}
@@ -284,10 +273,6 @@ const ManageTagMaps: React.FC = () => {
                     onClick={() => setSelectedTag(tag)}
                     className={`tag-expense-chip${selectedTag === tag ? ' selected' : ''}`}
                     size="medium"
-                    sx={{
-                      minWidth: '80px',
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                    }}
                   />
                 ))}
               </Box>

@@ -201,3 +201,49 @@
     background-color: #323a42;
   }
 }
+
+// ManageTagMaps styling
+
+.search-field {
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important;
+}
+
+.message-text {
+  margin-bottom: 0.5rem;
+}
+
+.vendor-name-display {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 15px;
+  background-color: #5b5b61;
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  color: white;
+}
+
+.tag-expense-category-label {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag-expense-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.tag-expense-chip {
+  min-width: 80px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.selected {
+    font-weight: 500;
+  }
+}
