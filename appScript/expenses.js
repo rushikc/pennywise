@@ -43,7 +43,7 @@ async function myFunction() {
         let mailId = mailIdList[mailIndex];
         res = Gmail.Users.Messages.get('me', mailId);
 
-        const snippet = res.snippet;
+        let snippet = res.snippet;
         let expense = null;
         let type = '';
         let cost;
@@ -60,6 +60,7 @@ async function myFunction() {
             type = 'Credit card'
             const creditCardCostRegex = /Rs\b\W\b.+ at/g; // 'Rs 24.00 at'
             const creditCardVendorRegex = /at\b\W\b.+ on \b\d{2}-\d{2}\b/g; // 'at MEDPLUS KONNENA AGRAHA on 09-02'
+
 
             console.log('-> snippet: ', snippet);
             console.log('-> snippet:1 ', snippet.match(creditCardCostRegex));
@@ -88,6 +89,7 @@ async function myFunction() {
                 const upiCreditCostRegex = /Rs\b\W\b.+ is successfully/g; // 'Rs.85.00 is successfully'
                 const upiCreditVendorRegex = /VPA\b\W\b.+ on \b\d{2}-\d{2}\b/g; // 'VPA aayushXYZ@okaxis AYUSH SHARMA on 09-02'
 
+                snippet = snippet.replace('Rs. ', 'Rs.');
                 console.log('-> snippet: ', snippet);
                 console.log('-> snippet:1 ', snippet.match(upiCreditCostRegex));
                 console.log('-> snippet:2 ', snippet.match(upiCreditVendorRegex));

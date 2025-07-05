@@ -18,7 +18,7 @@ import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
-import {selectExpense, setExpenseAndTag, setTagExpense, setTagList, mergeSaveExpense} from '../../store/expenseActions';
+import {mergeSaveExpense, selectExpense, setExpenseAndTag, setTagExpense, setTagList} from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
@@ -448,7 +448,7 @@ const Home: FC<any> = (): ReactElement => {
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
             <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
-              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
+              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowDownIcon/>}
             </IconButton>
           </div>
         </div>

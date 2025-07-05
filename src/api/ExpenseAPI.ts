@@ -80,7 +80,16 @@ export class ExpenseAPI {
         try {
             console.log("Process Data Init");
 
-            const tags =await ExpenseAPI.getTagMaps();
+            const tags =await ExpenseAPI.getTagMapList();
+            // const tga1 = tags[1];
+            console.log("TagMap List: ", tags);
+
+            tags.forEach(tag => {
+                tag.date = new Date(tag.date);
+                ExpenseAPI.updateTagMap(tag);
+            })
+            // ExpenseAPI.updateTagMap(tga1);
+
             console.log("expense list ", tags);
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -136,7 +145,7 @@ export class ExpenseAPI {
 
 
             const lastDateJS = getDayJs();
-            lastDateJS.add(-1, 'days');
+            lastDateJS.subtract(1, 'days');
             const lastDate = lastDateJS.toDate();
 
             await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: lastDate}]);
@@ -233,22 +242,23 @@ export class ExpenseAPI {
             let isLastUpdateAvailable = false;
 
 
-            await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
-                // console.log("index db config ", data);
-                if (data) {
-                    lastUpdatedDate = new Date(data.value);
-                    // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
-                    isLastUpdateAvailable = true;
-                }
-            });
-
-            if (isLastUpdateAvailable) {
-                await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
-            }
+            // await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
+            //     // console.log("index db config ", data);
+            //     if (data) {
+            //         lastUpdatedDate = new Date(data.value);
+            //         // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
+            //         isLastUpdateAvailable = true;
+            //     }
+            // });
+            //
+            // if (isLastUpdateAvailable) {
+            //     await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
+            // }
 
             // console.log(" lastUpdatedDate ", lastUpdatedDate);
 
-            const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            // const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            const q = query(collection(db, table));
             const querySnapshot = await getDocs(q);
 
             const queryResultLen = querySnapshot.docs.length;
@@ -260,7 +270,7 @@ export class ExpenseAPI {
                     // console.log(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
-                    document.date = String(document.date);
+                    // document.date = getISODate(document.date.seconds);
                     fireDocList.push(document)
                 });
 
@@ -268,7 +278,7 @@ export class ExpenseAPI {
             }
 
             const lastDateJS = getDayJs();
-            lastDateJS.add(-1, 'days');
+            lastDateJS.subtract(1, 'days');
             const lastDate = lastDateJS.toDate();
 
             await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
@@ -289,44 +299,46 @@ export class ExpenseAPI {
         }
     }
 
-    static getTagMaps = async () => {
-        try {
+    // static getTagMaps = async () => {
+    //     try {
+    //
+    //         const q = query(collection(db, 'tagMap'));
+    //         const querySnapshot = await getDocs(q);
+    //
+    //         const queryResultLen = querySnapshot.docs.length;
+    //         console.log("expense list length ", queryResultLen);
+    //         const fireDocList: TagMap[] = [];
+    //
+    //         querySnapshot.forEach((doc) => {
+    //             let document = doc.data();
+    //             let newDoc = {
+    //                 id: '',
+    //                 tag: '',
+    //                 vendor: '',
+    //             };
+    //             newDoc.tag = document.tag;
+    //             newDoc.vendor = document.vendor;
+    //             newDoc.vendor = document.vendor;
+    //             newDoc.id = doc.id;
+    //             fireDocList.push(newDoc);
+    //         });
+    //
+    //         return fireDocList;
+    //
+    //     } catch (e) {
+    //         ErrorHandlers.handleApiError(e);
+    //         console.error("Error getting tagMap:", e);
+    //         return null;
+    //     }
+    // }
 
-            const q = query(collection(db, 'tagMap'));
-            const querySnapshot = await getDocs(q);
-
-            const queryResultLen = querySnapshot.docs.length;
-            console.log("expense list length ", queryResultLen);
-            const fireDocList: TagMap[] = [];
-
-            querySnapshot.forEach((doc) => {
-                let document = doc.data();
-                let newDoc = {
-                    id: '',
-                    tag: '',
-                    vendor: '',
-                };
-                newDoc.tag = document.tag;
-                newDoc.vendor = document.vendor;
-                newDoc.id = doc.id;
-                fireDocList.push(newDoc);
-            });
-
-            return fireDocList;
-
-        } catch (e) {
-            ErrorHandlers.handleApiError(e);
-            console.error("Error getting tagMap:", e);
-            return null;
-        }
-    }
-
-    static updateTagMap = async (tagMap: any) => {
+    static updateTagMap = async (tagMap: TagMap) => {
         try {
 
 
             // Extract ID for use as the document key
             const {id, ...tagMapWithoutId} = tagMap;
+            tagMapWithoutId.date = new Date();
 
             // Update in Firestore
             const docRef = doc(db, "tagMap", id);

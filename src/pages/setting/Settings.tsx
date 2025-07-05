@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {Alert, Box, Container, Paper, Snackbar, Typography} from '@mui/material';
 import {
-  Alert,
-  Box,
-  Container,
-  Paper,
-  Snackbar,
-  Typography
-} from '@mui/material';
-import {
-  BarChart as StatsIcon,
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
+  Map as MapIcon,
   Person as ProfileIcon,
   Refresh as ReloadIcon,
   Settings as ConfigIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import {useNavigate} from 'react-router-dom';
+import {motion} from 'framer-motion';
 import './settings.scss';
 import ReloadExpense from './setting-views/ReloadExpense';
-import { useAuth } from '../../hooks/useAuth';
+import {useAuth} from '../../hooks/useAuth';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
 
@@ -87,6 +80,14 @@ const Settings: React.FC = () => {
       icon: <ReloadIcon />,
       route: '/reload',
       color: '#ffa726'
+    },
+    {
+      id: 'manage-tag-maps',
+      title: 'Manage Tag Maps',
+      subtitle: 'Configure your tag mappings',
+      icon: <MapIcon />,
+      route: '/setting-tag-maps',
+      color: '#64b5f6'
     },
     {
       id: 'sign out',

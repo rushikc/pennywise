@@ -16,6 +16,7 @@ import ManageTags from "./pages/setting/setting-views/ManageTags";
 import {useSelector} from "react-redux";
 import Login from "./pages/login/Login";
 import {AuthProvider, useAuth} from "./pages/login/AuthContext";
+import ManageTagMaps from "./pages/setting/setting-views/ManageTagMaps";
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
@@ -75,6 +76,7 @@ function App() {
           <Route path='/Update' element={<ProtectedRoute><UpdateGmail/></ProtectedRoute>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
+          <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageTagMaps/></ProtectedRoute>}/>
           <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         </Routes>
 

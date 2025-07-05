@@ -13,7 +13,8 @@ export interface Expense {
 export interface TagMap {
     id: string,
     vendor: string,
-    tag: string
+    tag: string,
+    date: Date
 }
 
 export type TagList = string[];
