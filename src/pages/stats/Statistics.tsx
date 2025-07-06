@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Box,
   Button,
   ButtonGroup,
@@ -27,8 +28,6 @@ import {useNavigate} from 'react-router-dom';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
 
-// You'll need to install recharts:
-// npm install recharts --save
 import Loading from "../../components/Loading";
 
 // Interface for expense data
@@ -188,6 +187,27 @@ const Statistics: React.FC = () => {
           Statistics & Insights
         </Typography>
       </Box>
+
+      {/* Development Notification */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Alert
+          severity="info"
+          variant="filled"
+          sx={{
+            mb: 3,
+            borderRadius: 2,
+            boxShadow: 2,
+            '& .MuiAlert-icon': { color: 'white' },
+            '& .MuiAlert-message': { fontWeight: 'medium' }
+          }}
+        >
+          Stats page is still under development
+        </Alert>
+      </motion.div>
 
       {/* Time Range Selector */}
       <Paper
