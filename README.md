@@ -189,6 +189,44 @@ PennyWise is built using a modern front-end architecture with the following key 
                     └───────────────┘
 ```
 
+### Enhanced Architecture View
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                        Client Application                        │
+│                                                                  │
+│  ┌─────────────┐    ┌───────────────┐    ┌──────────────────┐    │
+│  │             │    │               │    │                  │    │
+│  │    Pages    │◄──►│  UI Components│◄───┤  State (Redux)   │    │
+│  │             │    │               │    │                  │    │
+│  └─────────────┘    └───────────────┘    └────────┬─────────┘    │
+│                                                   │              │
+│  ┌─────────────────────────────────────┐          │              │
+│  │                                     │          │              │
+│  │       Data Access Layer             │◄─────────┘              │
+│  │  (API Clients & Data Processing)    │                         │
+│  │                                     │                         │
+│  └──────────────────┬───���────────────┘                         │
+│                     │                                            │
+└─────────────────────┼────────────────────────────────────────────┘
+                      │
+                      ▼
+     ┌────────────────────────────┐       ┌──────────────────────────┐
+     │                            │       │                          │
+     │      Local Storage         │◄─────►│     Cloud Storage        │
+     │      (IndexedDB)           │       │   (Firebase Firestore)   │
+     │                            │       │                          │
+     └────────────────────────────┘       └──────────────────────────┘
+
+             │                                        │
+             ▼                                        ▼
+    ┌────────────────┐                     ┌────────────────────┐
+    │                │                     │                    │
+    │  Offline Mode  │                     │  Online Features   │
+    │                │                     │                    │
+    └────────────────┘                     └────────────────────┘
+```
+
 ## Core Components
 
 - **Home**: Main dashboard showing expense list with filtering and grouping options
