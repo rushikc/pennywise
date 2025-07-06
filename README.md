@@ -3,7 +3,6 @@
 <div align="center">
   <img src="public/logo.png" alt="PennyWise Logo" width="120px" />
   <br />
-  <br />
   <strong>Track, Analyze, and Master Your Personal Finances</strong>
 </div>
 
@@ -256,11 +255,11 @@ interface Expense {
 
 ## Roadmap
 
-- [ ] Mobile application (React Native)
-- [ ] Expense predictions using historical data
-- [ ] Budget planning tools
-- [ ] Multi-currency support
-- [ ] Expense sharing between users
+- [ ] Statistical page with useful graphs
+- [ ] Improved Desktop UX
+- [ ] Expense predictions using historical data (Firebase AI Logic)
+- [ ] Multiple bank support
+- [ ] Expense sharing/tracking between users
 - [ ] Data export options (CSV, PDF)
 
 ## Contributing
@@ -271,9 +270,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+5. Open a Pull Request to main branch
 
-Please ensure your code follows the project's coding standards and includes appropriate tests.
+Please ensure your code follows the project's and general coding standards.
 
 ## License
 
