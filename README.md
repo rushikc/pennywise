@@ -1,5 +1,26 @@
 # PennyWise: Personal Expense Tracker
 
+<div align="center">
+  <img src="public/logo.png" alt="PennyWise Logo" width="120px" />
+  <br />
+  <br />
+  <strong>Track, Analyze, and Master Your Personal Finances</strong>
+</div>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#project-structure">Project Structure</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#technology-stack">Technology Stack</a> •
+  <a href="#roadmap">Roadmap</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
+</p>
+
+## Overview
+
 PennyWise is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
 
 ## Features
@@ -11,6 +32,88 @@ PennyWise is a comprehensive expense tracking web application designed to help u
 - 📱 **Responsive Design**: Works on both desktop and mobile devices
 - 🔄 **Offline Support**: Uses IndexedDB for offline data access
 - 🔒 **Google Authentication**: Secure login via Google OAuth
+- 📧 **Gmail Integration**: Scan emails for expense information (optional)
+
+## Demo
+
+[Live Demo](#) - Coming Soon!
+
+Screenshot previews:
+
+<div align="center">
+  <em>Add screenshots here</em>
+</div>
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14+)
+- npm or yarn
+- Firebase account (for deployment)
+- Google OAuth credentials (for authentication)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/pennywise.git
+   cd pennywise
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Set up Firebase configuration:
+   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Enable Firestore, Authentication with Google provider
+   - Create a `.env` file based on `.env.example` and add your Firebase configuration
+
+4. Start the development server:
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+5. Open your browser to `http://localhost:3000`
+
+### Deployment
+
+To deploy to Firebase:
+
+```bash
+npm run build
+firebase deploy
+```
+
+## Project Structure
+
+```
+pennywise/
+├── public/               # Static assets
+├── src/
+│   ├── api/              # API clients and data fetching
+│   │   ├── BaseApi.ts
+│   │   ├── ExpenseAPI.ts
+│   │   └── FinanceIndexDB.ts
+│   ├── components/       # Reusable UI components
+│   ├── firebase/         # Firebase configuration & utilities
+│   ├── hooks/            # Custom React hooks
+│   ├── pages/            # Application pages & views
+│   │   ├── home/         # Main dashboard
+│   │   ├── login/        # Authentication flow
+│   │   ├── setting/      # Application settings
+│   │   └── stats/        # Statistical views
+│   ├── store/            # Redux store configuration
+│   └── utility/          # Helper functions & constants
+├── functions/            # Firebase Cloud Functions
+└── appScript/            # Google Apps Script for email integration
+```
 
 ## Architecture
 
@@ -18,12 +121,25 @@ PennyWise is built using a modern front-end architecture with the following key 
 
 ### Technology Stack
 
-- **Frontend**: React, TypeScript, Material-UI
-- **State Management**: Redux (with Redux Toolkit)
-- **Database**:
-  - Firebase Firestore (cloud storage)
-  - IndexedDB (local storage for offline capability)
-- **Authentication**: Google OAuth
+- **Frontend**:
+  - [React](https://reactjs.org/) - UI framework
+  - [TypeScript](https://www.typescriptlang.org/) - Type safety
+  - [Material-UI v6](https://mui.com/) - Component library
+  - [Framer Motion](https://www.framer.com/motion/) - Animations
+
+- **State Management**:
+  - [Redux Toolkit](https://redux-toolkit.js.org/) - Centralized state
+
+- **Storage**:
+  - [Firebase Firestore](https://firebase.google.com/docs/firestore) - Cloud database
+  - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (via [idb](https://www.npmjs.com/package/idb)) - Offline storage
+
+- **Authentication**:
+  - [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (via [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
+
+- **Utilities**:
+  - [date-fns](https://date-fns.org/) & [luxon](https://moment.github.io/luxon/) - Date manipulation
+  - [axios](https://axios-http.com/) - HTTP client
 
 ### Data Flow
 
@@ -73,7 +189,7 @@ PennyWise is built using a modern front-end architecture with the following key 
                     └───────────────┘
 ```
 
-### Core Components
+## Core Components
 
 - **Home**: Main dashboard showing expense list with filtering and grouping options
 - **TagExpenses**: Interface for tagging and categorizing expenses
@@ -100,76 +216,33 @@ interface Expense {
 }
 ```
 
-### TagMap
+## Roadmap
 
-Maps vendors to expense categories:
+- [ ] Mobile application (React Native)
+- [ ] Expense predictions using historical data
+- [ ] Budget planning tools
+- [ ] Multi-currency support
+- [ ] Expense sharing between users
+- [ ] Data export options (CSV, PDF)
 
-```typescript
-interface TagMap {
-    tag: string,
-    vendor: string,
-    date: string
-}
-```
+## Contributing
 
-## Application Structure
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-The application follows a modular structure:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- `/api`: API clients for Firebase and IndexedDB
-- `/components`: Reusable UI components
-- `/pages`: Application screens and views
-- `/store`: Redux store configuration and slices
-- `/utility`: Helper functions and constants
-
-## Data Storage
-
-PennyWise uses a dual storage strategy:
-
-1. **Firebase Firestore**: Cloud database for persistent storage
-2. **IndexedDB**: Local browser database for offline access and performance
-
-Data synchronization between these two storage systems ensures that:
-- Users can access their data offline
-- Changes are persisted to the cloud when connectivity is restored
-- Application performance is optimized by reducing network requests
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/finance.git
-```
-
-2. Install dependencies:
-```
-cd finance
-npm install
-```
-
-3. Start the development server:
-```
-npm start
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
-
-### Build for Production
-
-To create an optimized production build:
-```
-npm run build
-```
-
-The build files will be located in the `build` folder.
+Please ensure your code follows the project's coding standards and includes appropriate tests.
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com/)
+- [Material-UI](https://mui.com/) for the beautiful components
+- [Firebase](https://firebase.google.com/) for backend services
