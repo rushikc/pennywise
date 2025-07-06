@@ -4,7 +4,6 @@ import {
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
-  Person as ProfileIcon,
   Refresh as ReloadIcon,
   Settings as ConfigIcon
 } from '@mui/icons-material';
@@ -110,7 +109,9 @@ const Settings: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
+        duration: 0.4
       }
     }
   };

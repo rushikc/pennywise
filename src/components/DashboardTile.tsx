@@ -24,14 +24,14 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
   isLast = false
 }) => {
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: 'spring',
-        stiffness: 120,
-        damping: 12
+        stiffness: 70,
+        damping: 14
       }
     }
   };

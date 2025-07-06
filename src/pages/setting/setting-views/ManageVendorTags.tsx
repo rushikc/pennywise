@@ -24,7 +24,7 @@ import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
-const ManageTagMaps: React.FC = () => {
+const ManageVendorTags: React.FC = () => {
   const navigate = useNavigate();
   const [tagMaps, setTagMaps] = useState<TagMap[]>([]);
   const [filteredTagMaps, setFilteredTagMaps] = useState<TagMap[]>([]);
@@ -295,4 +295,4 @@ const ManageTagMaps: React.FC = () => {
   );
 };
 
-export default ManageTagMaps;
+export default ManageVendorTags;
