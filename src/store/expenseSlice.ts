@@ -1,12 +1,12 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Expense, TagMap} from "../Types";
+import {Expense, VendorTag} from "../Types";
 import {FinanceIndexDB} from "../api/FinanceIndexDB";
 
 
 interface InitialState {
     expenseList: Expense[],
     expense: Expense | null,
-    tagMapList: TagMap[],
+    vendorTagList: VendorTag[],
     isAppLoading: boolean,
     isTagModal: boolean,
     tagList: string[],
@@ -15,7 +15,7 @@ interface InitialState {
 const initialState: InitialState = {
     expenseList: [],
     expense: null,
-    tagMapList: [],
+    vendorTagList: [],
     isAppLoading: true,
     isTagModal: false,
     tagList: [],
@@ -42,17 +42,17 @@ export const expenseSlice = createSlice({
             state.isTagModal = true;
         },
 
-        setTagMap: (state, action: PayloadAction<TagMap>) => {
+        setTagMap: (state, action: PayloadAction<VendorTag>) => {
             const tagObj = action.payload;
-            const tagIndex = state.tagMapList.findIndex(t => t.vendor == tagObj.vendor);
+            const tagIndex = state.vendorTagList.findIndex(t => t.vendor == tagObj.vendor);
 
             if (tagIndex > -1) {
-                state.tagMapList[tagIndex].tag = tagObj.tag;
+                state.vendorTagList[tagIndex].tag = tagObj.tag;
             } else {
-                state.tagMapList.push(tagObj)
+                state.vendorTagList.push(tagObj)
             }
 
-            void FinanceIndexDB.addTagMap(tagObj);
+            void FinanceIndexDB.addVendorTag(tagObj);
 
         },
 
@@ -71,9 +71,9 @@ export const expenseSlice = createSlice({
             state.isTagModal = false;
         },
 
-        setExpenseAndTag: (state, action: PayloadAction<{ expenseList: Expense[], tagMapList: TagMap[] }>) => {
+        setExpenseAndTag: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] }>) => {
             state.expenseList = action.payload.expenseList;
-            state.tagMapList = action.payload.tagMapList;
+            state.vendorTagList = action.payload.vendorTagList;
             state.isAppLoading = false;
         },
 
@@ -107,5 +107,3 @@ export const expenseSlice = createSlice({
         },
     }
 })
-
-

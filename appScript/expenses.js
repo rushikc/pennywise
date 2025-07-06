@@ -4,7 +4,7 @@ async function myFunction() {
 
     const Config = "config";
     const LastGmailId = "lastGmailId";
-    const TagMap = "tagMap";
+    const VendorTag = "vendorTag";
 
     // usually returns last 100 mails
     let res = Gmail.Users.Messages.list('me');
@@ -14,7 +14,7 @@ async function myFunction() {
 
     //194eaa0858bfc2fe
 
-    const tagMap = getAllDoc(TagMap);
+    const vendorTag = getAllDoc(VendorTag);
 
 
     let lastMailId;
@@ -131,7 +131,7 @@ async function myFunction() {
             expense.cost = Number(cost)
             expense.vendor = vendor.toUpperCase()
 
-            const obj = tagMap.find(({vendor}) => expense.vendor === vendor);
+            const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
 
             if (obj) {
                 expense.tag = obj.tag;

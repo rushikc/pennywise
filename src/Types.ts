@@ -10,7 +10,7 @@ export interface Expense {
     vendor: string
 }
 
-export interface TagMap {
+export interface VendorTag {
     id: string,
     vendor: string,
     tag: string,
@@ -28,5 +28,3 @@ export interface BankConfig {
     enableUpi: boolean;
     creditCards: string[];
 }
-
-

@@ -126,7 +126,7 @@ const UpdateGmail: FC<any> = (): ReactElement => {
     ]
 
     tags.forEach(tag => {
-      ExpenseAPI.setOneDoc(tag.vendor, tag, 'tagMap');
+      ExpenseAPI.setOneDoc(tag.vendor, tag, 'vendorTag');
     });
   }
 

@@ -1,11 +1,11 @@
-import { Config, Expense, TagMap } from "../Types";
+import { Config, Expense, VendorTag } from "../Types";
 
 
 
 const dbName = "Finance";
 const dbVersion = 4;
 
-type TableNames = "expense" | "tagMap" | "config";
+type TableNames = "expense" | "vendorTag" | "config";
 
 export class FinanceIndexDB {
 
@@ -29,7 +29,7 @@ export class FinanceIndexDB {
                 expenseStore.createIndex("vendor_index", ["vendor"], { unique: false });
                 expenseStore.createIndex("date_index", ["date"], { unique: false, });
 
-                db.createObjectStore("tagMap", { keyPath: "vendor" });
+                db.createObjectStore("vendorTag", { keyPath: "vendor" });
                 db.createObjectStore("config", { keyPath: "key" });
 
                 console.debug("Created finance IndexedDB");
@@ -64,10 +64,10 @@ export class FinanceIndexDB {
 
     }
 
-    static addTagMap = async (tagMap: TagMap) => {
-        console.debug("addTagMap IndexedDB");
-        const store = await this.getStoreInstance("tagMap");
-        store.put(tagMap);
+    static addVendorTag = async (vendorTag: VendorTag) => {
+        console.debug("addVendorTag IndexedDB");
+        const store = await this.getStoreInstance("vendorTag");
+        store.put(vendorTag);
     }
 
 

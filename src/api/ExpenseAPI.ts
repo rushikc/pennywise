@@ -5,7 +5,7 @@ import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {TagMap} from "../Types";
+import {VendorTag} from "../Types";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -80,14 +80,14 @@ export class ExpenseAPI {
         try {
             console.log("Process Data Init");
 
-            const tags =await ExpenseAPI.getTagMapList();
+            const tags =await ExpenseAPI.getVendorTagList();
             // const tga1 = tags[1];
-            console.log("TagMap List: ", tags);
+            console.log("Vendor Tag List: ", tags);
 
-            tags.forEach(tag => {
-                tag.date = new Date(tag.date);
-                ExpenseAPI.updateTagMap(tag);
-            })
+            // tags.forEach(tag => {
+            //     tag.date = new Date(tag.date);
+            //     ExpenseAPI.updateVendorTag(tag);
+            // })
             // ExpenseAPI.updateTagMap(tga1);
 
             console.log("expense list ", tags);
@@ -230,9 +230,9 @@ export class ExpenseAPI {
         }
     }
 
-    static getTagMapList = async () => {
+    static getVendorTagList = async () => {
         try {
-            let table = 'tagMap';
+            let table = 'vendorTag';
 
 
             let indexDocList: any[] = [];
@@ -274,40 +274,40 @@ export class ExpenseAPI {
                     fireDocList.push(document)
                 });
 
-                fireDocList.forEach(val => FinanceIndexDB.addTagMap(val));
+                fireDocList.forEach(val => FinanceIndexDB.addVendorTag(val));
             }
 
             const lastDateJS = getDayJs();
             lastDateJS.subtract(1, 'days');
             const lastDate = lastDateJS.toDate();
 
-            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
+            // await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
 
-            console.debug('IndexDB  query for tagMap - ', table, indexDocList);
-            console.debug('Firebase query for tagMap - ', table, fireDocList);
+            console.debug('IndexDB  query for vendorTag - ', table, indexDocList);
+            console.debug('Firebase query for vendorTag - ', table, fireDocList);
 
             const finalList = fireDocList.concat(indexDocList);
 
             finalList.forEach(val => val.date = String(val.date));
 
-            console.debug('FinalList query for tagMap- ', table, finalList);
+            console.debug('FinalList query for vendorTag- ', table, finalList);
             return finalList;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
-            console.error("Error getting tag map list: ", e);
+            console.error("Error getting vendor tag list: ", e);
             return [];
         }
     }
 
-    // static getTagMaps = async () => {
+    // static getVendorTags = async () => {
     //     try {
     //
-    //         const q = query(collection(db, 'tagMap'));
+    //         const q = query(collection(db, 'vendorTag'));
     //         const querySnapshot = await getDocs(q);
     //
     //         const queryResultLen = querySnapshot.docs.length;
     //         console.log("expense list length ", queryResultLen);
-    //         const fireDocList: TagMap[] = [];
+    //         const fireDocList: VendorTag[] = [];
     //
     //         querySnapshot.forEach((doc) => {
     //             let document = doc.data();
@@ -327,43 +327,41 @@ export class ExpenseAPI {
     //
     //     } catch (e) {
     //         ErrorHandlers.handleApiError(e);
-    //         console.error("Error getting tagMap:", e);
+    //         console.error("Error getting vendorTag:", e);
     //         return null;
     //     }
     // }
 
-    static updateTagMap = async (tagMap: TagMap) => {
+    static updateVendorTag = async (vendorTag: VendorTag) => {
         try {
-
-
             // Extract ID for use as the document key
-            const {id, ...tagMapWithoutId} = tagMap;
-            tagMapWithoutId.date = new Date();
+            const {id, ...vendorTagWithoutId} = vendorTag;
+            vendorTagWithoutId.date = new Date();
 
             // Update in Firestore
-            const docRef = doc(db, "tagMap", id);
-            await setDoc(docRef, tagMapWithoutId);
-            console.debug("TagMap updated in Firestore with ID:", id);
+            const docRef = doc(db, "vendorTag", id);
+            await setDoc(docRef, vendorTagWithoutId);
+            console.debug("VendorTag updated in Firestore with ID:", id);
             return true;
 
         } catch (e) {
             ErrorHandlers.handleApiError(e);
-            console.error("Error updating tagMap:", e);
+            console.error("Error updating vendorTag:", e);
             return false;
         }
     }
 
-    static deleteTagMap = async (tagMapId: string): Promise<boolean> => {
+    static deleteVendorTag = async (vendorTagId: string): Promise<boolean> => {
         try {
             // Delete from Firestore
-            const docRef = doc(db, "tagMap", tagMapId);
+            const docRef = doc(db, "vendorTag", vendorTagId);
             await deleteDoc(docRef);
-            console.debug("TagMap deleted from Firestore with ID:", tagMapId);
+            console.debug("VendorTag deleted from Firestore with ID:", vendorTagId);
 
             return true;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
-            console.error("Error deleting tagMap:", e);
+            console.error("Error deleting vendorTag:", e);
             return false;
         }
     }

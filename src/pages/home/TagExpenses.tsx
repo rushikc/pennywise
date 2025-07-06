@@ -23,7 +23,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
 
-  const {tagMapList, expense, isTagModal, tagList} = useSelector(selectExpense);
+  const {vendorTagList, expense, isTagModal, tagList} = useSelector(selectExpense);
 
   if (expense == null || !isTagModal) {
     return <></>;
@@ -34,7 +34,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
       let _vendor = expense.vendor;
       let _tag = expense.tag;
 
-      let tagObj = tagMapList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
+      let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
       if (!tagObj) {
         tagObj = {
@@ -43,7 +43,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
           tag: selectedTag[0],
           date: new Date()
         };
-        void ExpenseAPI.updateTagMap(tagObj);
+        void ExpenseAPI.updateVendorTag(tagObj);
         setTagMap(tagObj);
       }
     }

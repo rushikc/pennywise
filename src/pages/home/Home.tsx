@@ -34,7 +34,8 @@ import {
 } from './validations';
 import './Home.scss';
 import MergeExpenses from './MergeExpenses';
-import {ExpenseAPI} from "../../api/ExpenseAPI"; // Import the new MergeExpenses component
+import {ExpenseAPI} from "../../api/ExpenseAPI";
+import {FinanceIndexDB} from "../../api/FinanceIndexDB"; // Import the new MergeExpenses component
 
 // Add interface to extend Window type
 declare global {
@@ -76,9 +77,10 @@ const Home: FC<any> = (): ReactElement => {
 
   useEffect(() => {
 
+
     void ExpenseAPI.processData();
 
-    const tagMapApi = ExpenseAPI.getTagMapList();
+    const tagMapApi = ExpenseAPI.getVendorTagList();
     const expenseApi = ExpenseAPI.getExpenseList();
     const tagListApi = ExpenseAPI.getTagList();
 

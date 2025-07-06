@@ -46,6 +46,7 @@ const BottomNavAuth = () => {
 };
 
 function App() {
+
   FinanceIndexDB.initDB();
 
   // define theme1

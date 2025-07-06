@@ -59,7 +59,7 @@ const Settings: React.FC = () => {
     {
       id: 'tags',
       title: 'Tags',
-      subtitle: 'Manage your expense categories',
+      subtitle: 'Manage your expense tags',
       icon: <TagsIcon />,
       route: '/setting-tags',
       color: '#ce93d8'
@@ -74,8 +74,8 @@ const Settings: React.FC = () => {
     },
     {
       id: 'manage-tag-maps',
-      title: 'Manage Tag Maps',
-      subtitle: 'Configure your tag mappings',
+      title: 'Manage Vendor Tags',
+      subtitle: 'Configure your vendor tag mappings',
       icon: <MapIcon />,
       route: '/setting-tag-maps',
       color: '#64b5f6'
@@ -147,15 +147,7 @@ const Settings: React.FC = () => {
         </Box>
       </Paper>
 
-      <Typography
-        variant="h6"
-        component={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="dashboard-title-text"
-      >
-        Settings
-      </Typography>
+
 
       <motion.div
         variants={containerVariants}
