@@ -7,41 +7,77 @@
 </div>
 
 <p align="center">
+  <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#demo">Demo</a> •
-  <a href="#getting-started">Getting Started</a> •
+  <a href="#technology-stack">Tech Stack</a> •
+  <a href="#architecture-how-it-works">Architecture & How It Works</a> •
   <a href="#project-structure">Project Structure</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#technology-stack">Technology Stack</a> •
+  <a href="#getting-started">Getting Started</a> •
   <a href="#roadmap">Roadmap</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#license">License</a>
 </p>
 
+---
+
 ## Overview
 
-PennyWise is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
+PennyWise is a comprehensive, open-source web application designed to empower individuals in managing their personal finances. It provides an intuitive platform to track, categorize, and visualize expenses, helping users gain clear insights into their spending patterns and achieve financial mastery. Built with modern web technologies, PennyWise offers a user-friendly experience with robust features, including offline support and secure authentication.
 
 ## Features
 
-- 📊 **Expense Tracking**: Add, edit, and manage your daily expenses
-- 🏷️ **Tagging System**: Categorize expenses with custom tags
-- 📅 **Date Filtering**: Filter expenses by different time periods (1 day, 7 days, 2 weeks, etc.)
-- 📊 **Visualization**: View spending patterns through statistical analysis
-- 📱 **Responsive Design**: Works on both desktop and mobile devices
-- 🔄 **Offline Support**: Uses IndexedDB for offline data access
-- 🔒 **Google Authentication**: Secure login via Google OAuth
-- 📧 **Gmail Integration**: Scan emails for expense information (optional)
+* 📊 **Expense Tracking**: Easily add, edit, and manage your daily expenses with detailed inputs.
+* 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
+* 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, custom ranges) for focused analysis.
+* 📊 **Visualization**: Understand spending patterns at a glance through interactive statistical charts and graphs.
+* 🔄 **Offline Support**: Access and manage your data even without an internet connection, thanks to IndexedDB for local storage.
+* 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
+* 📧 **Gmail Integration**: Effortlessly scan your emails to automatically identify and import expense information.
 
 ## Demo
 
 [Live Demo](#) - Coming Soon!
 
-Screenshot previews:
+Experience PennyWise in action:
 
 <div align="center">
-  <em>Add screenshots here</em>
+  <em>Add screenshot previews of the application interface here (e.g., dashboard, add expense, stats page).</em>
 </div>
+
+---
+
+## Technology Stack
+
+PennyWise leverages a modern and robust set of technologies to deliver a high-performance and maintainable application.
+
+### Frontend
+* **UI Framework**: [React](https://reactjs.org/)
+* **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
+* **Component Library**: [Material-UI v6](https://mui.com/)
+* **Animations**: [Framer Motion](https://www.framer.com/motion/)
+
+### State Management
+* **Centralized State**: [Redux Toolkit](https://redux-toolkit.js.org/)
+
+### Data Storage
+* **Cloud Database**: [Firebase Firestore](https://firebase.google.com/docs/firestore)
+* **Offline Storage**: [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (via [idb](https://www.npmjs.com/package/idb) library)
+
+### Authentication
+* **OAuth Provider**: [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (integrated using [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
+
+### Utilities
+* **Date Manipulation**: [date-fns](https://date-fns.org/) & [luxon](https://moment.github.io/luxon/)
+* **HTTP Client**: [axios](https://axios-http.com/)
+
+---
+
+## Architecture: How It Works
+
+PennyWise is designed with a client-side architecture emphasizing performance, offline capability, and seamless data synchronization. Below is an overview of its core components and data flow.
+
+### High-Level Architecture View
 
 ## Getting Started
 
