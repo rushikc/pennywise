@@ -1,5 +1,11 @@
 # PennyWise: Personal Expense Tracker
 
+> **Disclaimer:** Currently, PennyWise only supports transaction tracking for below
+> * HDFC UPI credit & debit transactions.
+> * HDFC Credit card debit transactions.
+>
+> We are actively working on expanding support to other banks and transaction types.
+
 <div align="center">
   <img src="public/logo.png" alt="PennyWise Logo" width="120px" />
   <br />
@@ -194,11 +200,11 @@ PennyWise is built using a modern front-end architecture with the following key 
 ### Data Flow Diagram
 
 ```
-┌─────────────┐     ┌───────────────┐     ┌───────────────┐
+┌──��──────────┐     ┌───────────────┐     ┌───────────────┐
 │             │     │               │     │               │
 │  User Input ├────►│ React UI/Views├────►│ Redux Actions │
 │             │     │               │     │               │
-└─────────────┘     └───────┬───────┘     └───────┬───────┘
+└────────────��┘     └───────┬───────┘     └───────┬───────┘
                             │                     │
                             │                     ▼
 ┌─────────────┐     ┌───────▼───────┐     ┌───────────────┐
@@ -210,9 +216,9 @@ PennyWise is built using a modern front-end architecture with the following key 
        │                    │
        ▼                    ▼
 ┌─────────────┐     ┌───────────────┐     ┌────────────────┐
-│             │     │               │     │                │
-│ App.tsx     ├────►│  ExpenseAPI   ├────►│ FinanceIndexDB │
-│Initial Load │     │               │     │ (Local Cache)  │
+│             │     │               │     │                  │
+│ App.tsx     ├────►│  ExpenseAPI   ├────►│ FinanceIndexDB   │
+│Initial Load │     │               │     │ (Local Cache)    │
 └─────────────┘     └───────┬───────┘     └───────┬────────┘
                             │                     │
                             ▼                     │
@@ -242,16 +248,16 @@ PennyWise is built using a modern front-end architecture with the following key 
 │  │  (API Clients & Data Processing)    │                         │
 │  │                                     │                         │
 │  └──────────────────┬───���────────────┘                         │
-│                     │                                            │
+���                     │                                            │
 └─────────────────────┼────────────────────────────────────────────┘
                       │
                       ▼
-     ┌────────────────────────────┐       ┌──────────────────────────┐
+     ┌──────────────────────────��─┐       ┌──────────────────────────┐
      │                            │       │                          │
      │      Local Storage         │◄─────►│     Cloud Storage        │
      │      (IndexedDB)           │       │   (Firebase Firestore)   │
      │                            │       │                          │
-     └────────────────────────────┘       └──────────────────────────┘
+     └────────────────────────────┘       └─────────────────────��────┘
 
              │                                        │
              ▼                                        ▼
