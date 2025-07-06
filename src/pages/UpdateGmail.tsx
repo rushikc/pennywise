@@ -158,7 +158,7 @@ const UpdateGmail: FC<any> = (): ReactElement => {
         {
           isLoading === 'loading' &&
           <div style={{ paddingLeft: '9rem', paddingTop: '4rem' }}>
-            <span>Fetaching Gmail Data</span>
+            <span>Fetching Gmail Data</span>
             <br />
             <CircularProgress style={{ marginTop: '1rem' }} />
           </div>

@@ -80,9 +80,9 @@ export class ExpenseAPI {
         try {
             console.log("Process Data Init");
 
-            const tags =await ExpenseAPI.getVendorTagList();
+            // const tags =await ExpenseAPI.getVendorTagList();
             // const tga1 = tags[1];
-            console.log("Vendor Tag List: ", tags);
+            // console.log("Vendor Tag List: ", tags);
 
             // tags.forEach(tag => {
             //     tag.date = new Date(tag.date);
@@ -90,7 +90,7 @@ export class ExpenseAPI {
             // })
             // ExpenseAPI.updateTagMap(tga1);
 
-            console.log("expense list ", tags);
+            // console.log("expense list ", tags);
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error processing data: ", e);
@@ -145,8 +145,7 @@ export class ExpenseAPI {
 
 
             const lastDateJS = getDayJs();
-            lastDateJS.subtract(1, 'days');
-            const lastDate = lastDateJS.toDate();
+            const lastDate = lastDateJS.subtract(1, 'days').toDate();
 
             await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: lastDate}]);
 
@@ -234,7 +233,6 @@ export class ExpenseAPI {
         try {
             let table = 'vendorTag';
 
-
             let indexDocList: any[] = [];
             let fireDocList: any[] = [];
 
@@ -242,23 +240,23 @@ export class ExpenseAPI {
             let isLastUpdateAvailable = false;
 
 
-            // await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
-            //     // console.log("index db config ", data);
-            //     if (data) {
-            //         lastUpdatedDate = new Date(data.value);
-            //         // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
-            //         isLastUpdateAvailable = true;
-            //     }
-            // });
-            //
-            // if (isLastUpdateAvailable) {
-            //     await FinanceIndexDB.getAllData("tagMap").then(data => indexDocList = data);
-            // }
+            await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
+                // console.log("index db config ", data);
+                if (data) {
+                    lastUpdatedDate = new Date(data.value);
+                    // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
+                    isLastUpdateAvailable = true;
+                }
+            });
+
+            if (isLastUpdateAvailable) {
+                await FinanceIndexDB.getAllData("vendorTag").then(data => indexDocList = data);
+            }
 
             // console.log(" lastUpdatedDate ", lastUpdatedDate);
 
-            // const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
-            const q = query(collection(db, table));
+            const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            // const q = query(collection(db, table));
             const querySnapshot = await getDocs(q);
 
             const queryResultLen = querySnapshot.docs.length;
@@ -270,7 +268,7 @@ export class ExpenseAPI {
                     // console.log(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
-                    // document.date = getISODate(document.date.seconds);
+                    document.date = getISODate(document.date.seconds);
                     fireDocList.push(document)
                 });
 
@@ -278,10 +276,11 @@ export class ExpenseAPI {
             }
 
             const lastDateJS = getDayJs();
-            lastDateJS.subtract(1, 'days');
-            const lastDate = lastDateJS.toDate();
+            const lastDate = lastDateJS.subtract(1, 'days').toDate();
 
-            // await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
+            console.log("Last Date for vendorTag - ", lastDate);
+
+            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
 
             console.debug('IndexDB  query for vendorTag - ', table, indexDocList);
             console.debug('Firebase query for vendorTag - ', table, fireDocList);
@@ -299,38 +298,6 @@ export class ExpenseAPI {
         }
     }
 
-    // static getVendorTags = async () => {
-    //     try {
-    //
-    //         const q = query(collection(db, 'vendorTag'));
-    //         const querySnapshot = await getDocs(q);
-    //
-    //         const queryResultLen = querySnapshot.docs.length;
-    //         console.log("expense list length ", queryResultLen);
-    //         const fireDocList: VendorTag[] = [];
-    //
-    //         querySnapshot.forEach((doc) => {
-    //             let document = doc.data();
-    //             let newDoc = {
-    //                 id: '',
-    //                 tag: '',
-    //                 vendor: '',
-    //             };
-    //             newDoc.tag = document.tag;
-    //             newDoc.vendor = document.vendor;
-    //             newDoc.vendor = document.vendor;
-    //             newDoc.id = doc.id;
-    //             fireDocList.push(newDoc);
-    //         });
-    //
-    //         return fireDocList;
-    //
-    //     } catch (e) {
-    //         ErrorHandlers.handleApiError(e);
-    //         console.error("Error getting vendorTag:", e);
-    //         return null;
-    //     }
-    // }
 
     static updateVendorTag = async (vendorTag: VendorTag) => {
         try {
