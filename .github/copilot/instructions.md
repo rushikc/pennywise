@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions for finance-web
+# GitHub Copilot Instructions for pennywise
 
 ## Project Overview
 This is a financial web application built with React and TypeScript. The project follows strict TypeScript standards and emphasizes type safety.
