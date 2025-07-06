@@ -50,14 +50,6 @@ const Settings: React.FC = () => {
   // Define dashboard tiles configuration
   const dashboardTiles = [
     {
-      id: 'profile',
-      title: 'Profile',
-      subtitle: 'Manage your account settings',
-      icon: <ProfileIcon />,
-      route: '/profile',
-      color: '#90caf9'
-    },
-    {
       id: 'config',
       title: 'Configuration',
       subtitle: 'Configure app preferences',
