@@ -47,7 +47,7 @@ Screenshot previews:
 
 ### Prerequisites
 
-- Node.js (v14+)
+- Node.js (v20+)
 - npm or yarn
 - Firebase account (for deployment)
 - Google OAuth credentials (for authentication)
