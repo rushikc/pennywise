@@ -1,6 +1,6 @@
-# MyExpense: Personal Expense Tracker
+# PennyWise: Personal Expense Tracker
 
-MyExpense is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
+PennyWise is a comprehensive expense tracking web application designed to help users manage their personal finances by tracking and categorizing expenses. Built with modern web technologies, it provides a user-friendly interface for monitoring spending patterns and financial activities.
 
 ## Features
 
@@ -14,7 +14,7 @@ MyExpense is a comprehensive expense tracking web application designed to help u
 
 ## Architecture
 
-MyExpense is built using a modern front-end architecture with the following key components:
+PennyWise is built using a modern front-end architecture with the following key components:
 
 ### Technology Stack
 
@@ -124,7 +124,7 @@ The application follows a modular structure:
 
 ## Data Storage
 
-MyExpense uses a dual storage strategy:
+PennyWise uses a dual storage strategy:
 
 1. **Firebase Firestore**: Cloud database for persistent storage
 2. **IndexedDB**: Local browser database for offline access and performance
