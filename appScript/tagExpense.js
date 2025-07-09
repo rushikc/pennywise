@@ -4,7 +4,7 @@
 async function tagExpenses() {
     const Config = "config";
     const LastAccessedTime = "lastTaggedTime";
-    const TagMap = "tagMap";
+    const VendorTag = "vendorTag";
     const Expenses = "expenses";
 
     let lastTaggedTimeDoc = getOneDoc(Config, LastAccessedTime);
@@ -34,14 +34,14 @@ async function tagExpenses() {
 
     console.log("Found " + expenses.length + " expenses to process");
 
-    const tagMap = getAllDoc(TagMap);
-    console.log("Loaded " + tagMap.length + " tag mappings");
+    const vendorTag = getAllDoc(VendorTag);
+    console.log("Loaded " + vendorTag.length + " tag mappings");
 
     let updatedCount = 0;
     for (const expense of expenses) {
         if (!expense.tag && expense.vendor) {
             const vendorUpper = expense.vendor.toUpperCase();
-            const matchingTag = tagMap.find(mapping => vendorUpper.includes(mapping.vendor.toUpperCase()));
+            const matchingTag = vendorTag.find(mapping => vendorUpper.includes(mapping.vendor.toUpperCase()));
 
             if (matchingTag) {
                 expense.tag = matchingTag.tag;

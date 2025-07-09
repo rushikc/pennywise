@@ -35,7 +35,6 @@ import {
 import './Home.scss';
 import MergeExpenses from './MergeExpenses';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {FinanceIndexDB} from "../../api/FinanceIndexDB"; // Import the new MergeExpenses component
 
 // Add interface to extend Window type
 declare global {
@@ -44,7 +43,6 @@ declare global {
     scrollTimeout: ReturnType<typeof setTimeout> | undefined;
   }
 }
-
 
 
 const Home: FC<any> = (): ReactElement => {
@@ -147,11 +145,35 @@ const Home: FC<any> = (): ReactElement => {
   };
 
   // Handle delete selected expenses
-  const handleDeleteSelected = () => {
-    // Implement delete logic here
-    console.log('Deleting', selectedExpenses);
-    // After deletion is complete:
-    cancelSelection();
+  const handleDeleteSelected = async () => {
+    if (selectedExpenses.length === 0) return;
+
+    setLoading(true); // Show loading state while deleting
+
+    try {
+      // Delete each selected expense using the ExpenseAPI
+      const deletePromises = selectedExpenses.map(expense =>
+        ExpenseAPI.deleteExpense(expense)
+      );
+
+      // Wait for all delete operations to complete
+      const results = await Promise.all(deletePromises);
+
+      // Check if all deletions were successful
+      const allSuccessful = results.every(Boolean);
+
+      if (allSuccessful) {
+        console.log(`Successfully deleted ${selectedExpenses.length} expenses`);
+      } else {
+        console.error('Some expenses could not be deleted');
+      }
+    } catch (error) {
+      console.error('Error deleting expenses:', error);
+    } finally {
+      setLoading(false);
+      // Exit selection mode
+      cancelSelection();
+    }
   };
 
   // Handle merge selected expenses
@@ -486,7 +508,7 @@ const Home: FC<any> = (): ReactElement => {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon/>
                 </InputAdornment>
               ),
             },
@@ -641,9 +663,6 @@ const Home: FC<any> = (): ReactElement => {
 };
 
 
-
-
-
 // Filter Panel Component
 const FilterPanel: FC<{
   show: boolean;
@@ -745,4 +764,5 @@ const GroupByPanel: FC<{
 };
 
 export default Home;
+
 

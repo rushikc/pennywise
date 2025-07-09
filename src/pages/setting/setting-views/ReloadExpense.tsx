@@ -17,7 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { format } from 'date-fns';
 import { ExpenseAPI } from "../../../api/ExpenseAPI";
-import { getDateFormat } from "../../../utility/utility";
+import {getDateFormat, getDateFromString} from "../../../utility/utility";
 
 interface ReloadExpenseProps {
   open: boolean;
@@ -61,10 +61,12 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
     }
   }, [success, onClose]);
 
+
   const handleReloadAll = async () => {
     setLoading(true);
     try {
       console.log("Reloading all expenses");
+      await ExpenseAPI.getExpenseList('2020-01-01');
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload all expenses:", error);

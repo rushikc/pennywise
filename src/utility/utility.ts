@@ -23,6 +23,10 @@ export const getDateFormat = (date = new Date()) => {
     return dayjs(date).format('YYYY-MM-DD');
 }
 
+export const getDateFromString = (date : string, format = 'YYYY-MM-DD') => {
+    return dayjs(date, format);
+}
+
 
 export const getDateMonth = (date: Date) => {
     return dayjs(date).format('DD MMM');
