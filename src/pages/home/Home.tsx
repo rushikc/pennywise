@@ -35,6 +35,7 @@ import {
 import './Home.scss';
 import MergeExpenses from './MergeExpenses';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
+import {CreditCard} from "@mui/icons-material";
 
 // Add interface to extend Window type
 declare global {
@@ -422,7 +423,9 @@ const Home: FC<any> = (): ReactElement => {
         >
           {isSelected ?
             <CheckCircleIcon fontSize="inherit"/> :
-            <CurrencyRupeeIcon fontSize="inherit"/>
+            expense.type === 'credit' ?
+              <CreditCard fontSize="inherit"/> :
+              <CurrencyRupeeIcon fontSize="inherit"/>
           }
         </Avatar>
         <Col>
@@ -764,5 +767,4 @@ const GroupByPanel: FC<{
 };
 
 export default Home;
-
 
