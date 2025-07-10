@@ -1,13 +1,13 @@
 export interface Expense {
     id: string,
-    tag: string,
-    mailId: string,
-    cost: number,
-    costType: string,
-    date: Date,
-    user: string,
-    type: 'credit' | 'debit',
-    vendor: string
+    tag: string, // tag for the expense
+    mailId: string, // unique identifier for the expense from mail id
+    cost: number, // expense cost
+    costType: 'credit' | 'debit',
+    date: Date, // date of the expense
+    user: string, // user who created the expense
+    type: string, // upi, credit, cash, etc.
+    vendor: string // vendor name for the expense
 }
 
 export interface VendorTag {
