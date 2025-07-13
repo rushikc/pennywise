@@ -2,19 +2,19 @@ $red: #e97878;
 $purple-light: rgb(103, 125, 247);
 
 .tag-text-red {
-  font-size: 10px;
+  font-size: 11px;
   border: solid $red 1px;
   border-radius: 10px;
-  padding: 2px 4px;
+  padding: 3px 5px;
   color: $red;
 }
 
 .tag-text-purple-light {
-  font-size: 10px;
+  font-size: 12px;
   border: solid $purple-light 1px;
   border-radius: 10px;
-  padding: 2px 4px;
-  color: $purple-light;
+  padding: 3px 5px;
+  color: #d6d7e9;
 }
 
 .button-class {
