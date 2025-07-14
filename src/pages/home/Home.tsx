@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MergeIcon from '@mui/icons-material/Merge';
+import AddIcon from '@mui/icons-material/Add';
 import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -552,6 +553,22 @@ const Home: FC<any> = (): ReactElement => {
                 color="primary"
                 clickable
               />
+            </div>
+
+            {/* Add Expense button*/}
+            <div>
+              <Fab
+                color="secondary"
+                className="add-expense-button"
+                size="large"
+                aria-label="add expense"
+                onClick={() => {
+                  setSelectionMode(false);
+                  console.log('Add Expense clicked');
+                }}
+              >
+                <AddIcon />
+              </Fab>
             </div>
 
             {/* Group by button */}

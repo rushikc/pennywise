@@ -257,7 +257,9 @@
     justify-content: center;
 }
 
-.filter-button, .group-by-button {
+.filter-button, .group-by-button, {
+    padding-top: 10px;
+
     .MuiChip-root {
         background-color: #2a3242; /* Subtle blue-gray that's still visible but not too bright */
         color: #e0e0e0; /* Softer white text */
@@ -266,6 +268,8 @@
         padding: 0 15px;
         border: 1px solid #475366; /* Subtle border that provides definition */
         font-weight: 400; /* Standard weight */
+        min-width: 140px; /* Ensure minimum width for all buttons */
+        justify-content: center; /* Center content within chip */
 
         .MuiChip-icon {
             color: #90caf9;
@@ -278,6 +282,13 @@
         }
     }
 }
+
+/* Special styling for the add expense button */
+.add-expense-button {
+    background-color: #8ecaf9 !important;
+    border-color: #8ecaf9 !important;
+}
+
 
 .filter-panel, .group-by-panel {
     position: fixed;
@@ -404,11 +415,11 @@
 /* Collapse all button */
 .collapse-all-button {
     position: fixed !important;
-    bottom: 140px; /* Position below the scroll to top button */
+    bottom: 160px; /* Position below the scroll to top button */
     right: 25px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
     z-index: 90 !important;
-    background-color: #2a3035 !important;
+    background-color: #3a4045 !important;
     color: white !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;
 
@@ -484,64 +495,64 @@
 
 // Selection mode styles
 .expense-row {
-  &.selected {
-    background-color: rgba(63, 81, 181, 0.1);
-  }
-
-  .expense-avatar {
     &.selected {
-      background-color: #3f51b5;
-      color: white;
+        background-color: rgba(63, 81, 181, 0.1);
     }
-  }
+
+    .expense-avatar {
+        &.selected {
+            background-color: #3f51b5;
+            color: white;
+        }
+    }
 }
 
 // Selected count display
 .selected-count-display {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: black;
-  color: white;
-  border-radius: 20px;
-  padding: 6px 16px;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  z-index: 1000;
-  text-align: center;
-  font-size: 14px;
-  margin-bottom: 10px;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(144, 202, 249, 0.5);
-  animation: fadeIn 0.3s ease;
-  min-width: 150px;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 10px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(144, 202, 249, 0.5);
+    animation: fadeIn 0.3s ease;
+    min-width: 150px;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // Action buttons in selection mode
 .action-button {
-  .MuiChip-root {
-    font-weight: 500;
+    .MuiChip-root {
+        font-weight: 500;
 
-    &[disabled] {
-      opacity: 0.6;
-      pointer-events: none;
+        &[disabled] {
+            opacity: 0.6;
+            pointer-events: none;
+        }
     }
-  }
 }
 
 // Cancel selection button
 .cancel-selection-button {
-  position: fixed !important;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  padding: 5px 15px;
+    position: fixed !important;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 5px 15px;
 }
