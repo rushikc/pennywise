@@ -282,15 +282,13 @@ export class ExpenseAPI {
 
             await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
 
-            console.debug('IndexDB  query for vendorTag - ', table, indexDocList);
-            console.debug('Firebase query for vendorTag - ', table, fireDocList);
+            console.log('IndexDB  query for vendorTag - ', table, indexDocList);
+            console.log('Firebase query for vendorTag - ', table, fireDocList);
 
-            const finalList = fireDocList.concat(indexDocList);
+            await FinanceIndexDB.getAllData("vendorTag").then(data => indexDocList = data);
 
-            finalList.forEach(val => val.date = String(val.date));
-
-            console.debug('FinalList query for vendorTag- ', table, finalList);
-            return finalList;
+            console.debug('FinalList query for vendorTag- ', table, indexDocList);
+            return indexDocList;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error getting vendor tag list: ", e);

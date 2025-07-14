@@ -64,7 +64,7 @@ export const useAuth = (redirectToLogin = true) => {
     try {
       // Clear IndexedDB data before signing out using the method from FinanceIndexDB
       await FinanceIndexDB.clearIndexedDBData();
-
+      FinanceIndexDB.initDB();
       // Then sign out from Firebase
       await auth.signOut();
       return { success: true };
