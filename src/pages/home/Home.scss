@@ -248,7 +248,7 @@
 /* Buttons container for Filter and Group By buttons */
 .buttons-container {
     position: fixed;
-    bottom: 80px;
+    bottom: 70px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 90;
@@ -268,7 +268,7 @@
         padding: 0 15px;
         border: 1px solid #475366; /* Subtle border that provides definition */
         font-weight: 400; /* Standard weight */
-        min-width: 140px; /* Ensure minimum width for all buttons */
+        min-width: 155px; /* Ensure minimum width for all buttons */
         justify-content: center; /* Center content within chip */
 
         .MuiChip-icon {
@@ -395,11 +395,11 @@
 /* Scroll to top button */
 .scroll-top-button {
     position: fixed !important;
-    bottom: 195px; /* Position above the filter button */
+    bottom: 210px; /* Position above the filter button */
     right: 25px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
     z-index: 90 !important;
-    background-color: #2a3035 !important;
+    background-color: #3a4045 !important;
     color: white !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;
 
@@ -415,7 +415,7 @@
 /* Collapse all button */
 .collapse-all-button {
     position: fixed !important;
-    bottom: 160px; /* Position below the scroll to top button */
+    bottom: 150px; /* Position below the scroll to top button */
     right: 25px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
     z-index: 90 !important;

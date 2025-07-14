@@ -19,7 +19,14 @@ import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
-import {mergeSaveExpense, selectExpense, setExpenseAndTag, setTagExpense, setTagList} from '../../store/expenseActions';
+import {
+  deleteExpense,
+  mergeSaveExpense,
+  selectExpense,
+  setExpenseAndTag,
+  setTagExpense,
+  setTagList
+} from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
@@ -35,6 +42,7 @@ import {
 } from './validations';
 import './Home.scss';
 import MergeExpenses from './MergeExpenses';
+import AddExpense from './AddExpense';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 import {CreditCard} from "@mui/icons-material";
 
@@ -66,6 +74,7 @@ const Home: FC<any> = (): ReactElement => {
   const [selectedExpenses, setSelectedExpenses] = useState<Expense[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
   const [showMergeDialog, setShowMergeDialog] = useState(false);
+  const [showAddExpenseDialog, setShowAddExpenseDialog] = useState(false);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -80,22 +89,37 @@ const Home: FC<any> = (): ReactElement => {
 
     void ExpenseAPI.processData();
 
-    const tagMapApi = ExpenseAPI.getVendorTagList();
+    const vendorTagApi = ExpenseAPI.getVendorTagList();
     const expenseApi = ExpenseAPI.getExpenseList();
     const tagListApi = ExpenseAPI.getTagList();
 
-    Promise.all([tagMapApi, expenseApi, tagListApi]).then((res) => {
+    Promise.all([vendorTagApi, expenseApi, tagListApi]).then((res) => {
 
-      const tagResult = res[0];
+      const vendorTagResult = res[0];
       const expenseResult = res[1];
       const tagList = res[2];
       const expenseList = sortByKeyDate(expenseResult, 'date');
 
-      setExpenseAndTag(expenseList, tagResult);
+      setExpenseAndTag(expenseList, vendorTagResult);
       setTagList(tagList);
 
     }).catch((res1) => alert(res1))
   }, []);
+
+
+  const reloadExpenseList = () => {
+    setLoading(true);
+    ExpenseAPI.getExpenseList()
+      .then(expenses => {
+        const sortedExpenses = sortByKeyDate(expenses, 'date');
+        setExpenseAndTag(sortedExpenses, []);
+        setTimeout(() => setLoading(false), 300);
+      })
+      .catch(error => {
+        console.error('Error reloading expenses:', error);
+        setLoading(false);
+      });
+  }
 
   const toggleFilters = () => {
     if (selectionMode) return; // Don't show filters in selection mode
@@ -159,22 +183,16 @@ const Home: FC<any> = (): ReactElement => {
       );
 
       // Wait for all delete operations to complete
-      const results = await Promise.all(deletePromises);
+      await Promise.all(deletePromises);
+      selectedExpenses.forEach(expense => deleteExpense(expense));
 
-      // Check if all deletions were successful
-      const allSuccessful = results.every(Boolean);
 
-      if (allSuccessful) {
-        console.log(`Successfully deleted ${selectedExpenses.length} expenses`);
-      } else {
-        console.error('Some expenses could not be deleted');
-      }
     } catch (error) {
       console.error('Error deleting expenses:', error);
     } finally {
-      setLoading(false);
-      // Exit selection mode
+      // setLoading(false);
       cancelSelection();
+      reloadExpenseList();
     }
   };
 
@@ -564,7 +582,7 @@ const Home: FC<any> = (): ReactElement => {
                 aria-label="add expense"
                 onClick={() => {
                   setSelectionMode(false);
-                  console.log('Add Expense clicked');
+                  setShowAddExpenseDialog(true);
                 }}
               >
                 <AddIcon />
@@ -677,6 +695,12 @@ const Home: FC<any> = (): ReactElement => {
         onClose={() => setShowMergeDialog(false)}
         expenses={selectedExpenses}
         onMergeComplete={handleMergeComplete}
+      />
+
+      {/* Add expense dialog - only show when add expense dialog is triggered */}
+      <AddExpense
+        open={showAddExpenseDialog}
+        onClose={() => setShowAddExpenseDialog(false)}
       />
     </div>
   );
