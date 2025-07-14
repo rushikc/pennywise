@@ -26,7 +26,7 @@ interface AddExpenseModalProps {
 
 const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string>("");
-  const [cost, setCost] = useState<string>("0");
+  const [cost, setCost] = useState<string>("");
   const [currentDate] = useState<Date>(new Date());
 
   // Get tag list from the store
@@ -36,7 +36,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   useEffect(() => {
     if (open) {
       setSelectedTag("");
-      setCost("0");
+      setCost("");
     }
   }, [open]);
 
@@ -83,7 +83,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
         <Fade in={open} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              Manual Entry
+              Add New Expense
             </Typography>
             <Typography variant="body2" className="tag-expense-date">
               {formattedDateTime}
