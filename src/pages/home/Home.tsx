@@ -188,7 +188,6 @@ const Home: FC<any> = (): ReactElement => {
       await Promise.all(deletePromises);
       selectedExpenses.forEach(expense => deleteExpense(expense));
 
-
     } catch (error) {
       console.error('Error deleting expenses:', error);
     } finally {

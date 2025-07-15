@@ -44,8 +44,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     // Create a new expense object
     const uuid = uuidv4();
     const newExpense: Expense = {
-      id: `manual-${uuid}`, // Generate a unique ID
-      vendor: "manual", // As specified, set vendor as "manual"
+      id: 'manual', // will be overridden by ExpenseAPI logic
+      vendor: "manual entry", // As specified, set vendor as "manual"
       date: currentDate,
       cost: parseFloat(cost),
       tag: selectedTag,
@@ -56,15 +56,16 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     };
 
     // Save the expense
-    void ExpenseAPI.addExpense(newExpense);
-    updateExpense(newExpense);
+    ExpenseAPI.addExpense(newExpense).then((expense) => {
+      updateExpense(expense);
+      // Call the onExpenseAdded callback if provided
+      if (onExpenseAdded) {
+        onExpenseAdded(newExpense);
+      }
+      onClose();
+    });
 
-    // Call the onExpenseAdded callback if provided
-    if (onExpenseAdded) {
-      onExpenseAdded(newExpense);
-    }
 
-    onClose();
   };
 
   // Format the current date and time

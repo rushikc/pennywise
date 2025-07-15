@@ -16,7 +16,7 @@ const db = getFirestore(app);
 
 export class ExpenseAPI {
 
-    static addExpense = async (expense: any) => {
+    static addExpense = async (expense: any): Promise<Expense> => {
 
         try {
 
@@ -31,9 +31,13 @@ export class ExpenseAPI {
 
             await FinanceIndexDB.addExpenseList([expense]);
 
+            expense["id"] = key;
+            return expense;
+
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error adding document: ", e);
+            return expense;
         }
     }
 
