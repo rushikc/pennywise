@@ -5,7 +5,7 @@ import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {VendorTag} from "../Types";
+import {BankConfig, VendorTag} from "../Types";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -217,7 +217,7 @@ export class ExpenseAPI {
         }
     }
 
-    static updateBankConfig = async (config: { enableUpi: boolean, creditCards: string[] }) => {
+    static updateBankConfig = async (config: BankConfig) => {
         try {
             await ExpenseAPI.setOneDoc('bank', config, 'config');
             console.log('Updated bank config:', config);

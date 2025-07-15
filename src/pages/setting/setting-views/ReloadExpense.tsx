@@ -11,11 +11,11 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { format } from 'date-fns';
+import dayjs, {Dayjs} from 'dayjs';
 import { ExpenseAPI } from "../../../api/ExpenseAPI";
 import {getDateFormat, getDateFromString} from "../../../utility/utility";
 
@@ -47,7 +47,7 @@ const DATE_PICKER_STYLES = {
  * either for a specific date or all expenses.
  */
 const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -82,7 +82,7 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
     setLoading(true);
     try {
       console.log("Reloading expenses for:", selectedDate);
-      await ExpenseAPI.getExpenseList(getDateFormat(selectedDate));
+      await ExpenseAPI.getExpenseList(getDateFormat(selectedDate.toDate()));
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload expenses for selected date:", error);
@@ -118,7 +118,7 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
         gap: 2,
         mt: 1
       }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Select Date"
             value={selectedDate}
@@ -141,7 +141,7 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
         >
           {loading ?
             <CircularProgress size={24}/> :
-            `Reload from ${selectedDate ? format(selectedDate, 'MMM dd, yyyy') : ''}`
+            `Reload from ${selectedDate ? dayjs(selectedDate).format('MMM DD, YYYY') : ''}`
           }
         </Button>
       </Box>

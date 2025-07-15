@@ -36,7 +36,7 @@ const Configuration: React.FC = () => {
   const navigate = useNavigate();
 
   // State for bank configuration
-  const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: []});
+  const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: [], darkMode: false});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -79,6 +79,27 @@ const Configuration: React.FC = () => {
       }
     } catch (error) {
       console.error('Error updating UPI setting:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDarkModeToggle = async () => {
+    setIsSaving(true);
+    const updatedConfig: BankConfig = {
+      ...bankConfig,
+      darkMode: !bankConfig.darkMode
+    };
+
+    try {
+      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      if (success) {
+        setBankConfig(updatedConfig);
+      } else {
+        console.error('Failed to update dark mode setting');
+      }
+    } catch (error) {
+      console.error('Error updating dark mode setting:', error);
     } finally {
       setIsSaving(false);
     }
@@ -185,7 +206,7 @@ const Configuration: React.FC = () => {
       >
         {isLoading ? (
           <Box className="loading-container">
-            <CircularProgress size={28} className="loading-indicator" />
+            <CircularProgress size={28} className="loading-indicator"/>
           </Box>
         ) : (
           <>
@@ -246,7 +267,7 @@ const Configuration: React.FC = () => {
 
         {isLoading ? (
           <Box className="loading-container">
-            <CircularProgress size={28} className="loading-indicator" />
+            <CircularProgress size={28} className="loading-indicator"/>
           </Box>
         ) : (
           <List>
@@ -262,11 +283,11 @@ const Configuration: React.FC = () => {
                     disabled={isSaving}
                     className="delete-button"
                   >
-                    <RemoveCircleOutline />
+                    <RemoveCircleOutline/>
                   </IconButton>
                 }
               >
-                <CreditCardIcon className="card-icon" />
+                <CreditCardIcon className="card-icon"/>
                 <ListItemText
                   primary={`HDFC ****${cardDigits}`}
                   primaryTypographyProps={{
@@ -289,6 +310,49 @@ const Configuration: React.FC = () => {
             size={16}
             className="loading-indicator mini"
           />
+        )}
+      </Paper>
+
+
+      <Paper
+        component={motion.div}
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
+        elevation={3}
+        className="section-paper bank-section"
+      >
+        {isLoading ? (
+          <Box className="loading-container">
+            <CircularProgress size={28} className="loading-indicator"/>
+          </Box>
+        ) : (
+          <>
+            <Typography variant="h6" className="section-title">
+              App Theme
+            </Typography>
+
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={bankConfig.darkMode}
+                  onChange={handleDarkModeToggle}
+                  color="primary"
+                  disabled={isSaving}
+                />
+              }
+              label="Enable Dark Mode"
+              sx={{width: '100%'}}
+            />
+
+            {isSaving && (
+              <CircularProgress
+                size={16}
+                className="loading-indicator mini"
+              />
+            )}
+          </>
         )}
       </Paper>
 

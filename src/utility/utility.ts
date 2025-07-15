@@ -1,9 +1,14 @@
-import {DateTime} from "luxon";
 import dayjs, {Dayjs} from "dayjs";
+// Add necessary dayjs plugins
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+// Initialize dayjs plugins
+dayjs.extend(customParseFormat);
+dayjs.extend(localizedFormat);
 
 
 //daysJs
-
 
 
 export const getDayJs = (date: Date = new Date()) => {
@@ -60,60 +65,16 @@ export const getISODate = (seconds: number): Date => {
 }
 
 
-export const getDate = (date: Date): string => {
-    return DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
-}
-
-/**
- * {@link DateTime.toLocaleString} format like 'Oct 14, 1983, 9:30 AM'. Only 12-hour if the locale is.
- */
-export const getDateMed = (seconds: number): string => {
-    return DateTime.fromISO(getISODate(seconds).toISOString()).toLocaleString(DateTime.TIME_SIMPLE)
-}
-
-
-export const getTime = (seconds: number): string => {
-    return DateTime.fromISO(getISODate(seconds).toISOString()).toLocaleString(DateTime.TIME_SIMPLE)
-}
-
-
-export const getDateFromISO = (isoTime: string): string => {
-    return DateTime.fromISO(isoTime).toLocaleString(DateTime.DATE_MED)
-}
-
-
-export const getTimeFromISO = (isoTime: string): string => {
-    return DateTime.fromISO(isoTime).toLocaleString(DateTime.TIME_SIMPLE)
-}
-
-
-export const getTimeSecFromISO = (isoTime: string): string => {
-    return DateTime.fromISO(isoTime).toLocaleString(DateTime.TIME_WITH_SECONDS)
-}
 
 
 export const getDateTimeSecFromISO = (isoTime: string): string => {
-    return DateTime.fromISO(isoTime).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)
+    // Using dayjs to parse ISO string and format with localized short datetime with seconds
+    return dayjs(isoTime).format('MM/DD/YYYY, hh:mm:ss A');
 }
 
 
 
 
-
-
-
-//local storage
-
-// export const setStorage = (key: string, val: any) => {
-//     localStorage.setItem(key, JSON.stringify(val));
-// }
-
-// export const getStorage = (key: string) => {
-//     let val = localStorage.getItem(key);
-//     return val ? JSON.parse(val) : val;
-// }
-
-// export const clearStorage = () => localStorage.clear();
 
 
 

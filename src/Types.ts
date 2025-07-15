@@ -26,5 +26,6 @@ export interface Config {
 
 export interface BankConfig {
     enableUpi: boolean;
+    darkMode: boolean;
     creditCards: string[];
 }

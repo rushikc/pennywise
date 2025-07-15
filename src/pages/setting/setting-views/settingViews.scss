@@ -45,205 +45,206 @@
 // Configuration styling
 
 .config-container {
-  padding-bottom: 10rem;
-  padding-top: 2rem;
+    padding-bottom: 10rem;
+    padding-top: 2rem;
 }
 
 .config-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
 }
 
 .back-button {
-  margin-right: 1rem;
-  color: var(--primary-color);
+    margin-right: 1rem;
+    color: var(--primary-color);
 }
 
 .section-paper {
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: #23272a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-
-  &.bank-section {
+    padding: 1.5rem;
+    border-radius: 16px;
     margin-bottom: 1.5rem;
-  }
+    background: #23272a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    &.bank-section {
+        margin-bottom: 1.5rem;
+    }
 }
 
 .section-title {
-  margin-bottom: 1rem;
-  font-weight: 500;
+    margin-bottom: 1rem;
+    font-weight: 500;
 }
 
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
 .add-card-button {
-  border-radius: 8px;
+    border-radius: 8px;
 }
 
 .loading-container {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
 }
 
 .loading-indicator {
-  color: #90caf9;
+    color: #90caf9;
 
-  &.mini {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 16px;
-    height: 16px;
-  }
+    &.mini {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 16px;
+        height: 16px;
+    }
 }
 
 .card-list-item {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  background-color: #2a3035;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background-color: #2a3035;
 
-  &:hover {
-    background-color: #323a42;
-  }
+    &:hover {
+        background-color: #323a42;
+    }
 }
 
 .card-icon {
-  margin-right: 1rem;
-  color: #90caf9;
+    margin-right: 1rem;
+    color: #90caf9;
 }
 
 .delete-button {
-  color: #ef5350;
-
-  svg {
     color: #ef5350;
-    fill: #ef5350;
-  }
+
+    svg {
+        color: #ef5350;
+        fill: #ef5350;
+    }
 }
 
 .card-text {
-  color: #e0e0e0;
-  font-weight: 500;
+    color: #e0e0e0;
+    font-weight: 500;
 }
 
 .empty-cards-message {
-  text-align: center;
-  padding: 1rem 0;
-  color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 1rem 0;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 // Dialog styling
 .card-dialog {
-  .MuiPaper-root {
-    background-color: #23272a;
-    border-radius: 16px;
-  }
+    .MuiPaper-root {
+        background-color: #23272a;
+        border-radius: 16px;
+    }
 }
 
 .dialog-title {
-  color: #e0e0e0;
+    color: #e0e0e0;
 }
 
 .dialog-text {
-  color: #b0bec5;
-  margin-bottom: 1rem;
+    color: #b0bec5;
+    margin-bottom: 1rem;
 }
 
 .text-field {
-  .MuiOutlinedInput-root {
-    color: #e0e0e0;
+    .MuiOutlinedInput-root {
+        color: #e0e0e0;
 
-    fieldset {
-      border-color: #3a4045;
+        fieldset {
+            border-color: #3a4045;
+        }
+
+        &:hover fieldset {
+            border-color: #90caf9;
+        }
+
+        &.Mui-focused fieldset {
+            border-color: #90caf9;
+        }
     }
 
-    &:hover fieldset {
-      border-color: #90caf9;
+    .MuiFormLabel-root {
+        color: #90caf9;
     }
 
-    &.Mui-focused fieldset {
-      border-color: #90caf9;
+    .MuiFormHelperText-root {
+        color: #ef5350;
     }
-  }
-
-  .MuiFormLabel-root {
-    color: #90caf9;
-  }
-
-  .MuiFormHelperText-root {
-    color: #ef5350;
-  }
 }
 
 .dialog-actions {
-  padding: 0 1.5rem 1rem;
+    padding: 0 1.5rem 1rem;
 }
 
 .cancel-button {
-  color: #90caf9;
+    color: #90caf9;
 }
 
 .save-button {
-  background-color: #2a3035;
+    background-color: #2a3035;
 
-  &:hover {
-    background-color: #323a42;
-  }
+    &:hover {
+        background-color: #323a42;
+    }
 }
 
 // ManageVendorTags styling
 
 .search-field {
-  margin-bottom: 1rem !important;
-  margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
 }
 
 .message-text {
-  margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .vendor-name-display {
-  margin-bottom: 1rem;
-  font-weight: bold;
-  text-align: center;
-  padding: 10px 15px;
-  background-color: #5b5b61;
-  border-radius: 8px;
-  width: 100%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  word-break: break-word;
-  overflow-wrap: break-word;
-  color: white;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 15px;
+    background-color: #5b5b61;
+    border-radius: 8px;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    color: white;
 }
 
 .tag-expense-category-label {
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .tag-expense-chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
 }
 
 .tag-expense-chip {
-  min-width: 80px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 80px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &.selected {
-    font-weight: 500;
-  }
+    &.selected {
+        font-weight: 500;
+    }
 }
