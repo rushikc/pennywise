@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Expense, VendorTag} from "../Types";
+import {BankConfig, Expense, VendorTag} from "../Types";
 import {FinanceIndexDB} from "../api/FinanceIndexDB";
 
 
@@ -7,6 +7,7 @@ interface InitialState {
     expenseList: Expense[],
     expense: Expense | null,
     vendorTagList: VendorTag[],
+    bankConfig: BankConfig,
     isAppLoading: boolean,
     isTagModal: boolean,
     tagList: string[],
@@ -17,6 +18,11 @@ const initialState: InitialState = {
     expense: null,
     vendorTagList: [],
     isAppLoading: true,
+    bankConfig: {
+        enableUpi: false,
+        darkMode: false,
+        creditCards: [],
+    },
     isTagModal: false,
     tagList: [],
 }
@@ -81,11 +87,13 @@ export const expenseSlice = createSlice({
             state.isTagModal = false;
         },
 
-        setExpenseAndTag: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] }>) => {
+        setExpenseState: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] , bankConfig: BankConfig}>) => {
             state.expenseList = action.payload.expenseList;
             state.vendorTagList = action.payload.vendorTagList;
+            state.bankConfig = action.payload.bankConfig;
             state.isAppLoading = false;
         },
+
 
         setTagList: (state, action: PayloadAction<string[]>) => {
             state.tagList = action.payload;

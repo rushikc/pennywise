@@ -5,7 +5,7 @@ import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig, VendorTag} from "../Types";
+import {BankConfig, Expense, VendorTag} from "../Types";
 
 
 const firebaseConfig = getFirebaseConfig();
@@ -98,7 +98,7 @@ export class ExpenseAPI {
     }
 
 
-    static getExpenseList = async (overrideLastDate: string | undefined = undefined) => {
+    static getExpenseList = async (overrideLastDate: string | undefined = undefined): Promise<Expense[]> => {
         try {
             let table = 'expense';
 
@@ -193,7 +193,7 @@ export class ExpenseAPI {
         }
     }
 
-    static getBankConfig = async () => {
+    static getBankConfig = async (): Promise<BankConfig> => {
         try {
             const bankConfig: any = await ExpenseAPI.getOneDoc('bank', 'config');
 
@@ -201,6 +201,7 @@ export class ExpenseAPI {
             if (!bankConfig) {
                 return {
                     enableUpi: false,
+                    darkMode: false,
                     creditCards: []
                 };
             }
@@ -212,7 +213,8 @@ export class ExpenseAPI {
             console.error("Error getting bank config:", e);
             return {
                 enableUpi: false,
-                creditCards: []
+                creditCards: [],
+                darkMode: false
             };
         }
     }
@@ -229,7 +231,7 @@ export class ExpenseAPI {
         }
     }
 
-    static getVendorTagList = async () => {
+    static getVendorTagList = async () : Promise<VendorTag[]> => {
         try {
             let table = 'vendorTag';
 
