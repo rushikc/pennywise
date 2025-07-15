@@ -21,11 +21,11 @@
     --border-color-dark: #ced4da;
 
     // Accent colors (preserved across themes)
-    --accent-red: #e97878;
+    --accent-red: #ca1919;
     --accent-red-rgb: 233, 120, 120;
     --accent-blue: #1c75bd;
     --accent-blue-rgb: 28, 117, 189;
-    --accent-purple: rgb(103, 125, 247);
+    --accent-purple: rgb(48, 73, 214);
     --accent-purple-rgb: 103, 125, 247;
     --accent-green: #23ad29;
     --accent-green-rgb: 35, 173, 41;
@@ -79,11 +79,19 @@
     --border-color: #3a4045;
     --border-color-dark: #4e5358;
 
-    // Accent colors (preserved across themes)
+    // Accent colors
+    --accent-red: #e97878;
+    --accent-red-rgb: 233, 120, 120;
     --accent-blue: #90caf9;
     --accent-blue-rgb: 144, 202, 249;
+    --accent-purple: rgb(103, 125, 247);
+    --accent-purple-rgb: 103, 125, 247;
     --accent-green: #66bb6a;
     --accent-green-rgb: 102, 187, 106;
+    --accent-yellow: #ffca28;
+    --accent-yellow-rgb: 255, 202, 40;
+
+
 
     // Component-specific colors
     --search-bg: #23272a;
