@@ -5,7 +5,8 @@ import {
   Logout as LogoutIcon,
   Map as MapIcon,
   Refresh as ReloadIcon,
-  Settings as ConfigIcon
+  Settings as ConfigIcon,
+  Brightness4 as ThemeIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
@@ -14,12 +15,17 @@ import ReloadExpense from './setting-views/ReloadExpense';
 import {useAuth} from '../../hooks/useAuth';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
+import { useDispatch, useSelector } from 'react-redux';
+import { expenseSlice } from '../../store/expenseSlice';
+import { selectExpense } from '../../store/expenseActions';
 
 /**
  * Settings page component with user profile and settings options
  */
 const Settings: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { bankConfig } = useSelector(selectExpense);
   const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
@@ -65,6 +71,14 @@ const Settings: React.FC = () => {
       color: '#ce93d8'
     },
     {
+      id: 'theme',
+      title: `${bankConfig.darkMode ? 'Light' : 'Dark'} Theme`,
+      subtitle: `Switch to ${bankConfig.darkMode ? 'light' : 'dark'} mode`,
+      icon: <ThemeIcon />,
+      route: '/toggle-theme',
+      color: '#9c27b0'
+    },
+    {
       id: 'reload',
       title: 'Reload Expense',
       subtitle: 'Reload your expense data',
@@ -90,6 +104,11 @@ const Settings: React.FC = () => {
     }
   ];
 
+  // Handle theme toggle
+  const toggleTheme = () => {
+    dispatch(expenseSlice.actions.toggleDarkMode());
+  };
+
   const handleTileClick = (route: string) => {
     if (route === '/reload') {
       setReloadExpenseModalOpen(true);
@@ -98,6 +117,11 @@ const Settings: React.FC = () => {
 
     if (route === '/signout') {
       void handleSignOut();
+      return;
+    }
+
+    if (route === '/toggle-theme') {
+      toggleTheme();
       return;
     }
 
@@ -129,6 +153,7 @@ const Settings: React.FC = () => {
         transition={{ duration: 0.5 }}
         elevation={3}
         className="user-profile-paper"
+        sx={{ bgcolor: 'transparent' }}
       >
         <Box className="user-profile-box">
           <ProfileAvatar
@@ -146,8 +171,6 @@ const Settings: React.FC = () => {
           </Box>
         </Box>
       </Paper>
-
-
 
       <motion.div
         variants={containerVariants}

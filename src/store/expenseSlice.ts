@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {BankConfig, Expense, VendorTag} from "../Types";
 import {FinanceIndexDB} from "../api/FinanceIndexDB";
+import {ExpenseAPI} from "../api/ExpenseAPI";
 
 
 interface InitialState {
@@ -122,6 +123,12 @@ export const expenseSlice = createSlice({
 
             // Add the merged expense
             state.expenseList.push(mergedExpense);
+        },
+
+        toggleDarkMode: (state) => {
+            state.bankConfig.darkMode = !state.bankConfig.darkMode;
+            // Optionally save the setting to persistent storage
+            void ExpenseAPI.updateBankConfig(state.bankConfig);
         },
     }
 })

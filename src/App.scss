@@ -1,5 +1,8 @@
-$red: #e97878;
-$purple-light: rgb(103, 125, 247);
+@import './styles/theme.scss';
+
+// Using theme variables instead of hardcoded colors
+$red: var(--accent-red);
+$purple-light: var(--accent-purple);
 
 .tag-text-red {
   font-size: 11px;
@@ -14,7 +17,7 @@ $purple-light: rgb(103, 125, 247);
   border: solid $purple-light 1px;
   border-radius: 10px;
   padding: 3px 5px;
-  color: #d6d7e9;
+  color: var(--text-secondary);
 }
 
 .button-class {
@@ -50,4 +53,3 @@ $purple-light: rgb(103, 125, 247);
   padding: 0 !important;
   margin: 0 !important;
 }
-

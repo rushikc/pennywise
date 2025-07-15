@@ -24,11 +24,11 @@
     border-radius: 4px;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     padding-right: 4px;
-    background-color: #0b0d0e; /* Dark mode background color */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: var(--bg-card); /* Use theme variable */
+    box-shadow: var(--box-shadow);
 
     &.is-dragging {
-        background-color: rgba(80, 80, 80, 1); /* Slightly lighter when dragging */
+        background-color: var(--bg-tertiary); /* Use theme variable for dragging */
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     }
 }
@@ -57,15 +57,15 @@
 
 .back-button {
     margin-right: 1rem;
-    color: var(--primary-color);
+    color: var(--accent-blue);
 }
 
 .section-paper {
     padding: 1.5rem;
     border-radius: 16px;
     margin-bottom: 1.5rem;
-    background: #23272a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: var(--bg-card);
+    box-shadow: var(--box-shadow);
     position: relative;
 
     &.bank-section {
@@ -76,6 +76,7 @@
 .section-title {
     margin-bottom: 1rem;
     font-weight: 500;
+    color: var(--text-primary);
 }
 
 .section-header {
@@ -96,7 +97,7 @@
 }
 
 .loading-indicator {
-    color: #90caf9;
+    color: var(--accent-blue);
 
     &.mini {
         position: absolute;
@@ -112,78 +113,78 @@
     padding-bottom: 0.5rem;
     border-radius: 4px;
     margin-bottom: 0.5rem;
-    background-color: #2a3035;
+    background-color: var(--bg-tertiary);
 
     &:hover {
-        background-color: #323a42;
+        background-color: var(--group-header-hover);
     }
 }
 
 .card-icon {
     margin-right: 1rem;
-    color: #90caf9;
+    color: var(--accent-blue);
 }
 
 .delete-button {
-    color: #ef5350;
+    color: var(--accent-red);
 
     svg {
-        color: #ef5350;
-        fill: #ef5350;
+        color: var(--accent-red);
+        fill: var(--accent-red);
     }
 }
 
 .card-text {
-    color: #e0e0e0;
+    color: var(--text-primary);
     font-weight: 500;
 }
 
 .empty-cards-message {
     text-align: center;
     padding: 1rem 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-primary);
 }
 
 // Dialog styling
 .card-dialog {
     .MuiPaper-root {
-        background-color: #23272a;
+        background-color: var(--bg-card);
         border-radius: 16px;
     }
 }
 
 .dialog-title {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 .dialog-text {
-    color: #b0bec5;
+    color: var(--text-secondary);
     margin-bottom: 1rem;
 }
 
 .text-field {
     .MuiOutlinedInput-root {
-        color: #e0e0e0;
+        color: var(--text-primary);
 
         fieldset {
-            border-color: #3a4045;
+            border-color: var(--border-color);
         }
 
         &:hover fieldset {
-            border-color: #90caf9;
+            border-color: var(--accent-blue);
         }
 
         &.Mui-focused fieldset {
-            border-color: #90caf9;
+            border-color: var(--accent-blue);
         }
     }
 
     .MuiFormLabel-root {
-        color: #90caf9;
+        color: var(--accent-blue);
     }
 
     .MuiFormHelperText-root {
-        color: #ef5350;
+        color: var(--accent-red);
     }
 }
 
@@ -192,14 +193,14 @@
 }
 
 .cancel-button {
-    color: #90caf9;
+    color: var(--accent-blue);
 }
 
 .save-button {
-    background-color: #2a3035;
+    background-color: var(--bg-tertiary);
 
     &:hover {
-        background-color: #323a42;
+        background-color: var(--group-header-hover);
     }
 }
 
@@ -212,6 +213,7 @@
 
 .message-text {
     margin-bottom: 0.5rem;
+    color: var(--text-secondary);
 }
 
 .vendor-name-display {
@@ -219,18 +221,19 @@
     font-weight: bold;
     text-align: center;
     padding: 10px 15px;
-    background-color: #5b5b61;
+    background-color: var(--bg-tertiary);
     border-radius: 8px;
     width: 100%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--box-shadow);
     word-break: break-word;
     overflow-wrap: break-word;
-    color: white;
+    color: var(--text-primary);
 }
 
 .tag-expense-category-label {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    color: var(--text-primary);
 }
 
 .tag-expense-chip-list {

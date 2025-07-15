@@ -4,6 +4,7 @@ import {Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {FinanceIndexDB} from "./api/FinanceIndexDB";
 import './App.scss';
 import BottomNav from "./components/BottomNav";
+import ThemeManager from "./components/ThemeManager";
 import Home from "./pages/home/Home";
 import TagExpenses from "./pages/home/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
@@ -50,11 +51,21 @@ function App() {
   FinanceIndexDB.initDB();
 
   // define theme1
-  const theme = createTheme({
+  const { bankConfig } = useSelector(selectExpense);
+  const darkTheme = createTheme({
     palette: {
       mode: 'dark',
     },
   });
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+    },
+  });
+
+  // Use the appropriate theme based on bankConfig.darkMode
+  const theme = bankConfig.darkMode ? darkTheme : lightTheme;
 
 
 
@@ -80,6 +91,7 @@ function App() {
           <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>
           <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         </Routes>
+        <ThemeManager/>
 
         {/* Using the bottom nav component that safely uses useAuth hook */}
         <BottomNavAuth/>

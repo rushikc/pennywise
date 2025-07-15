@@ -24,16 +24,22 @@ import {
   Add as AddIcon,
   ArrowBack as BackIcon,
   CreditCard as CreditCardIcon,
-  RemoveCircleOutline
+  RemoveCircleOutline,
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {BankConfig} from "../../../Types";
 import './settingViews.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectExpense } from '../../../store/expenseActions';
+import { expenseSlice } from '../../../store/expenseSlice';
 
 const Configuration: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // State for bank configuration
   const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: [], darkMode: false});
@@ -95,6 +101,7 @@ const Configuration: React.FC = () => {
       const success = await ExpenseAPI.updateBankConfig(updatedConfig);
       if (success) {
         setBankConfig(updatedConfig);
+        dispatch(expenseSlice.actions.toggleDarkMode());
       } else {
         console.error('Failed to update dark mode setting');
       }
