@@ -27,8 +27,8 @@
     --accent-blue-rgb: 28, 117, 189;
     --accent-purple: rgb(103, 125, 247);
     --accent-purple-rgb: 103, 125, 247;
-    --accent-green: #66bb6a;
-    --accent-green-rgb: 102, 187, 106;
+    --accent-green: #23ad29;
+    --accent-green-rgb: 35, 173, 41;
     --accent-yellow: #ffca28;
     --accent-yellow-rgb: 255, 202, 40;
 
@@ -47,7 +47,7 @@
 
     // Group box colors
     --group-bg: #ffffff;
-    --group-header-bg: #d9dee3;
+    --group-header-bg: #e7e9ec;
     --group-header-hover: #e9ecef;
     --group-label: #212529;
     --group-count: #6c757d;
@@ -56,7 +56,7 @@
     --overlay-bg: rgba(0, 0, 0, 0.5);
 
     // Box-shadow
-    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 // Dark mode variables
@@ -82,7 +82,8 @@
     // Accent colors (preserved across themes)
     --accent-blue: #90caf9;
     --accent-blue-rgb: 144, 202, 249;
-
+    --accent-green: #66bb6a;
+    --accent-green-rgb: 102, 187, 106;
 
     // Component-specific colors
     --search-bg: #23272a;

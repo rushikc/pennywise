@@ -24,7 +24,7 @@ export const filterOptions: { id: DateRange, label: string }[] = [
 export const groupByOptions: { id: GroupByOption, label: string }[] = [
   {id: 'days', label: 'Days'},
   {id: 'vendor', label: 'Vendor'},
-  {id: 'cost', label: 'Cost Range'},
+  {id: 'cost', label: 'Cost'},
   {id: 'tags', label: 'Tags'},
 ];
 

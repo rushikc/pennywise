@@ -44,7 +44,7 @@ import './Home.scss';
 import MergeExpenses from './MergeExpenses';
 import AddExpense from './AddExpense';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {CreditCard} from "@mui/icons-material";
+import {CreditCard, Sort} from "@mui/icons-material";
 
 // Add interface to extend Window type
 declare global {
@@ -594,7 +594,7 @@ const Home: FC<any> = (): ReactElement => {
             {/* Group by button */}
             <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
               <Chip
-                icon={<GroupIcon/>}
+                icon={<Sort/>}
                 label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
                 color="primary"
                 clickable
