@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -11,13 +11,13 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import dayjs, {Dayjs} from 'dayjs';
-import { ExpenseAPI } from "../../../api/ExpenseAPI";
-import {getDateFormat, getDateFromString} from "../../../utility/utility";
+import {ExpenseAPI} from "../../../api/ExpenseAPI";
+import {getDateFormat, getUnixTimestamp} from "../../../utility/utility";
 
 interface ReloadExpenseProps {
   open: boolean;
@@ -66,7 +66,7 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
     setLoading(true);
     try {
       console.log("Reloading all expenses");
-      await ExpenseAPI.getExpenseList('2020-01-01');
+      await ExpenseAPI.getExpenseList(getUnixTimestamp('2020-01-01'));
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload all expenses:", error);
@@ -82,7 +82,7 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({ open, onClose }) => {
     setLoading(true);
     try {
       console.log("Reloading expenses for:", selectedDate);
-      await ExpenseAPI.getExpenseList(getDateFormat(selectedDate.toDate()));
+      await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload expenses for selected date:", error);

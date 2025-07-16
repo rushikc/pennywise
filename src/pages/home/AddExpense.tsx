@@ -27,7 +27,6 @@ interface AddExpenseModalProps {
 const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [cost, setCost] = useState<string>("");
-  const [currentDate] = useState<Date>(new Date());
 
   // Get tag list from the store
   const {tagList} = useSelector(selectExpense);
@@ -46,7 +45,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     const newExpense: Expense = {
       id: 'manual', // will be overridden by ExpenseAPI logic
       vendor: "manual entry", // As specified, set vendor as "manual"
-      date: currentDate,
+      date: Date.now(),
+      modifiedDate: Date.now(),
       cost: parseFloat(cost),
       tag: selectedTag,
       costType: "debit", // Default to debit
@@ -69,7 +69,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   };
 
   // Format the current date and time
-  const formattedDateTime = getDateMonthTime(currentDate);
+  const formattedDateTime = getDateMonthTime(Date.now());
 
   return (
     <Dialog

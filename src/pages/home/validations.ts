@@ -82,7 +82,7 @@ export const filterExpensesByDate = (
   }
 
   return expenses.filter(expense => {
-    const expenseDate = dayjs(expense.date);
+    const expenseDate = dayjs(new Date(expense.date));
     return expenseDate.isAfter(startDate) || expenseDate.isSame(startDate, 'day');
   });
 };
@@ -125,7 +125,7 @@ export const groupExpenses = (
     switch (selectedGroupBy) {
       case 'days':
         // Use date as key (without time part)
-        groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+        groupKey = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
         groupLabel = getDateMonth(expense.date);
         break;
 
@@ -160,7 +160,7 @@ export const groupExpenses = (
         break;
 
       default:
-        groupKey = dayjs(expense.date).format('YYYY-MM-DD');
+        groupKey = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
         groupLabel = getDateMonth(expense.date);
     }
 

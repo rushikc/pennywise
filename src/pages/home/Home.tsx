@@ -3,7 +3,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import GroupIcon from '@mui/icons-material/ViewModule';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,7 +21,8 @@ import Loading from '../../components/Loading';
 import {
   deleteExpense,
   mergeSaveExpense,
-  selectExpense, setExpenseList,
+  selectExpense,
+  setExpenseList,
   setExpenseState,
   setTagExpense,
   setTagList
@@ -84,6 +84,8 @@ const Home: FC<any> = (): ReactElement => {
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
+  // console.log('Expense List STore:', expenseList);
+
   useEffect(() => {
 
 
@@ -102,6 +104,8 @@ const Home: FC<any> = (): ReactElement => {
       const bankConfig = res[3];
       const expenseList = sortByKeyDate(expenseResult, 'date');
 
+      console.log('Vendor Tag Result:', vendorTagResult);
+      console.log('Expense List:', expenseList);
       setExpenseState(expenseList, vendorTagResult, bankConfig);
       setTagList(tagList);
 
@@ -257,6 +261,7 @@ const Home: FC<any> = (): ReactElement => {
 
   // Filter expenses based on selected date range
   useEffect(() => {
+    console.log('effect 1', expenseList, selectedRange);
     if (expenseList.length === 0) {
       setDateFilteredExpenses([]);
       return;
@@ -283,6 +288,7 @@ const Home: FC<any> = (): ReactElement => {
 
     const grouped = groupExpenses(filteredExpenses, selectedGroupBy);
 
+    console.log('Grouped Expenses:', grouped);
     // Initialize collapsed state for new groups
     Object.keys(grouped).forEach(groupKey => {
       setCollapsedGroups(prev => ({

@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore/lite';
-import { getFirebaseConfig } from '../firebase/firebase-public';
-import { getDateMedJs } from '../utility/utility';
+import { getFirebaseConfig } from '../src/firebase/firebase-public';
+import { getDateMedJs } from '../src/utility/utility';
 
 
 const firebaseConfig = getFirebaseConfig();

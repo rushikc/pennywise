@@ -122,7 +122,7 @@ const ManageVendorTags: React.FC = () => {
     const updatedVendorTag: VendorTag = {
       ...selectedVendorTag,
       tag: selectedTag,
-      date: new Date()
+      date: Date.now()
     };
 
     ExpenseAPI.updateVendorTag(updatedVendorTag)

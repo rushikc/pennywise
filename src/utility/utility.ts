@@ -19,12 +19,15 @@ export const getDayJsToDate = (date: Dayjs) => {
     return dayjs().toDate();
 }
 
+export const getUnixTimestamp = (date: Date | string) => {
+    return dayjs(date).unix() * 1000;
+}
 
 export const getCurrentDate = () => {
     return dayjs().format('DD-MM-YY');
 }
 
-export const getDateFormat = (date = new Date()) => {
+export const getDateFormat = (date: Dayjs) => {
     return dayjs(date).format('YYYY-MM-DD');
 }
 
@@ -33,12 +36,12 @@ export const getDateFromString = (date : string, format = 'YYYY-MM-DD') => {
 }
 
 
-export const getDateMonth = (date: Date) => {
-    return dayjs(date).format('DD MMM');
+export const getDateMonth = (date: number) => {
+    return dayjs(new Date(date)).format('DD MMM');
 }
 
-export const getDateMonthTime = (date: Date = new Date()) => {
-    return dayjs(date).format('DD MMM YY, hh:mm A');
+export const getDateMonthTime = (date: number = Date.now()) => {
+    return dayjs(new Date(date)).format('DD MMM YY, hh:mm A');
 }
 
 export const getDateMedJs = (seconds: number) => {
@@ -103,7 +106,7 @@ export const sortByKeyDate = (array: any[], key: string) => {
 
     return array.sort((function (a, b) {
         //@ts-ignore
-        return (new Date(b[key]) - new Date(a[key]))
+        return (b[key] - a[key]);
     }));
 }
 

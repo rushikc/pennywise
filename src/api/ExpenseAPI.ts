@@ -2,7 +2,7 @@ import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../firebase/firebase-public';
-import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate} from "../utility/utility";
+import {getDateFormat, getDateJsIdFormat, getDayJs, getISODate, getUnixTimestamp} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, Expense, VendorTag} from "../Types";
@@ -16,14 +16,14 @@ const db = getFirestore(app);
 
 export class ExpenseAPI {
 
-    static addExpense = async (expense: any): Promise<Expense> => {
+    static addExpense = async (expense: Expense): Promise<Expense> => {
 
         try {
 
-            let key = getDateJsIdFormat(expense.date) + ' ' + expense.vendor.slice(0, 10);
+            let key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
             // console.log("Document written with expense: ", JSONCopy(expense));
 
-            expense.date = new Date(expense.date); // date to epoch
+            expense.modifiedDate = Date.now(); // date to epoch
 
             const docRef = doc(db, "expense", key);
             const {id, ...expenseWithoutId} = expense;
@@ -84,15 +84,39 @@ export class ExpenseAPI {
         try {
             console.log("Process Data Init");
 
-            // const tags =await ExpenseAPI.getVendorTagList();
-            // const tga1 = tags[1];
-            // console.log("Vendor Tag List: ", tags);
 
-            // tags.forEach(tag => {
-            //     tag.date = new Date(tag.date);
-            //     ExpenseAPI.updateVendorTag(tag);
-            // })
-            // ExpenseAPI.updateTagMap(tga1);
+            // const q = query(collection(db, "expense"), where("date", ">", new Date("2020-01-01")));
+            // const q = query(collection(db, "expense"));
+            // const querySnapshot = await getDocs(q);
+            //
+            // const queryResultLen = querySnapshot.docs.length;
+            // console.log("Query Result Length: ", queryResultLen);
+            // let count = 0;
+            // if (queryResultLen) {
+            //
+            //
+            //     querySnapshot.forEach((doc) => {
+            //         // doc.data() is never undefined for query doc snapshots
+            //         let document = doc.data();
+            //         if(document.modifiedDate === undefined) {
+            //         //     document.date = document.date.seconds * 1000;
+            //             // const date = new Date(doc.id.substring(0,19));
+            //
+            //             console.log(doc.id, " => ", JSONCopy(document));
+            //             document['modifiedDate'] = document.date;
+            //
+            //             console.log("modified => ", JSONCopy(document));
+            //
+            //
+            //             if(count < 700) {
+            //                 ExpenseAPI.setOneDoc(doc.id, document, 'expense');
+            //                 count++;
+            //             }
+            //         }
+            //
+            //     });
+            //     console.log("Total Documents Processed: ", count);
+            // }
 
             // console.log("expense list ", tags);
         } catch (e) {
@@ -102,36 +126,38 @@ export class ExpenseAPI {
     }
 
 
-    static getExpenseList = async (overrideLastDate: string | undefined = undefined): Promise<Expense[]> => {
+    static getExpenseList = async (overrideLastDate: number | undefined = undefined): Promise<Expense[]> => {
         try {
             let table = 'expense';
 
             let indexDocList: any[] = [];
             let fireDocList: any[] = [];
 
-            let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
+            let lastUpdatedDate = getUnixTimestamp("2020-01-01"); // to fetch all expenses
 
 
             await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
                 // console.log("index db config ", getDateFormat(data.value));
                 if (data) {
-                    lastUpdatedDate = new Date(getDateFormat(data.value));
+                    lastUpdatedDate = data.value;
                     // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
                 }
             });
 
             if (overrideLastDate) {
-                lastUpdatedDate = new Date(overrideLastDate);
+                lastUpdatedDate = overrideLastDate;
             }
 
             console.log("lastUpdatedDate ", lastUpdatedDate);
 
             // return null;
 
-            const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
+            const q = query(collection(db, table), where("modifiedDate", ">", lastUpdatedDate));
             const querySnapshot = await getDocs(q);
 
             const queryResultLen = querySnapshot.docs.length;
+
+            console.log("Expense Query Result Length: ", queryResultLen);
 
             if (queryResultLen) {
 
@@ -140,7 +166,6 @@ export class ExpenseAPI {
                     // console.log(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
-                    document.date = getISODate(document.date.seconds);
                     fireDocList.push(document)
                 });
 
@@ -148,10 +173,7 @@ export class ExpenseAPI {
             }
 
 
-            const lastDateJS = getDayJs();
-            const lastDate = lastDateJS.subtract(1, 'days').toDate();
-
-            await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: lastDate}]);
+            await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: Date.now() - 3600000}]);
 
             await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
 
@@ -159,8 +181,6 @@ export class ExpenseAPI {
             console.debug('Firebase query for expenses - ', table, fireDocList);
             console.debug('IndexDB query for expenses - ', table, indexDocList);
 
-
-            indexDocList.forEach(val => val.date = String(val.date));
 
             console.debug('FinalList query for expenses - ', table, indexDocList);
             return indexDocList;
@@ -235,21 +255,20 @@ export class ExpenseAPI {
         }
     }
 
-    static getVendorTagList = async () : Promise<VendorTag[]> => {
+    static getVendorTagList = async (): Promise<VendorTag[]> => {
         try {
             let table = 'vendorTag';
 
             let indexDocList: any[] = [];
             let fireDocList: any[] = [];
 
-            let lastUpdatedDate: Date = new Date("2020-01-01"); // to fetch all expenses
+            let lastUpdatedDate = getUnixTimestamp("2020-01-01"); // to fetch all expenses
             let isLastUpdateAvailable = false;
-
 
             await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
                 // console.log("index db config ", data);
                 if (data) {
-                    lastUpdatedDate = new Date(data.value);
+                    lastUpdatedDate = data.value;
                     // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
                     isLastUpdateAvailable = true;
                 }
@@ -274,19 +293,14 @@ export class ExpenseAPI {
                     // console.log(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
-                    document.date = getISODate(document.date.seconds);
                     fireDocList.push(document)
                 });
 
                 fireDocList.forEach(val => FinanceIndexDB.addVendorTag(val));
             }
 
-            const lastDateJS = getDayJs();
-            const lastDate = lastDateJS.subtract(1, 'days').toDate();
 
-            console.log("Last Date for vendorTag - ", lastDate);
-
-            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: lastDate}]);
+            await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: Date.now() - 3600000}]);
 
             console.log('IndexDB  query for vendorTag - ', table, indexDocList);
             console.log('Firebase query for vendorTag - ', table, fireDocList);
@@ -307,7 +321,7 @@ export class ExpenseAPI {
         try {
             // Extract ID for use as the document key
             const {id, ...vendorTagWithoutId} = vendorTag;
-            vendorTagWithoutId.date = new Date();
+            vendorTagWithoutId.date = Date.now();
 
             // Update in Firestore
             const docRef = doc(db, "vendorTag", id);

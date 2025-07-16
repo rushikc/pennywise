@@ -41,7 +41,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
           id: _vendor,
           vendor: _vendor,
           tag: selectedTag[0],
-          date: new Date()
+          date: Date.now()
         };
         void ExpenseAPI.updateVendorTag(tagObj);
         setTagMap(tagObj);

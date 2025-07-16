@@ -27,12 +27,11 @@ exports.addExpenseData = onRequest((req, res) => {
         try {
             const expense = (req.body) || {};
 
-            let key = dayjs(expense.date).utcOffset(330)
+            let key = dayjs(new Date(expense.date)).utcOffset(330)
                 .format('DD MMM YY, hh:mm A') + ' ' + expense.vendor.slice(0, 10);
 
             const docRef = db.collection("expense").doc(key);
 
-            expense.date = new Date(expense.date);
             // setDoc is now using the admin SDK's db instance
             docRef.set(expense).then(() => {
                 console.log('Executed setDoc');

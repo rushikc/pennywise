@@ -83,6 +83,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       tag: selectedTag || vendorExpense.tag, // Use selected tag or keep original
       cost: Math.abs(totalCost),
       date: vendorExpense.date,
+      modifiedDate: Date.now(),
       costType: totalCost < 0 ? 'debit' : 'credit',
       mailId: vendorExpense.mailId,
       user: vendorExpense.user,
