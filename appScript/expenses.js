@@ -170,6 +170,7 @@ const getExpense = (date, type, mailId) => {
         tag: null,
         type,
         date,
+        modifiedDate: date,
         user: 'rushi',
         mailId
     };

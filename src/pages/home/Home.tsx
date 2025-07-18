@@ -86,33 +86,6 @@ const Home: FC<any> = (): ReactElement => {
 
   // console.log('Expense List STore:', expenseList);
 
-  useEffect(() => {
-
-
-    void ExpenseAPI.processData();
-
-    const vendorTagApi = ExpenseAPI.getVendorTagList();
-    const expenseApi = ExpenseAPI.getExpenseList();
-    const tagListApi = ExpenseAPI.getTagList();
-    const bankConfigApi = ExpenseAPI.getBankConfig();
-
-    Promise.all([vendorTagApi, expenseApi, tagListApi, bankConfigApi]).then((res) => {
-
-      const vendorTagResult = res[0];
-      const expenseResult = res[1];
-      const tagList = res[2];
-      const bankConfig = res[3];
-      const expenseList = sortByKeyDate(expenseResult, 'date');
-
-      console.log('Vendor Tag Result:', vendorTagResult);
-      console.log('Expense List:', expenseList);
-      setExpenseState(expenseList, vendorTagResult, bankConfig);
-      setTagList(tagList);
-
-    }).catch((res1) => alert(res1))
-  }, []);
-
-
   const reloadExpenseList = () => {
     setLoading(true);
     ExpenseAPI.getExpenseList()

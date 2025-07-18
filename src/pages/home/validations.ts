@@ -1,6 +1,8 @@
 import { Expense } from '../../Types';
 import dayjs from 'dayjs';
-import {getDateMonth} from "../../utility/utility";
+import {getDateMonth, sortByKeyDate} from "../../utility/utility";
+import {ExpenseAPI} from "../../api/ExpenseAPI";
+import {setExpenseState, setTagList} from "../../store/expenseActions";
 
 // Define date range options
 export type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
@@ -8,6 +10,33 @@ export type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
 export type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 
 export type SortByOption = 'cost' | 'count' | 'date' | null;
+
+
+export const loadInitialAppData =  () => {
+
+    void ExpenseAPI.processData();
+
+    const vendorTagApi = ExpenseAPI.getVendorTagList();
+    const expenseApi = ExpenseAPI.getExpenseList();
+    const tagListApi = ExpenseAPI.getTagList();
+    const bankConfigApi = ExpenseAPI.getBankConfig();
+
+    Promise.all([vendorTagApi, expenseApi, tagListApi, bankConfigApi]).then((res) => {
+
+        const vendorTagResult = res[0];
+        const expenseResult = res[1];
+        const tagList = res[2];
+        const bankConfig = res[3];
+        const expenseList = sortByKeyDate(expenseResult, 'date');
+
+        console.log('Vendor Tag Result:', vendorTagResult);
+        console.log('Expense List:', expenseList);
+        setExpenseState(expenseList, vendorTagResult, bankConfig);
+        setTagList(tagList);
+
+    }).catch((res1) => alert(res1))
+}
+
 
 // Define filter options
 export const filterOptions: { id: DateRange, label: string }[] = [

@@ -18,16 +18,24 @@ import {useSelector} from "react-redux";
 import Login from "./pages/login/Login";
 import {AuthProvider, useAuth} from "./pages/login/AuthContext";
 import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
+import {loadInitialAppData} from "./pages/home/validations";
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const {currentUser, loading} = useAuth();
+  const {isAppLoading} = useSelector(selectExpense);
   const location = useLocation();
 
   if (loading) return null;
 
   if (!currentUser) {
     return <Navigate to="/login" state={{from: location}} replace/>;
+  }
+
+  console.log("isAppLoading in ProtectedRoute:", isAppLoading);
+
+  if (isAppLoading) {
+    loadInitialAppData()
   }
 
   return <>{children}</>;
