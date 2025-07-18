@@ -7,7 +7,9 @@
 > We are actively working on expanding support to other banks and transaction types.
 
 <div align="center">
-  <img src="public/logo.png" alt="PennyWise Logo" width="120px" />
+  <br/>
+  <img src="public/logo.png" alt="PennyWise Logo" width="150px" />
+  <br />
   <br />
   <strong>Track, Analyze, and Master Your Personal Finances</strong>
 </div>
@@ -296,7 +298,6 @@ interface Expense {
 ## Roadmap
 
 - [ ] Statistical page with useful graphs
-- [ ] Improved Desktop UX
 - [ ] Expense predictions using historical data (Firebase AI Logic)
 - [ ] Multiple bank support
 - [ ] Expense sharing/tracking between users

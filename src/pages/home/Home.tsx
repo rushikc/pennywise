@@ -45,6 +45,7 @@ import MergeExpenses from './MergeExpenses';
 import AddExpense from './AddExpense';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 import {CreditCard, Sort} from "@mui/icons-material";
+import Container from "@mui/material/Container";
 
 // Add interface to extend Window type
 declare global {
@@ -491,7 +492,7 @@ const Home: FC<any> = (): ReactElement => {
   }
 
   return (
-    <div className="home-root">
+    <Container maxWidth="sm" className="home-root">
       {/* Loading overlay for regrouping */}
       <Fade in={isRegrouping} timeout={100} unmountOnExit>
         <div className="regrouping-overlay">
@@ -682,7 +683,7 @@ const Home: FC<any> = (): ReactElement => {
         open={showAddExpenseDialog}
         onClose={() => setShowAddExpenseDialog(false)}
       />
-    </div>
+    </Container>
   );
 };
 
