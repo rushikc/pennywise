@@ -47,8 +47,22 @@ PennyWise is a comprehensive, open-source web application designed to empower in
 
 Experience PennyWise in action:
 
-<div align="center">
-  <em>Add screenshot previews of the application interface here (e.g., dashboard, add expense, stats page).</em>
+<div style="text-align: center; margin: 0 auto;">
+  <div style="display: flex; overflow-x: auto; gap: 12px; padding: 15px 0; scroll-behavior: smooth;">
+    <img src="public/pics/Screenshot_20250718-232746.png" alt="PennyWise Screenshot 6" width="300" />
+    <img src="public/pics/Screenshot_20250718-232754.png" alt="PennyWise Screenshot 7" width="300" />
+    <img src="public/pics/Screenshot_20250718-232757.png" alt="PennyWise Screenshot 8" width="300" />
+    <img src="public/pics/Screenshot_20250718-232800.png" alt="PennyWise Screenshot 9" width="300" />
+    <img src="public/pics/Screenshot_20250718-232804.png" alt="PennyWise Screenshot 10" width="300" />
+    <img src="public/pics/Screenshot_20250718-232723.png" alt="PennyWise Screenshot 1" width="300" />
+    <img src="public/pics/Screenshot_20250718-232727.png" alt="PennyWise Screenshot 2" width="300" />
+    <img src="public/pics/Screenshot_20250718-232723.png" alt="PennyWise Screenshot 1" width="300" />
+    <img src="public/pics/Screenshot_20250718-232727.png" alt="PennyWise Screenshot 2" width="300" />
+    <img src="public/pics/Screenshot_20250718-232731.png" alt="PennyWise Screenshot 3" width="300" />
+    <img src="public/pics/Screenshot_20250718-232739.png" alt="PennyWise Screenshot 4" width="300" />
+    <img src="public/pics/Screenshot_20250718-232742.png" alt="PennyWise Screenshot 5" width="300" />
+</div>
+  <p><em>Scroll horizontally to see all features →</em></p>
 </div>
 
 ---
