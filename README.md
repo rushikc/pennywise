@@ -72,7 +72,7 @@ PennyWise leverages a modern and robust set of technologies to deliver a high-pe
 * **OAuth Provider**: [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (integrated using [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
 
 ### Utilities
-* **Date Manipulation**: [date-fns](https://date-fns.org/) & [luxon](https://moment.github.io/luxon/)
+* **Date Manipulation**: [dayjs](https://day.js.org/)
 * **HTTP Client**: [axios](https://axios-http.com/)
 
 ---
