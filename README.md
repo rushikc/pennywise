@@ -47,8 +47,7 @@ PennyWise is a comprehensive, open-source web application designed to empower in
 
 Experience PennyWise in action:
 
-<div style="text-align: center; margin: 0 auto;">
-  <div style="display: flex; overflow-x: auto; gap: 12px; padding: 15px 0; scroll-behavior: smooth;">
+<div align="center">
     <img src="public/pics/Screenshot_20250718-232746.png" alt="PennyWise Screenshot 6" width="300" />
     <img src="public/pics/Screenshot_20250718-232754.png" alt="PennyWise Screenshot 7" width="300" />
     <img src="public/pics/Screenshot_20250718-232757.png" alt="PennyWise Screenshot 8" width="300" />
@@ -61,7 +60,6 @@ Experience PennyWise in action:
     <img src="public/pics/Screenshot_20250718-232731.png" alt="PennyWise Screenshot 3" width="300" />
     <img src="public/pics/Screenshot_20250718-232739.png" alt="PennyWise Screenshot 4" width="300" />
     <img src="public/pics/Screenshot_20250718-232742.png" alt="PennyWise Screenshot 5" width="300" />
-</div>
   <p><em>Scroll horizontally to see all features →</em></p>
 </div>
 
