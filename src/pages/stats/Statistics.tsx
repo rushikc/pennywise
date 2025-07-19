@@ -234,8 +234,13 @@ const Statistics: React.FC = () => {
         uniqueGroups.sort((a, b) => (groupCount.get(b) || 0) - (groupCount.get(a) || 0));
       }
 
-      // Limit to top 5 groups for clarity in the chart
-      uniqueGroups = uniqueGroups.slice(0, 5);
+      // Filter out "Untagged" group when grouping by tags
+      if (groupBy === 'tags') {
+        uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
+      }
+
+      // Limit to top 3 groups for clarity in the chart
+      uniqueGroups = uniqueGroups.slice(0, 3);
 
       // Now create data points for each date, with spending for each group
       const result: LineDataPoint[] = [];
