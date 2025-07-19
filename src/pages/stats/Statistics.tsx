@@ -351,6 +351,7 @@ const Statistics: React.FC = () => {
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
           transition={{duration: 0.3, delay: 0.1}}
+          style={{flex: 1}}
         >
           <Paper className="daily-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
@@ -375,6 +376,7 @@ const Statistics: React.FC = () => {
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
           transition={{duration: 0.3, delay: 0.2}}
+          style={{flex: 1}}
         >
           <Paper className="monthly-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
@@ -416,19 +418,11 @@ const Statistics: React.FC = () => {
       </Box>
 
       {/* Line Graph / Pie Chart based on selected chart type */}
-      <Box sx={{mb: 5, height: 300, mt: 3}}>
+      <Box className="chart-container">
         {chartType === 'spending' ? (
           lineChartData.length > 0 ? (
-            <Paper
-              elevation={3}
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                height: '100%',
-                background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-              }}
-            >
-              <Typography variant="subtitle2" sx={{mb: 1, fontWeight: 'medium'}}>
+            <Paper className="chart-paper" elevation={3}>
+              <Typography variant="subtitle2" className="chart-title">
                 Spending Trends
               </Typography>
               <ResponsiveContainer width="100%" height="90%">
@@ -476,18 +470,7 @@ const Statistics: React.FC = () => {
               </ResponsiveContainer>
             </Paper>
           ) : (
-            <Paper
-              elevation={3}
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-              }}
-            >
+            <Paper className="chart-paper empty-chart" elevation={3}>
               <Typography variant="body1" color="text.secondary">
                 No data available for the selected filters
               </Typography>
@@ -495,18 +478,7 @@ const Statistics: React.FC = () => {
           )
         ) : (
           // Pie chart will be implemented separately
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-            }}
-          >
+          <Paper className="chart-paper empty-chart" elevation={3}>
             <Typography variant="body1" color="text.secondary">
               Pie Chart will display here
             </Typography>

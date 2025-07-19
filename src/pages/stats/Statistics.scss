@@ -1,7 +1,7 @@
 @import '../../styles/theme.scss';
 
 .statistics-container {
-  padding: 16px 0 80px;
+  padding: 16px;
 }
 
 .statistics-header {
@@ -12,6 +12,10 @@
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
+
+  motion-div {
+    flex: 1;
+  }
 }
 
 .total-card,
@@ -23,15 +27,67 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .MuiBox-root {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .MuiBox-root:last-child {
+    align-items: center;
+  }
 }
 
 .total-card {
   margin-bottom: 16px;
+  background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+  box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3);
+
+  .MuiTypography-subtitle2,
+  .MuiTypography-caption {
+    color: rgba(255, 255, 255, 0.85);
+  }
 }
 
-.daily-card,
+.daily-card {
+  flex: 1;
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  box-shadow: 0 4px 20px rgba(17, 153, 142, 0.3);
+
+  .MuiTypography-subtitle2,
+  .MuiTypography-caption {
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
 .monthly-card {
   flex: 1;
+  background: linear-gradient(135deg, #834d9b, #d04ed6);
+  box-shadow: 0 4px 20px rgba(131, 77, 155, 0.3);
+
+  .MuiTypography-subtitle2,
+  .MuiTypography-caption {
+    color: rgba(255, 255, 255, 0.85);
+  }
 }
 
-/* Background gradients, use MUI theme colors inline or override here if desired */
+.chart-container {
+  margin-bottom: 40px;
+  height: 300px;
+  margin-top: 24px;
+}
+
+.chart-paper {
+  padding: 16px;
+  border-radius: 8px;
+  height: 100%;
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+}
+
+.chart-title {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
