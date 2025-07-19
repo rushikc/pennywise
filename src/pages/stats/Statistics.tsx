@@ -14,7 +14,7 @@ import {sortByKeyDate} from '../../utility/utility';
 import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
-import {GroupByOption, groupByOptions, SortByOption, sortByOptions} from '../../utility/validations';
+import {GroupByOption, groupByOptions, SortByOption, sortByOptions, filterOptions, filterExpensesByDate, DateRange} from '../../utility/validations';
 import '../home/Home.scss';
 
 // Import Recharts components for line graph
@@ -29,32 +29,13 @@ interface LineDataPoint {
   [key: string]: string | number;
 }
 
-// Filter options for stats
-const statsFilterOptions: { id: string; label: string }[] = [
-  {id: 'week', label: 'Last Week'},
-  {id: 'month', label: 'Last Month'},
-  {id: 'year', label: 'Last Year'},
-  {id: 'all', label: 'All Time'},
-];
-
+// Statistics component
 const Statistics: React.FC = () => {
   const theme = useTheme();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState('month');
+  const [timeRange, setTimeRange] = useState<DateRange>('30d');
   const [chartType, setChartType] = useState('spending');
-
-  // Colors for charts
-  const COLORS = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.error.main,
-    theme.palette.success.main,
-    theme.palette.warning.main,
-    '#8884d8',
-    '#82ca9d',
-    '#ffc658'
-  ];
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -74,68 +55,7 @@ const Statistics: React.FC = () => {
   }, []);
 
   // Filter expenses based on selected time range
-  const getFilteredExpenses = () => {
-    const now = new Date();
-    return expenses.filter(expense => {
-      const expenseDate = new Date(expense.date);
-      if (timeRange === 'week') {
-        const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return expenseDate >= oneWeekAgo;
-      } else if (timeRange === 'month') {
-        const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-        return expenseDate >= oneMonthAgo;
-      } else if (timeRange === 'year') {
-        const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-        return expenseDate >= oneYearAgo;
-      }
-      return true; // Show all if 'all' is selected
-    });
-  };
-
-  // Generate spending by category data for pie chart
-  const getCategoryData = () => {
-    const filtered = getFilteredExpenses();
-    const categoryMap = new Map<string, number>();
-
-    filtered.forEach(expense => {
-      const category = expense.tag || 'Uncategorized';
-      const currentAmount = categoryMap.get(category) || 0;
-      categoryMap.set(category, currentAmount + expense.cost);
-    });
-
-    const categoryData = Array.from(categoryMap.entries()).map(([name, value]) => ({
-      name,
-      value
-    }));
-
-    return categoryData.sort((a, b) => b.value - a.value).slice(0, 8); // Top 8 categories
-  };
-
-  // Generate daily spending data for line/bar chart
-  const getDailySpendingData = () => {
-    const filtered = getFilteredExpenses();
-    const dailyMap = new Map<string, number>();
-
-    filtered.forEach(expense => {
-      const dateStr = new Date(expense.date).toLocaleDateString();
-      const currentAmount = dailyMap.get(dateStr) || 0;
-      dailyMap.set(dateStr, currentAmount + expense.cost);
-    });
-
-    const dailyData = Array.from(dailyMap.entries())
-      .map(([date, cost]) => ({
-        date,
-        cost
-      }))
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    // Limit to last 10 days if there are too many
-    if (dailyData.length > 10) {
-      return dailyData.slice(dailyData.length - 10);
-    }
-
-    return dailyData;
-  };
+  const getFilteredExpenses = () => filterExpensesByDate(expenses, timeRange);
 
   // Calculate total spending
   const getTotalSpending = () => {
@@ -180,8 +100,8 @@ const Statistics: React.FC = () => {
     setShowGroupByOptions(!showGroupByOptions);
     if (showFilters) setShowFilters(false);
   };
-  const handleRangeChange = (id: string) => {
-    setTimeRange(id);
+  const handleRangeChange = (range: DateRange) => {
+    setTimeRange(range);
     setShowFilters(false);
   };
   const handleGroupByChange = (option: GroupByOption) => {
@@ -396,9 +316,7 @@ const Statistics: React.FC = () => {
             <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
               <TrendingUpIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
               <Typography variant="caption" color="rgba(255,255,255,0.7)">
-                {timeRange === 'all' ? 'All time' :
-                  timeRange === 'year' ? 'Last Year' :
-                    timeRange === 'month' ? 'Last Month' : 'Last Week'}
+                {filterOptions.find(o => o.id === timeRange)?.label}
               </Typography>
             </Box>
           </Paper>
@@ -560,7 +478,7 @@ const Statistics: React.FC = () => {
         <div className="filter-button" ref={filterButtonRef} onClick={toggleFilters}>
           <Chip
             icon={<FilterListIcon/>}
-            label={statsFilterOptions.find(o => o.id === timeRange)?.label}
+            label={filterOptions.find(o => o.id === timeRange)?.label}
             clickable
             color="primary"
           />
@@ -602,13 +520,7 @@ const Statistics: React.FC = () => {
 export default Statistics;
 
 // Filter Panel Component for Stats
-const FilterPanel: React.FC<{
-  show: boolean;
-  onClose: () => void;
-  selectedRange: string;
-  onRangeChange: (id: string) => void;
-  panelRef: React.RefObject<HTMLDivElement>;
-}> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
+const FilterPanel: React.FC<{ show: boolean; onClose: () => void; selectedRange: DateRange; onRangeChange: (range: DateRange) => void; panelRef: React.RefObject<HTMLDivElement>; }> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
   if (!show) return null;
   return (
     <div className="filter-panel" ref={panelRef}>
@@ -619,7 +531,7 @@ const FilterPanel: React.FC<{
         </IconButton>
       </div>
       <div className="filter-options">
-        {statsFilterOptions.map(option => (
+        {filterOptions.map(option => (
           <Chip
             key={option.id}
             label={option.label}
