@@ -1,12 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Box, Button, ButtonGroup, Chip, Container, IconButton, Paper, Stack, Typography, useTheme} from '@mui/material';
+import {Box, Chip, Container, IconButton, Paper, Stack, Typography, useTheme} from '@mui/material';
 import {motion} from 'framer-motion';
-import {
-  PieChart as PieChartIcon,
-  Timeline as TimelineIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon
-} from '@mui/icons-material';
+import {TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
@@ -15,23 +10,22 @@ import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
 import {
+  DateRange,
+  filterExpensesByDate,
+  filterOptions,
   GroupByOption,
   groupByOptions,
   SortByOption,
-  sortByOptions,
-  filterOptions,
-  filterExpensesByDate,
-  DateRange
+  sortByOptions
 } from '../../utility/validations';
 import '../home/Home.scss';
 import './Statistics.scss';
 import {Expense} from "../../Types";
-import {CartesianGrid, Tooltip, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis} from "recharts";
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 // Interface for line graph data
 interface LineDataPoint {
   date: string;
-
   [key: string]: string | number;
 }
 
@@ -41,7 +35,6 @@ const Statistics: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<DateRange>('30d');
-  const [chartType, setChartType] = useState('spending');
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -105,10 +98,6 @@ const Statistics: React.FC = () => {
 
     const avgAmount = totalAmount / Math.max(uniqueDates.size, 1);
     return avgAmount.toFixed(2);
-  };
-
-  const handleChartTypeChange = (type: string) => {
-    setChartType(type);
   };
 
   const [showFilters, setShowFilters] = useState(false);
@@ -402,90 +391,61 @@ const Statistics: React.FC = () => {
         </motion.div>
       </Stack>
 
-      {/* Chart Type Selector */}
-      <Box sx={{mb: 3}}>
-        <ButtonGroup variant="outlined" fullWidth>
-          <Button
-            variant={chartType === 'spending' ? 'contained' : 'outlined'}
-            onClick={() => handleChartTypeChange('spending')}
-            startIcon={<TimelineIcon/>}
-          >
-            Line Graph
-          </Button>
-          <Button
-            variant={chartType === 'categories' ? 'contained' : 'outlined'}
-            onClick={() => handleChartTypeChange('categories')}
-            startIcon={<PieChartIcon/>}
-          >
-            Pie Chart
-          </Button>
-        </ButtonGroup>
-      </Box>
-
       {/* Line Graph / Pie Chart based on selected chart type */}
       <Box className="chart-container">
-        {chartType === 'spending' ? (
-          lineChartData.length > 0 ? (
-            <Paper className="chart-paper" elevation={3}>
-              <Typography variant="subtitle2" className="chart-title">
-                Spending Trends
-              </Typography>
-              <ResponsiveContainer width="100%" height="90%">
-                <LineChart
-                  data={lineChartData}
-                  margin={{top: 5, right: 20, left: 0, bottom: 5}}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
-                  <XAxis
-                    dataKey="date"
-                    stroke={theme.palette.text.secondary}
-                    tick={{fontSize: 12}}
-                    tickLine={{stroke: theme.palette.divider}}
+        {lineChartData.length > 0 ? (
+          <Paper className="chart-paper" elevation={3}>
+            <Typography variant="subtitle2" className="chart-title">
+              Spending Trends
+            </Typography>
+            <ResponsiveContainer width="100%" height="90%">
+              <LineChart
+                data={lineChartData}
+                margin={{top: 5, right: 20, left: 0, bottom: 5}}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
+                <XAxis
+                  dataKey="date"
+                  stroke={theme.palette.text.secondary}
+                  tick={{fontSize: 12}}
+                  tickLine={{stroke: theme.palette.divider}}
+                />
+                <YAxis
+                  stroke={theme.palette.text.secondary}
+                  tick={{fontSize: 12}}
+                  tickLine={{stroke: theme.palette.divider}}
+                  width={40}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: theme.palette.background.paper,
+                    border: `1px solid ${theme.palette.divider}`,
+                    borderRadius: '8px'
+                  }}
+                />
+                <Legend
+                  verticalAlign="top"
+                  height={36}
+                  wrapperStyle={{fontSize: '12px'}}
+                />
+                {lineKeys.map((key, index) => (
+                  <Line
+                    key={key}
+                    type="monotone"
+                    dataKey={key}
+                    stroke={lineColors[index % lineColors.length]}
+                    activeDot={{r: 8}}
+                    strokeWidth={2}
+                    dot={{strokeWidth: 2}}
                   />
-                  <YAxis
-                    stroke={theme.palette.text.secondary}
-                    tick={{fontSize: 12}}
-                    tickLine={{stroke: theme.palette.divider}}
-                    width={40}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: theme.palette.background.paper,
-                      border: `1px solid ${theme.palette.divider}`,
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="top"
-                    height={36}
-                    wrapperStyle={{fontSize: '12px'}}
-                  />
-                  {lineKeys.map((key, index) => (
-                    <Line
-                      key={key}
-                      type="monotone"
-                      dataKey={key}
-                      stroke={lineColors[index % lineColors.length]}
-                      activeDot={{r: 8}}
-                      strokeWidth={2}
-                      dot={{strokeWidth: 2}}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </Paper>
-          ) : (
-            <Paper className="chart-paper empty-chart" elevation={3}>
-              <Typography variant="body1" color="text.secondary">
-                No data available for the selected filters
-              </Typography>
-            </Paper>
-          )
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
         ) : (
-          // Pie chart will be implemented separately
           <Paper className="chart-paper empty-chart" elevation={3}>
             <Typography variant="body1" color="text.secondary">
-              Pie Chart will display here
+              No data available for the selected filters
             </Typography>
           </Paper>
         )}
