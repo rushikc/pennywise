@@ -1,34 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  Container,
-  FormControl,
-  Grid,
-  IconButton,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  Typography,
-  useTheme
-} from '@mui/material';
+import React, {useEffect, useRef, useState} from 'react';
+import { Box, Button, ButtonGroup, Chip, Container, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
 import {motion} from 'framer-motion';
-import {
-  ArrowBack as BackIcon,
-  DateRange as DateRangeIcon,
-  PieChart as PieChartIcon,
-  Timeline as TimelineIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon
-} from '@mui/icons-material';
-import {useNavigate} from 'react-router-dom';
+import { PieChart as PieChartIcon, Timeline as TimelineIcon, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
 
 import Loading from "../../components/Loading";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SortIcon from '@mui/icons-material/Sort';
+import { GroupByOption, SortByOption, groupByOptions, sortByOptions } from '../home/validations';
+import '../home/Home.scss';
 
 // Interface for expense data
 interface Expense {
@@ -40,9 +22,16 @@ interface Expense {
   tags?: string[];
 }
 
+// Filter options for stats
+const statsFilterOptions: { id: string; label: string }[] = [
+  { id: 'week', label: 'Last Week' },
+  { id: 'month', label: 'Last Month' },
+  { id: 'year', label: 'Last Year' },
+  { id: 'all', label: 'All Time' },
+];
+
 const Statistics: React.FC = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('month');
@@ -162,12 +151,39 @@ const Statistics: React.FC = () => {
     return avgAmount.toFixed(2);
   };
 
-  const handleTimeRangeChange = (event: SelectChangeEvent) => {
-    setTimeRange(event.target.value);
-  };
-
   const handleChartTypeChange = (type: string) => {
     setChartType(type);
+  };
+
+  const [showFilters, setShowFilters] = useState(false);
+  const filterPanelRef = useRef<HTMLDivElement>(null);
+  const filterButtonRef = useRef<HTMLDivElement>(null);
+
+  const [showGroupByOptions, setShowGroupByOptions] = useState(false);
+  const groupByPanelRef = useRef<HTMLDivElement>(null);
+  const groupByButtonRef = useRef<HTMLDivElement>(null);
+  const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
+  const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>(null);
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+    if (showGroupByOptions) setShowGroupByOptions(false);
+  };
+  const toggleGroupByOptions = () => {
+    setShowGroupByOptions(!showGroupByOptions);
+    if (showFilters) setShowFilters(false);
+  };
+  const handleRangeChange = (id: string) => {
+    setTimeRange(id);
+    setShowFilters(false);
+  };
+  const handleGroupByChange = (option: GroupByOption) => {
+    setSelectedGroupBy(option);
+    setShowGroupByOptions(false);
+  };
+  const handleSortByChange = (option: SortByOption) => {
+    setSelectedSortBy(option);
+    setShowGroupByOptions(false);
   };
 
   if (isLoading) {
@@ -176,133 +192,79 @@ const Statistics: React.FC = () => {
 
   return (
     <Container maxWidth="sm" sx={{ pb: 10, pt: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <IconButton
-          onClick={() => navigate('/dashboard')}
-          sx={{ mr: 2, color: theme.palette.primary.main }}
-        >
-          <BackIcon />
-        </IconButton>
+      <div style={{paddingBottom:10}}>
         <Typography variant="h5" fontWeight="bold">
           Statistics & Insights
         </Typography>
-      </Box>
+      </div>
 
-      {/* Development Notification */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Alert
-          severity="info"
-          variant="filled"
-          sx={{
-            mb: 3,
-            borderRadius: 2,
-            boxShadow: 2,
-            '& .MuiAlert-icon': { color: 'white' },
-            '& .MuiAlert-message': { fontWeight: 'medium' }
-          }}
-        >
-          Stats page is still under development
-        </Alert>
-      </motion.div>
-
-      {/* Time Range Selector */}
-      <Paper
-        elevation={3}
-        sx={{ p: 2, mb: 3, borderRadius: 2 }}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <DateRangeIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
-            <Typography variant="subtitle1">Time Range</Typography>
-          </Box>
-          <FormControl sx={{ minWidth: 120 }} size="small">
-            <Select
-              value={timeRange}
-              onChange={handleTimeRangeChange}
-              displayEmpty
-              variant="outlined"
-            >
-              <MenuItem value="week">Last Week</MenuItem>
-              <MenuItem value="month">Last Month</MenuItem>
-              <MenuItem value="year">Last Year</MenuItem>
-              <MenuItem value="all">All Time</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      </Paper>
 
       {/* Summary Cards */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{ flex: 1 }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`
+            }}
           >
-            <Paper
-              elevation={3}
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`
-              }}
-            >
-              <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
-                Total Spending
+            <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
+              Total Spending
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
+              <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
+                ₹{getTotalSpending()}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
-                <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
-                  ₹{getTotalSpending()}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <TrendingUpIcon sx={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5 }} />
-                <Typography variant="caption" color="rgba(255,255,255,0.7)">
-                  {timeRange === 'all' ? 'All time' :
-                    timeRange === 'year' ? 'Last Year' :
-                    timeRange === 'month' ? 'Last Month' : 'Last Week'}
-                </Typography>
-              </Box>
-            </Paper>
-          </motion.div>
-        </Grid>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+              <TrendingUpIcon sx={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5 }} />
+              <Typography variant="caption" color="rgba(255,255,255,0.7)">
+                {timeRange === 'all' ? 'All time' :
+                  timeRange === 'year' ? 'Last Year' :
+                  timeRange === 'month' ? 'Last Month' : 'Last Week'}
+              </Typography>
+            </Box>
+          </Paper>
+        </motion.div>
 
-        <Grid item xs={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          style={{ flex: 1 }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.secondary.main} 100%)`
+            }}
           >
-            <Paper
-              elevation={3}
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.secondary.main} 100%)`
-              }}
-            >
-              <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
-                Daily Average
+            <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
+              Daily Average
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
+              <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
+                ${getAverageDailySpending()}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
-                <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
-                  ${getAverageDailySpending()}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <TrendingDownIcon sx={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5 }} />
-                <Typography variant="caption" color="rgba(255,255,255,0.7)">
-                  Per Day
-                </Typography>
-              </Box>
-            </Paper>
-          </motion.div>
-        </Grid>
-      </Grid>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+              <TrendingDownIcon sx={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5 }} />
+              <Typography variant="caption" color="rgba(255,255,255,0.7)">
+                Per Day
+              </Typography>
+            </Box>
+          </Paper>
+        </motion.div>
+      </Stack>
 
       {/* Chart Type Selector */}
       <Box sx={{ mb: 3 }}>
@@ -324,9 +286,134 @@ const Statistics: React.FC = () => {
         </ButtonGroup>
       </Box>
 
+      {/* Filter & Group By Controls */}
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between' }}>
+        <div ref={filterButtonRef}>
+          <Chip
+            icon={<FilterListIcon />}
+            label={statsFilterOptions.find(o => o.id === timeRange)?.label}
+            clickable
+            onClick={toggleFilters}
+          />
+        </div>
+        <div ref={groupByButtonRef}>
+          <Chip
+            icon={<SortIcon />}
+            label={`Group: ${groupByOptions.find(o => o.id === selectedGroupBy)?.label}`}
+            clickable
+            onClick={toggleGroupByOptions}
+          />
+        </div>
+      </Box>
+
+      {/* Filter Panel */}
+      <FilterPanel
+        show={showFilters}
+        onClose={() => setShowFilters(false)}
+        selectedRange={timeRange}
+        onRangeChange={handleRangeChange}
+        panelRef={filterPanelRef}
+      />
+
+      {/* Group By Panel */}
+      <GroupByPanel
+        show={showGroupByOptions}
+        onClose={() => setShowGroupByOptions(false)}
+        selectedGroupBy={selectedGroupBy}
+        selectedSortBy={selectedSortBy}
+        onGroupByChange={handleGroupByChange}
+        onSortByChange={handleSortByChange}
+        panelRef={groupByPanelRef}
+      />
 
     </Container>
   );
 };
 
 export default Statistics;
+
+// Filter Panel Component for Stats
+const FilterPanel: React.FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedRange: string;
+  onRangeChange: (id: string) => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({ show, onClose, selectedRange, onRangeChange, panelRef }) => {
+  if (!show) return null;
+  return (
+    <div className="filter-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Filter by date range</span>
+        <IconButton size="small" className="close-button" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </div>
+      <div className="filter-options">
+        {statsFilterOptions.map(option => (
+          <Chip
+            key={option.id}
+            label={option.label}
+            color="primary"
+            variant={selectedRange === option.id ? "filled" : "outlined"}
+            onClick={() => onRangeChange(option.id)}
+            className="filter-chip"
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Group By Panel Component for Stats
+const GroupByPanel: React.FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedGroupBy: GroupByOption;
+  selectedSortBy: SortByOption;
+  onGroupByChange: (o: GroupByOption) => void;
+  onSortByChange: (o: SortByOption) => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({ show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef }) => {
+  if (!show) return null;
+  return (
+    <div className="group-by-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Group by</span>
+        <IconButton size="small" className="close-button" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </div>
+      <div className="panel-section">
+        <div className="section-title">Group by</div>
+        <div className="group-by-options">
+          {groupByOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              color="primary"
+              variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+              onClick={() => onGroupByChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+      <div className="panel-section">
+        <div className="section-title">Sort by</div>
+        <div className="sort-by-options">
+          {sortByOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              color="primary"
+              variant={selectedSortBy === option.id ? "filled" : "outlined"}
+              onClick={() => onSortByChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
