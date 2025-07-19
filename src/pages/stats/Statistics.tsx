@@ -21,13 +21,25 @@ import {
 import '../home/Home.scss';
 import './Statistics.scss';
 import {Expense} from "../../Types";
-import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-import { PieChart, Pie, Cell } from 'recharts';
+import {
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 
 // Interface for line graph data
 interface LineDataPoint {
   date: string;
-  [key:string]: string | number;
+
+  [key: string]: string | number;
 }
 
 const truncate = (str: string, n: number) => {
@@ -119,18 +131,22 @@ const Statistics: React.FC = () => {
     setShowFilters(!showFilters);
     if (showGroupByOptions) setShowGroupByOptions(false);
   };
+
   const toggleGroupByOptions = () => {
     setShowGroupByOptions(!showGroupByOptions);
     if (showFilters) setShowFilters(false);
   };
+
   const handleRangeChange = (range: DateRange) => {
     setTimeRange(range);
     setShowFilters(false);
   };
+
   const handleGroupByChange = (option: GroupByOption) => {
     setSelectedGroupBy(option);
     setShowGroupByOptions(false);
   };
+
   const handleSortByChange = (option: SortByOption) => {
     setSelectedSortBy(option);
     setShowGroupByOptions(false);
@@ -146,7 +162,7 @@ const Statistics: React.FC = () => {
     lineKeys: string[];
   } => {
     if (expenses.length === 0) {
-      return { lineChartData: [], pieChartData: [], lineKeys: [] };
+      return {lineChartData: [], pieChartData: [], lineKeys: []};
     }
 
     const expensesByDate = new Map<string, Expense[]>();
@@ -230,7 +246,7 @@ const Statistics: React.FC = () => {
     );
 
     dates.forEach(date => {
-      const dataPoint: LineDataPoint = { date };
+      const dataPoint: LineDataPoint = {date};
       const dateExpenses = expensesByDate.get(date) || [];
 
       topGroups.forEach(group => {
@@ -245,7 +261,7 @@ const Statistics: React.FC = () => {
       lineChartData.push(dataPoint);
     });
 
-    return { lineChartData, pieChartData, lineKeys: topGroups };
+    return {lineChartData, pieChartData, lineKeys: topGroups};
   };
 
   // Helper function to determine cost range bucket
@@ -263,7 +279,7 @@ const Statistics: React.FC = () => {
   // Update chart data when filters or grouping changes
   useEffect(() => {
     const filteredExpenses = getFilteredExpenses();
-    const { lineChartData, pieChartData, lineKeys } = prepareChartData(
+    const {lineChartData, pieChartData, lineKeys} = prepareChartData(
       filteredExpenses,
       selectedGroupBy,
       selectedSortBy
@@ -385,7 +401,7 @@ const Statistics: React.FC = () => {
             <ResponsiveContainer width="100%" height="95%">
               <LineChart
                 data={lineChartData}
-                margin={{top: 5, right: 20, left: 0, bottom: 5}}
+                margin={{top: 5, right: 20, left: 10, bottom: 5}}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
                 <XAxis
@@ -398,7 +414,10 @@ const Statistics: React.FC = () => {
                   stroke={theme.palette.text.secondary}
                   tick={{fontSize: 12}}
                   tickLine={{stroke: theme.palette.divider}}
-                  width={40}
+                  width={50}
+                  tickFormatter={(value) => `₹${value}`}
+                  domain={['auto', 'auto']}
+                  allowDataOverflow={false}
                 />
                 <Tooltip
                   contentStyle={{
@@ -464,7 +483,7 @@ const Statistics: React.FC = () => {
                 </Pie>
                 <Legend
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: '12px', whiteSpace: 'normal'}}
+                  wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
                   formatter={(value) => truncate(value, 20)}
                 />
               </PieChart>
