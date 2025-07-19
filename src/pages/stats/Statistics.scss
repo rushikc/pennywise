@@ -6,6 +6,8 @@
 
 .statistics-header {
   padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
 }
 
 .summary-row {
@@ -43,8 +45,8 @@
 
 .total-card {
   margin-bottom: 16px;
-  background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-  box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3);
+  background: linear-gradient(135deg, #3a7bd5, #00d2ff) !important;
+  box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3) !important;
 
   .MuiTypography-subtitle2,
   .MuiTypography-caption {
@@ -54,8 +56,8 @@
 
 .daily-card {
   flex: 1;
-  background: linear-gradient(135deg, #11998e, #38ef7d);
-  box-shadow: 0 4px 20px rgba(17, 153, 142, 0.3);
+  background: linear-gradient(135deg, #11998e, #38ef7d) !important;
+  box-shadow: 0 4px 20px rgba(17, 153, 142, 0.3) !important;
 
   .MuiTypography-subtitle2,
   .MuiTypography-caption {
@@ -65,8 +67,8 @@
 
 .monthly-card {
   flex: 1;
-  background: linear-gradient(135deg, #834d9b, #d04ed6);
-  box-shadow: 0 4px 20px rgba(131, 77, 155, 0.3);
+  background: linear-gradient(135deg, #834d9b, #d04ed6) !important;
+  box-shadow: 0 4px 20px rgba(131, 77, 155, 0.3) !important;
 
   .MuiTypography-subtitle2,
   .MuiTypography-caption {

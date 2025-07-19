@@ -347,7 +347,7 @@ const Statistics: React.FC = () => {
       <div style={{paddingBottom: 10}}>
         <div className="statistics-header">
           <Typography variant="h5" fontWeight="bold">
-            Statistics & Insights
+            Expense Insights
           </Typography>
         </div>
       </div>
