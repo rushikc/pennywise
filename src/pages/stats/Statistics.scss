@@ -74,9 +74,14 @@
   }
 }
 
-.chart-container {
-  margin-bottom: 40px;
+.line-chart-container {
+  margin-bottom: 20px;
   height: 300px;
+  margin-top: 24px;
+}
+.pie-chart-container {
+  padding-bottom: 120px;
+  //height: 300px;
   margin-top: 24px;
 }
 

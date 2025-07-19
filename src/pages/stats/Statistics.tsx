@@ -22,6 +22,7 @@ import '../home/Home.scss';
 import './Statistics.scss';
 import {Expense} from "../../Types";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import { PieChart, Pie, Cell } from 'recharts';
 
 // Interface for line graph data
 interface LineDataPoint {
@@ -290,6 +291,38 @@ const Statistics: React.FC = () => {
     }
   }, [expenses, timeRange, selectedGroupBy, selectedSortBy]);
 
+  const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+
+  useEffect(() => {
+    if (selectedGroupBy !== 'days') {
+      const filteredExpenses = getFilteredExpenses();
+      const groupData: { [key: string]: number } = {};
+
+      filteredExpenses.forEach(expense => {
+        const groupKey =
+          selectedGroupBy === 'vendor'
+            ? expense.vendor
+            : selectedGroupBy === 'tags'
+            ? expense.tag || 'Untagged'
+            : getCostRange(expense.cost);
+
+        if (!groupData[groupKey]) {
+          groupData[groupKey] = 0;
+        }
+        groupData[groupKey] += Number(expense.cost);
+      });
+
+      const sortedData = Object.entries(groupData)
+        .map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 3); // Limit to top 3 elements
+
+      setPieChartData(sortedData);
+    } else {
+      setPieChartData([]);
+    }
+  }, [expenses, selectedGroupBy, timeRange]);
+
   if (isLoading) {
     return <Loading/>;
   }
@@ -392,7 +425,7 @@ const Statistics: React.FC = () => {
       </Stack>
 
       {/* Line Graph / Pie Chart based on selected chart type */}
-      <Box className="chart-container">
+      <Box className="line-chart-container">
         {lineChartData.length > 0 ? (
           <Paper className="chart-paper" elevation={3}>
             <Typography variant="subtitle2" className="chart-title">
@@ -450,6 +483,43 @@ const Statistics: React.FC = () => {
           </Paper>
         )}
       </Box>
+
+      {/* Pie Chart */}
+      {selectedGroupBy !== 'days' && pieChartData.length > 0 && (
+        <Box className="pie-chart-container">
+          <Paper className="chart-paper" elevation={3}>
+            <Typography variant="subtitle2" className="chart-title">
+              Group Distribution
+            </Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill={theme.palette.primary.main}
+                  label
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={lineColors[index % lineColors.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend
+                  verticalAlign="top"
+                  height={36}
+                  wrapperStyle={{ fontSize: '12px' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Box>
+      )}
 
       {/* Floating Filter & Group By Buttons */}
       <div className="buttons-container">
