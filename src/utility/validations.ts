@@ -5,7 +5,7 @@ import {ExpenseAPI} from "../api/ExpenseAPI";
 import {setExpenseState, setTagList} from "../store/expenseActions";
 
 // Define date range options
-export type DateRange = '1d' | '7d' | '14d' | '30d' | '90d' | '180d' | '366d';
+export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d';
 
 export type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 
@@ -44,9 +44,11 @@ export const filterOptions: { id: DateRange, label: string }[] = [
   {id: '7d', label: '7 Days'},
   {id: '14d', label: '2 Weeks'},
   {id: '30d', label: '1 Month'},
+  {id: '60d', label: '2 Month'},
   {id: '90d', label: '3 Month'},
   {id: '180d', label: '6 Month'},
   {id: '366d', label: '1 year'},
+  {id: '732d', label: '2 year'},
 ];
 
 // Define group by options

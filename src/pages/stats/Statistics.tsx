@@ -60,8 +60,31 @@ const Statistics: React.FC = () => {
   // Calculate total spending
   const getTotalSpending = () => {
     const filtered = getFilteredExpenses();
-    // console.log("Filtered Expenses: ", filtered);
+    console.log("Total spending Filtered Expenses: ", filtered);
     return filtered.reduce((sum, expense) => sum + Number(expense.cost), 0).toFixed(2);
+  };
+
+  // Calculate average monthly spending
+  const getAverageMonthlySpending = () => {
+    const filtered = getFilteredExpenses();
+    if (filtered.length === 0) return '0.00';
+
+    // Check if the time range is a month or less
+    const isMonthOrLess = timeRange === '7d' || timeRange === '30d';
+    if (isMonthOrLess) {
+      return getAverageDailySpending();
+    }
+
+    const totalAmount = filtered.reduce((sum, expense) => sum + Number(expense.cost), 0);
+
+    // Get all months in the filtered data
+    const uniqueMonths = new Set(filtered.map(expense => {
+      const date = new Date(expense.date);
+      return `${date.getFullYear()}-${date.getMonth()}`;
+    }));
+
+    const avgAmount = totalAmount / Math.max(uniqueMonths.size, 1);
+    return avgAmount.toFixed(2);
   };
 
   // Calculate average daily spending
@@ -290,38 +313,45 @@ const Statistics: React.FC = () => {
 
 
       {/* Summary Cards */}
-      <Stack direction="row" spacing={2} sx={{mb: 3}}>
-        <motion.div
-          initial={{opacity: 0, y: 20}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.3}}
-          style={{flex: 1}}
+      {/* Total Spending Card */}
+      <motion.div
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.3}}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            p: 2,
+            mb: 2,
+            borderRadius: 2,
+            background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center'
+          }}
         >
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`
-            }}
-          >
-            <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
-              Total Spending
+          <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
+            Total Spending
+          </Typography>
+          <Box sx={{display: 'flex', alignItems: 'baseline', justifyContent: 'center', mt: 1}}>
+            <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
+              ₹{getTotalSpending()}
             </Typography>
-            <Box sx={{display: 'flex', alignItems: 'baseline', mt: 1}}>
-              <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
-                ₹{getTotalSpending()}
-              </Typography>
-            </Box>
-            <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
-              <TrendingUpIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
-              <Typography variant="caption" color="rgba(255,255,255,0.7)">
-                {filterOptions.find(o => o.id === timeRange)?.label}
-              </Typography>
-            </Box>
-          </Paper>
-        </motion.div>
+          </Box>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1}}>
+            <TrendingUpIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
+            <Typography variant="caption" color="rgba(255,255,255,0.7)">
+              {filterOptions.find(o => o.id === timeRange)?.label}
+            </Typography>
+          </Box>
+        </Paper>
+      </motion.div>
 
+      {/* Averages Row */}
+      <Stack direction="row" spacing={2} sx={{mb: 3}}>
+        {/* Daily Average Card */}
         <motion.div
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
@@ -341,13 +371,45 @@ const Statistics: React.FC = () => {
             </Typography>
             <Box sx={{display: 'flex', alignItems: 'baseline', mt: 1}}>
               <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
-                ${getAverageDailySpending()}
+                ₹{getAverageDailySpending()}
               </Typography>
             </Box>
             <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
               <TrendingDownIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
               <Typography variant="caption" color="rgba(255,255,255,0.7)">
                 Per Day
+              </Typography>
+            </Box>
+          </Paper>
+        </motion.div>
+
+        {/* Monthly Average Card */}
+        <motion.div
+          initial={{opacity: 0, y: 20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.3, delay: 0.2}}
+          style={{flex: 1}}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${theme.palette.error.dark} 0%, ${theme.palette.error.main} 100%)`
+            }}
+          >
+            <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
+              Monthly Average
+            </Typography>
+            <Box sx={{display: 'flex', alignItems: 'baseline', mt: 1}}>
+              <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
+                ₹{getAverageMonthlySpending()}
+              </Typography>
+            </Box>
+            <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
+              <TrendingDownIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
+              <Typography variant="caption" color="rgba(255,255,255,0.7)">
+                {timeRange === '7d' || timeRange === '30d' ? 'Same as Daily Avg' : 'Per Month'}
               </Typography>
             </Box>
           </Paper>
