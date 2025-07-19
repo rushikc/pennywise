@@ -299,12 +299,18 @@ const Statistics: React.FC = () => {
       const groupData: { [key: string]: number } = {};
 
       filteredExpenses.forEach(expense => {
-        const groupKey =
-          selectedGroupBy === 'vendor'
-            ? expense.vendor
-            : selectedGroupBy === 'tags'
-            ? expense.tag || 'Untagged'
-            : getCostRange(expense.cost);
+        let groupKey: string;
+        if (selectedGroupBy === 'vendor') {
+          groupKey = expense.vendor;
+        } else if (selectedGroupBy === 'tags') {
+          groupKey = expense.tag || 'Untagged';
+        } else {
+          groupKey = getCostRange(expense.cost);
+        }
+
+        if (selectedGroupBy === 'tags' && groupKey === 'Untagged') {
+          return; // Skip untagged data when grouping by tags
+        }
 
         if (!groupData[groupKey]) {
           groupData[groupKey] = 0;
@@ -501,7 +507,7 @@ const Statistics: React.FC = () => {
                   cy="50%"
                   outerRadius={100}
                   fill={theme.palette.primary.main}
-                  label
+                  label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
                 >
                   {pieChartData.map((entry, index) => (
                     <Cell
