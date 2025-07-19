@@ -14,13 +14,19 @@ import {sortByKeyDate} from '../../utility/utility';
 import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
-import {GroupByOption, groupByOptions, SortByOption, sortByOptions, filterOptions, filterExpensesByDate, DateRange} from '../../utility/validations';
+import {
+  GroupByOption,
+  groupByOptions,
+  SortByOption,
+  sortByOptions,
+  filterOptions,
+  filterExpensesByDate,
+  DateRange
+} from '../../utility/validations';
 import '../home/Home.scss';
-
-// Import Recharts components for line graph
-import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import './Statistics.scss';
 import {Expense} from "../../Types";
-
+import {CartesianGrid, Tooltip, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis} from "recharts";
 
 // Interface for line graph data
 interface LineDataPoint {
@@ -304,13 +310,14 @@ const Statistics: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="sm" sx={{pb: 10, pt: 2}}>
+    <Container maxWidth="sm" className="statistics-container">
       <div style={{paddingBottom: 10}}>
-        <Typography variant="h5" fontWeight="bold">
-          Statistics & Insights
-        </Typography>
+        <div className="statistics-header">
+          <Typography variant="h5" fontWeight="bold">
+            Statistics & Insights
+          </Typography>
+        </div>
       </div>
-
 
       {/* Summary Cards */}
       {/* Total Spending Card */}
@@ -319,28 +326,16 @@ const Statistics: React.FC = () => {
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.3}}
       >
-        <Paper
-          elevation={3}
-          sx={{
-            p: 2,
-            mb: 2,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center'
-          }}
-        >
+        <Paper className="total-card">
           <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
             Total Spending
           </Typography>
-          <Box sx={{display: 'flex', alignItems: 'baseline', justifyContent: 'center', mt: 1}}>
+          <Box>
             <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
               ₹{getTotalSpending()}
             </Typography>
           </Box>
-          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1}}>
+          <Box>
             <TrendingUpIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
             <Typography variant="caption" color="rgba(255,255,255,0.7)">
               {filterOptions.find(o => o.id === timeRange)?.label}
@@ -350,31 +345,23 @@ const Statistics: React.FC = () => {
       </motion.div>
 
       {/* Averages Row */}
-      <Stack direction="row" spacing={2} sx={{mb: 3}}>
+      <Stack direction="row" className="summary-row">
         {/* Daily Average Card */}
         <motion.div
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
           transition={{duration: 0.3, delay: 0.1}}
-          style={{flex: 1}}
         >
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.secondary.main} 100%)`
-            }}
-          >
+          <Paper className="daily-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
               Daily Average
             </Typography>
-            <Box sx={{display: 'flex', alignItems: 'baseline', mt: 1}}>
+            <Box>
               <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
                 ₹{getAverageDailySpending()}
               </Typography>
             </Box>
-            <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
+            <Box>
               <TrendingDownIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
               <Typography variant="caption" color="rgba(255,255,255,0.7)">
                 Per Day
@@ -388,25 +375,17 @@ const Statistics: React.FC = () => {
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
           transition={{duration: 0.3, delay: 0.2}}
-          style={{flex: 1}}
         >
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${theme.palette.error.dark} 0%, ${theme.palette.error.main} 100%)`
-            }}
-          >
+          <Paper className="monthly-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
               Monthly Average
             </Typography>
-            <Box sx={{display: 'flex', alignItems: 'baseline', mt: 1}}>
+            <Box>
               <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
                 ₹{getAverageMonthlySpending()}
               </Typography>
             </Box>
-            <Box sx={{display: 'flex', alignItems: 'center', mt: 1}}>
+            <Box>
               <TrendingDownIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
               <Typography variant="caption" color="rgba(255,255,255,0.7)">
                 {timeRange === '7d' || timeRange === '30d' ? 'Same as Daily Avg' : 'Per Month'}
@@ -582,7 +561,13 @@ const Statistics: React.FC = () => {
 export default Statistics;
 
 // Filter Panel Component for Stats
-const FilterPanel: React.FC<{ show: boolean; onClose: () => void; selectedRange: DateRange; onRangeChange: (range: DateRange) => void; panelRef: React.RefObject<HTMLDivElement>; }> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
+const FilterPanel: React.FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedRange: DateRange;
+  onRangeChange: (range: DateRange) => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
   if (!show) return null;
   return (
     <div className="filter-panel" ref={panelRef}>
