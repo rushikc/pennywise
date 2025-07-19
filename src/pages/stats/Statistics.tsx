@@ -132,137 +132,116 @@ const Statistics: React.FC = () => {
     setShowGroupByOptions(false);
   };
 
-  // Generate line graph data based on selected group by option
-  const prepareLineGraphData = (expenses: Expense[], groupBy: GroupByOption, sortBy: SortByOption | null): LineDataPoint[] => {
-    if (expenses.length === 0) return [];
+  const prepareChartData = (
+    expenses: Expense[],
+    groupBy: GroupByOption,
+    sortBy: SortByOption | null
+  ): {
+    lineChartData: LineDataPoint[];
+    pieChartData: { name: string; value: number }[];
+    lineKeys: string[];
+  } => {
+    if (expenses.length === 0) {
+      return { lineChartData: [], pieChartData: [], lineKeys: [] };
+    }
 
-    // First, group the expenses by date
     const expensesByDate = new Map<string, Expense[]>();
     expenses.forEach(expense => {
-      const dateStr = new Date(expense.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+      const dateStr = new Date(expense.date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
       if (!expensesByDate.has(dateStr)) {
         expensesByDate.set(dateStr, []);
       }
       expensesByDate.get(dateStr)!.push(expense);
     });
 
-    // Get unique categories/tags/groups based on groupBy option
-    let uniqueGroups: string[] = [];
-
     if (groupBy === 'days') {
-      // If grouped by days, we don't need further grouping for the line chart
-      // Each day will be a data point
-      const result: LineDataPoint[] = [];
+      const lineChartData: LineDataPoint[] = [];
       Array.from(expensesByDate.entries()).forEach(([date, dateExpenses]) => {
-        const totalCost = dateExpenses.reduce((sum, exp) => sum + Number(exp.cost), 0);
-        result.push({
+        const totalCost = dateExpenses.reduce(
+          (sum, exp) => sum + Number(exp.cost),
+          0
+        );
+        lineChartData.push({
           date,
-          'Daily Total': totalCost
+          'Daily Total': totalCost,
         });
       });
 
-      // Sort by date
-      return result.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        return dateA.getTime() - dateB.getTime();
-      });
-    } else {
-      // For other groupBy options, we need to extract the groups
-      if (groupBy === 'vendor') {
-        // Get unique vendors
-        const vendorSet = new Set<string>();
-        expenses.forEach(expense => vendorSet.add(expense.vendor));
-        uniqueGroups = Array.from(vendorSet);
-      } else if (groupBy === 'tags') {
-        // Get unique tags
-        const tagSet = new Set<string>();
-        expenses.forEach(expense => tagSet.add(expense.tag || 'Untagged'));
-        uniqueGroups = Array.from(tagSet);
-      } else if (groupBy === 'cost') {
-        // Predefined cost ranges
-        uniqueGroups = ['₹0-₹100', '₹100-₹500', '₹500-₹1000', '₹1000+'];
-      }
+      lineChartData.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
 
-      // Sort groups by total spend if sortBy is cost
-      if (sortBy === 'cost') {
-        const groupSpend = new Map<string, number>();
-
-        uniqueGroups.forEach(group => {
-          let groupTotal = 0;
-          expenses.forEach(expense => {
-            if (
-              (groupBy === 'vendor' && expense.vendor === group) ||
-              (groupBy === 'tags' && (expense.tag || 'Untagged') === group) ||
-              (groupBy === 'cost' && getCostRange(expense.cost) === group)
-            ) {
-              groupTotal += Number(expense.cost);
-            }
-          });
-          groupSpend.set(group, groupTotal);
-        });
-
-        uniqueGroups.sort((a, b) => (groupSpend.get(b) || 0) - (groupSpend.get(a) || 0));
-      } else if (sortBy === 'count') {
-        // Sort by count of expenses in each group
-        const groupCount = new Map<string, number>();
-
-        uniqueGroups.forEach(group => {
-          let count = 0;
-          expenses.forEach(expense => {
-            if (
-              (groupBy === 'vendor' && expense.vendor === group) ||
-              (groupBy === 'tags' && (expense.tag || 'Untagged') === group) ||
-              (groupBy === 'cost' && getCostRange(expense.cost) === group)
-            ) {
-              count++;
-            }
-          });
-          groupCount.set(group, count);
-        });
-
-        uniqueGroups.sort((a, b) => (groupCount.get(b) || 0) - (groupCount.get(a) || 0));
-      }
-
-      // Filter out "Untagged" group when grouping by tags
-      if (groupBy === 'tags') {
-        uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
-      }
-
-      // Limit to top 3 groups for clarity in the chart
-      uniqueGroups = uniqueGroups.slice(0, 3);
-
-      // Now create data points for each date, with spending for each group
-      const result: LineDataPoint[] = [];
-      const dates = Array.from(expensesByDate.keys()).sort((a, b) => {
-        return new Date(a).getTime() - new Date(b).getTime();
-      });
-
-      dates.forEach(date => {
-        const dataPoint: LineDataPoint = {date};
-        const dateExpenses = expensesByDate.get(date) || [];
-
-        uniqueGroups.forEach(group => {
-          let groupSum = 0;
-
-          dateExpenses.forEach(expense => {
-            if (
-              (groupBy === 'vendor' && expense.vendor === group) ||
-              (groupBy === 'tags' && (expense.tag || 'Untagged') === group) ||
-              (groupBy === 'cost' && getCostRange(expense.cost) === group)
-            ) {
-              groupSum += Number(expense.cost);
-            }
-          });
-
-          dataPoint[group] = groupSum;
-        });
-
-        result.push(dataPoint);
-      });
-
-      return result;
+      return {
+        lineChartData,
+        pieChartData: [],
+        lineKeys: ['Daily Total'],
+      };
     }
+
+    const getGroupKey = (expense: Expense): string => {
+      if (groupBy === 'vendor') return expense.vendor;
+      if (groupBy === 'tags') return expense.tag || 'Untagged';
+      if (groupBy === 'cost') return getCostRange(expense.cost);
+      return '';
+    };
+
+    const groupSpend = new Map<string, number>();
+    const groupCount = new Map<string, number>();
+
+    expenses.forEach(expense => {
+      const groupKey = getGroupKey(expense);
+      if (groupKey) {
+        groupSpend.set(groupKey, (groupSpend.get(groupKey) || 0) + Number(expense.cost));
+        groupCount.set(groupKey, (groupCount.get(groupKey) || 0) + 1);
+      }
+    });
+
+    let uniqueGroups = Array.from(groupSpend.keys());
+
+    if (sortBy === 'cost') {
+      uniqueGroups.sort((a, b) => (groupSpend.get(b) || 0) - (groupSpend.get(a) || 0));
+    } else if (sortBy === 'count') {
+      uniqueGroups.sort((a, b) => (groupCount.get(b) || 0) - (groupCount.get(a) || 0));
+    } else {
+      uniqueGroups.sort((a, b) => (groupSpend.get(b) || 0) - (groupSpend.get(a) || 0));
+    }
+
+    if (groupBy === 'tags') {
+      uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
+    }
+
+    const topGroups = uniqueGroups.slice(0, 3);
+
+    const pieChartData = topGroups.map(group => ({
+      name: group,
+      value: groupSpend.get(group) || 0,
+    }));
+
+    const lineChartData: LineDataPoint[] = [];
+    const dates = Array.from(expensesByDate.keys()).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    );
+
+    dates.forEach(date => {
+      const dataPoint: LineDataPoint = { date };
+      const dateExpenses = expensesByDate.get(date) || [];
+
+      topGroups.forEach(group => {
+        let groupSum = 0;
+        dateExpenses.forEach(expense => {
+          if (getGroupKey(expense) === group) {
+            groupSum += Number(expense.cost);
+          }
+        });
+        dataPoint[group] = groupSum;
+      });
+      lineChartData.push(dataPoint);
+    });
+
+    return { lineChartData, pieChartData, lineKeys: topGroups };
   };
 
   // Helper function to determine cost range bucket
@@ -275,59 +254,21 @@ const Statistics: React.FC = () => {
 
   const [lineChartData, setLineChartData] = useState<LineDataPoint[]>([]);
   const [lineKeys, setLineKeys] = useState<string[]>([]);
-
-  // Update line chart data when filters or grouping changes
-  useEffect(() => {
-    const filteredExpenses = getFilteredExpenses();
-    const data = prepareLineGraphData(filteredExpenses, selectedGroupBy, selectedSortBy);
-    setLineChartData(data);
-
-    // Extract keys for the line series (excluding the date key)
-    if (data.length > 0) {
-      const keys = Object.keys(data[0]).filter(key => key !== 'date');
-      setLineKeys(keys);
-    } else {
-      setLineKeys([]);
-    }
-  }, [expenses, timeRange, selectedGroupBy, selectedSortBy]);
-
   const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
 
+  // Update chart data when filters or grouping changes
   useEffect(() => {
-    if (selectedGroupBy !== 'days') {
-      const filteredExpenses = getFilteredExpenses();
-      const groupData: { [key: string]: number } = {};
+    const filteredExpenses = getFilteredExpenses();
+    const { lineChartData, pieChartData, lineKeys } = prepareChartData(
+      filteredExpenses,
+      selectedGroupBy,
+      selectedSortBy
+    );
 
-      filteredExpenses.forEach(expense => {
-        let groupKey: string;
-        if (selectedGroupBy === 'vendor') {
-          groupKey = expense.vendor;
-        } else if (selectedGroupBy === 'tags') {
-          groupKey = expense.tag || 'Untagged';
-        } else {
-          groupKey = getCostRange(expense.cost);
-        }
-
-        if (selectedGroupBy === 'tags' && groupKey === 'Untagged') {
-          return; // Skip untagged data when grouping by tags
-        }
-
-        if (!groupData[groupKey]) {
-          groupData[groupKey] = 0;
-        }
-        groupData[groupKey] += Number(expense.cost);
-      });
-
-      const sortedData = Object.entries(groupData)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 3); // Limit to top 3 elements
-
-      setPieChartData(sortedData);
-    } else {
-      setPieChartData([]);
-    }
-  }, [expenses, selectedGroupBy, timeRange]);
+    setLineChartData(lineChartData);
+    setPieChartData(pieChartData);
+    setLineKeys(lineKeys);
+  }, [expenses, timeRange, selectedGroupBy, selectedSortBy]);
 
   if (isLoading) {
     return <Loading/>;
