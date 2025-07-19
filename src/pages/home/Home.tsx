@@ -39,7 +39,7 @@ import {
   searchExpenses,
   SortByOption,
   sortByOptions
-} from './validations';
+} from '../../utility/validations';
 import './Home.scss';
 import MergeExpenses from './MergeExpenses';
 import AddExpense from './AddExpense';
