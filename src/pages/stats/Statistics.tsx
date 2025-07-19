@@ -10,13 +10,13 @@ import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
 import {
+  CalculationOption,
+  calculationOptions,
   DateRange,
   filterExpensesByDate,
   filterOptions,
   GroupByOption,
   groupByOptions,
-  SortByOption,
-  sortByOptions
 } from '../../utility/validations';
 import '../home/Home.scss';
 import './Statistics.scss';
@@ -91,16 +91,26 @@ const Statistics: React.FC = () => {
       return getAverageDailySpending();
     }
 
-    const totalAmount = filtered.reduce((sum, expense) => sum + Number(expense.cost), 0);
-
-    // Get all months in the filtered data
-    const uniqueMonths = new Set(filtered.map(expense => {
+    const expensesByMonth = new Map<string, number>();
+    filtered.forEach(expense => {
       const date = new Date(expense.date);
-      return `${date.getFullYear()}-${date.getMonth()}`;
-    }));
+      const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+      const currentTotal = expensesByMonth.get(monthKey) || 0;
+      expensesByMonth.set(monthKey, currentTotal + Number(expense.cost));
+    });
 
-    const avgAmount = totalAmount / Math.max(uniqueMonths.size, 1);
-    return avgAmount.toFixed(2);
+    const monthlyTotals = Array.from(expensesByMonth.values());
+
+    if (selectedCalculation === 'average') {
+      const totalAmount = monthlyTotals.reduce((sum, total) => sum + total, 0);
+      const avgAmount = totalAmount / Math.max(monthlyTotals.length, 1);
+      return avgAmount.toFixed(2);
+    } else { // median
+      const sortedTotals = [...monthlyTotals].sort((a, b) => a - b);
+      const mid = Math.floor(sortedTotals.length / 2);
+      const median = sortedTotals.length % 2 !== 0 ? sortedTotals[mid] : (sortedTotals[mid - 1] + sortedTotals[mid]) / 2;
+      return median.toFixed(2);
+    }
   };
 
   // Calculate average daily spending
@@ -108,13 +118,25 @@ const Statistics: React.FC = () => {
     const filtered = getFilteredExpenses();
     if (filtered.length === 0) return '0.00';
 
-    const totalAmount = filtered.reduce((sum, expense) => sum + Number(expense.cost), 0);
-    const uniqueDates = new Set(filtered.map(expense =>
-      new Date(expense.date).toLocaleDateString()
-    ));
+    const expensesByDay = new Map<string, number>();
+    filtered.forEach(expense => {
+      const dayKey = new Date(expense.date).toLocaleDateString();
+      const currentTotal = expensesByDay.get(dayKey) || 0;
+      expensesByDay.set(dayKey, currentTotal + Number(expense.cost));
+    });
 
-    const avgAmount = totalAmount / Math.max(uniqueDates.size, 1);
-    return avgAmount.toFixed(2);
+    const dailyTotals = Array.from(expensesByDay.values());
+
+    if (selectedCalculation === 'average') {
+      const totalAmount = dailyTotals.reduce((sum, total) => sum + total, 0);
+      const avgAmount = totalAmount / Math.max(dailyTotals.length, 1);
+      return avgAmount.toFixed(2);
+    } else { // median
+      const sortedTotals = [...dailyTotals].sort((a, b) => a - b);
+      const mid = Math.floor(sortedTotals.length / 2);
+      const median = sortedTotals.length % 2 !== 0 ? sortedTotals[mid] : (sortedTotals[mid - 1] + sortedTotals[mid]) / 2;
+      return median.toFixed(2);
+    }
   };
 
   const [showFilters, setShowFilters] = useState(false);
@@ -125,7 +147,7 @@ const Statistics: React.FC = () => {
   const groupByPanelRef = useRef<HTMLDivElement>(null);
   const groupByButtonRef = useRef<HTMLDivElement>(null);
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
-  const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>(null);
+  const [selectedCalculation, setSelectedCalculation] = useState<CalculationOption>('median');
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
@@ -147,24 +169,27 @@ const Statistics: React.FC = () => {
     setShowGroupByOptions(false);
   };
 
-  const handleSortByChange = (option: SortByOption) => {
-    setSelectedSortBy(option);
+  const handleCalculationChange = (option: CalculationOption) => {
+    setSelectedCalculation(option);
     setShowGroupByOptions(false);
   };
 
   const prepareChartData = (
     expenses: Expense[],
     groupBy: GroupByOption,
-    sortBy: SortByOption | null
+    calculation: CalculationOption
   ): {
     lineChartData: LineDataPoint[];
     pieChartData: { name: string; value: number }[];
     lineKeys: string[];
   } => {
+
+
     if (expenses.length === 0) {
       return {lineChartData: [], pieChartData: [], lineKeys: []};
     }
 
+    console.log("prepareChartData ", calculation);
     const expensesByDate = new Map<string, Expense[]>();
     expenses.forEach(expense => {
       const dateStr = new Date(expense.date).toLocaleDateString('en-US', {
@@ -208,26 +233,26 @@ const Statistics: React.FC = () => {
       return '';
     };
 
-    const groupSpend = new Map<string, number>();
-    const groupCount = new Map<string, number>();
+    const groupMetrics = new Map<string, number[]>();
 
     expenses.forEach(expense => {
       const groupKey = getGroupKey(expense);
       if (groupKey) {
-        groupSpend.set(groupKey, (groupSpend.get(groupKey) || 0) + Number(expense.cost));
-        groupCount.set(groupKey, (groupCount.get(groupKey) || 0) + 1);
+        if (!groupMetrics.has(groupKey)) {
+          groupMetrics.set(groupKey, []);
+        }
+        groupMetrics.get(groupKey)!.push(Number(expense.cost));
       }
     });
 
-    let uniqueGroups = Array.from(groupSpend.keys());
+    let uniqueGroups = Array.from(groupMetrics.keys());
 
-    if (sortBy === 'cost') {
-      uniqueGroups.sort((a, b) => (groupSpend.get(b) || 0) - (groupSpend.get(a) || 0));
-    } else if (sortBy === 'count') {
-      uniqueGroups.sort((a, b) => (groupCount.get(b) || 0) - (groupCount.get(a) || 0));
-    } else {
-      uniqueGroups.sort((a, b) => (groupSpend.get(b) || 0) - (groupSpend.get(a) || 0));
-    }
+    // Sort groups by total spend (default)
+    uniqueGroups.sort((a, b) => {
+      const totalA = groupMetrics.get(a)!.reduce((sum, val) => sum + val, 0);
+      const totalB = groupMetrics.get(b)!.reduce((sum, val) => sum + val, 0);
+      return totalB - totalA;
+    });
 
     if (groupBy === 'tags') {
       uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
@@ -235,33 +260,53 @@ const Statistics: React.FC = () => {
 
     const topGroups = uniqueGroups.slice(0, 3);
 
-    const pieChartData = topGroups.map(group => ({
-      name: group,
-      value: groupSpend.get(group) || 0,
-    }));
+    const pieChartData = topGroups.map(group => {
+      const values = groupMetrics.get(group) || [0];
+      const totalValue = values.reduce((sum, val) => sum + val, 0);
+      return {
+        name: group,
+        value: totalValue,
+      };
+    });
 
     const lineChartData: LineDataPoint[] = [];
     const dates = Array.from(expensesByDate.keys()).sort(
       (a, b) => new Date(a).getTime() - new Date(b).getTime()
     );
 
-    dates.forEach(date => {
+    const newLineChartData = dates.map((date, index) => {
       const dataPoint: LineDataPoint = {date};
-      const dateExpenses = expensesByDate.get(date) || [];
 
       topGroups.forEach(group => {
-        let groupSum = 0;
-        dateExpenses.forEach(expense => {
-          if (getGroupKey(expense) === group) {
-            groupSum += Number(expense.cost);
-          }
+        // Get data for the last 7 days for rolling calculation
+        const rollingDates = dates.slice(Math.max(0, index - 6), index + 1);
+        const groupValues: number[] = [];
+
+        rollingDates.forEach(rollingDate => {
+          const dateExpenses = expensesByDate.get(rollingDate) || [];
+          dateExpenses.forEach(expense => {
+            if (getGroupKey(expense) === group) {
+              groupValues.push(Number(expense.cost));
+            }
+          });
         });
-        dataPoint[group] = groupSum;
+
+        if (groupValues.length > 0) {
+          if (calculation === 'average') {
+            dataPoint[group] = groupValues.reduce((sum, val) => sum + val, 0) / groupValues.length;
+          } else { // median
+            const sortedValues = [...groupValues].sort((a, b) => a - b);
+            const mid = Math.floor(sortedValues.length / 2);
+            dataPoint[group] = sortedValues.length % 2 !== 0 ? sortedValues[mid] : (sortedValues[mid - 1] + sortedValues[mid]) / 2;
+          }
+        } else {
+          dataPoint[group] = 0;
+        }
       });
-      lineChartData.push(dataPoint);
+      return dataPoint;
     });
 
-    return {lineChartData, pieChartData, lineKeys: topGroups};
+    return {lineChartData: newLineChartData, pieChartData, lineKeys: topGroups};
   };
 
   // Helper function to determine cost range bucket
@@ -282,13 +327,13 @@ const Statistics: React.FC = () => {
     const {lineChartData, pieChartData, lineKeys} = prepareChartData(
       filteredExpenses,
       selectedGroupBy,
-      selectedSortBy
+      selectedCalculation
     );
 
     setLineChartData(lineChartData);
     setPieChartData(pieChartData);
     setLineKeys(lineKeys);
-  }, [expenses, timeRange, selectedGroupBy, selectedSortBy]);
+  }, [expenses, timeRange, selectedGroupBy, selectedCalculation]);
 
   if (isLoading) {
     return <Loading/>;
@@ -526,9 +571,9 @@ const Statistics: React.FC = () => {
         show={showGroupByOptions}
         onClose={() => setShowGroupByOptions(false)}
         selectedGroupBy={selectedGroupBy}
-        selectedSortBy={selectedSortBy}
+        selectedCalculation={selectedCalculation}
         onGroupByChange={handleGroupByChange}
-        onSortByChange={handleSortByChange}
+        onCalculationChange={handleCalculationChange}
         panelRef={groupByPanelRef}
       />
 
@@ -576,11 +621,11 @@ const GroupByPanel: React.FC<{
   show: boolean;
   onClose: () => void;
   selectedGroupBy: GroupByOption;
-  selectedSortBy: SortByOption;
+  selectedCalculation: CalculationOption;
   onGroupByChange: (o: GroupByOption) => void;
-  onSortByChange: (o: SortByOption) => void;
+  onCalculationChange: (o: CalculationOption) => void;
   panelRef: React.RefObject<HTMLDivElement>;
-}> = ({show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef}) => {
+}> = ({show, onClose, selectedGroupBy, selectedCalculation, onGroupByChange, onCalculationChange, panelRef}) => {
   if (!show) return null;
   return (
     <div className="group-by-panel" ref={panelRef}>
@@ -606,15 +651,15 @@ const GroupByPanel: React.FC<{
         </div>
       </div>
       <div className="panel-section">
-        <div className="section-title">Sort by</div>
-        <div className="sort-by-options">
-          {sortByOptions.map(option => (
+        <div className="section-title">Calculation</div>
+        <div className="calculation-options">
+          {calculationOptions.map(option => (
             <Chip
               key={option.id}
               label={option.label}
               color="primary"
-              variant={selectedSortBy === option.id ? "filled" : "outlined"}
-              onClick={() => onSortByChange(option.id)}
+              variant={selectedCalculation === option.id ? "filled" : "outlined"}
+              onClick={() => onCalculationChange(option.id)}
               className="filter-chip"
             />
           ))}

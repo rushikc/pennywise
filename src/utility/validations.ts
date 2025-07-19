@@ -11,6 +11,8 @@ export type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 
 export type SortByOption = 'cost' | 'count' | 'date' | null;
 
+export type CalculationOption = 'average' | 'median' ;
+
 
 export const loadInitialAppData =  () => {
 
@@ -55,14 +57,20 @@ export const filterOptions: { id: DateRange, label: string }[] = [
 export const groupByOptions: { id: GroupByOption, label: string }[] = [
   {id: 'days', label: 'Days'},
   {id: 'vendor', label: 'Vendor'},
-  {id: 'cost', label: 'Cost'},
   {id: 'tags', label: 'Tags'},
+  {id: 'cost', label: 'Cost'},
 ];
 
 // Define sort by options
 export const sortByOptions: { id: SortByOption, label: string }[] = [
   {id: 'cost', label: 'Total Cost'},
   {id: 'count', label: 'Expenses Count'},
+];
+
+// Define sort by options
+export const calculationOptions: { id: CalculationOption, label: string }[] = [
+  {id: 'average', label: 'Average'},
+  {id: 'median', label: 'Median'},
 ];
 
 // Interface for grouped expenses
