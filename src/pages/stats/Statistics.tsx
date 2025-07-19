@@ -27,8 +27,12 @@ import { PieChart, Pie, Cell } from 'recharts';
 // Interface for line graph data
 interface LineDataPoint {
   date: string;
-  [key: string]: string | number;
+  [key:string]: string | number;
 }
+
+const truncate = (str: string, n: number) => {
+  return str.length > n ? str.slice(0, n - 1) + '...' : str;
+};
 
 // Statistics component
 const Statistics: React.FC = () => {
@@ -378,7 +382,7 @@ const Statistics: React.FC = () => {
             <Typography variant="subtitle2" className="chart-title">
               Spending Trends
             </Typography>
-            <ResponsiveContainer width="100%" height="90%">
+            <ResponsiveContainer width="100%" height="95%">
               <LineChart
                 data={lineChartData}
                 margin={{top: 5, right: 20, left: 0, bottom: 5}}
@@ -404,9 +408,9 @@ const Statistics: React.FC = () => {
                   }}
                 />
                 <Legend
-                  verticalAlign="top"
-                  height={36}
-                  wrapperStyle={{fontSize: '12px'}}
+                  verticalAlign="bottom"
+                  wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
+                  formatter={(value) => truncate(value, 20)}
                 />
                 {lineKeys.map((key, index) => (
                   <Line
@@ -438,7 +442,7 @@ const Statistics: React.FC = () => {
             <Typography variant="subtitle2" className="chart-title">
               Group Distribution
             </Typography>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={330}>
               <PieChart>
                 <Pie
                   data={pieChartData}
@@ -446,6 +450,7 @@ const Statistics: React.FC = () => {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
+                  style={{marginTop: 20}}
                   outerRadius={100}
                   fill={theme.palette.primary.main}
                   label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
@@ -458,9 +463,9 @@ const Statistics: React.FC = () => {
                   ))}
                 </Pie>
                 <Legend
-                  verticalAlign="top"
-                  height={36}
-                  wrapperStyle={{ fontSize: '12px' }}
+                  verticalAlign="bottom"
+                  wrapperStyle={{ fontSize: '12px', whiteSpace: 'normal'}}
+                  formatter={(value) => truncate(value, 20)}
                 />
               </PieChart>
             </ResponsiveContainer>
