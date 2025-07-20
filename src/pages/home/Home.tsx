@@ -23,9 +23,7 @@ import {
   mergeSaveExpense,
   selectExpense,
   setExpenseList,
-  setExpenseState,
-  setTagExpense,
-  setTagList
+  setTagExpense
 } from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
@@ -566,7 +564,7 @@ const Home: FC<any> = (): ReactElement => {
                   setShowAddExpenseDialog(true);
                 }}
               >
-                <AddIcon />
+                <AddIcon/>
               </Fab>
             </div>
 

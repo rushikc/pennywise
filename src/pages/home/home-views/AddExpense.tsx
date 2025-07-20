@@ -77,7 +77,9 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       onClose={onClose}
       maxWidth="xs"
       fullWidth
-      TransitionComponent={Zoom}
+      slots={{
+        transition: Zoom
+      }}
       transitionDuration={350}
     >
       <DialogContent className="tag-expense-dialog-content">
@@ -97,8 +99,10 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
               fullWidth
               variant="outlined"
               margin="normal"
-              InputProps={{
-                startAdornment: <span style={{marginRight: 8}}>₹</span>,
+              slotProps={{
+                input: {
+                  startAdornment: <span style={{marginRight: 8}}>₹</span>,
+                }
               }}
               autoFocus
             />

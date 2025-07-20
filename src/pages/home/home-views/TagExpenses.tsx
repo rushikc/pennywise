@@ -69,7 +69,9 @@ const TagExpenses: FC<any> = (): ReactElement => {
       onClose={hideTagExpense}
       maxWidth="xs"
       fullWidth
-      TransitionComponent={Zoom}
+      slots={{
+        transition: Zoom
+      }}
       transitionDuration={350}
     >
       <DialogContent className="tag-expense-dialog-content">
