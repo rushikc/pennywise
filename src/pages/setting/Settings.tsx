@@ -220,6 +220,19 @@ const Settings: React.FC = () => {
           {signOutError}
         </Alert>
       </Snackbar>
+
+      {/* Version display */}
+      <Paper
+        elevation={0}
+        className="version-display"
+      >
+        <Typography
+          variant="caption"
+          className="version-text"
+        >
+          PennyWise v1.0.0
+        </Typography>
+      </Paper>
     </Container>
   );
 };

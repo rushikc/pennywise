@@ -191,3 +191,24 @@
   margin: 0 16px;
 }
 
+// Version display styles
+.version-display {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 20px !important;
+  background-color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color);
+  opacity: 0.9;
+  box-shadow: var(--box-shadow) !important;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.version-text {
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
