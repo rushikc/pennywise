@@ -1,3 +1,17 @@
+/*
+Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details, or get a copy at
+<https://www.gnu.org/licenses/gpl-3.0.txt>.
+*/
+
 import {AppBar, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import React from "react";
 import {Navigate, Route, Routes, useLocation} from "react-router-dom";
@@ -7,7 +21,6 @@ import BottomNav from "./components/BottomNav";
 import ThemeManager from "./components/ThemeManager";
 import Home from "./pages/home/Home";
 import TagExpenses from "./pages/home/home-views/TagExpenses";
-import TagList from "./pages/unused/TagList";
 import Settings from "./pages/setting/Settings";
 import Insights from "./pages/insights/Insights";
 import Configuration from "./pages/setting/setting-views/Configuration";
@@ -92,7 +105,6 @@ function App() {
           <Route path='/home' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path='/profile' element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
           <Route path='/stats' element={<ProtectedRoute><Insights/></ProtectedRoute>}/>
-          <Route path='/tag' element={<ProtectedRoute><TagList/></ProtectedRoute>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
           <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>

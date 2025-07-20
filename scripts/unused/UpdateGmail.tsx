@@ -4,8 +4,8 @@ import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Paper from '@mui/material/Paper';
 import React, {FC, ReactElement, useState} from "react";
 import {Row} from "reactstrap";
-import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {getDateTimeSecFromISO} from "../../utility/utility";
+import {ExpenseAPI} from "../../src/api/ExpenseAPI";
+import {getDateTimeSecFromISO} from "../../src/utility/utility";
 
 // Define styles as objects instead of using styled API
 const itemStyles = {

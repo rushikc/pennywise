@@ -15,6 +15,7 @@
 </div>
 
 <p align="center">
+  <a href="#license">License</a> •
   <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#demo">Demo</a> •
@@ -24,10 +25,14 @@
   <a href="#getting-started">Getting Started</a> •
   <a href="#roadmap">Roadmap</a> •
   <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
 </p>
 
 ---
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
 
 ## Overview
 
@@ -315,9 +320,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Please ensure your code follows the project's and general coding standards.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
