@@ -490,7 +490,7 @@ const Insights: React.FC = () => {
             sx={{
               backgroundColor: theme.palette.primary.main,
               '&:hover': {
-                backgroundColor: theme.palette.secondary.dark,
+                backgroundColor: theme.palette.primary.dark,
               },
               borderRadius: 2,
               py: 1,

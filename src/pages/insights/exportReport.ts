@@ -17,6 +17,7 @@ import {utils, write} from "xlsx";
 import {saveAs} from "file-saver";
 import {filterOptions} from "../dataValidations";
 import {getCurrentDate} from "../../utility/utility";
+import {json2csv} from 'json-2-csv';
 
 /**
  * Export expense data as XLSX file
@@ -95,6 +96,52 @@ export const exportAsXLSX = (expenses: Expense[], timeRange: string): void => {
  * @param timeRange The selected time range for filtering
  */
 export const exportAsCSV = (expenses: Expense[], timeRange: string): void => {
-    // Implementation will be added later
-    console.log('Exporting as CSV', expenses.length, 'expenses for time range:', timeRange);
+    if (!expenses || expenses.length === 0) {
+        console.warn("No expense data to export");
+        return;
+    }
+
+    try {
+        // Format the expenses for CSV - converting dates and transforming data
+        const formattedExpenses = expenses.map(expense => ({
+            Date: new Date(expense.date).toLocaleDateString(),
+            Time: new Date(expense.date).toLocaleTimeString(),
+            Vendor: expense.vendor,
+            Amount: expense.cost,
+            Type: expense.costType,
+            PaymentMode: expense.type,
+            Tag: expense.tag || 'Untagged',
+        }));
+
+
+        // Convert JSON to CSV using the callback API
+        try {
+
+            const csv = json2csv(formattedExpenses, {
+                emptyFieldValue: ''
+            });
+
+            // Get date range label for the filename
+            const rangeLabel = filterOptions.find(opt => opt.id === timeRange)?.label || timeRange;
+
+            // Generate filename with current date and time
+            const dateStr = getCurrentDate('YYYYMMDD_HHmmss');
+            const filename = 'Pennywise_' +
+                `${rangeLabel}_range_${dateStr}.csv`
+                    .replace(' ', '')
+                    .toLowerCase();
+
+            // Trigger file download using file-saver
+            const dataBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            saveAs(dataBlob, filename);
+
+        } catch (error) {
+            console.error("Error exporting to CSV:", error);
+            alert("Failed to export CSV.");
+        }
+
+
+    } catch (error) {
+        console.error('Error exporting expenses as CSV:', error);
+    }
 };
