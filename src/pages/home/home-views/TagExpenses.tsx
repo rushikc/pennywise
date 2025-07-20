@@ -3,9 +3,9 @@ import './TagExpenses.scss';
 
 import Button from "@mui/material/Button";
 import {useSelector} from "react-redux";
-import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {hideTagExpense, selectExpense, setTagMap, updateExpense} from "../../store/expenseActions";
-import {getDateMonthTime, JSONCopy} from "../../utility/utility";
+import {ExpenseAPI} from "../../../api/ExpenseAPI";
+import {hideTagExpense, selectExpense, setTagMap, updateExpense} from "../../../store/expenseActions";
+import {getDateMonthTime, JSONCopy} from "../../../utility/utility";
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';

@@ -7,16 +7,16 @@ import { selectExpense } from '../store/expenseActions';
  * based on the darkMode setting in the Redux store
  */
 const ThemeManager = () => {
-  const { bankConfig } = useSelector(selectExpense);
+  const { appConfig } = useSelector(selectExpense);
 
   useEffect(() => {
     // Apply theme to the document element
-    if (bankConfig.darkMode) {
+    if (appConfig.darkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
     } else {
       document.documentElement.setAttribute('data-theme', 'light');
     }
-  }, [bankConfig.darkMode]);
+  }, [appConfig.darkMode]);
 
   return null; // This component doesn't render anything
 };

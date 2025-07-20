@@ -6,8 +6,7 @@ import './App.scss';
 import BottomNav from "./components/BottomNav";
 import ThemeManager from "./components/ThemeManager";
 import Home from "./pages/home/Home";
-import TagExpenses from "./pages/home/TagExpenses";
-import UpdateGmail from "./pages/UpdateGmail";
+import TagExpenses from "./pages/home/home-views/TagExpenses";
 import TagList from "./pages/unused/TagList";
 import Settings from "./pages/setting/Settings";
 import Insights from "./pages/insights/Insights";
@@ -59,7 +58,7 @@ function App() {
   FinanceIndexDB.initDB();
 
   // define theme1
-  const { bankConfig } = useSelector(selectExpense);
+  const { appConfig } = useSelector(selectExpense);
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
@@ -73,7 +72,7 @@ function App() {
   });
 
   // Use the appropriate theme based on bankConfig.darkMode
-  const theme = bankConfig.darkMode ? darkTheme : lightTheme;
+  const theme = appConfig.darkMode ? darkTheme : lightTheme;
 
 
 
@@ -93,7 +92,6 @@ function App() {
           <Route path='/profile' element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
           <Route path='/stats' element={<ProtectedRoute><Insights/></ProtectedRoute>}/>
           <Route path='/tag' element={<ProtectedRoute><TagList/></ProtectedRoute>}/>
-          <Route path='/Update' element={<ProtectedRoute><UpdateGmail/></ProtectedRoute>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
           <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>

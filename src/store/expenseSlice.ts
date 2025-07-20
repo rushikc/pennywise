@@ -9,6 +9,9 @@ interface InitialState {
     expense: Expense | null,
     vendorTagList: VendorTag[],
     bankConfig: BankConfig,
+    appConfig: {
+        darkMode: boolean
+    },
     isAppLoading: boolean,
     isTagModal: boolean,
     tagList: string[],
@@ -19,9 +22,11 @@ const initialState: InitialState = {
     expense: null,
     vendorTagList: [],
     isAppLoading: true,
+    appConfig: {
+        darkMode: false
+    },
     bankConfig: {
         enableUpi: false,
-        darkMode: false,
         creditCards: [],
     },
     isTagModal: false,
@@ -44,10 +49,6 @@ export const expenseSlice = createSlice({
             state.isTagModal = true;
         },
 
-        addTagExpense: (state, action: PayloadAction<Expense>) => {
-            state.expense = action.payload;
-            state.isTagModal = true;
-        },
 
         setTagMap: (state, action: PayloadAction<VendorTag>) => {
             const tagObj = action.payload;
@@ -88,10 +89,10 @@ export const expenseSlice = createSlice({
             state.isTagModal = false;
         },
 
-        setExpenseState: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] , bankConfig: BankConfig}>) => {
+        setExpenseState: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] , darkMode: boolean}>) => {
             state.expenseList = action.payload.expenseList;
             state.vendorTagList = action.payload.vendorTagList;
-            state.bankConfig = action.payload.bankConfig;
+            state.appConfig.darkMode = action.payload.darkMode;
             state.isAppLoading = false;
         },
 
@@ -126,9 +127,7 @@ export const expenseSlice = createSlice({
         },
 
         toggleDarkMode: (state) => {
-            state.bankConfig.darkMode = !state.bankConfig.darkMode;
-            // Optionally save the setting to persistent storage
-            void ExpenseAPI.updateBankConfig(state.bankConfig);
+            state.appConfig.darkMode = !state.appConfig.darkMode;
         },
     }
 })

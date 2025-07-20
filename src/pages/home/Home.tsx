@@ -41,8 +41,8 @@ import {
   sortByOptions
 } from '../../utility/validations';
 import './Home.scss';
-import MergeExpenses from './MergeExpenses';
-import AddExpense from './AddExpense';
+import MergeExpenses from './home-views/MergeExpenses';
+import AddExpense from './home-views/AddExpense';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 import {CreditCard, Sort} from "@mui/icons-material";
 import Container from "@mui/material/Container";

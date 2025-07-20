@@ -2,9 +2,9 @@ import {FC, ReactElement, useEffect, useState} from "react";
 import './TagExpenses.scss';
 import Button from "@mui/material/Button";
 import {useSelector} from "react-redux";
-import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {selectExpense, updateExpense} from "../../store/expenseActions";
-import {getDateMonthTime} from "../../utility/utility";
+import {ExpenseAPI} from "../../../api/ExpenseAPI";
+import {selectExpense, updateExpense} from "../../../store/expenseActions";
+import {getDateMonthTime} from "../../../utility/utility";
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -14,7 +14,7 @@ import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import TextField from '@mui/material/TextField';
-import {Expense} from "../../Types";
+import {Expense} from "../../../Types";
 import {v4 as uuidv4} from 'uuid';
 
 

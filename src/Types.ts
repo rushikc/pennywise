@@ -29,7 +29,6 @@ export type TagList = string[];
 
 export interface BankConfig {
     enableUpi: boolean;
-    darkMode: boolean;
     creditCards: string[];
 }
 

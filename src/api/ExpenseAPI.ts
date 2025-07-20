@@ -1,5 +1,5 @@
 import {initializeApp} from 'firebase/app';
-import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, where} from 'firebase/firestore/lite';
+import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {getFirebaseConfig} from '../firebase/firebase-public';
 import {getDateJsIdFormat, getUnixTimestamp} from "../utility/utility";
@@ -225,7 +225,6 @@ export class ExpenseAPI {
             if (!bankConfig) {
                 return {
                     enableUpi: false,
-                    darkMode: false,
                     creditCards: []
                 };
             }
@@ -238,7 +237,6 @@ export class ExpenseAPI {
             return {
                 enableUpi: false,
                 creditCards: [],
-                darkMode: false
             };
         }
     }
@@ -247,6 +245,38 @@ export class ExpenseAPI {
         try {
             await ExpenseAPI.setOneDoc('bank', config, 'config');
             console.log('Updated bank config:', config);
+            return true;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error updating bank config:", e);
+            return false;
+        }
+    }
+
+    static getDarkModeConfig = async (): Promise<boolean> => {
+
+        try {
+            const darkModeConfig: any = await ExpenseAPI.getOneDoc('darkMode', 'config');
+            // Return default config if not found
+            if (!darkModeConfig) {
+                return false; // Default to light mode
+            }
+            console.log('Retrieved dark mode config:', darkModeConfig);
+            return darkModeConfig.value;
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error getting dark mode config:", e);
+            return false; // Default to light mode on error
+        }
+    }
+
+    static updateDarkMode = async (val: boolean) => {
+        try {
+            const config = {
+                value: val,
+            }
+            await ExpenseAPI.setOneDoc('darkMode', config, 'config');
+            console.log('Updated darkMode config:', config);
             return true;
         } catch (e) {
             ErrorHandlers.handleApiError(e);

@@ -21,19 +21,19 @@ export const loadInitialAppData =  () => {
     const vendorTagApi = ExpenseAPI.getVendorTagList();
     const expenseApi = ExpenseAPI.getExpenseList();
     const tagListApi = ExpenseAPI.getTagList();
-    const bankConfigApi = ExpenseAPI.getBankConfig();
+    const darkModeApi = ExpenseAPI.getDarkModeConfig();
 
-    Promise.all([vendorTagApi, expenseApi, tagListApi, bankConfigApi]).then((res) => {
+    Promise.all([vendorTagApi, expenseApi, tagListApi, darkModeApi]).then((res) => {
 
         const vendorTagResult = res[0];
         const expenseResult = res[1];
         const tagList = res[2];
-        const bankConfig = res[3];
+        const darkMode = res[3];
         const expenseList = sortByKeyDate(expenseResult, 'date');
 
         console.log('Vendor Tag Result:', vendorTagResult);
         console.log('Expense List:', expenseList);
-        setExpenseState(expenseList, vendorTagResult, bankConfig);
+        setExpenseState(expenseList, vendorTagResult, darkMode);
         setTagList(tagList);
 
     }).catch((res1) => alert(res1))
@@ -216,36 +216,4 @@ export const groupExpenses = (
   });
 
   return grouped;
-};
-
-// Sort grouped expenses
-export const sortGroupedExpenses = (
-  groupedExpenses: GroupedExpenses,
-  selectedGroupBy: GroupByOption,
-  selectedSortBy: SortByOption
-): [string, GroupedExpenses[string]][] => {
-  return Object.entries(groupedExpenses)
-    .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
-      if (selectedGroupBy === 'days' &&
-          (selectedSortBy === 'date' || selectedSortBy == null))
-        return keyB.localeCompare(keyA);
-
-      return selectedSortBy === "cost" ?
-        groupDataB.totalAmount - groupDataA.totalAmount :
-        groupDataB.expenses.length - groupDataA.expenses.length;
-    });
-};
-
-// Initialize collapsed groups state
-export const initializeCollapsedGroups = (
-  groupedExpenses: GroupedExpenses,
-  selectedGroupBy: GroupByOption
-): { [groupKey: string]: boolean } => {
-  const collapsedGroups: { [groupKey: string]: boolean } = {};
-
-  Object.keys(groupedExpenses).forEach(key => {
-    collapsedGroups[key] = selectedGroupBy !== 'days';
-  });
-
-  return collapsedGroups;
 };

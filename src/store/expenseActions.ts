@@ -1,6 +1,6 @@
 import {expenseSlice} from "./expenseSlice";
 import {RootState, store} from "./store";
-import {BankConfig, Expense, VendorTag} from "../Types";
+import {Expense, VendorTag} from "../Types";
 
 
 export const selectExpense = (state: RootState) => state.expense;
@@ -10,10 +10,10 @@ export const setTagExpense = (expense: Expense) => store.dispatch(expenseSlice.a
 export const setTagMap = (tag: VendorTag) => store.dispatch(expenseSlice.actions.setTagMap(tag));
 export const updateExpense = (expense: Expense) => store.dispatch(expenseSlice.actions.updateExpense(expense));
 export const hideTagExpense = () => store.dispatch(expenseSlice.actions.hideTagExpense());
-export const setExpenseState = (expenseList: Expense[], vendorTagList: VendorTag[], bankConfig: BankConfig) => store.dispatch(expenseSlice.actions.setExpenseState({
+export const setExpenseState = (expenseList: Expense[], vendorTagList: VendorTag[], darkMode: boolean) => store.dispatch(expenseSlice.actions.setExpenseState({
     expenseList,
     vendorTagList,
-    bankConfig
+    darkMode
 }));
 
 export const setTagList = (tags: string[]) => store.dispatch(expenseSlice.actions.setTagList(tags));

@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import { Card, CardContent, Typography, Box, IconButton, CircularProgress } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
-import TagExpenses from "../home/TagExpenses";
+import TagExpenses from "../home/home-views/TagExpenses";
 
 // Define filter options
 type FilterOption = 'all' | 'untagged';

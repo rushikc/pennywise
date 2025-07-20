@@ -36,7 +36,7 @@ const Configuration: React.FC = () => {
   const navigate = useNavigate();
 
   // State for bank configuration
-  const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: [], darkMode: false});
+  const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: []});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 

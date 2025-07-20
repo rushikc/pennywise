@@ -17,7 +17,6 @@ import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
-import {BankConfig} from "../../Types";
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 
 /**
@@ -25,7 +24,7 @@ import {ExpenseAPI} from "../../api/ExpenseAPI";
  */
 const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const {bankConfig} = useSelector(selectExpense);
+  const {appConfig} = useSelector(selectExpense);
   const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
@@ -72,8 +71,8 @@ const Settings: React.FC = () => {
     },
     {
       id: 'theme',
-      title: `${bankConfig.darkMode ? 'Light' : 'Dark'} Theme`,
-      subtitle: `Switch to ${bankConfig.darkMode ? 'light' : 'dark'} mode`,
+      title: `${appConfig.darkMode ? 'Light' : 'Dark'} Theme`,
+      subtitle: `Switch to ${appConfig.darkMode ? 'light' : 'dark'} mode`,
       icon: <ThemeIcon/>,
       route: '/toggle-theme',
       color: '#9c27b0'
@@ -106,13 +105,8 @@ const Settings: React.FC = () => {
 
   // Handle theme toggle
   const toggleTheme = async () => {
-    const updatedConfig: BankConfig = {
-      ...bankConfig,
-      darkMode: !bankConfig.darkMode
-    };
-
     try {
-      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      const success = await ExpenseAPI.updateDarkMode(!appConfig.darkMode);
       if (success) {
         toggleDarkMode();
       } else {
