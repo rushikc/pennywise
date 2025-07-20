@@ -1,7 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {User} from 'firebase/auth';
 import {AuthService} from "./AuthService";
-import {FinanceIndexDB} from "../../api/FinanceIndexDB";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -20,7 +19,7 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
