@@ -31,7 +31,7 @@ import Login from "./pages/login/Login";
 import {AuthProvider, useAuth} from "./pages/login/AuthContext";
 import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
 import ReloadExpense from "./pages/setting/setting-views/ReloadExpense";
-import {loadInitialAppData} from "./utility/validations";
+import {loadInitialAppData} from "./pages/dataValidations";
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {

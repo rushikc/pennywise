@@ -37,8 +37,8 @@ export const getUnixTimestamp = (date: Date | string) => {
     return dayjs(date).unix() * 1000;
 }
 
-export const getCurrentDate = () => {
-    return dayjs().format('DD-MM-YY');
+export const getCurrentDate = (format: string = 'YYYY-MM-DD') => {
+    return dayjs().format(format);
 }
 
 export const getDateFormat = (date: Dayjs) => {

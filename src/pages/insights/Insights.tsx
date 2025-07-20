@@ -13,12 +13,13 @@ GNU General Public License for more details, or get a copy at
 */
 
 import React, {useEffect, useRef, useState} from 'react';
-import {Box, Chip, Container, IconButton, Paper, Stack, Typography, useTheme} from '@mui/material';
+import {Box, Chip, Container, IconButton, Paper, Stack, Typography, useTheme, Button} from '@mui/material';
 import {motion} from 'framer-motion';
-import {TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
+import {FileDownload, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
+import {exportAsXLSX, exportAsCSV} from './exportReport';
 
 import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -31,7 +32,7 @@ import {
   filterOptions,
   GroupByOption,
   groupByOptions,
-} from '../../utility/validations';
+} from '../dataValidations';
 import '../home/Home.scss';
 import './Insights.scss';
 import {Expense} from "../../Types";
@@ -446,6 +447,57 @@ const Insights: React.FC = () => {
               </Typography>
             </Box>
           </Paper>
+        </motion.div>
+      </Stack>
+
+      {/* Export Buttons Row */}
+      <Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
+        <motion.div
+          initial={{opacity: 0, y: 20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.3, delay: 0.3}}
+          style={{flex: 1}}
+        >
+          <Button
+            variant="contained"
+            fullWidth
+            startIcon={<FileDownload />}
+            onClick={() => exportAsXLSX(getFilteredExpenses(), timeRange)}
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+              borderRadius: 2,
+              py: 1,
+            }}
+          >
+            Export XLSX
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{opacity: 0, y: 20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.3, delay: 0.4}}
+          style={{flex: 1}}
+        >
+          <Button
+            variant="contained"
+            fullWidth
+            startIcon={<FileDownload />}
+            onClick={() => exportAsCSV(getFilteredExpenses(), timeRange)}
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: theme.palette.secondary.dark,
+              },
+              borderRadius: 2,
+              py: 1,
+            }}
+          >
+            Export CSV
+          </Button>
         </motion.div>
       </Stack>
 

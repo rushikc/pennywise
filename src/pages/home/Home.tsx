@@ -51,7 +51,7 @@ import {
   searchExpenses,
   SortByOption,
   sortByOptions
-} from '../../utility/validations';
+} from '../dataValidations';
 import './Home.scss';
 import MergeExpenses from './home-views/MergeExpenses';
 import AddExpense from './home-views/AddExpense';

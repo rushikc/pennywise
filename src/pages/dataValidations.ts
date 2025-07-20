@@ -1,11 +1,11 @@
 import { Expense } from '../Types';
 import dayjs from 'dayjs';
-import {getDateMonth, sortByKeyDate} from "./utility";
+import {getDateMonth, sortByKeyDate} from "../utility/utility";
 import {ExpenseAPI} from "../api/ExpenseAPI";
 import {setExpenseState, setTagList} from "../store/expenseActions";
 
 // Define date range options
-export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d';
+export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d' | '1800d';
 
 export type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 /*
@@ -64,6 +64,7 @@ export const filterOptions: { id: DateRange, label: string }[] = [
   {id: '180d', label: '6 Month'},
   {id: '366d', label: '1 year'},
   {id: '732d', label: '2 year'},
+  {id: '1800d', label: 'All Time'}
 ];
 
 // Define group by options
@@ -120,6 +121,9 @@ export const filterExpensesByDate = (
     case '30d':
       startDate = now.subtract(30, 'day');
       break;
+    case '60d':
+      startDate = now.subtract(60, 'day');
+      break;
     case '90d':
       startDate = now.subtract(90, 'day');
       break;
@@ -128,6 +132,12 @@ export const filterExpensesByDate = (
       break;
     case '366d':
       startDate = now.subtract(366, 'day');
+      break;
+    case '732d':
+      startDate = now.subtract(732, 'day');
+      break;
+    case '1800d':
+      startDate = now.subtract(1800, 'day');
       break;
     default:
       startDate = now.subtract(7, 'day');
