@@ -1,28 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  Divider,
-  IconButton,
-  Paper,
-  Stack,
-  Typography
-} from '@mui/material';
+import {Box, Button, CircularProgress, Container, IconButton, Paper, Stack, Typography} from '@mui/material';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
 import {ExpenseAPI} from "../../../api/ExpenseAPI";
 import {getUnixTimestamp} from "../../../utility/utility";
-
-interface ReloadExpenseProps {
-  open: boolean;
-  onClose: () => void;
-}
+import {useNavigate} from 'react-router-dom';
+import './settingViews.scss';
 
 const PAPER_STYLES = {
   p: 2,
@@ -46,7 +32,8 @@ const DATE_PICKER_STYLES = {
  * ReloadExpense component allows users to reload expense data
  * either for a specific date or all expenses.
  */
-const ReloadExpense: React.FC<ReloadExpenseProps> = ({open, onClose}) => {
+const ReloadExpense: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -55,12 +42,10 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({open, onClose}) => {
     if (success) {
       const timer = setTimeout(() => {
         setSuccess(false);
-        onClose();
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [success, onClose]);
-
+  }, [success]);
 
   const handleReloadAll = async () => {
     setLoading(true);
@@ -70,7 +55,6 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({open, onClose}) => {
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload all expenses:", error);
-      onClose();
     } finally {
       setLoading(false);
     }
@@ -86,25 +70,10 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({open, onClose}) => {
       setSuccess(true);
     } catch (error) {
       console.error("Failed to reload expenses for selected date:", error);
-      onClose();
     } finally {
       setLoading(false);
     }
   };
-
-  const DialogHeader = () => (
-    <>
-      <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2}}>
-        <Typography variant="h6" component="div">
-          Reload Expenses
-        </Typography>
-        <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
-          <CloseIcon/>
-        </IconButton>
-      </Box>
-      <Divider/>
-    </>
-  );
 
   const DateSpecificSection = () => (
     <Paper elevation={0} sx={PAPER_STYLES}>
@@ -186,16 +155,24 @@ const ReloadExpense: React.FC<ReloadExpenseProps> = ({open, onClose}) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogHeader/>
-      <DialogContent>
-        <Stack spacing={3}>
-          <DateSpecificSection/>
-          <ReloadAllSection/>
-          <SuccessMessage/>
-        </Stack>
-      </DialogContent>
-    </Dialog>
+    <Container className="config-container" maxWidth="sm">
+      <Box className="config-header">
+        <IconButton
+          onClick={() => navigate('/profile')}
+          className="back-button"
+        >
+          <ArrowBackIcon/>
+        </IconButton>
+        <Typography variant="h5" fontWeight="bold">
+          Reload Expenses
+        </Typography>
+      </Box>
+      <Stack spacing={3}>
+        <DateSpecificSection/>
+        <ReloadAllSection/>
+        <SuccessMessage/>
+      </Stack>
+    </Container>
   );
 };
 

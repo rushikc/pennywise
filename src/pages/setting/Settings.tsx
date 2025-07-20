@@ -11,7 +11,6 @@ import {
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import './settings.scss';
-import ReloadExpense from './setting-views/ReloadExpense';
 import {useAuth} from '../../hooks/useAuth';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
@@ -25,7 +24,6 @@ import {ExpenseAPI} from "../../api/ExpenseAPI";
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const {appConfig} = useSelector(selectExpense);
-  const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
 
@@ -82,7 +80,7 @@ const Settings: React.FC = () => {
       title: 'Reload Expense',
       subtitle: 'Reload your expense data',
       icon: <ReloadIcon/>,
-      route: '/reload',
+      route: '/reload-expense',
       color: '#ffa726'
     },
     {
@@ -118,8 +116,8 @@ const Settings: React.FC = () => {
   };
 
   const handleTileClick = (route: string) => {
-    if (route === '/reload') {
-      setReloadExpenseModalOpen(true);
+    if (route === '/reload-expense') {
+      navigate('/reload-expense');
       return;
     }
 
@@ -200,10 +198,6 @@ const Settings: React.FC = () => {
         ))}
       </motion.div>
 
-      <ReloadExpense
-        open={reloadExpenseModalOpen}
-        onClose={() => setReloadExpenseModalOpen(false)}
-      />
 
       {/* Sign out progress and error handling */}
       <Snackbar

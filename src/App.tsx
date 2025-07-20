@@ -17,6 +17,7 @@ import {useSelector} from "react-redux";
 import Login from "./pages/login/Login";
 import {AuthProvider, useAuth} from "./pages/login/AuthContext";
 import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
+import ReloadExpense from "./pages/setting/setting-views/ReloadExpense";
 import {loadInitialAppData} from "./utility/validations";
 
 // Protected route component
@@ -95,6 +96,7 @@ function App() {
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
           <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>
+          <Route path='/reload-expense' element={<ProtectedRoute><ReloadExpense/></ProtectedRoute>}/>
           <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         </Routes>
         <ThemeManager/>
