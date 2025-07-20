@@ -93,13 +93,10 @@ const ManageTags: React.FC = () => {
           <BackIcon/>
         </IconButton>
         <Typography variant="h5" fontWeight="bold">
-          Configuration
+          Manage Tags
         </Typography>
       </Box>
       <Paper elevation={3} className="manage-tags-paper">
-        <Typography variant="h5" className="manage-tags-title">
-          Manage Tags
-        </Typography>
 
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="tags">

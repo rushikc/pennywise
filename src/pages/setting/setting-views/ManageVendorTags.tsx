@@ -160,14 +160,10 @@ const ManageVendorTags: React.FC = () => {
           <BackIcon/>
         </IconButton>
         <Typography variant="h5" fontWeight="bold">
-          Configuration
+          Manage Vendor Tags
         </Typography>
       </Box>
       <Paper elevation={3} className="manage-tags-paper">
-        <Typography variant="h5" className="manage-tags-title">
-          Manage Vendor Tags
-        </Typography>
-
 
         <div>
           <TextField

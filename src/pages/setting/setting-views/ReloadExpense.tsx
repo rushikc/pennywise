@@ -10,24 +10,6 @@ import {getUnixTimestamp} from "../../../utility/utility";
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
-const PAPER_STYLES = {
-  p: 2,
-  bgcolor: '#324e656b',
-  color: '#fff',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  borderRadius: 2
-};
-
-const DATE_PICKER_STYLES = {
-  '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    '& fieldset': {borderColor: 'rgba(255, 255, 255, 0.23)'},
-    '&:hover fieldset': {borderColor: 'rgba(255, 255, 255, 0.5)'},
-  },
-  '& .MuiInputLabel-root, & .MuiOutlinedInput-input': {color: 'rgba(255, 255, 255, 0.9)'},
-  '& .MuiSvgIcon-root': {color: 'rgba(255, 255, 255, 0.7)'}
-};
-
 /**
  * ReloadExpense component allows users to reload expense data
  * either for a specific date or all expenses.
@@ -42,7 +24,7 @@ const ReloadExpense: React.FC = () => {
     if (success) {
       const timer = setTimeout(() => {
         setSuccess(false);
-      }, 1500);
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, [success]);
@@ -76,17 +58,11 @@ const ReloadExpense: React.FC = () => {
   };
 
   const DateSpecificSection = () => (
-    <Paper elevation={0} sx={PAPER_STYLES}>
-      <Typography variant="subtitle1" gutterBottom fontWeight="medium" sx={{color: '#fff'}}>
+    <Paper elevation={0} className="reload-section-paper">
+      <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
         Reload Expenses by Date
       </Typography>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: {xs: 'column', sm: 'row'},
-        alignItems: {xs: 'stretch', sm: 'center'},
-        gap: 2,
-        mt: 1
-      }}>
+      <Box className="date-reload-container">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Select Date"
@@ -96,7 +72,7 @@ const ReloadExpense: React.FC = () => {
               textField: {
                 fullWidth: true,
                 size: "small",
-                sx: DATE_PICKER_STYLES
+                className: "reload-date-picker"
               }
             }}
           />
@@ -106,7 +82,7 @@ const ReloadExpense: React.FC = () => {
           color="primary"
           variant="contained"
           disabled={loading || !selectedDate}
-          sx={{minWidth: '220px', height: '40px'}}
+          className="reload-button"
         >
           {loading ?
             <CircularProgress size={24}/> :
@@ -118,21 +94,20 @@ const ReloadExpense: React.FC = () => {
   );
 
   const ReloadAllSection = () => (
-    <Paper elevation={0} sx={PAPER_STYLES}>
-      <Typography variant="subtitle1" gutterBottom fontWeight="medium" sx={{color: '#fff'}}>
+    <Paper elevation={0} className="reload-section-paper">
+      <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
         Reload All Expenses
       </Typography>
-      <Typography variant="body2" sx={{color: 'rgba(255, 255, 255, 0.7)', mb: 2}}>
-        Warning: This action will reload all expense data from your sources. This operation
-        might be costly in terms of Firebase cloud reads and could impact your billing.
-        Only use this option when necessary.
+      <Typography variant="body2" className="reload-warning-text">
+        Caution: Reloading all expense data from Firebase can be costly. Repeated operations, particularly with large
+        datasets, may significantly impact your billing due to increased Cloud Reads. Please use this option sparingly.
       </Typography>
       <Button
         onClick={handleReloadAll}
         color="error"
         variant="contained"
         disabled={loading}
-        sx={{minWidth: '180px'}}
+        className="reload-all-button"
       >
         {loading ? <CircularProgress size={24}/> : 'Reload All Expenses'}
       </Button>
@@ -143,10 +118,10 @@ const ReloadExpense: React.FC = () => {
     if (!success) return null;
 
     return (
-      <Paper elevation={0} sx={{p: 2, bgcolor: '#2e7d32', color: '#fff', borderRadius: 2}}>
+      <Paper elevation={0} className="success-message">
         <Stack direction="row" alignItems="center" spacing={1}>
           <CheckCircleIcon/>
-          <Typography variant="body2" sx={{color: '#fff'}}>
+          <Typography variant="body2">
             Reload successful!
           </Typography>
         </Stack>
