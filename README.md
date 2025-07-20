@@ -272,7 +272,7 @@ PennyWise is built using a modern front-end architecture with the following key 
 
 - **Home**: Main dashboard showing expense list with filtering and grouping options
 - **TagExpenses**: Interface for tagging and categorizing expenses
-- **Statistics**: Visualizations and charts of spending patterns
+- **Insights**: Visualizations and charts of spending patterns
 - **Settings**: Application configuration and user profile management
 
 ## Data Models

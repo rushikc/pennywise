@@ -22,3 +22,4 @@ export const deleteTag = (tag: string) => store.dispatch(expenseSlice.actions.de
 export const mergeSaveExpense = (originalExpenses: Expense[], mergedExpense: Expense) =>
   store.dispatch(expenseSlice.actions.mergeSaveExpense({ originalExpenses, mergedExpense }));
 export const deleteExpense = (expense: Expense) => store.dispatch(expenseSlice.actions.deleteExpense(expense));
+export const toggleDarkMode = () => store.dispatch(expenseSlice.actions.toggleDarkMode());

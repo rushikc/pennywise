@@ -24,22 +24,16 @@ import {
   Add as AddIcon,
   ArrowBack as BackIcon,
   CreditCard as CreditCardIcon,
-  RemoveCircleOutline,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon
+  RemoveCircleOutline
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {BankConfig} from "../../../Types";
 import './settingViews.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectExpense } from '../../../store/expenseActions';
-import { expenseSlice } from '../../../store/expenseSlice';
 
 const Configuration: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // State for bank configuration
   const [bankConfig, setBankConfig] = useState<BankConfig>({enableUpi: false, creditCards: [], darkMode: false});
@@ -90,27 +84,6 @@ const Configuration: React.FC = () => {
     }
   };
 
-  const handleDarkModeToggle = async () => {
-    setIsSaving(true);
-    const updatedConfig: BankConfig = {
-      ...bankConfig,
-      darkMode: !bankConfig.darkMode
-    };
-
-    try {
-      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
-      if (success) {
-        setBankConfig(updatedConfig);
-        dispatch(expenseSlice.actions.toggleDarkMode());
-      } else {
-        console.error('Failed to update dark mode setting');
-      }
-    } catch (error) {
-      console.error('Error updating dark mode setting:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleAddCreditCard = () => {
     // Open the modal dialog
@@ -321,47 +294,6 @@ const Configuration: React.FC = () => {
       </Paper>
 
 
-      <Paper
-        component={motion.div}
-        initial={{opacity: 0, y: 20}}
-        animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.5}}
-        elevation={3}
-        className="section-paper bank-section"
-      >
-        {isLoading ? (
-          <Box className="loading-container">
-            <CircularProgress size={28} className="loading-indicator"/>
-          </Box>
-        ) : (
-          <>
-            <Typography variant="h6" className="section-title">
-              App Theme
-            </Typography>
-
-
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={bankConfig.darkMode}
-                  onChange={handleDarkModeToggle}
-                  color="primary"
-                  disabled={isSaving}
-                />
-              }
-              label="Enable Dark Mode"
-              sx={{width: '100%'}}
-            />
-
-            {isSaving && (
-              <CircularProgress
-                size={16}
-                className="loading-indicator mini"
-              />
-            )}
-          </>
-        )}
-      </Paper>
 
       {/* Credit Card Dialog */}
       <Dialog

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Avatar, CircularProgress, Box } from '@mui/material';
-import { AccountCircle as AccountIcon } from '@mui/icons-material';
+import React, {useState} from 'react';
+import {Avatar} from '@mui/material';
+import AccountIcon from '@mui/icons-material/AccountCircle';
 
 interface ProfileAvatarProps {
-  photoUrl: string | null;
-  name: string;
+  photoUrl?: string | null;
+  name?: string;
   size?: number;
   className?: string;
 }
@@ -18,20 +18,32 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
   size = 60,
   className
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
 
   const handleImageError = () => {
     setImageError(true);
   };
 
+
+  if (!photoUrl || imageError) {
+    return (
+      <Avatar
+        alt={name}
+        className={className}
+        sx={{
+          width: size,
+          height: size,
+          bgcolor: 'primary.main'
+        }}
+      >
+        <AccountIcon sx={{ fontSize: size * 0.6 }} />
+      </Avatar>
+    );
+  }
+
   return (
     <Avatar
-      src={imageLoaded && photoUrl ? photoUrl : undefined}
+      src={photoUrl}
       alt={name}
       className={className}
       sx={{
@@ -39,23 +51,13 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
         height: size,
         bgcolor: 'primary.main'
       }}
-    >
-      {!imageLoaded && photoUrl && (
-        <>
-          <img
-            src={photoUrl}
-            alt=""
-            style={{ display: 'none' }}
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
-          {/*<CircularProgress size={size * 0.4} color="inherit" />*/}
-        </>
-      )}
-      {(!photoUrl || imageError) && (
-        <AccountIcon sx={{ fontSize: size * 0.6 }} />
-      )}
-    </Avatar>
+      slotProps={{
+        img: {
+          loading: 'lazy',
+          onError: handleImageError,
+        },
+      }}
+    />
   );
 };
 

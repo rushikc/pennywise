@@ -28,8 +28,20 @@ const Login: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2 }}>
+          <Box
+            component="img"
+            src="/logo.png"
+            alt="Pennywise logo"
+            sx={{
+              width: 100,
+              height: 100,
+              margin: '0 auto',
+              display: 'block',
+              mb: 4,
+            }}
+          />
           <Typography component="h1" variant="h4" align="center" gutterBottom>
-            PennyWise Login
+            PennyWise
           </Typography>
 
           {error && (
@@ -63,5 +75,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-

@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {Alert, Box, Container, Paper, Snackbar, Typography} from '@mui/material';
 import {
+  Brightness4 as ThemeIcon,
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
   Refresh as ReloadIcon,
-  Settings as ConfigIcon,
-  Brightness4 as ThemeIcon
+  Settings as ConfigIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
@@ -15,23 +15,23 @@ import ReloadExpense from './setting-views/ReloadExpense';
 import {useAuth} from '../../hooks/useAuth';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
-import { useDispatch, useSelector } from 'react-redux';
-import { expenseSlice } from '../../store/expenseSlice';
-import { selectExpense } from '../../store/expenseActions';
+import {useSelector} from 'react-redux';
+import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
+import {BankConfig} from "../../Types";
+import {ExpenseAPI} from "../../api/ExpenseAPI";
 
 /**
  * Settings page component with user profile and settings options
  */
 const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { bankConfig } = useSelector(selectExpense);
+  const {bankConfig} = useSelector(selectExpense);
   const [reloadExpenseModalOpen, setReloadExpenseModalOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
 
   // Use the custom hook for authentication
-  const { userProfile, signOut, isLoading } = useAuth();
+  const {userProfile, signOut, isLoading} = useAuth();
 
   // Handle sign out
   const handleSignOut = async () => {
@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
       id: 'config',
       title: 'Configuration',
       subtitle: 'Configure app preferences',
-      icon: <ConfigIcon />,
+      icon: <ConfigIcon/>,
       route: '/config',
       color: '#f48fb1'
     },
@@ -66,7 +66,7 @@ const Settings: React.FC = () => {
       id: 'tags',
       title: 'Tags',
       subtitle: 'Manage your expense tags',
-      icon: <TagsIcon />,
+      icon: <TagsIcon/>,
       route: '/setting-tags',
       color: '#ce93d8'
     },
@@ -74,7 +74,7 @@ const Settings: React.FC = () => {
       id: 'theme',
       title: `${bankConfig.darkMode ? 'Light' : 'Dark'} Theme`,
       subtitle: `Switch to ${bankConfig.darkMode ? 'light' : 'dark'} mode`,
-      icon: <ThemeIcon />,
+      icon: <ThemeIcon/>,
       route: '/toggle-theme',
       color: '#9c27b0'
     },
@@ -82,7 +82,7 @@ const Settings: React.FC = () => {
       id: 'reload',
       title: 'Reload Expense',
       subtitle: 'Reload your expense data',
-      icon: <ReloadIcon />,
+      icon: <ReloadIcon/>,
       route: '/reload',
       color: '#ffa726'
     },
@@ -90,7 +90,7 @@ const Settings: React.FC = () => {
       id: 'manage-tag-maps',
       title: 'Manage Vendor Tags',
       subtitle: 'Configure your vendor tag mappings',
-      icon: <MapIcon />,
+      icon: <MapIcon/>,
       route: '/setting-tag-maps',
       color: '#64b5f6'
     },
@@ -98,15 +98,29 @@ const Settings: React.FC = () => {
       id: 'sign out',
       title: 'Sign Out',
       subtitle: 'Log out of your account',
-      icon: <LogoutIcon />,
+      icon: <LogoutIcon/>,
       route: '/signout',
       color: '#f44336'
     }
   ];
 
   // Handle theme toggle
-  const toggleTheme = () => {
-    dispatch(expenseSlice.actions.toggleDarkMode());
+  const toggleTheme = async () => {
+    const updatedConfig: BankConfig = {
+      ...bankConfig,
+      darkMode: !bankConfig.darkMode
+    };
+
+    try {
+      const success = await ExpenseAPI.updateBankConfig(updatedConfig);
+      if (success) {
+        toggleDarkMode();
+      } else {
+        console.error('Failed to update dark mode setting');
+      }
+    } catch (error) {
+      console.error('Error updating dark mode setting:', error);
+    }
   };
 
   const handleTileClick = (route: string) => {
@@ -121,7 +135,7 @@ const Settings: React.FC = () => {
     }
 
     if (route === '/toggle-theme') {
-      toggleTheme();
+      void toggleTheme();
       return;
     }
 
@@ -129,7 +143,7 @@ const Settings: React.FC = () => {
   };
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: {opacity: 0},
     visible: {
       opacity: 1,
       transition: {
@@ -148,12 +162,12 @@ const Settings: React.FC = () => {
       {/* User Profile Card */}
       <Paper
         component={motion.div}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{opacity: 0, y: -20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
         elevation={3}
         className="user-profile-paper"
-        sx={{ bgcolor: 'transparent' }}
+        sx={{bgcolor: 'transparent'}}
       >
         <Box className="user-profile-box">
           <ProfileAvatar
@@ -200,21 +214,21 @@ const Settings: React.FC = () => {
       {/* Sign out progress and error handling */}
       <Snackbar
         open={isSigningOut}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         autoHideDuration={6000}
         onClose={() => setSignOutError(null)}
       >
-        <Alert onClose={() => setSignOutError(null)} severity="info" sx={{ width: '100%' }}>
+        <Alert onClose={() => setSignOutError(null)} severity="info" sx={{width: '100%'}}>
           Signing out...
         </Alert>
       </Snackbar>
       <Snackbar
         open={Boolean(signOutError)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         autoHideDuration={6000}
         onClose={() => setSignOutError(null)}
       >
-        <Alert onClose={() => setSignOutError(null)} severity="error" sx={{ width: '100%' }}>
+        <Alert onClose={() => setSignOutError(null)} severity="error" sx={{width: '100%'}}>
           {signOutError}
         </Alert>
       </Snackbar>

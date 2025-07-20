@@ -10,7 +10,7 @@ import TagExpenses from "./pages/home/TagExpenses";
 import UpdateGmail from "./pages/UpdateGmail";
 import TagList from "./pages/unused/TagList";
 import Settings from "./pages/setting/Settings";
-import Statistics from "./pages/stats/Statistics";
+import Insights from "./pages/insights/Insights";
 import Configuration from "./pages/setting/setting-views/Configuration";
 import {selectExpense} from "./store/expenseActions";
 import ManageTags from "./pages/setting/setting-views/ManageTags";
@@ -91,7 +91,7 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path='/home' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path='/profile' element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
-          <Route path='/stats' element={<ProtectedRoute><Statistics/></ProtectedRoute>}/>
+          <Route path='/stats' element={<ProtectedRoute><Insights/></ProtectedRoute>}/>
           <Route path='/tag' element={<ProtectedRoute><TagList/></ProtectedRoute>}/>
           <Route path='/Update' element={<ProtectedRoute><UpdateGmail/></ProtectedRoute>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>

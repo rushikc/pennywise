@@ -19,7 +19,7 @@ import {
   groupByOptions,
 } from '../../utility/validations';
 import '../home/Home.scss';
-import './Statistics.scss';
+import './Insights.scss';
 import {Expense} from "../../Types";
 import {
   CartesianGrid,
@@ -46,8 +46,8 @@ const truncate = (str: string, n: number) => {
   return str.length > n ? str.slice(0, n - 1) + '...' : str;
 };
 
-// Statistics component
-const Statistics: React.FC = () => {
+// Insights component
+const Insights: React.FC = () => {
   const theme = useTheme();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -269,7 +269,6 @@ const Statistics: React.FC = () => {
       };
     });
 
-    const lineChartData: LineDataPoint[] = [];
     const dates = Array.from(expensesByDate.keys()).sort(
       (a, b) => new Date(a).getTime() - new Date(b).getTime()
     );
@@ -519,7 +518,7 @@ const Statistics: React.FC = () => {
                   fill={theme.palette.primary.main}
                   label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
                 >
-                  {pieChartData.map((entry, index) => (
+                  {pieChartData.map((_entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={lineColors[index % lineColors.length]}
@@ -581,7 +580,7 @@ const Statistics: React.FC = () => {
   );
 };
 
-export default Statistics;
+export default Insights;
 
 // Filter Panel Component for Stats
 const FilterPanel: React.FC<{
@@ -652,7 +651,7 @@ const GroupByPanel: React.FC<{
       </div>
       <div className="panel-section">
         <div className="section-title">Calculation</div>
-        <div className="calculation-options">
+        <div className="group-by-options">
           {calculationOptions.map(option => (
             <Chip
               key={option.id}
