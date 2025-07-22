@@ -67,7 +67,9 @@ declare global {
   }
 }
 
-
+/**
+ * Home component displays the main expense management interface
+ */
 const Home: FC<any> = (): ReactElement => {
   const {expenseList} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
@@ -89,45 +91,43 @@ const Home: FC<any> = (): ReactElement => {
   const [showMergeDialog, setShowMergeDialog] = useState(false);
   const [showAddExpenseDialog, setShowAddExpenseDialog] = useState(false);
 
-  // Refs for handling outside clicks
+  // Refs to detect clicks outside panels
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
   const groupByPanelRef = useRef<HTMLDivElement>(null);
   const groupByButtonRef = useRef<HTMLDivElement>(null);
 
+  // Select an expense for tagging
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
-  // console.log('Expense List STore:', expenseList);
-
+  // Fetch and sort expenses, manage loading spinner
   const reloadExpenseList = () => {
     setLoading(true);
     ExpenseAPI.getExpenseList()
       .then(expenses => {
-        const sortedExpenses = sortByKeyDate(expenses, 'date');
-        setExpenseList(sortedExpenses);
+        setExpenseList(sortByKeyDate(expenses, 'date'));
         setTimeout(() => setLoading(false), 300);
       })
-      .catch(error => {
-        console.error('Error reloading expenses:', error);
-        setLoading(false);
-      });
-  }
+      .catch(() => setLoading(false));
+  };
 
+  // Toggle filter panel, reset group-by panel
   const toggleFilters = () => {
-    if (selectionMode) return; // Don't show filters in selection mode
-    setShowFilters(!showFilters);
-    if (showGroupByOptions) setShowGroupByOptions(false);
+    if (selectionMode) return;
+    setShowFilters(prev => !prev);
+    setShowGroupByOptions(false);
   };
 
+  // Toggle group-by panel, reset filters
   const toggleGroupByOptions = () => {
-    if (selectionMode) return; // Don't show group options in selection mode
-    setShowGroupByOptions(!showGroupByOptions);
-    if (showFilters) setShowFilters(false);
+    if (selectionMode) return;
+    setShowGroupByOptions(prev => !prev);
+    setShowFilters(false);
   };
 
-  // Toggle expense selection
+  // Manage multi-select without opening detail view
   const toggleExpenseSelection = (expense: Expense, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent opening the expense details
+    event.stopPropagation();
 
     if (!selectionMode) {
       // Enter selection mode and select this expense
@@ -164,24 +164,16 @@ const Home: FC<any> = (): ReactElement => {
 
   // Handle delete selected expenses
   const handleDeleteSelected = async () => {
-    if (selectedExpenses.length === 0) return;
-
-    setLoading(true); // Show loading state while deleting
+    if (!selectedExpenses.length) return;
+    setLoading(true);
 
     try {
-      // Delete each selected expense using the ExpenseAPI
-      const deletePromises = selectedExpenses.map(expense =>
-        ExpenseAPI.deleteExpense(expense)
-      );
-
-      // Wait for all delete operations to complete
+      const deletePromises = selectedExpenses.map(expense => ExpenseAPI.deleteExpense(expense));
       await Promise.all(deletePromises);
       selectedExpenses.forEach(expense => deleteExpense(expense));
-
-    } catch (error) {
-      console.error('Error deleting expenses:', error);
+    } catch {
+      // suppress errors or handle via UI notification
     } finally {
-      // setLoading(false);
       cancelSelection();
       reloadExpenseList();
     }
@@ -486,8 +478,8 @@ const Home: FC<any> = (): ReactElement => {
           </div>
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
-            <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
-              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowDownIcon/>}
+            <IconButton className="collapse-button">
+              <KeyboardArrowDownIcon/>
             </IconButton>
           </div>
         </div>
