@@ -32,40 +32,9 @@ import {AuthProvider, useAuth} from "./pages/login/AuthContext";
 import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
 import ReloadExpense from "./pages/setting/setting-views/ReloadExpense";
 import {loadInitialAppData} from "./pages/dataValidations";
+import AutoTagExpenses from "./pages/setting/setting-views/AutoTagExpenses";
 
-// Protected route component
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const {currentUser, loading} = useAuth();
-  const {isAppLoading} = useSelector(selectExpense);
-  const location = useLocation();
 
-  if (loading) return null;
-
-  if (!currentUser) {
-    return <Navigate to="/login" state={{from: location}} replace/>;
-  }
-
-  console.log("isAppLoading in ProtectedRoute:", isAppLoading);
-
-  if (isAppLoading) {
-    loadInitialAppData()
-  }
-
-  return <>{children}</>;
-};
-
-// Bottom navigation wrapper that uses auth context
-const BottomNavAuth = () => {
-  const {currentUser} = useAuth();
-
-  if (!currentUser) return null;
-
-  return (
-    <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
-      <BottomNav/>
-    </AppBar>
-  );
-};
 
 function App() {
 
@@ -109,6 +78,7 @@ function App() {
           <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
           <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>
           <Route path='/reload-expense' element={<ProtectedRoute><ReloadExpense/></ProtectedRoute>}/>
+          <Route path='/auto-tag-expenses' element={<ProtectedRoute><AutoTagExpenses/></ProtectedRoute>}/>
           <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         </Routes>
         <ThemeManager/>
@@ -119,5 +89,44 @@ function App() {
     </AuthProvider>
   );
 }
+
+
+// Protected route component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
+  const {currentUser, loading} = useAuth();
+  const {isAppLoading} = useSelector(selectExpense);
+  const location = useLocation();
+
+  if (loading) return null;
+
+  if (!currentUser) {
+    return <Navigate to="/login" state={{from: location}} replace/>;
+  }
+
+  // console.log("isAppLoading in ProtectedRoute:", isAppLoading);
+
+  if (isAppLoading) {
+    loadInitialAppData()
+  }
+
+  return <>{children}</>;
+};
+
+
+
+// Bottom navigation wrapper that uses auth context
+const BottomNavAuth = () => {
+  const {currentUser} = useAuth();
+
+  if (!currentUser) return null;
+
+  return (
+    <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
+      <BottomNav/>
+    </AppBar>
+  );
+};
+
+
 
 export default App;

@@ -15,6 +15,7 @@ GNU General Public License for more details, or get a copy at
 import React, {useState} from 'react';
 import {Alert, Box, Container, Paper, Snackbar, Typography} from '@mui/material';
 import {
+  AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
@@ -106,6 +107,14 @@ const Settings: React.FC = () => {
       color: '#64b5f6'
     },
     {
+      id: 'auto-tag',
+      title: 'Auto-tag Expenses',
+      subtitle: 'Automatically tag past expenses',
+      icon: <AutoTagIcon/>,
+      route: '/auto-tag-expenses',
+      color: '#4db6ac'
+    },
+    {
       id: 'sign out',
       title: 'Sign Out',
       subtitle: 'Log out of your account',
@@ -132,6 +141,11 @@ const Settings: React.FC = () => {
   const handleTileClick = (route: string) => {
     if (route === '/reload-expense') {
       navigate('/reload-expense');
+      return;
+    }
+
+    if (route === '/auto-tag-expenses') {
+      navigate('/auto-tag-expenses');
       return;
     }
 

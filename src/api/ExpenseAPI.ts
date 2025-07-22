@@ -35,7 +35,7 @@ export class ExpenseAPI {
         try {
 
             let key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
-            // console.log("Document written with expense: ", JSONCopy(expense));
+            // console.debug("Document written with expense: ", JSONCopy(expense));
 
             expense.modifiedDate = Date.now(); // date to epoch
 
@@ -96,7 +96,7 @@ export class ExpenseAPI {
 
     static processData = async () => {
         try {
-            console.log("Process Data Init");
+            console.debug("Process Data Init");
 
 
             // const q = query(collection(db, "expense"), where("date", ">", new Date("2020-01-01")));
@@ -104,7 +104,7 @@ export class ExpenseAPI {
             // const querySnapshot = await getDocs(q);
             //
             // const queryResultLen = querySnapshot.docs.length;
-            // console.log("Query Result Length: ", queryResultLen);
+            // console.debug("Query Result Length: ", queryResultLen);
             // let count = 0;
             // if (queryResultLen) {
             //
@@ -116,10 +116,10 @@ export class ExpenseAPI {
             //         //     document.date = document.date.seconds * 1000;
             //             // const date = new Date(doc.id.substring(0,19));
             //
-            //             console.log(doc.id, " => ", JSONCopy(document));
+            //             console.debug(doc.id, " => ", JSONCopy(document));
             //             document['modifiedDate'] = document.date;
             //
-            //             console.log("modified => ", JSONCopy(document));
+            //             console.debug("modified => ", JSONCopy(document));
             //
             //
             //             if(count < 700) {
@@ -129,10 +129,10 @@ export class ExpenseAPI {
             //         }
             //
             //     });
-            //     console.log("Total Documents Processed: ", count);
+            //     console.debug("Total Documents Processed: ", count);
             // }
 
-            // console.log("expense list ", tags);
+            // console.debug("expense list ", tags);
         } catch (e) {
             ErrorHandlers.handleApiError(e);
             console.error("Error processing data: ", e);
@@ -151,7 +151,7 @@ export class ExpenseAPI {
 
 
             await FinanceIndexDB.getData("config", EXPENSE_LAST_UPDATE).then(data => {
-                // console.log("index db config ", getDateFormat(data.value));
+                // console.debug("index db config ", getDateFormat(data.value));
                 if (data) {
                     lastUpdatedDate = data.value;
                     // lastUpdatedDate = new Date("2025-06-13"); // to fetch FROM CUSTOM DATE
@@ -171,13 +171,13 @@ export class ExpenseAPI {
 
             const queryResultLen = querySnapshot.docs.length;
 
-            console.log("Expense Query Result Length: ", queryResultLen);
+            console.debug("Expense Query Result Length: ", queryResultLen);
 
             if (queryResultLen) {
 
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
+                    // console.debug(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
                     fireDocList.push(document)
@@ -192,8 +192,8 @@ export class ExpenseAPI {
             await FinanceIndexDB.getAllData("expense").then(data => indexDocList = data);
 
 
-            console.debug('Firebase query for expenses - ', table, fireDocList);
-            console.debug('IndexDB query for expenses - ', table, indexDocList);
+            console.log('Firebase query for expenses - ', table, fireDocList);
+            console.log('IndexDB query for expenses - ', table, indexDocList);
 
 
             console.debug('FinalList query for expenses - ', table, indexDocList);
@@ -243,7 +243,7 @@ export class ExpenseAPI {
                 };
             }
 
-            console.log('Retrieved bank config:', bankConfig);
+            console.debug('Retrieved bank config:', bankConfig);
             return bankConfig;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -258,7 +258,7 @@ export class ExpenseAPI {
     static updateBankConfig = async (config: BankConfig) => {
         try {
             await ExpenseAPI.setOneDoc('bank', config, 'config');
-            console.log('Updated bank config:', config);
+            console.debug('Updated bank config:', config);
             return true;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -275,7 +275,7 @@ export class ExpenseAPI {
             if (!darkModeConfig) {
                 return false; // Default to light mode
             }
-            console.log('Retrieved dark mode config:', darkModeConfig);
+            console.debug('Retrieved dark mode config:', darkModeConfig);
             return darkModeConfig.value;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -290,7 +290,7 @@ export class ExpenseAPI {
                 value: val,
             }
             await ExpenseAPI.setOneDoc('darkMode', config, 'config');
-            console.log('Updated darkMode config:', config);
+            console.debug('Updated darkMode config:', config);
             return true;
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -310,7 +310,7 @@ export class ExpenseAPI {
             let isLastUpdateAvailable = false;
 
             await FinanceIndexDB.getData("config", TAG_LAST_UPDATE).then(data => {
-                // console.log("index db config ", data);
+                // console.debug("index db config ", data);
                 if (data) {
                     lastUpdatedDate = data.value;
                     // lastUpdatedDate = new Date("2025-06-12"); // to fetch FROM CUSTOM DATE
@@ -322,7 +322,7 @@ export class ExpenseAPI {
                 await FinanceIndexDB.getAllData("vendorTag").then(data => indexDocList = data);
             }
 
-            // console.log(" lastUpdatedDate ", lastUpdatedDate);
+            // console.debug(" lastUpdatedDate ", lastUpdatedDate);
 
             const q = query(collection(db, table), where("date", ">", lastUpdatedDate));
             // const q = query(collection(db, table));
@@ -334,7 +334,7 @@ export class ExpenseAPI {
 
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
+                    // console.debug(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
                     fireDocList.push(document)
@@ -415,6 +415,96 @@ export class ExpenseAPI {
             ErrorHandlers.handleApiError(e);
             console.error("Error deleting expense: ", e);
             return false;
+        }
+    }
+
+    static autoTagPastExpenses = async (startDate: number): Promise<number> => {
+        try {
+            console.log(`Auto-tagging expenses from ${new Date(startDate).toISOString()}`);
+
+            // 1. Fetch all vendor tags from IndexDB
+            const vendorTags: VendorTag[] = await FinanceIndexDB.getAllData('vendorTag');
+            const vendorTagMap = new Map(vendorTags.map(vt => [vt.vendor.toLowerCase(), vt.tag]));
+
+            if (vendorTagMap.size === 0) {
+                console.log("No vendor tags found. Aborting auto-tagging.");
+                return 0;
+            }
+
+            // 2. Fetch expenses from Firestore starting from the given date
+            const expenseQuery = query(collection(db, "expense"),
+                where("modifiedDate", ">=", startDate));
+            const querySnapshot = await getDocs(expenseQuery);
+
+            let processedCount = 0;
+            const expensesToUpdate: Expense[] = [];
+
+            querySnapshot.forEach((doc) => {
+                const expense = { id: doc.id, ...doc.data() } as Expense;
+
+                // Check if the expense already has a tag or is a payment
+                if (expense.tag) {
+                    return;
+                }
+
+                const vendorLower = expense.vendor.toLowerCase();
+                if (vendorTagMap.has(vendorLower)) {
+                    const newTag = vendorTagMap.get(vendorLower);
+                    if (newTag) {
+                        const updatedExpense: Expense = {
+                            ...expense,
+                            tag: newTag,
+                            modifiedDate: Date.now(),
+                        };
+                        expensesToUpdate.push(updatedExpense);
+                    }
+                }
+            });
+
+            if (expensesToUpdate.length > 0) {
+                processedCount = expensesToUpdate.length;
+                console.log("Auto tag past expenses for expense: ", expensesToUpdate);
+                console.log(`Found ${processedCount} expenses to auto-tag.`);
+
+                const batchSize = 700;
+
+                for (let i = 0; i < expensesToUpdate.length; i += batchSize) {
+                    const batch = expensesToUpdate.slice(i, i + batchSize);
+                    console.log(`Processing batch ${i / batchSize + 1}...`);
+
+                    // Batch update expenses in Firestore
+                    const updatePromises = batch.map(async (expense) => {
+                        const { id, ...expenseWithoutId } = expense;
+                        if (id) {
+                            const docRef = doc(db, "expense", id);
+                            await setDoc(docRef, expenseWithoutId);
+                        }
+                    });
+
+                    await Promise.all(updatePromises);
+
+                    // Update in IndexedDB
+                    await FinanceIndexDB.addExpenseList(batch);
+                    // console.log(`Batch ${i / batchSize + 1} processed.`);
+
+                    // Pause 1.5 sec between batches
+                    if (i + batchSize < expensesToUpdate.length) {
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                    }
+                }
+
+                console.log("Successfully updated all expenses in Firestore and IndexedDB.");
+
+            } else {
+                console.log("No expenses needed auto-tagging.");
+            }
+
+            return processedCount;
+
+        } catch (e) {
+            ErrorHandlers.handleApiError(e);
+            console.error("Error during auto-tagging process: ", e);
+            return 0;
         }
     }
 }

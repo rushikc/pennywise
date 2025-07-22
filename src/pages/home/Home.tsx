@@ -247,7 +247,7 @@ const Home: FC<any> = (): ReactElement => {
 
   // Filter expenses based on selected date range
   useEffect(() => {
-    console.log('effect 1', expenseList, selectedRange);
+    // console.log('effect 1', expenseList, selectedRange);
     if (expenseList.length === 0) {
       setDateFilteredExpenses([]);
       return;
@@ -274,7 +274,7 @@ const Home: FC<any> = (): ReactElement => {
 
     const grouped = groupExpenses(filteredExpenses, selectedGroupBy);
 
-    console.log('Grouped Expenses:', grouped);
+    // console.log('Grouped Expenses:', grouped);
     // Initialize collapsed state for new groups
     Object.keys(grouped).forEach(groupKey => {
       setCollapsedGroups(prev => ({
