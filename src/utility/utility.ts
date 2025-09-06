@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -45,7 +45,7 @@ export const getDateFormat = (date: Dayjs) => {
     return dayjs(date).format('YYYY-MM-DD');
 }
 
-export const getDateFromString = (date : string, format = 'YYYY-MM-DD') => {
+export const getDateFromString = (date: string, format = 'YYYY-MM-DD') => {
     return dayjs(date, format);
 }
 
@@ -82,19 +82,10 @@ export const getISODate = (seconds: number): Date => {
 }
 
 
-
-
 export const getDateTimeSecFromISO = (isoTime: string): string => {
     // Using dayjs to parse ISO string and format with localized short datetime with seconds
     return dayjs(isoTime).format('MM/DD/YYYY, hh:mm:ss A');
 }
-
-
-
-
-
-
-
 
 
 //sort

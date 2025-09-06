@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -98,7 +98,7 @@ const ManageTags: React.FC = () => {
   };
 
   return (
-    <Container className="manage-tags-container">
+    <Container className="manage-tags-container" maxWidth="sm">
       <Box className="config-header">
         <IconButton
           onClick={() => navigate('/profile')}

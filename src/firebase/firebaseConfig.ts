@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -14,10 +14,10 @@ GNU General Public License for more details, or get a copy at
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirebaseConfig } from "./firebase-public";
+import { firebaseConfig } from "./firebase-public";
 
 // Initialize Firebase
-const app = initializeApp(getFirebaseConfig());
+const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Auth and get a reference to the service
 export const auth = getAuth(app);

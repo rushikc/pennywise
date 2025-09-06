@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -12,10 +12,10 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import { Modal, Box, Typography, Button } from '@mui/material';
-import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { auth } from '../firebase/firebaseConfig';
+import {Box, Button, Modal, Typography} from '@mui/material';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {auth} from '../firebase/firebaseConfig';
 
 interface ErrorModalProps {
   open: boolean;

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -12,14 +12,15 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import React, {useEffect, useRef, useState} from 'react';
-import {Box, Chip, Container, IconButton, Paper, Stack, Typography, useTheme, Button} from '@mui/material';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
+import {Box, Button, Chip, Container, IconButton, Paper, Stack, Typography, useTheme} from '@mui/material';
 import {motion} from 'framer-motion';
 import {FileDownload, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
+import TuneIcon from '@mui/icons-material/Tune';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
-import {exportAsXLSX, exportAsCSV} from './exportReport';
+import {exportAsCSV, exportAsXLSX} from './exportReport';
 
 import Loading from "../../components/Loading";
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -49,6 +50,7 @@ import {
   XAxis,
   YAxis
 } from "recharts";
+import {CHART_COLORS} from "../../utility/constants";
 
 // Interface for line graph data
 interface LineDataPoint {
@@ -86,7 +88,9 @@ const Insights: React.FC = () => {
   }, []);
 
   // Filter expenses based on selected time range
-  const getFilteredExpenses = () => filterExpensesByDate(expenses, timeRange);
+  const getFilteredExpenses = useCallback(() =>
+    filterExpensesByDate(expenses, timeRange)
+  , [expenses, timeRange]);
 
   // Calculate total spending
   const getTotalSpending = () => {
@@ -164,14 +168,28 @@ const Insights: React.FC = () => {
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
   const [selectedCalculation, setSelectedCalculation] = useState<CalculationOption>('median');
 
+  // New state for selection panel
+  const [showSelectionPanel, setShowSelectionPanel] = useState(false);
+  const selectionPanelRef = useRef<HTMLDivElement>(null);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [availableItems, setAvailableItems] = useState<string[]>([]);
+
   const toggleFilters = () => {
     setShowFilters(!showFilters);
     if (showGroupByOptions) setShowGroupByOptions(false);
+    if (showSelectionPanel) setShowSelectionPanel(false);
   };
 
   const toggleGroupByOptions = () => {
     setShowGroupByOptions(!showGroupByOptions);
     if (showFilters) setShowFilters(false);
+    if (showSelectionPanel) setShowSelectionPanel(false);
+  };
+
+  const toggleSelectionPanel = () => {
+    setShowSelectionPanel(!showSelectionPanel);
+    if (showFilters) setShowFilters(false);
+    if (showGroupByOptions) setShowGroupByOptions(false);
   };
 
   const handleRangeChange = (range: DateRange) => {
@@ -182,24 +200,70 @@ const Insights: React.FC = () => {
   const handleGroupByChange = (option: GroupByOption) => {
     setSelectedGroupBy(option);
     setShowGroupByOptions(false);
+    // Reset selected items when group by changes
+    setSelectedItems([]);
   };
+
 
   const handleCalculationChange = (option: CalculationOption) => {
     setSelectedCalculation(option);
     setShowGroupByOptions(false);
   };
 
-  const prepareChartData = (
+  // Helper function to determine cost range bucket
+  const getCostRange = useCallback((cost: number): string => {
+    if (cost <= 100) return '₹0-₹100';
+    if (cost <= 500) return '₹100-₹500';
+    if (cost <= 1000) return '₹500-₹1000';
+    return '₹1000+';
+  }, []);
+
+  // Helper function to get available items based on groupBy
+  const getAvailableItems = useCallback((expenses: Expense[], groupBy: GroupByOption): string[] => {
+    if (groupBy === 'days') return [];
+
+    const getGroupKey = (expense: Expense): string => {
+      if (groupBy === 'vendor') return expense.vendor;
+      if (groupBy === 'tags') return expense.tag || 'Untagged';
+      if (groupBy === 'cost') return getCostRange(expense.cost);
+      return '';
+    };
+
+    const groupMetrics = new Map<string, number>();
+    expenses.forEach(expense => {
+      const groupKey = getGroupKey(expense);
+      if (groupKey) {
+        const currentTotal = groupMetrics.get(groupKey) || 0;
+        groupMetrics.set(groupKey, currentTotal + Number(expense.cost));
+      }
+    });
+
+    let uniqueGroups = Array.from(groupMetrics.keys());
+
+    // Sort groups by total spend
+    uniqueGroups.sort((a, b) => {
+      const totalA = groupMetrics.get(a) || 0;
+      const totalB = groupMetrics.get(b) || 0;
+      return totalB - totalA;
+    });
+
+    if (groupBy === 'tags') {
+      uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
+    }
+
+    return uniqueGroups;
+  }, [getCostRange]);
+
+  const prepareChartData = useCallback((
     expenses: Expense[],
     groupBy: GroupByOption,
-    calculation: CalculationOption
+    calculation: CalculationOption,
+    selectedItems: string[]
   ): {
     lineChartData: LineDataPoint[];
     pieChartData: { name: string; value: number }[];
     lineKeys: string[];
   } => {
-
-
     if (expenses.length === 0) {
       return {lineChartData: [], pieChartData: [], lineKeys: []};
     }
@@ -260,22 +324,25 @@ const Insights: React.FC = () => {
       }
     });
 
-    let uniqueGroups = Array.from(groupMetrics.keys());
+    // Use selectedItems if available, otherwise fall back to top 5
+    let targetGroups: string[];
+    if (selectedItems.length > 0) {
+      targetGroups = selectedItems.filter(item => groupMetrics.has(item));
+    } else {
+      let uniqueGroups = Array.from(groupMetrics.keys());
+      uniqueGroups.sort((a, b) => {
+        const totalA = groupMetrics.get(a)!.reduce((sum, val) => sum + val, 0);
+        const totalB = groupMetrics.get(b)!.reduce((sum, val) => sum + val, 0);
+        return totalB - totalA;
+      });
 
-    // Sort groups by total spend (default)
-    uniqueGroups.sort((a, b) => {
-      const totalA = groupMetrics.get(a)!.reduce((sum, val) => sum + val, 0);
-      const totalB = groupMetrics.get(b)!.reduce((sum, val) => sum + val, 0);
-      return totalB - totalA;
-    });
-
-    if (groupBy === 'tags') {
-      uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
+      if (groupBy === 'tags') {
+        uniqueGroups = uniqueGroups.filter(group => group !== 'Untagged');
+      }
+      targetGroups = uniqueGroups.slice(0, 5);
     }
 
-    const topGroups = uniqueGroups.slice(0, 3);
-
-    const pieChartData = topGroups.map(group => {
+    const pieChartData = targetGroups.map(group => {
       const values = groupMetrics.get(group) || [0];
       const totalValue = values.reduce((sum, val) => sum + val, 0);
       return {
@@ -291,7 +358,7 @@ const Insights: React.FC = () => {
     const newLineChartData = dates.map((date, index) => {
       const dataPoint: LineDataPoint = {date};
 
-      topGroups.forEach(group => {
+      targetGroups.forEach(group => {
         // Get data for the last 7 days for rolling calculation
         const rollingDates = dates.slice(Math.max(0, index - 6), index + 1);
         const groupValues: number[] = [];
@@ -320,16 +387,8 @@ const Insights: React.FC = () => {
       return dataPoint;
     });
 
-    return {lineChartData: newLineChartData, pieChartData, lineKeys: topGroups};
-  };
-
-  // Helper function to determine cost range bucket
-  const getCostRange = (cost: number): string => {
-    if (cost <= 100) return '₹0-₹100';
-    if (cost <= 500) return '₹100-₹500';
-    if (cost <= 1000) return '₹500-₹1000';
-    return '₹1000+';
-  };
+    return {lineChartData: newLineChartData, pieChartData, lineKeys: targetGroups};
+  }, [getCostRange]);
 
   const [lineChartData, setLineChartData] = useState<LineDataPoint[]>([]);
   const [lineKeys, setLineKeys] = useState<string[]>([]);
@@ -341,25 +400,44 @@ const Insights: React.FC = () => {
     const {lineChartData, pieChartData, lineKeys} = prepareChartData(
       filteredExpenses,
       selectedGroupBy,
-      selectedCalculation
+      selectedCalculation,
+      selectedItems // Pass selectedItems to prepareChartData
     );
 
     setLineChartData(lineChartData);
     setPieChartData(pieChartData);
     setLineKeys(lineKeys);
-  }, [expenses, timeRange, selectedGroupBy, selectedCalculation]);
+  }, [expenses, timeRange, selectedGroupBy, selectedCalculation, getFilteredExpenses, prepareChartData, selectedItems]);
+
+  // Update available items when groupBy or expenses change
+  useEffect(() => {
+    if (selectedGroupBy !== 'days') {
+      const filtered = getFilteredExpenses();
+      const items = getAvailableItems(filtered, selectedGroupBy);
+      setAvailableItems(items);
+
+      // Auto-select top 5 items if no items are selected
+      if (selectedItems.length === 0 && items.length > 0) {
+        setSelectedItems(items.slice(0, 5));
+      }
+    } else {
+      setAvailableItems([]);
+      setSelectedItems([]);
+    }
+  }, [selectedGroupBy, expenses, timeRange, getFilteredExpenses, getAvailableItems, selectedItems.length]);
 
   if (isLoading) {
     return <Loading/>;
   }
 
-  // Line colors for the chart
+  // Line colors for the chart - Extended to support 15+ different colors
   const lineColors = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.error.main,
-    theme.palette.success.main,
-    theme.palette.warning.main
+    theme.palette.primary.main,      // Blue
+    theme.palette.secondary.main,    // Purple/Pink
+    theme.palette.error.main,        // Red
+    theme.palette.success.main,      // Green
+    theme.palette.warning.main,      // Orange/Yellow
+    ...CHART_COLORS
   ];
 
   return (
@@ -408,7 +486,7 @@ const Insights: React.FC = () => {
         >
           <Paper className="daily-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
-              Daily Average
+              Daily {selectedCalculation === 'average' ? 'Average' : 'Median'}
             </Typography>
             <Box>
               <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
@@ -433,7 +511,7 @@ const Insights: React.FC = () => {
         >
           <Paper className="monthly-card">
             <Typography variant="subtitle2" color="rgba(255,255,255,0.7)">
-              Monthly Average
+              Monthly {selectedCalculation === 'average' ? 'Average' : 'Median'}
             </Typography>
             <Box>
               <Typography variant="h4" fontSize={22} fontWeight="bold" color="white">
@@ -443,12 +521,139 @@ const Insights: React.FC = () => {
             <Box>
               <TrendingDownIcon sx={{fontSize: 16, color: 'rgba(255,255,255,0.7)', mr: 0.5}}/>
               <Typography variant="caption" color="rgba(255,255,255,0.7)">
-                {timeRange === '7d' || timeRange === '30d' ? 'Same as Daily Avg' : 'Per Month'}
+                {timeRange === '7d' || timeRange === '30d' ? `Same as Daily ${selectedCalculation === 'average' ? 'Avg' : 'Median'}` : 'Per Month'}
               </Typography>
             </Box>
           </Paper>
         </motion.div>
       </Stack>
+
+      {/* Chart rendering based on groupBy selection */}
+      {selectedGroupBy === 'days' ? (
+        // Show Line Chart when groupBy is 'days'
+        <Box className="line-chart-container">
+          {lineChartData.length > 0 ? (
+            <Paper className="chart-paper" elevation={3}>
+              <Typography variant="subtitle2" className="chart-title">
+                Spending Trends
+              </Typography>
+              <ResponsiveContainer width="100%" height="95%">
+                <LineChart
+                  data={lineChartData}
+                  margin={{top: 5, right: 20, left: 10, bottom: 5}}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
+                  <XAxis
+                    dataKey="date"
+                    stroke={theme.palette.text.secondary}
+                    tick={{fontSize: 12}}
+                    tickLine={{stroke: theme.palette.divider}}
+                  />
+                  <YAxis
+                    stroke={theme.palette.text.secondary}
+                    tick={{fontSize: 12}}
+                    tickLine={{stroke: theme.palette.divider}}
+                    width={50}
+                    tickFormatter={(value) => `₹${value}`}
+                    domain={['auto', 'auto']}
+                    allowDataOverflow={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: theme.palette.background.paper,
+                      border: `1px solid ${theme.palette.divider}`,
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="bottom"
+                    wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
+                    formatter={(value) => truncate(value, 20)}
+                  />
+                  {lineKeys.map((key, index) => (
+                    <Line
+                      key={key}
+                      type="monotone"
+                      dataKey={key}
+                      stroke={lineColors[index % lineColors.length]}
+                      activeDot={{r: 8}}
+                      strokeWidth={2}
+                      dot={{strokeWidth: 2}}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </Paper>
+          ) : (
+            <Paper className="chart-paper empty-chart" elevation={3}>
+              <Typography variant="body1" color="text.secondary">
+                No data available for the selected filters
+              </Typography>
+            </Paper>
+          )}
+        </Box>
+      ) : (
+        // Show Pie Chart when groupBy is not 'days'
+        pieChartData.length > 0 ? (
+          <Box className="pie-chart-container">
+            <Paper className="chart-paper" elevation={3}>
+              <div className="chart-header">
+                <Typography variant="subtitle2" className="chart-title">
+                  Group Distribution
+                </Typography>
+                {/* Selection Button - Moved to right side of title */}
+                <div className="selection-button-inline">
+                  <IconButton
+                    onClick={toggleSelectionPanel}
+                    size="small"
+                  >
+                    <TuneIcon />
+                  </IconButton>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={330}>
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    style={{marginTop: 20}}
+                    outerRadius={100}
+                    fill={theme.palette.primary.main}
+                    label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
+                  >
+                    {pieChartData.map((_entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={lineColors[index % lineColors.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend
+                    verticalAlign="bottom"
+                    wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
+                    formatter={(value) => truncate(value, 20)}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </Paper>
+          </Box>
+        ) : (
+          <Paper className="chart-paper empty-chart" elevation={3}>
+            <Typography variant="body1" color="text.secondary">
+              No data available for the selected filters
+            </Typography>
+          </Paper>
+        )
+      )}
+
+      {/* Info Banner */}
+      <Typography variant="body2" className="info-banner-text">
+        Reports are downloaded based on the selected range, current range is
+        <strong>{" "+ filterOptions.find(o => o.id === timeRange)?.label}</strong>
+      </Typography>
 
       {/* Export Buttons Row */}
       <Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
@@ -501,107 +706,6 @@ const Insights: React.FC = () => {
         </motion.div>
       </Stack>
 
-      {/* Line Graph / Pie Chart based on selected chart type */}
-      <Box className="line-chart-container">
-        {lineChartData.length > 0 ? (
-          <Paper className="chart-paper" elevation={3}>
-            <Typography variant="subtitle2" className="chart-title">
-              Spending Trends
-            </Typography>
-            <ResponsiveContainer width="100%" height="95%">
-              <LineChart
-                data={lineChartData}
-                margin={{top: 5, right: 20, left: 10, bottom: 5}}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
-                <XAxis
-                  dataKey="date"
-                  stroke={theme.palette.text.secondary}
-                  tick={{fontSize: 12}}
-                  tickLine={{stroke: theme.palette.divider}}
-                />
-                <YAxis
-                  stroke={theme.palette.text.secondary}
-                  tick={{fontSize: 12}}
-                  tickLine={{stroke: theme.palette.divider}}
-                  width={50}
-                  tickFormatter={(value) => `₹${value}`}
-                  domain={['auto', 'auto']}
-                  allowDataOverflow={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: theme.palette.background.paper,
-                    border: `1px solid ${theme.palette.divider}`,
-                    borderRadius: '8px'
-                  }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-                  formatter={(value) => truncate(value, 20)}
-                />
-                {lineKeys.map((key, index) => (
-                  <Line
-                    key={key}
-                    type="monotone"
-                    dataKey={key}
-                    stroke={lineColors[index % lineColors.length]}
-                    activeDot={{r: 8}}
-                    strokeWidth={2}
-                    dot={{strokeWidth: 2}}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </Paper>
-        ) : (
-          <Paper className="chart-paper empty-chart" elevation={3}>
-            <Typography variant="body1" color="text.secondary">
-              No data available for the selected filters
-            </Typography>
-          </Paper>
-        )}
-      </Box>
-
-      {/* Pie Chart */}
-      {selectedGroupBy !== 'days' && pieChartData.length > 0 && (
-        <Box className="pie-chart-container">
-          <Paper className="chart-paper" elevation={3}>
-            <Typography variant="subtitle2" className="chart-title">
-              Group Distribution
-            </Typography>
-            <ResponsiveContainer width="100%" height={330}>
-              <PieChart>
-                <Pie
-                  data={pieChartData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  style={{marginTop: 20}}
-                  outerRadius={100}
-                  fill={theme.palette.primary.main}
-                  label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
-                >
-                  {pieChartData.map((_entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={lineColors[index % lineColors.length]}
-                    />
-                  ))}
-                </Pie>
-                <Legend
-                  verticalAlign="bottom"
-                  wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-                  formatter={(value) => truncate(value, 20)}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </Paper>
-        </Box>
-      )}
-
       {/* Floating Filter & Group By Buttons */}
       <div className="buttons-container">
         <div className="filter-button" ref={filterButtonRef} onClick={toggleFilters}>
@@ -612,6 +716,8 @@ const Insights: React.FC = () => {
             color="primary"
           />
         </div>
+
+
         <div className="group-by-button" ref={groupByButtonRef} onClick={toggleGroupByOptions}>
           <Chip
             icon={<SortIcon/>}
@@ -640,6 +746,16 @@ const Insights: React.FC = () => {
         onGroupByChange={handleGroupByChange}
         onCalculationChange={handleCalculationChange}
         panelRef={groupByPanelRef}
+      />
+
+      {/* Selection Panel - New Component */}
+      <SelectionPanel
+        show={showSelectionPanel}
+        onClose={() => setShowSelectionPanel(false)}
+        selectedItems={selectedItems}
+        onItemsChange={setSelectedItems}
+        availableItems={availableItems}
+        panelRef={selectionPanelRef}
       />
 
     </Container>
@@ -715,6 +831,7 @@ const GroupByPanel: React.FC<{
           ))}
         </div>
       </div>
+
       <div className="panel-section">
         <div className="section-title">Calculation</div>
         <div className="group-by-options">
@@ -729,6 +846,49 @@ const GroupByPanel: React.FC<{
             />
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Selection Panel Component - New
+const SelectionPanel: React.FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedItems: string[];
+  onItemsChange: (items: string[]) => void;
+  availableItems: string[];
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({show, onClose, selectedItems, onItemsChange, availableItems, panelRef}) => {
+  if (!show) return null;
+
+  const handleItemToggle = (item: string) => {
+    if (selectedItems.includes(item)) {
+      onItemsChange(selectedItems.filter(i => i !== item));
+    } else {
+      onItemsChange([...selectedItems, item]);
+    }
+  };
+
+  return (
+    <div className="selection-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Select Items</span>
+        <IconButton size="small" className="close-button" onClick={onClose}>
+          <CloseIcon/>
+        </IconButton>
+      </div>
+      <div className="selection-options">
+        {availableItems.map(item => (
+          <Chip
+            key={item}
+            label={item}
+            color={selectedItems.includes(item) ? "primary" : "default"}
+            variant={selectedItems.includes(item) ? "filled" : "outlined"}
+            onClick={() => handleItemToggle(item)}
+            className="selection-chip"
+          />
+        ))}
       </div>
     </div>
   );

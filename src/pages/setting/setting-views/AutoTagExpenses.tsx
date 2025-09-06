@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -117,8 +117,7 @@ const AutoTagExpenses: React.FC = () => {
         Auto-tag All Past Expenses
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
-        This action will go through all past expenses and apply tags based on your vendor settings. This can be a
-        lengthy and data-intensive process.
+        This action will go through all past expenses and apply tags based on your vendor-tag mappings available in 'Manage Vendor Tags'.
       </Typography>
       <Button
         onClick={handleAutoTagAll}

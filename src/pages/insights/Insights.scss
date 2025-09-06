@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -13,10 +13,11 @@ GNU General Public License for more details, or get a copy at
 */
 
 
-@import '../../styles/theme.scss';
+@use '../../styles/theme.scss';
 
 .statistics-container {
   padding: 16px;
+  margin-bottom: 120px;
 }
 
 .statistics-header {
@@ -93,13 +94,13 @@ GNU General Public License for more details, or get a copy at
 
 .line-chart-container {
   margin-bottom: 20px;
-  height: 330px;
+  height: 410px;
   margin-top: 24px;
 }
 
 
 .pie-chart-container {
-  padding-bottom: 120px;
+  padding-bottom: 20px;
   //height: 300px;
   margin-top: 24px;
 }
@@ -114,4 +115,321 @@ GNU General Public License for more details, or get a copy at
 .chart-title {
   margin-bottom: 8px;
   font-weight: 500;
+}
+
+.info-banner-text {
+  margin-bottom: 1.5rem !important;
+  color: var(--text-secondary);
+  padding: 0.75rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-blue);
+}
+
+/* Buttons container for Filter, Selection, and Group By buttons */
+.buttons-container {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Chart header styling for title and inline selection button */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 0 8px 0;
+
+  .chart-title {
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+}
+
+/* Inline selection button styling next to chart title */
+.selection-button-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .MuiIconButton-root {
+    width: 32px;
+    height: 32px;
+    background-color: var(--accent-blue) !important;
+    color: var(--bg-primary) !important;
+    box-shadow: 0 2px 8px rgba(58, 123, 213, 0.3);
+    border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--accent-blue) !important;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(58, 123, 213, 0.4);
+    }
+
+    &:disabled {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-secondary) !important;
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border-color);
+    }
+
+    .MuiSvgIcon-root {
+      font-size: 18px;
+    }
+  }
+}
+
+.filter-button, .group-by-button {
+  padding-top: 10px;
+
+  .MuiChip-root {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: var(--box-shadow);
+    height: 40px;
+    padding: 0 15px;
+    border: 1px solid var(--border-color);
+    font-weight: 400;
+    min-width: 120px;
+    justify-content: center;
+
+    .MuiChip-icon {
+      color: var(--accent-blue);
+    }
+
+    &:hover {
+      background-color: var(--group-header-hover);
+      border-color: var(--border-color-dark);
+    }
+  }
+}
+
+/* Selection button styling to match the design pattern */
+.selection-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .MuiIconButton-root {
+    width: 48px;
+    height: 48px;
+    background-color: var(--accent-blue) !important;
+    color: white !important;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--accent-blue) !important;
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    }
+
+    &:disabled {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-secondary) !important;
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border-color);
+    }
+
+    .MuiSvgIcon-root {
+      font-size: 20px;
+    }
+  }
+}
+
+.filter-panel, .group-by-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-width: 600px;
+  bottom: 56px;
+  background-color: var(--group-header-bg);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  padding-bottom: 20px;
+  animation: slideUp 0.2s ease-out;
+  border: 1px solid var(--border-color);
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border-color);
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .close-button {
+      color: var(--accent-blue);
+      background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+      transition: all 0.2s ease;
+      padding: 4px;
+      margin-right: -4px;
+
+      &:hover {
+        transform: scale(1.1);
+        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+        border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+      }
+
+      .MuiSvgIcon-root {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .panel-section {
+    padding: 0 20px;
+    margin-top: 15px;
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      padding-left: 5px;
+    }
+
+    &:first-of-type {
+      margin-top: 5px;
+    }
+  }
+
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 20px 10px;
+
+    .filter-chip {
+      &.MuiChip-outlined {
+        border-color: var(--border-color);
+        background-color: var(--bg-secondary);
+      }
+    }
+  }
+
+  .group-by-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 5px 0;
+
+    .filter-chip {
+      margin: 0;
+      &.MuiChip-outlined {
+        border-color: var(--border-color);
+        background-color: var(--bg-secondary);
+      }
+    }
+  }
+}
+
+/* Animation for sliding up panels */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Selection Panel Styles
+.selection-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-width: 600px;
+  bottom: 56px;
+  background-color: var(--group-header-bg);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  padding-bottom: 20px;
+  animation: slideUp 0.2s ease-out;
+  border: 1px solid var(--border-color);
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border-color);
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .close-button {
+      color: var(--accent-blue);
+      background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+      transition: all 0.2s ease;
+      border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
+      padding: 4px;
+      margin-right: -4px;
+
+      &:hover {
+        transform: scale(1.1);
+        color: var(--text-white);
+        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+        border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+      }
+
+      .MuiSvgIcon-root {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .selection-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 15px 20px 10px;
+    max-height: 400px;
+    overflow-y: auto;
+
+    .selection-chip {
+      margin: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+
+      &.MuiChip-outlined {
+        border-color: var(--border-color);
+        background-color: var(--bg-secondary);
+      }
+    }
+  }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {Expense} from "../../Types";
-import {utils, write} from "xlsx";
+import * as ExcelJS from "exceljs";
 import {saveAs} from "file-saver";
 import {filterOptions} from "../dataValidations";
 import {getCurrentDate} from "../../utility/utility";
@@ -82,7 +82,7 @@ const generateFilename = (timeRange: string, fileType: string): string => {
  * @param expenses List of expenses to export
  * @param timeRange The selected time range for filtering
  */
-export const exportAsXLSX = (expenses: Expense[], timeRange: string): void => {
+export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Promise<void> => {
     if (!validateExpenses(expenses)) {
         return;
     }
@@ -90,35 +90,54 @@ export const exportAsXLSX = (expenses: Expense[], timeRange: string): void => {
     try {
         const formattedExpenses = formatExpenses(expenses);
 
-        // Create a worksheet from the formatted data
-        const worksheet = utils.json_to_sheet(formattedExpenses);
+        // Create a new workbook and worksheet
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Expenses");
 
-        // Adjust column widths
-        worksheet["!cols"] = [
-            {wch: 12}, // Date
-            {wch: 12}, // Time
-            {wch: 20}, // Vendor
-            {wch: 10}, // Amount
-            {wch: 10}, // Type
-            {wch: 15}, // PaymentMode
-            {wch: 15}, // Tag
+        // Define columns with headers and widths
+        worksheet.columns = [
+            { header: 'Date', key: 'Date', width: 12 },
+            { header: 'Time', key: 'Time', width: 12 },
+            { header: 'Vendor', key: 'Vendor', width: 30 },
+            { header: 'Amount', key: 'Amount', width: 10 },
+            { header: 'Type', key: 'Type', width: 10 },
+            { header: 'PaymentMode', key: 'PaymentMode', width: 15 },
+            { header: 'Tag', key: 'Tag', width: 15 },
         ];
 
-        // Create a workbook with the worksheet
-        const workbook = {
-            SheetNames: ["Expenses"],
-            Sheets: {
-                Expenses: worksheet,
-            },
+        // Add data rows
+        formattedExpenses.forEach(expense => {
+            worksheet.addRow(expense);
+        });
+
+        // Style the header row
+        const headerRow = worksheet.getRow(1);
+        headerRow.font = { bold: true };
+        headerRow.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFE0E0E0' }
         };
+
+        // Add borders to all cells
+        worksheet.eachRow((row) => {
+            row.eachCell((cell) => {
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+        });
 
         const filename = generateFilename(timeRange, 'xlsx');
 
-        // Convert workbook to a binary string
-        const excelBuffer = write(workbook, {bookType: 'xlsx', type: 'array'});
+        // Generate Excel file buffer
+        const buffer = await workbook.xlsx.writeBuffer();
 
         // Create a Blob and trigger download
-        const blob = new Blob([excelBuffer], {
+        const blob = new Blob([buffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
         saveAs(blob, filename);

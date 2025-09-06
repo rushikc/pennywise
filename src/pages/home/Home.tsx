@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, {FC, ReactElement, useEffect, useRef, useState} from "react";
+import React, {FC, ReactElement, useEffect, useRef, useState, useCallback} from "react";
 import {useSelector} from 'react-redux';
 import {Col, Row} from "reactstrap";
 import {Expense} from '../../Types';
@@ -58,6 +58,7 @@ import AddExpense from './home-views/AddExpense';
 import {ExpenseAPI} from "../../api/ExpenseAPI";
 import {CreditCard, Sort} from "@mui/icons-material";
 import Container from "@mui/material/Container";
+import {useLongPress} from "../../hooks/useLongPress";
 
 // Add interface to extend Window type
 declare global {
@@ -67,11 +68,9 @@ declare global {
   }
 }
 
-/**
- * Home component displays the main expense management interface
- */
+
 const Home: FC<any> = (): ReactElement => {
-  const {expenseList} = useSelector(selectExpense);
+  const {expenseList, isAppLoading} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -91,43 +90,49 @@ const Home: FC<any> = (): ReactElement => {
   const [showMergeDialog, setShowMergeDialog] = useState(false);
   const [showAddExpenseDialog, setShowAddExpenseDialog] = useState(false);
 
-  // Refs to detect clicks outside panels
+  // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
   const groupByPanelRef = useRef<HTMLDivElement>(null);
   const groupByButtonRef = useRef<HTMLDivElement>(null);
 
-  // Select an expense for tagging
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
-  // Fetch and sort expenses, manage loading spinner
+  // console.log('Expense List STore:', expenseList);
+
+  useEffect(() => {
+    setLoading(isAppLoading);
+  }, [isAppLoading]);
+
   const reloadExpenseList = () => {
     setLoading(true);
     ExpenseAPI.getExpenseList()
       .then(expenses => {
-        setExpenseList(sortByKeyDate(expenses, 'date'));
+        const sortedExpenses = sortByKeyDate(expenses, 'date');
+        setExpenseList(sortedExpenses);
         setTimeout(() => setLoading(false), 300);
       })
-      .catch(() => setLoading(false));
-  };
+      .catch(error => {
+        console.error('Error reloading expenses:', error);
+        setLoading(false);
+      });
+  }
 
-  // Toggle filter panel, reset group-by panel
   const toggleFilters = () => {
-    if (selectionMode) return;
-    setShowFilters(prev => !prev);
-    setShowGroupByOptions(false);
+    if (selectionMode) return; // Don't show filters in selection mode
+    setShowFilters(!showFilters);
+    if (showGroupByOptions) setShowGroupByOptions(false);
   };
 
-  // Toggle group-by panel, reset filters
   const toggleGroupByOptions = () => {
-    if (selectionMode) return;
-    setShowGroupByOptions(prev => !prev);
-    setShowFilters(false);
+    if (selectionMode) return; // Don't show group options in selection mode
+    setShowGroupByOptions(!showGroupByOptions);
+    if (showFilters) setShowFilters(false);
   };
 
-  // Manage multi-select without opening detail view
+  // Toggle expense selection
   const toggleExpenseSelection = (expense: Expense, event: React.MouseEvent) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Prevent opening the expense details
 
     if (!selectionMode) {
       // Enter selection mode and select this expense
@@ -157,23 +162,31 @@ const Home: FC<any> = (): ReactElement => {
   };
 
   // Cancel selection mode
-  const cancelSelection = () => {
+  const cancelSelection = useCallback(() => {
     setSelectedExpenses([]);
     setSelectionMode(false);
-  };
+  }, []);
 
   // Handle delete selected expenses
   const handleDeleteSelected = async () => {
-    if (!selectedExpenses.length) return;
-    setLoading(true);
+    if (selectedExpenses.length === 0) return;
+
+    setLoading(true); // Show loading state while deleting
 
     try {
-      const deletePromises = selectedExpenses.map(expense => ExpenseAPI.deleteExpense(expense));
+      // Delete each selected expense using the ExpenseAPI
+      const deletePromises = selectedExpenses.map(expense =>
+        ExpenseAPI.deleteExpense(expense)
+      );
+
+      // Wait for all delete operations to complete
       await Promise.all(deletePromises);
       selectedExpenses.forEach(expense => deleteExpense(expense));
-    } catch {
-      // suppress errors or handle via UI notification
+
+    } catch (error) {
+      console.error('Error deleting expenses:', error);
     } finally {
+      // setLoading(false);
       cancelSelection();
       reloadExpenseList();
     }
@@ -248,6 +261,9 @@ const Home: FC<any> = (): ReactElement => {
     const filtered = filterExpensesByDate(expenseList, selectedRange);
     const sortedExpenses = sortByKeyDate(filtered, 'date');
     setDateFilteredExpenses(sortedExpenses);
+
+    console.log('Filtered Expenses:', sortedExpenses);
+
   }, [expenseList, selectedRange]);
 
   // Apply search filter after date filtering
@@ -289,7 +305,7 @@ const Home: FC<any> = (): ReactElement => {
     if (searchTerm && selectionMode) {
       cancelSelection();
     }
-  }, [searchTerm]);
+  }, [searchTerm, cancelSelection, selectionMode]);
 
   // Toggle collapse state for a group
   const toggleGroupCollapse = (groupKey: string) => {
@@ -416,47 +432,14 @@ const Home: FC<any> = (): ReactElement => {
     const isSelected = selectedExpenses.some(e => e.id === expense.id);
 
     return (
-      <Row
+      <ExpenseItem
         key={index}
-        className={`expense-row ${isSelected ? 'selected' : ''}`}
-        onClick={(e) => selectionMode ? toggleExpenseSelection(expense, e) : onSetExpense(expense)}
-      >
-        <Avatar
-          className={`expense-avatar ${isSelected ? 'selected' : ''}`}
-          onClick={(e) => toggleExpenseSelection(expense, e)}
-        >
-          {isSelected ?
-            <CheckCircleIcon fontSize="inherit"/> :
-            expense.type === 'credit' ?
-              <CreditCard fontSize="inherit"/> :
-              <CurrencyRupeeIcon fontSize="inherit"/>
-          }
-        </Avatar>
-        <Col>
-          <Row className="expense-row-header">
-            <Col>
-              <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
-            </Col>
-            <Col xs="auto" className='d-flex justify-content-end mr-2'>
-              <span className='expense-type'>
-                {expense.costType === 'debit' ? '-' : '+'}
-              </span>
-              <span className="expense-currency">₹</span>
-              <span className="expense-cost">{expense.cost}</span>
-            </Col>
-          </Row>
-          <Row className="expense-date-row">
-            <span className="expense-date">{getDateMonth(expense.date)}</span>
-          </Row>
-          <Row>
-            <Col>
-              <span className={expense.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
-                {expense.tag ? expense.tag : 'untagged'}
-              </span>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+        expense={expense}
+        isSelected={isSelected}
+        selectionMode={selectionMode}
+        onSelect={toggleExpenseSelection}
+        onView={onSetExpense}
+      />
     );
   };
 
@@ -478,8 +461,8 @@ const Home: FC<any> = (): ReactElement => {
           </div>
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
-            <IconButton className="collapse-button">
-              <KeyboardArrowDownIcon/>
+            <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
+              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowDownIcon/>}
             </IconButton>
           </div>
         </div>
@@ -789,6 +772,79 @@ const GroupByPanel: FC<{
         </div>
       </div>
     </div>
+  );
+};
+
+// ExpenseItem Component - Separated to properly use hooks
+const ExpenseItem: FC<{
+  expense: Expense;
+  isSelected: boolean;
+  selectionMode: boolean;
+  onSelect: (expense: Expense, e: React.MouseEvent) => void;
+  onView: (expense: Expense) => void;
+}> = ({ expense, isSelected, selectionMode, onSelect, onView }) => {
+
+  // Create a minimal synthetic event object once instead of recreating it in each handler
+  const createSyntheticEvent = useCallback(() => {
+    return { stopPropagation: () => {} } as React.MouseEvent;
+  }, []);
+
+  // Handle long press on expense row - activates selection mode
+  const handleLongPress = useCallback(() => {
+    onSelect(expense, createSyntheticEvent());
+  }, [expense, onSelect, createSyntheticEvent]);
+
+  // Handle regular click - either selects in selection mode or views details
+  const handleClick = useCallback(() => {
+    if (selectionMode) {
+      onSelect(expense, createSyntheticEvent());
+    } else {
+      onView(expense);
+    }
+  }, [expense, selectionMode, onSelect, onView, createSyntheticEvent]);
+
+  // Setup long press gesture handlers
+  const longPressHandlers = useLongPress(handleLongPress, handleClick, { delay: 500 });
+
+
+  return (
+    <Row
+      className={`expense-row ${isSelected ? 'selected' : ''}`}
+      {...longPressHandlers}
+    >
+      <Avatar className={`expense-avatar ${isSelected ? 'selected' : ''}`}>
+        {isSelected ?
+          <CheckCircleIcon fontSize="inherit"/> :
+          expense.type === 'credit-card' ?
+            <CreditCard fontSize="inherit"/> :
+            <CurrencyRupeeIcon fontSize="inherit"/>
+        }
+      </Avatar>
+      <Col>
+        <Row className="expense-row-header">
+          <Col>
+            <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
+          </Col>
+          <Col xs="auto" className='d-flex justify-content-end mr-2'>
+            <span className='expense-type'>
+              {expense.costType === 'debit' ? '-' : '+'}
+            </span>
+            <span className="expense-currency">₹</span>
+            <span className="expense-cost">{expense.cost}</span>
+          </Col>
+        </Row>
+        <Row className="expense-date-row">
+          <span className="expense-date">{getDateMonth(expense.date)}</span>
+        </Row>
+        <Row>
+          <Col>
+            <span className={expense.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
+              {expense.tag ? expense.tag : 'untagged'}
+            </span>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   );
 };
 

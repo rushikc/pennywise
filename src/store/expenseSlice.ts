@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -13,9 +13,8 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {BankConfig, Expense, VendorTag} from "../Types";
+import {AppConfig, BankConfig, Expense, VendorTag} from "../Types";
 import {FinanceIndexDB} from "../api/FinanceIndexDB";
-import {ExpenseAPI} from "../api/ExpenseAPI";
 
 
 interface InitialState {
@@ -23,9 +22,7 @@ interface InitialState {
     expense: Expense | null,
     vendorTagList: VendorTag[],
     bankConfig: BankConfig,
-    appConfig: {
-        darkMode: boolean
-    },
+    appConfig: AppConfig,
     isAppLoading: boolean,
     isTagModal: boolean,
     tagList: string[],
@@ -66,7 +63,7 @@ export const expenseSlice = createSlice({
 
         setTagMap: (state, action: PayloadAction<VendorTag>) => {
             const tagObj = action.payload;
-            const tagIndex = state.vendorTagList.findIndex(t => t.vendor == tagObj.vendor);
+            const tagIndex = state.vendorTagList.findIndex(t => t.vendor === tagObj.vendor);
 
             if (tagIndex > -1) {
                 state.vendorTagList[tagIndex].tag = tagObj.tag;
@@ -80,7 +77,7 @@ export const expenseSlice = createSlice({
 
         updateExpense: (state, action: PayloadAction<Expense>) => {
             const expense = action.payload;
-            const expenseIndex = state.expenseList.findIndex(t => t.mailId == expense.mailId);
+            const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
             if (expenseIndex > -1) {
                 state.expenseList[expenseIndex].tag = expense.tag;
@@ -91,7 +88,7 @@ export const expenseSlice = createSlice({
 
         deleteExpense: (state, action: PayloadAction<Expense>) => {
             const expense = action.payload;
-            const expenseIndex = state.expenseList.findIndex(t => t.mailId == expense.mailId);
+            const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
             console.log("Deleting expense", expense, "at index", expenseIndex);
             if (expenseIndex > -1) {

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -12,7 +12,7 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Box,
   Button,
@@ -56,9 +56,6 @@ const ManageVendorTags: React.FC = () => {
     loadTags();
   }, []);
 
-  useEffect(() => {
-    filterVendorTags();
-  }, [searchTerm, vendorTags]);
 
   const loadVendorTags = () => {
     setLoading(true);
@@ -86,7 +83,7 @@ const ManageVendorTags: React.FC = () => {
       });
   };
 
-  const filterVendorTags = () => {
+  const filterVendorTags = useCallback(() => {
     if (!searchTerm.trim()) {
       setFilteredVendorTags(vendorTags);
       return;
@@ -99,7 +96,12 @@ const ManageVendorTags: React.FC = () => {
         vendorTag.tag.toLowerCase().includes(term)
     );
     setFilteredVendorTags(filtered);
-  };
+  }, [searchTerm, vendorTags]);
+
+
+  useEffect(() => {
+    filterVendorTags();
+  }, [searchTerm, vendorTags, filterVendorTags]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -165,7 +167,7 @@ const ManageVendorTags: React.FC = () => {
 
 
   return (
-    <Container className="manage-tags-container">
+    <Container className="manage-tags-container" maxWidth="sm">
       <Box className="config-header">
         <IconButton
           onClick={() => navigate('/profile')}

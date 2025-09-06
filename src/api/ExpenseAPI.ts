@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -15,14 +15,12 @@ GNU General Public License for more details, or get a copy at
 import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
-import {getFirebaseConfig} from '../firebase/firebase-public';
+import {firebaseConfig} from '../firebase/firebase-public';
 import {getDateJsIdFormat, getUnixTimestamp} from "../utility/utility";
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, Expense, VendorTag} from "../Types";
 
-
-const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -30,14 +28,23 @@ const db = getFirestore(app);
 
 export class ExpenseAPI {
 
+    /**
+     * Adds a new expense to Firestore and IndexedDB.
+     * It generates a unique key for the expense based on its date and vendor,
+     * updates the modified date, and then saves the expense.
+     * Returns the expense object with the generated ID.
+     */
     static addExpense = async (expense: Expense): Promise<Expense> => {
 
         try {
+
+            // console.log('Creating expense...', expense);
 
             let key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
             // console.debug("Document written with expense: ", JSONCopy(expense));
 
             expense.modifiedDate = Date.now(); // date to epoch
+            expense.cost = Number(expense.cost.toFixed(2)); 
 
             const docRef = doc(db, "expense", key);
             const {id, ...expenseWithoutId} = expense;
@@ -45,8 +52,11 @@ export class ExpenseAPI {
 
             await FinanceIndexDB.addExpenseList([expense]);
 
-            expense["id"] = key;
-            return expense;
+            // Return a new object with the updated ID instead of modifying the original
+            return {
+                ...expense,
+                id: key
+            };
 
         } catch (e) {
             ErrorHandlers.handleApiError(e);
@@ -56,6 +66,10 @@ export class ExpenseAPI {
     }
 
 
+    /**
+     * Sets a single document in a specified Firestore collection.
+     * If no collection is specified, it defaults to the 'config' collection.
+     */
     static setOneDoc = async (key: string, val: any, collectionName: string = 'config') => {
         try {
             const docRef = doc(db, collectionName, key);
@@ -68,6 +82,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Retrieves a single document from a specified Firestore collection.
+     * If no collection is specified, it defaults to the 'config' collection.
+     */
     static getOneDoc = async (key: string, collectionName: string = 'config') => {
         try {
             const docRef = doc(db, collectionName, key);
@@ -81,6 +99,11 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Deletes a single document from a specified Firestore collection.
+     * If no collection is specified, it defaults to the 'config' collection.
+     * Returns true on successful deletion, false otherwise.
+     */
     static deleteOneDoc = async (key: string, collectionName: string = 'config') => {
         try {
             const docRef = doc(db, collectionName, key);
@@ -94,6 +117,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * A utility function for processing and migrating data in Firestore.
+     * This function is typically used for one-off data manipulation tasks.
+     */
     static processData = async () => {
         try {
             console.debug("Process Data Init");
@@ -140,6 +167,12 @@ export class ExpenseAPI {
     }
 
 
+    /**
+     * Retrieves a list of expenses from Firestore and IndexedDB.
+     * It fetches expenses modified after the last update timestamp stored in IndexedDB,
+     * updates the local database, and returns the complete list of expenses.
+     * An optional date can be provided to override the last update check.
+     */
     static getExpenseList = async (overrideLastDate: number | undefined = undefined): Promise<Expense[]> => {
         try {
             let table = 'expense';
@@ -205,6 +238,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Retrieves the list of tags from the 'tags' document in the 'config' collection.
+     * Returns an array of strings representing the tags.
+     */
     static getTagList = async () => {
         try {
             let table = 'config';
@@ -220,6 +257,9 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Updates the list of tags in the 'tags' document in the 'config' collection.
+     */
     static updateTagList = async (tags: string[]) => {
         try {
             let table = 'config';
@@ -231,9 +271,13 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Retrieves the bank configuration from the 'bankConfig' document in the 'config' collection.
+     * This includes settings for UPI and credit card expense tracking.
+     */
     static getBankConfig = async (): Promise<BankConfig> => {
         try {
-            const bankConfig: any = await ExpenseAPI.getOneDoc('bank', 'config');
+            const bankConfig: any = await ExpenseAPI.getOneDoc('bankConfig', 'config');
 
             // Return default config if not found
             if (!bankConfig) {
@@ -255,9 +299,13 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Updates the bank configuration in the 'bankConfig' document in the 'config' collection.
+     * Returns true on success, false on failure.
+     */
     static updateBankConfig = async (config: BankConfig) => {
         try {
-            await ExpenseAPI.setOneDoc('bank', config, 'config');
+            await ExpenseAPI.setOneDoc('bankConfig', config, 'config');
             console.debug('Updated bank config:', config);
             return true;
         } catch (e) {
@@ -267,6 +315,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Retrieves the dark mode setting from the 'darkMode' document in the 'config' collection.
+     * Returns true if dark mode is enabled, false otherwise.
+     */
     static getDarkModeConfig = async (): Promise<boolean> => {
 
         try {
@@ -284,6 +336,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Updates the dark mode setting in the 'darkMode' document in the 'config' collection.
+     * Returns true on success, false on failure.
+     */
     static updateDarkMode = async (val: boolean) => {
         try {
             const config = {
@@ -299,6 +355,11 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Retrieves the list of vendor-to-tag mappings.
+     * It fetches new or updated mappings from Firestore since the last check,
+     * updates the local IndexedDB, and returns the full list.
+     */
     static getVendorTagList = async (): Promise<VendorTag[]> => {
         try {
             let table = 'vendorTag';
@@ -361,6 +422,11 @@ export class ExpenseAPI {
     }
 
 
+    /**
+     * Updates a vendor-to-tag mapping in Firestore.
+     * It sets the modified date to the current time before updating.
+     * Returns true on success, false on failure.
+     */
     static updateVendorTag = async (vendorTag: VendorTag) => {
         try {
             // Extract ID for use as the document key
@@ -380,6 +446,10 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Deletes a vendor-to-tag mapping from Firestore.
+     * Returns true on successful deletion, false otherwise.
+     */
     static deleteVendorTag = async (vendorTagId: string): Promise<boolean> => {
         try {
             // Delete from Firestore
@@ -395,6 +465,11 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Deletes an expense from both Firestore and IndexedDB.
+     * The IndexedDB deletion is based on the expense's mailId.
+     * Returns true on successful deletion, false otherwise.
+     */
     static deleteExpense = async (expense: any): Promise<boolean> => {
         try {
             // First, delete from Firebase
@@ -418,6 +493,12 @@ export class ExpenseAPI {
         }
     }
 
+    /**
+     * Automatically applies tags to past expenses based on vendor-to-tag mappings.
+     * It fetches untagged expenses from a specified start date, matches them against
+     * existing vendor tags, and updates them in batches.
+     * Returns the number of expenses that were successfully tagged.
+     */
     static autoTagPastExpenses = async (startDate: number): Promise<number> => {
         try {
             console.log(`Auto-tagging expenses from ${new Date(startDate).toISOString()}`);
@@ -440,7 +521,7 @@ export class ExpenseAPI {
             const expensesToUpdate: Expense[] = [];
 
             querySnapshot.forEach((doc) => {
-                const expense = { id: doc.id, ...doc.data() } as Expense;
+                const expense = {id: doc.id, ...doc.data()} as Expense;
 
                 // Check if the expense already has a tag or is a payment
                 if (expense.tag) {
@@ -474,7 +555,7 @@ export class ExpenseAPI {
 
                     // Batch update expenses in Firestore
                     const updatePromises = batch.map(async (expense) => {
-                        const { id, ...expenseWithoutId } = expense;
+                        const {id, ...expenseWithoutId} = expense;
                         if (id) {
                             const docRef = doc(db, "expense", id);
                             await setDoc(docRef, expenseWithoutId);

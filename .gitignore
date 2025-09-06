@@ -11,6 +11,7 @@ lerna-debug.log*
 database
 build
 .firebase
+.firebaserc
 
 #credentials
 */credentials/*

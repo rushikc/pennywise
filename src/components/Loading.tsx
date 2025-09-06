@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -14,7 +14,6 @@ GNU General Public License for more details, or get a copy at
 
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function Loading() {
 

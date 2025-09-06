@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -48,11 +48,11 @@ const ZoomTransition = React.forwardRef(function ZoomTransition(
 
 
 const MergeExpenses: FC<MergeExpensesProps> = ({
-                                                   expenses,
-                                                   open,
-                                                   onClose,
-                                                   onMergeComplete
-                                               }): ReactElement => {
+        expenses,
+        open,
+        onClose,
+        onMergeComplete
+    }): ReactElement => {
     const [selectedTag, setSelectedTag] = useState<string>("");
     const [selectedVendor, setSelectedVendor] = useState<string>("");
     const [totalCost, setTotalCost] = useState<number>(0);
@@ -91,7 +91,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
         const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
 
         // Create a new merged expense with properties from the selected vendor's expense
-        const mergedExpense: Expense = {
+        let mergedExpense: Expense = {
             id: vendorExpense.id,
             vendor: selectedVendor,
             tag: selectedTag || vendorExpense.tag, // Use selected tag or keep original

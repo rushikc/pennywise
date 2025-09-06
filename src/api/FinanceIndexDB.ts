@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 
-import { Config, Expense, VendorTag } from "../Types";
+import {Config, Expense, VendorTag} from "../Types";
 
 
 const dbName = "Finance";
@@ -24,6 +24,10 @@ type TableNames = "expense" | "vendorTag" | "config";
 export class FinanceIndexDB {
 
 
+    /**
+     * Initializes the IndexedDB database.
+     * Creates object stores and indexes if they don't exist.
+     */
     static initDB = () => {
 
         if (!indexedDB) {
@@ -39,12 +43,12 @@ export class FinanceIndexDB {
 
                 const db = financeDB.result;
 
-                const expenseStore = db.createObjectStore("expense", { keyPath: "mailId" });
-                expenseStore.createIndex("vendor_index", ["vendor"], { unique: false });
-                expenseStore.createIndex("date_index", ["date"], { unique: false, });
+                const expenseStore = db.createObjectStore("expense", {keyPath: "mailId"});
+                expenseStore.createIndex("vendor_index", ["vendor"], {unique: false});
+                expenseStore.createIndex("date_index", ["date"], {unique: false,});
 
-                db.createObjectStore("vendorTag", { keyPath: "vendor" });
-                db.createObjectStore("config", { keyPath: "key" });
+                db.createObjectStore("vendorTag", {keyPath: "vendor"});
+                db.createObjectStore("config", {keyPath: "key"});
 
                 console.debug("Created finance IndexedDB");
 
@@ -53,7 +57,10 @@ export class FinanceIndexDB {
     }
 
 
-
+    /**
+     * Gets an instance of a specific object store from the IndexedDB.
+     * Returns a promise that resolves with the object store instance.
+     */
     static getStoreInstance = async (storeName: TableNames, mode: IDBTransactionMode = "readwrite"): Promise<IDBObjectStore> => {
 
         return new Promise((resolve) => {
@@ -70,6 +77,9 @@ export class FinanceIndexDB {
     }
 
 
+    /**
+     * Adds a list of expenses to the 'expense' object store.
+     */
     static addExpenseList = async (expenseList: Expense[]) => {
 
         console.debug("addExpense IndexedDB");
@@ -78,6 +88,9 @@ export class FinanceIndexDB {
 
     }
 
+    /**
+     * Adds a vendor tag to the 'vendorTag' object store.
+     */
     static addVendorTag = async (vendorTag: VendorTag) => {
         console.debug("addVendorTag IndexedDB");
         const store = await this.getStoreInstance("vendorTag");
@@ -85,6 +98,9 @@ export class FinanceIndexDB {
     }
 
 
+    /**
+     * Adds a list of configurations to the 'config' object store.
+     */
     static addConfig = async (configList: Config[]) => {
 
         // console.debug("addExpense IndexedDB");
@@ -94,6 +110,9 @@ export class FinanceIndexDB {
     }
 
 
+    /**
+     * Retrieves a single data entry from a specified object store using a key.
+     */
     static getData = async (storeName: TableNames, keyPath: string): Promise<any> => {
 
         console.debug("getData IndexedDB - ", storeName, keyPath);
@@ -109,6 +128,9 @@ export class FinanceIndexDB {
 
     }
 
+    /**
+     * Retrieves all data from a specified object store.
+     */
     static getAllData = async (storeName: TableNames): Promise<any[]> => {
 
         console.debug("getAllData IndexedDB - ", storeName);
@@ -158,6 +180,9 @@ export class FinanceIndexDB {
         });
     }
 
+    /**
+     * Deletes an expense from the 'expense' object store by its mailId.
+     */
     static deleteExpense = async (mailId: string): Promise<void> => {
         console.debug("deleteExpense IndexedDB - mailId:", mailId);
 

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -19,21 +19,13 @@ import {FinanceIndexDB} from "./api/FinanceIndexDB";
 import './App.scss';
 import BottomNav from "./components/BottomNav";
 import ThemeManager from "./components/ThemeManager";
-import Home from "./pages/home/Home";
 import TagExpenses from "./pages/home/home-views/TagExpenses";
-import Settings from "./pages/setting/Settings";
-import Insights from "./pages/insights/Insights";
-import Configuration from "./pages/setting/setting-views/Configuration";
 import {selectExpense} from "./store/expenseActions";
-import ManageTags from "./pages/setting/setting-views/ManageTags";
 import {useSelector} from "react-redux";
 import Login from "./pages/login/Login";
 import {AuthProvider, useAuth} from "./pages/login/AuthContext";
-import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
-import ReloadExpense from "./pages/setting/setting-views/ReloadExpense";
 import {loadInitialAppData} from "./pages/dataValidations";
-import AutoTagExpenses from "./pages/setting/setting-views/AutoTagExpenses";
-
+import {routes} from "./routes";
 
 
 function App() {
@@ -58,35 +50,41 @@ function App() {
   const theme = appConfig.darkMode ? darkTheme : lightTheme;
 
 
-
   const {isTagModal} = useSelector(selectExpense);
 
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        {
-          isTagModal && <TagExpenses/>
-        }
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline/>
+          {
+            isTagModal && <TagExpenses/>
+          }
 
-        <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path='/home' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
-          <Route path='/profile' element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
-          <Route path='/stats' element={<ProtectedRoute><Insights/></ProtectedRoute>}/>
-          <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
-          <Route path='/setting-tags' element={<ProtectedRoute><ManageTags/></ProtectedRoute>}/>
-          <Route path='/setting-tag-maps' element={<ProtectedRoute><ManageVendorTags/></ProtectedRoute>}/>
-          <Route path='/reload-expense' element={<ProtectedRoute><ReloadExpense/></ProtectedRoute>}/>
-          <Route path='/auto-tag-expenses' element={<ProtectedRoute><AutoTagExpenses/></ProtectedRoute>}/>
-          <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
-        </Routes>
-        <ThemeManager/>
+          <Routes>
+            <Route path="/login" element={<Login/>}/>
+            {routes.map((route) => (
+                <Route
+                    key={route.key}
+                    path={route.path}
+                    element={
+                      route.isProtected ? (
+                          <ProtectedRoute>
+                            <route.component/>
+                          </ProtectedRoute>
+                      ) : (
+                          <route.component/>
+                      )
+                    }
+                />
+            ))}
+            <Route path='/' element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
+          </Routes>
+          <ThemeManager/>
 
-        {/* Using the bottom nav component that safely uses useAuth hook */}
-        <BottomNavAuth/>
-      </ThemeProvider>
-    </AuthProvider>
+          {/* Using the bottom nav component that safely uses useAuth hook */}
+          <BottomNavAuth/>
+        </ThemeProvider>
+      </AuthProvider>
   );
 }
 
@@ -106,12 +104,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => 
   // console.log("isAppLoading in ProtectedRoute:", isAppLoading);
 
   if (isAppLoading) {
-    loadInitialAppData()
+    loadInitialAppData();
+    return null; // or a loading spinner
   }
 
   return <>{children}</>;
 };
-
 
 
 // Bottom navigation wrapper that uses auth context

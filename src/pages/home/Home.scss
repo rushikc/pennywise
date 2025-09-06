@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -12,8 +12,7 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-
-@import '../../styles/theme.scss';
+@use '../../styles/theme.scss';
 
 .home-root {
     background: var(--bg-primary);
@@ -21,6 +20,7 @@ GNU General Public License for more details, or get a copy at
     position: relative;
     /* Add space for the filter button at bottom */
     padding: 20px 20px 80px;
+    margin-bottom: 130px; /* Ensure enough space for the filter panel */
 }
 
 /* Search styles */
@@ -311,6 +311,8 @@ GNU General Public License for more details, or get a copy at
     position: fixed;
     left: 0;
     right: 0;
+    margin: auto;
+    max-width: 600px;
     bottom: 56px;
     background-color: var(--group-header-bg);
     border-top-left-radius: 16px;
@@ -418,12 +420,6 @@ GNU General Public License for more details, or get a copy at
     z-index: 90 !important;
     background-color: var(--accent-blue) !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;
-
-    &:hover {
-        background-color: var(--group-header-hover) !important;
-    }
-
-
 }
 
 /* Collapse all button */
@@ -435,10 +431,6 @@ GNU General Public License for more details, or get a copy at
     z-index: 90 !important;
     background-color: var(--accent-blue) !important;
     transition: background-color 0.3s ease, transform 0.3s ease !important;
-
-    &:hover {
-        background-color: var(--group-header-hover) !important;
-    }
 
     /* Add subtle pulse animation when state changes */
     &.state-changed {

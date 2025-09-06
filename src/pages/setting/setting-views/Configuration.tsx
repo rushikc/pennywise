@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2025 Rushikesh <rushikc.dev@gmail.com>
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -108,10 +108,6 @@ const Configuration: React.FC = () => {
     setCardError('');
   };
 
-  const handleCloseCardDialog = () => {
-    setCardDialogOpen(false);
-  };
-
   const handleSaveCard = async () => {
     // Validate input
     if (!newCardDigits) {
@@ -175,6 +171,17 @@ const Configuration: React.FC = () => {
       setIsSaving(false);
     }
   };
+
+
+  if (isLoading) {
+    return (
+      <Container maxWidth="sm">
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+          <CircularProgress size={60}/>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container className="config-container" maxWidth="sm">
@@ -308,19 +315,13 @@ const Configuration: React.FC = () => {
       </Paper>
 
 
-
-      {/* Credit Card Dialog */}
-      <Dialog
-        open={cardDialogOpen}
-        onClose={handleCloseCardDialog}
-        className="card-dialog"
-      >
-        <DialogTitle className="dialog-title">Add HDFC Credit Card</DialogTitle>
+      {/* Add Credit Card Dialog */}
+      <Dialog open={cardDialogOpen} onClose={() => setCardDialogOpen(false)}>
+        <DialogTitle>Add New Credit Card</DialogTitle>
         <DialogContent>
-          <DialogContentText className="dialog-text">
+          <DialogContentText>
             Please enter the last 4 digits of your HDFC credit card.
           </DialogContentText>
-
           <TextField
             autoFocus
             margin="dense"
@@ -339,21 +340,13 @@ const Configuration: React.FC = () => {
             error={!!cardError}
             helperText={cardError}
             inputProps={{inputMode: 'numeric', pattern: '[0-9]*'}}
-            className="text-field"
           />
         </DialogContent>
-        <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCloseCardDialog}
-            className="cancel-button"
-          >
+        <DialogActions>
+          <Button onClick={() => setCardDialogOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleSaveCard}
-            variant="contained"
-            className="save-button"
-          >
+          <Button onClick={handleSaveCard} variant="contained" color="primary">
             Save
           </Button>
         </DialogActions>
