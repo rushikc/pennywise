@@ -1,8 +1,7 @@
 <div align="center">
   <br/>
-  <img src="public/logo2.png" alt="Pennywise Logo" width="150px" />
-  <br />
-  <br />
+  <img src="public/logo_low_res.png" alt="Pennywise Logo" width="150px" />
+  <h1>Pennywise</h1>
   <strong>Track, Analyze, and Master Your Personal Finances</strong>
 </div>
 
@@ -162,7 +161,7 @@ pennywise/
 │   ├── api/              # API clients and data fetching
 │   │   ├── ExpenseAPI.ts
 │   │   └── FinanceIndexDB.ts
-│   ├── components/       # Reusable UI components
+��   ├── components/       # Reusable UI components
 │   ├── firebase/         # Firebase configuration & utilities
 │   ├── hooks/            # Custom React hooks
 │   ├── pages/            # Application pages & views
