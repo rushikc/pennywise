@@ -2,7 +2,7 @@
   <br/>
   <img src="public/logo_low_res.png" alt="Pennywise Logo" width="150px" />
   <h1>Pennywise</h1>
-  <strong>Track, Analyze, and Master Your Personal Finances</strong>
+  <h3>Track, Analyze, and Master Your Personal Finances</h3>
 </div>
 
 <p align="center">
