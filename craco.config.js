@@ -4,6 +4,30 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 module.exports = {
   webpack: {
     configure: (webpackConfig) => {
+      // Configure Sass loader to use modern API and suppress deprecation warnings
+      const oneOfRule = webpackConfig.module.rules.find(rule => rule.oneOf);
+      if (oneOfRule) {
+        const sassRule = oneOfRule.oneOf.find(rule =>
+          rule.test && rule.test.toString().includes('scss|sass')
+        );
+
+        if (sassRule && sassRule.use) {
+          sassRule.use.forEach(loader => {
+            if (loader.loader && loader.loader.includes('sass-loader')) {
+              loader.options = {
+                ...loader.options,
+                implementation: require('sass'),
+                api: 'modern',
+                sassOptions: {
+                  silenceDeprecations: ['legacy-js-api'],
+                  quietDeps: true,
+                },
+              };
+            }
+          });
+        }
+      }
+
       // Configure optimization for production builds
       if (webpackConfig.mode === 'production') {
         // Ensure optimization object exists

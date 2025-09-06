@@ -17,7 +17,7 @@
   <a href="#project-structure">Project Structure</a> •
   <a href="#getting-started">Getting Started</a> •
   <a href="#Future Roadmap">Future Roadmap</a> •
-  <a href="#support-by-donating">Support by Donating</a>
+  <a href="#support-by-donating">Support by Donating</a> 
 </p>
 
 ---
@@ -182,7 +182,7 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ### Overview
 
-1. **User Authentication**:
+1. **User Authentication**: 
   - Users authenticate using Google OAuth
 2. **Data Fetching**:
   - On app initialization, data is fetched from Firebase Firestore
