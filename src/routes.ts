@@ -39,10 +39,18 @@ export const routes: Array<Route> = [
     {
         key: 'home-route',
         title: 'Home',
+        path: '/',
+        enabled: true,
+        component: Home,
+        isProtected: false,
+    },
+    {
+        key: 'home-route',
+        title: 'Home',
         path: '/home',
         enabled: true,
         component: Home,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'profile-route',
@@ -50,7 +58,7 @@ export const routes: Array<Route> = [
         path: '/profile',
         enabled: true,
         component: Settings,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'stats-route',
@@ -58,7 +66,7 @@ export const routes: Array<Route> = [
         path: '/stats',
         enabled: true,
         component: Insights,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'config-route',
@@ -66,7 +74,7 @@ export const routes: Array<Route> = [
         path: '/config',
         enabled: true,
         component: Configuration,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'setting-tags-route',
@@ -74,7 +82,7 @@ export const routes: Array<Route> = [
         path: '/setting-tags',
         enabled: true,
         component: ManageTags,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'setting-tag-maps-route',
@@ -82,7 +90,7 @@ export const routes: Array<Route> = [
         path: '/setting-tag-maps',
         enabled: true,
         component: ManageVendorTags,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'reload-expense-route',
@@ -90,7 +98,7 @@ export const routes: Array<Route> = [
         path: '/reload-expense',
         enabled: true,
         component: ReloadExpense,
-        isProtected: true,
+        isProtected: false,
     },
     {
         key: 'auto-tag-expenses-route',
@@ -98,6 +106,6 @@ export const routes: Array<Route> = [
         path: '/auto-tag-expenses',
         enabled: true,
         component: AutoTagExpenses,
-        isProtected: true,
+        isProtected: false,
     }
 ]

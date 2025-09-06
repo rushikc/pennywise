@@ -98,16 +98,21 @@ const Home: FC<any> = (): ReactElement => {
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
-  // console.log('Expense List STore:', expenseList);
+  // console.log('Expense List Store:', expenseList);
 
   useEffect(() => {
     setLoading(isAppLoading);
   }, [isAppLoading]);
 
+  useEffect(() => {
+    reloadExpenseList();
+  }, []);
+
   const reloadExpenseList = () => {
     setLoading(true);
     ExpenseAPI.getExpenseList()
       .then(expenses => {
+        console.log("Reloaded Expenses:", expenses);
         const sortedExpenses = sortByKeyDate(expenses, 'date');
         setExpenseList(sortedExpenses);
         setTimeout(() => setLoading(false), 300);

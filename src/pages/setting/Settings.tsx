@@ -42,6 +42,7 @@ const Settings: React.FC = () => {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
 
+  console.log("Profile loaded")
   // Use the custom hook for authentication
   const {userProfile, signOut, isLoading} = useAuth();
 
@@ -54,7 +55,7 @@ const Settings: React.FC = () => {
       if (!result.success && result.error) {
         setSignOutError(result.error);
       } else {
-        navigate('/login');
+        // navigate('/login');
       }
     } catch (error) {
       setSignOutError('Failed to sign out. Please try again.');

@@ -66,7 +66,7 @@ export const useAuth = (redirectToLogin = true) => {
           photoUrl: null,
           uid: null
         });
-        navigate('/login');
+        navigate('/');
       }
     });
 

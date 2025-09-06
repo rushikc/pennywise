@@ -14,7 +14,7 @@ GNU General Public License for more details, or get a copy at
 
 export interface Expense {
     id: string,
-    tag: string, // tag for the expense
+    tag: string | null, // tag for the expense
     mailId: string, // unique identifier for the expense from mail id
     cost: number, // expense cost
     costType: 'credit' | 'debit',
