@@ -20,17 +20,17 @@
 </p>
 
 ---
-
-## License
-
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
-
 > **Disclaimer:** Currently, Pennywise only supports transaction tracking for below
 > * HDFC UPI - credit & debit transactions.
 > * HDFC Credit card - only debit transactions.
 > * HDFC E-mandate transactions.
 >
 > We are actively working on expanding support to other banks email and transaction types.
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
 
 ## Overview
 
