@@ -1,0 +1,64 @@
+digraph SimpleDataFlow {
+    // Basic styling
+    graph [rankdir=TB, fontname="Helvetica", splines=ortho, nodesep=0.7, ranksep=0.84, compound=true];
+    node [shape=box, style=filled, fontname="Helvetica", fontsize=12, width=1.6, height=0.8];
+    edge [fontname="Helvetica", fontsize=10, fontcolor="#555555"];
+
+    // Top-level entities organized in a clear structure
+    subgraph cluster_top {
+        style="invis";  // invisible container
+        rank=same;
+
+        User [label="User", shape=person, fillcolor="#C5E0B4", color="#548235"];
+        GoogleAuth [label="Google Auth", shape=shield, fillcolor="#FFDDC1", color="#D6802B"];
+    }
+
+    // Client-side components
+    subgraph cluster_client {
+        label = "Client-Side";
+        style = "filled";
+        color = "#F5F5F5";
+        node [style=filled];
+
+        Frontend [label="React Web App", shape=component, fillcolor="#FFF2CC", color="#D6B656"];
+        StateManager [label="Redux Store", fillcolor="#F8CECC", color="#B85450"];
+        IndexDB [label="IndexDB", shape=cylinder, fillcolor="#E1D5E7", color="#9673A6"];
+    }
+
+    // Google Cloud services
+    subgraph cluster_google_cloud {
+        label = "Google Cloud";
+        style = "filled";
+        color = "#E3F2FD";
+        node [style=filled];
+
+        Gmail [label="Gmail", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
+        AppScript [label="AppScript", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
+        CloudFunctions [label="Cloud Functions", shape=box, fillcolor="#D5E8D4", color="#82B366"];
+    }
+
+    // Firebase
+    subgraph cluster_firebase {
+        label = "Firebase";
+        style = "filled";
+        color = "#FFF3E0";
+        node [style=filled];
+
+        FirestoreDB [label="Firestore DB", shape=cylinder, fillcolor="#FFE6CC", color="#D79B00"];
+    }
+
+    // Data Flow
+    User -> GoogleAuth [label="authenticates"];
+    GoogleAuth -> Frontend [label="grants access", lhead=cluster_client];
+    GoogleAuth -> FirestoreDB [label="grants access", lhead=cluster_firebase];
+    User -> Frontend [label="uses app"];
+    Frontend -> StateManager [label="dispatches actions"];
+    StateManager -> Frontend [label=""];
+    StateManager -> FirestoreDB [label=""];
+    FirestoreDB -> StateManager [label="read/write data"];
+    StateManager -> IndexDB [label="browser cache"];
+    IndexDB -> StateManager [label="read/write cached data"];
+    Gmail -> AppScript [label="fetches emails"];
+    AppScript -> CloudFunctions [label="invokes"];
+    CloudFunctions -> FirestoreDB [label="writes expense data"];
+}

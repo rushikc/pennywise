@@ -1,14 +1,6 @@
-# PennyWise: Personal Expense Tracker
-
-> **Disclaimer:** Currently, PennyWise only supports transaction tracking for below
-> * HDFC UPI credit & debit transactions.
-> * HDFC Credit card debit transactions.
->
-> We are actively working on expanding support to other banks and transaction types.
-
 <div align="center">
   <br/>
-  <img src="public/logo.png" alt="PennyWise Logo" width="150px" />
+  <img src="public/logo2.png" alt="Pennywise Logo" width="150px" />
   <br />
   <br />
   <strong>Track, Analyze, and Master Your Personal Finances</strong>
@@ -19,12 +11,13 @@
   <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#demo">Demo</a> •
+  <a href="#Security-&-Cost">Security & Cost</a> •
   <a href="#technology-stack">Tech Stack</a> •
-  <a href="#architecture-how-it-works">Architecture & How It Works</a> •
+  <a href="#architecture">Architecture</a> •
   <a href="#project-structure">Project Structure</a> •
   <a href="#getting-started">Getting Started</a> •
-  <a href="#roadmap">Roadmap</a> •
-  <a href="#contributing">Contributing</a> •
+  <a href="#Future Roadmap">Future Roadmap</a> •
+  <a href="#support-by-donating">Support by Donating</a>
 </p>
 
 ---
@@ -33,109 +26,132 @@
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
+> **Disclaimer:** Currently, Pennywise only supports transaction tracking for below
+> * HDFC UPI - credit & debit transactions.
+> * HDFC Credit card - only debit transactions.
+> * HDFC E-mandate transactions.
+>
+> We are actively working on expanding support to other banks email and transaction types.
 
 ## Overview
 
-PennyWise is a comprehensive, open-source web application designed to empower individuals in managing their personal finances. It provides an intuitive platform to track, categorize, and visualize expenses, helping users gain clear insights into their spending patterns and achieve financial mastery. Built with modern web technologies, PennyWise offers a user-friendly experience with robust features, including offline support and secure authentication.
+Pennywise is a comprehensive, open-source web application designed to empower individuals in managing their personal
+finances. It provides an intuitive platform to track, categorize, and visualize expenses, helping users gain clear
+insights into their spending patterns and achieve financial mastery. Built with modern web technologies, Pennywise offers
+a user-friendly experience with robust features, including offline support and secure authentication.
 
 ## Features
 
 * 📊 **Expense Tracking**: Easily add, edit, and manage your daily expenses with detailed inputs.
-* 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
-* 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, custom ranges) for focused analysis.
-* 📊 **Visualization**: Understand spending patterns at a glance through interactive statistical charts and graphs.
-* 🔄 **Offline Support**: Access and manage your data even without an internet connection, thanks to IndexedDB for local storage.
-* 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
 * 📧 **Gmail Integration**: Effortlessly scan your emails to automatically identify and import expense information.
+* 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
+* 🤖 **Auto Tagging**: Cloud functions automatically apply tags to new expenses based on previously user-marked
+  vendor-tag associations.
+* 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, & more) for focused
+  analysis.
+* 📊 **Visualization**: Understand spending patterns at a glance through interactive statistical charts and graphs.
+* 🔄 **Offline Caching**: Data is cached locally using IndexedDB, to reduce firestore queries, but the app requires
+  internet connectivity to function fully.
+* 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
 
 ## Demo
+- Google Auth & Firestore is disabled in demo app, All the data is stored in a static file to save costs.
+- This is a static variation of the website, which means you can explore the app without needing to log in.
 
-[Live Demo](#) - Coming Soon!
+<p align="center">
+  <a
+    href="https://pennywiserc.web.app/"
+    target="_blank"
+    rel="noopener noreferrer"
+    style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;"
+   >
+    Explore Pennywise Demo App
+  </a>
+</p>
 
-Experience PennyWise in action:
+![APP](public/docs/pics/app.png)
+![APP2](public/docs/pics/app2.png)
 
-<div align="center">
-    <img src="public/pics/demo.gif" alt="Demo of PennyWise" width="300" />
-</div>
+## Getting Started
+
+For detailed setup instructions, please refer below guide (30-60 min setup time)
+<p align="center">
+  <a href="SETUP.md" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 20px; background-color: #008CBA; color: white; text-decoration: none; border-radius: 5px;">
+    View Setup Instructions
+  </a>
+</p>
+
+## Security & Cost
+
+Pennywise is designed with your data privacy and security as a top priority. Unlike many other financial apps, Pennywise
+gives you complete control over your data and infrastructure. Here’s what makes our approach to security different:
+
+* **🔒 You Own Your Data**: Your financial data is yours alone. It is stored in your own Google Firebase Firestore
+  instance, not on our servers. You have full control over who can access it.
+
+* **☁️ Self-Hosted on Your Google Cloud**: You deploy Pennywise on your personal Google Cloud project. This means you
+  manage the entire infrastructure, ensuring that you are the only one with access to the backend services and database.
+
+* **💸 No Hidden Costs**: Pennywise is open-source and free to use. You only pay for what you use on the Google Cloud
+  Platform, which offers a generous free tier for Firebase and Cloud Functions.
+
+* **🚫 No Ads, No Tracking**: Pennywise is a completely ad-free platform. We do not track your behavior or sell your data
+  to third parties. Our goal is to provide a tool that helps you manage your finances, not to monetize your personal
+  information.
+
+* **📖 Open Source Transparency**: The entire codebase is open-source. You can inspect the code yourself to verify that
+  there are no hidden trackers or malicious logic. This transparency ensures that we are accountable to our users.
+
+* **🔐 Secure Authentication**: We use Google OAuth for authentication, which provides a secure and reliable way to log
+  in to your account without us ever seeing or storing your password.
+
+* **🔑 Minimal Permissions**: Pennywise requests only the necessary permissions to function. For instance, the Gmail
+  integration is designed to only access emails related to financial transactions, ensuring the privacy of your personal
+  correspondence.
+
+* **⚙️ You Control Updates**: Since you host the application, you are in full control of when and how you update it. You
+  will never be forced into an update that changes the functionality or privacy in a way you don't agree with.
+
+* **🔒 Secured Infrastructure**: All backend services on Google Cloud are protected by Google's authentication mechanisms
+  and including the infra exposed public internet. This ensures that only authenticated & your mail id requests from
+  your application can access your data and services.
+
+By putting you in control of your data and the application's infrastructure, Pennywise offers a transparent and secure
+way to manage your personal finances.
+
+For a detailed explanation of the security architecture, please see the [Security Policy](SECURITY.md).
 
 ## Technology Stack
 
-PennyWise leverages a modern and robust set of technologies to deliver a high-performance and maintainable application.
+Pennywise leverages a modern and robust set of technologies to deliver a user friendly and maintainable application.
 
 ### Frontend
+
 * **UI Framework**: [React](https://reactjs.org/)
 * **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
 * **Component Library**: [Material-UI v6](https://mui.com/)
 * **Animations**: [Framer Motion](https://www.framer.com/motion/)
+* **Charts**: [Recharts](https://recharts.org/en-US/)
 
 ### State Management
+
 * **Centralized State**: [Redux Toolkit](https://redux-toolkit.js.org/)
 
 ### Data Storage
+
 * **Cloud Database**: [Firebase Firestore](https://firebase.google.com/docs/firestore)
-* **Offline Storage**: [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (via [idb](https://www.npmjs.com/package/idb) library)
+* **Offline Storage**: [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (
+  via [idb](https://www.npmjs.com/package/idb) library)
 
 ### Authentication
-* **OAuth Provider**: [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (integrated using [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
+
+* **OAuth Provider**: [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (integrated
+  using [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
 
 ### Utilities
+
 * **Date Manipulation**: [dayjs](https://day.js.org/)
 * **HTTP Client**: [axios](https://axios-http.com/)
-
----
-
-## Architecture: How It Works
-
-PennyWise is designed with a client-side architecture emphasizing performance, offline capability, and seamless data synchronization. Below is an overview of its core components and data flow.
-
-### High-Level Architecture View
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v20+)
-- npm or yarn
-- Firebase account (for deployment)
-- Google OAuth credentials (for authentication)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/pennywise.git
-   cd pennywise
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. Set up Firebase configuration:
-   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Enable Firestore, Authentication with Google provider
-   - Create a `.env` file based on `.env.example` and add your Firebase configuration
-
-4. Start the development server:
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
-
-5. Open your browser to `http://localhost:3000`
-
-### Deployment
-
-To deploy to Firebase:
-
-```bash
-npm run build
-firebase deploy
-```
 
 ## Project Structure
 
@@ -144,17 +160,16 @@ pennywise/
 ├── public/               # Static assets
 ├── src/
 │   ├── api/              # API clients and data fetching
-│   │   ├── BaseApi.ts
 │   │   ├── ExpenseAPI.ts
 │   │   └── FinanceIndexDB.ts
 │   ├── components/       # Reusable UI components
 │   ├── firebase/         # Firebase configuration & utilities
 │   ├── hooks/            # Custom React hooks
 │   ├── pages/            # Application pages & views
-│   │   ├── home/         # Main dashboard
+│   │   ├── home/         # Expense dashboard
 │   │   ├── login/        # Authentication flow
 │   │   ├── setting/      # Application settings
-│   │   └── stats/        # Statistical views
+│   │   └── insights/     # Insights views
 │   ├── store/            # Redux store configuration
 │   └── utility/          # Helper functions & constants
 ├── functions/            # Firebase Cloud Functions
@@ -163,166 +178,48 @@ pennywise/
 
 ## Architecture
 
-PennyWise is built using a modern front-end architecture with the following key components:
+Pennywise is built using a modern front-end architecture with the following key components:
 
-### Technology Stack
+### Overview
 
-- **Frontend**:
-  - [React](https://reactjs.org/) - UI framework
-  - [TypeScript](https://www.typescriptlang.org/) - Type safety
-  - [Material-UI v6](https://mui.com/) - Component library
-  - [Framer Motion](https://www.framer.com/motion/) - Animations
-
-- **State Management**:
-  - [Redux Toolkit](https://redux-toolkit.js.org/) - Centralized state
-
-- **Storage**:
-  - [Firebase Firestore](https://firebase.google.com/docs/firestore) - Cloud database
-  - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (via [idb](https://www.npmjs.com/package/idb)) - Offline storage
-
-- **Authentication**:
-  - [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (via [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
-
-- **Utilities**:
-  - [date-fns](https://date-fns.org/) & [luxon](https://moment.github.io/luxon/) - Date manipulation
-  - [axios](https://axios-http.com/) - HTTP client
-
-### Data Flow
-
-1. **User Authentication**: Users authenticate using Google OAuth
+1. **User Authentication**:
+  - Users authenticate using Google OAuth
 2. **Data Fetching**:
-   - On app initialization, data is fetched from Firebase Firestore
-   - Data is stored locally in IndexedDB for offline access
-   - Redux store is populated with expense and tag data
+  - On app initialization, data is fetched from Firebase Firestore
+  - Data is stored locally in IndexedDB for offline access
+  - Redux store is populated with expense and tag data
 3. **User Interactions**:
-   - Users can view, filter, and group expenses
-   - New expenses can be added manually or imported
-   - Expenses can be tagged for categorization
+  - Users can view, filter, and group expenses
+  - New expenses can be added manually or imported
+  - Expenses can be tagged for categorization
 4. **Data Persistence**:
-   - Changes are saved to both IndexedDB and Firebase
-   - Data synchronization happens automatically when online
+  - Changes are saved to both IndexedDB and Firebase
+  - Data synchronization happens automatically when online
 
-### Data Flow Diagram
+### Architecture Diagram
 
-```
-┌──��──────────┐     ┌───────────────┐     ┌───────────────┐
-│             │     │               │     │               │
-│  User Input ├────►│ React UI/Views├────►│ Redux Actions │
-│             │     │               │     │               │
-└────────────��┘     └───────┬───────┘     └───────┬───────┘
-                            │                     │
-                            │                     ▼
-┌─────────────┐     ┌───────▼───────┐     ┌───────────────┐
-│             │     │               │     │               │
-│    Google   │     │  Redux Store  │◄────┤ Redux Reducers│
-│    OAuth    │     │               │     │               │
-│             │     └───────┬───────┘     └───────────────┘
-└──────┬──────┘             │
-       │                    │
-       ▼                    ▼
-┌─────────────┐     ┌───────────────┐     ┌────────────────┐
-│             │     │               │     │                  │
-│ App.tsx     ├────►│  ExpenseAPI   ├────►│ FinanceIndexDB   │
-│Initial Load │     │               │     │ (Local Cache)    │
-└─────────────┘     └───────┬───────┘     └───────┬────────┘
-                            │                     │
-                            ▼                     │
-                    ┌───────────────┐             │
-                    │               │             │
-                    │   Firebase    │◄────────────┘
-                    │  Firestore    │  (Sync when online)
-                    │               │
-                    └───────────────┘
-```
-
-### Enhanced Architecture View
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                        Client Application                        │
-│                                                                  │
-│  ┌─────────────┐    ┌───────────────┐    ┌──────────────────┐    │
-│  │             │    │               │    │                  │    │
-│  │    Pages    │◄──►│  UI Components│◄───┤  State (Redux)   │    │
-│  │             │    │               │    │                  │    │
-│  └─────────────┘    └───────────────┘    └────────┬─────────┘    │
-│                                                   │              │
-│  ┌─────────────────────────────────────┐          │              │
-│  │                                     │          │              │
-│  │       Data Access Layer             │◄─────────┘              │
-│  │  (API Clients & Data Processing)    │                         │
-│  │                                     │                         │
-│  └──────────────────┬───���────────────┘                         │
-���                     │                                            │
-└─────────────────────┼────────────────────────────────────────────┘
-                      │
-                      ▼
-     ┌──────────────────────────��─┐       ┌──────────────────────────┐
-     │                            │       │                          │
-     │      Local Storage         │◄─────►│     Cloud Storage        │
-     │      (IndexedDB)           │       │   (Firebase Firestore)   │
-     │                            │       │                          │
-     └────────────────────────────┘       └─────────────────────��────┘
-
-             │                                        │
-             ▼                                        ▼
-    ┌────────────────┐                     ┌────────────────────┐
-    │                │                     │                    │
-    │  Offline Mode  │                     │  Online Features   │
-    │                │                     │                    │
-    └────────────────┘                     └────────────────────┘
-```
-
-## Core Components
-
-- **Home**: Main dashboard showing expense list with filtering and grouping options
-- **TagExpenses**: Interface for tagging and categorizing expenses
-- **Insights**: Visualizations and charts of spending patterns
-- **Settings**: Application configuration and user profile management
-
-## Data Models
-
-### Expense
-
-The core data model representing a financial transaction:
-
-```typescript
-interface Expense {
-    id: string,
-    tag: string,
-    mailId: string,
-    cost: number,
-    costType: string,
-    date: Date,
-    user: string,
-    type: 'credit' | 'debit',
-    vendor: string
-}
-```
-
-## Roadmap
-
-- [ ] Statistical page with useful graphs
-- [ ] Expense predictions using historical data (Firebase AI Logic)
-- [ ] Multiple bank support
-- [ ] Expense sharing/tracking between users
-- [ ] Data export options (CSV, PDF)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request to main branch
-
-Please ensure your code follows the project's and general coding standards.
+![Architecture Diagram](public/docs/dataflow.svg)
 
 
-## Acknowledgments
+## Future Roadmap
 
-- Icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com/)
-- [Material-UI](https://mui.com/) for the beautiful components
-- [Firebase](https://firebase.google.com/) for backend services
+- [ ] Multiple bank support (We need people with different bank account to help us with this)
+- [ ] Enhancing Insights with more detailed analytics & better graph support grouped category
+- [ ] Multi-selected expense tagging feature
+- [ ] Expense analysis using historical data (Firebase AI Logic)
+- [ ] Expense sharing/tracking between users (Multi user persona)
+
+## Contributing & Local Development
+
+We welcome contributions to Pennywise! If you're interested in helping out, please refer to our [Development Guide](DEVELOP.md) for instructions on setting up the project locally, contributing code, and submitting pull requests.
+
+
+## Support the Project
+
+<a href="https://www.buymeacoffee.com/arcticfoxrc"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=arcticfoxrc&button_colour=5F7FFF&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" /></a>
+
+---
+<div align="center">
+  <p>Created with ❤️ by <a href="https://github.com/rushikc"> rushikc </a> & <a href="https://github.com/features/copilot">Copilot</a></p>
+  <p>rushikc.dev@gmail.com</p>
+</div>
