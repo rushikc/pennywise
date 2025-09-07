@@ -7,7 +7,7 @@
 **Firebase Setup**
 
 This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project.
-First complete the setup instructions in the [Setup Documentation](./public/docs/setup.md) .
+First complete the setup instructions in the [Setup Documentation](./SETUP.md) .
 
 - You would have already created `.env` file in the root folder of your project in below format as per the setup instructions.
 - For React project, you can use the following format:
@@ -99,3 +99,18 @@ We follow Semantic Versioning (SemVer) for managing releases. The version number
 *   `X` is the major version (incremented for breaking changes).
 *   `Y` is the minor version (incremented for new features).
 *   `Z` is the patch version (incremented for bug fixes).
+
+
+### Static Demo App
+
+For demonstration purposes, you can use the static demo code available in the `feature/static-demo-page`. 
+This code simulates the behavior of the application without requiring a live backend or database connection.
+
+Below files are modified to convert the app to a static demo version:
+- `src/hooks/useAuth.ts`
+- `src/pages/login/AuthContext.tsx`
+- `src/api/ExpsenseAPI.ts`
+- `src\data` contains static json files for expenses, categories and settings
+- `src/routes.ts` disable protection on routes
+- `src\pages\home\Home.tsx` : add a useEffect which fetches expenseList on load
+- comment all instances of `navigate('/login')` from the codebase

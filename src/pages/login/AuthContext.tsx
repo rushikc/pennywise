@@ -32,10 +32,17 @@ export const useAuth = () => {
     // }
     return {
         currentUser: 'test',
+        userProfile: {
+            name: 'Test User',
+            email: 'test@example.com',
+            photoUrl: ''
+        },
         signInWithGoogle: async () => null,
         loading: false,
         signOut: async () => {
-        }
+            return { success: true }
+        },
+        isLoading: false
     };
 };
 
