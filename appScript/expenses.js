@@ -111,8 +111,8 @@ async function myExpenseFunction() {
     console.log("Last mail id ", mailId);
 
     let lastMailIdIndex = mailIdList.indexOf(mailId);
-    mailIdList = mailIdList.slice(70);
-    // mailIdList = mailIdList.slice(lastMailIdIndex + 1);
+    // mailIdList = mailIdList.slice(70);
+    mailIdList = mailIdList.slice(lastMailIdIndex + 1);
     console.log("Pending mail id list ", mailIdList);
     console.log("Pending mail id length", mailIdList.length);
     // return;
