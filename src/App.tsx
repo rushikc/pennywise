@@ -32,8 +32,8 @@ function App() {
 
   FinanceIndexDB.initDB();
 
-  // define theme1
   const { appConfig } = useSelector(selectExpense);
+
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
