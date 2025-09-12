@@ -23,6 +23,59 @@
 
 
 /**
+ * Applies regex patterns to a string and returns the first valid match
+ *
+ * @param {string} snippet - The text to apply regex patterns to
+ * @param {string[]} regexPatterns - Array of regex patterns to try
+ * @param {function} validationFn - Function to validate the match
+ * @returns {string|null} - The first valid match or null if no match found
+ */
+function applyRegexPatterns(snippet, regexPatterns, validationFn) {
+    for (const pattern of regexPatterns) {
+        try {
+            const match = snippet.match(new RegExp(pattern));
+            if (match && match[1]) {
+                const result = match[1];
+                if (validationFn(result)) {
+                    return result;
+                }
+            }
+        } catch (regexError) {
+            console.log(`-> Regex failed: ${pattern}`, regexError.message);
+        }
+    }
+    return null;
+}
+
+/**
+ * Extracts cost information from an email snippet using regex patterns
+ *
+ * @param {string} snippet - The email snippet to extract cost from
+ * @param {string[]} costRegexPatterns - Array of regex patterns to try
+ * @returns {string|null} - The extracted cost as a string, or null if not found
+ */
+function extractCostFromSnippet(snippet, costRegexPatterns) {
+    return applyRegexPatterns(snippet, costRegexPatterns, (match) => {
+        const parsedCost = Number(match);
+        return !isNaN(parsedCost) && parsedCost > 0;
+    });
+}
+
+/**
+ * Extracts vendor information from an email snippet using regex patterns
+ *
+ * @param {string} snippet - The email snippet to extract vendor from
+ * @param {string[]} vendorRegexPatterns - Array of regex patterns to try
+ * @returns {string|null} - The extracted vendor as a string, or null if not found
+ */
+function extractVendorFromSnippet(snippet, vendorRegexPatterns) {
+    return applyRegexPatterns(snippet, vendorRegexPatterns, (match) => {
+        return match && match.trim() !== '';
+    });
+}
+
+
+/**
  * Processes Gmail messages to extract expense data and store it in a database.
  */
 async function myExpenseFunction() {
@@ -58,6 +111,7 @@ async function myExpenseFunction() {
     console.log("Last mail id ", mailId);
 
     let lastMailIdIndex = mailIdList.indexOf(mailId);
+    // mailIdList = mailIdList.slice(70);
     mailIdList = mailIdList.slice(lastMailIdIndex + 1);
     console.log("Pending mail id list ", mailIdList);
     console.log("Pending mail id length", mailIdList.length);
@@ -73,7 +127,6 @@ async function myExpenseFunction() {
         res = Gmail.Users.Messages.get('me', mailId);
 
         let snippet = res.snippet;
-
 
         console.log("Email snippet ", snippet);
 
@@ -98,44 +151,39 @@ async function myExpenseFunction() {
                 try {
                     console.log('-> Matched config strings: ', config.snippetStrings);
 
-                    // Iterate through costRegex array until a valid number is found
-                    cost = null;
-                    for (const costRegexPattern of config.costRegex) {
-                        try {
-                            const costMatch = snippet.match(new RegExp(costRegexPattern));
-                            if (costMatch && costMatch[1]) {
-                                const parsedCost = Number(costMatch[1]);
-                                if (!isNaN(parsedCost) && parsedCost > 0) {
-                                    cost = costMatch[1];
-                                    break;
-                                }
-                            }
-                        } catch (regexError) {
-                            console.log('-> Cost regex failed:', costRegexPattern, regexError.message);
+                    // Extract the full email body instead of using the snippet for extraction
+                    const fullEmailBody = findBody(res.payload.parts);
+                    let textToExtractFrom = snippet; // Default to snippet if body extraction fails
+
+                    if (fullEmailBody) {
+                        // If the email body is HTML, extract its plain text content
+                        if (res.payload.mimeType === 'text/html' ||
+                            (res.payload.parts && res.payload.parts.some(p => p.mimeType === 'text/html'))) {
+                            textToExtractFrom = extractPlainTextFromHtml(fullEmailBody);
+                        } else {
+                            textToExtractFrom = fullEmailBody;
                         }
+                        console.log('-> Using full email body for extraction');
+                    } else {
+                        console.log('-> Could not extract full email body, falling back to snippet');
                     }
 
-                    // Iterate through vendorRegex array until a non-null match is found
-                    vendor = null;
-                    for (const vendorRegexPattern of config.vendorRegex) {
-                        try {
-                            const vendorMatch = snippet.match(new RegExp(vendorRegexPattern));
-                            if (vendorMatch && vendorMatch[1] && vendorMatch[1].trim()) {
-                                vendor = vendorMatch[1];
-                                break;
-                            }
-                        } catch (regexError) {
-                            console.log('-> Vendor regex failed:', vendorRegexPattern, regexError.message);
-                        }
-                    }
+                    console.log('-> Extracted text: ', textToExtractFrom.substring(0, 300));
+
+                    // Extract cost using the full email body
+                    cost = extractCostFromSnippet(textToExtractFrom, config.costRegex);
+
+                    // Extract vendor using the full email body
+                    vendor = extractVendorFromSnippet(textToExtractFrom, config.vendorRegex);
+
+                    console.log('-> Extracted cost: ', cost);
+                    console.log('-> Extracted vendor: ', vendor);
+
 
                     // Only proceed if both cost and vendor were successfully extracted
                     if (cost !== null && vendor !== null) {
                         expense = getExpense(Number(res.internalDate), config.type, mailId);
                         expense.costType = config.costType;
-
-                        console.log('-> Cost: ', cost);
-                        console.log('-> Vendor: ', vendor);
 
                         expense.cost = Number(cost)
                         expense.vendor = vendor.toUpperCase().substring(0, 50);
