@@ -12,19 +12,19 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import React, {FC, ReactElement, useEffect, useState} from "react";
+import React, {FC, ReactElement, useEffect, useState} from 'react';
 import './TagExpenses.scss'; // We'll reuse the existing styles for consistency
-import Button from "@mui/material/Button";
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Fade from '@mui/material/Fade';
-import {useSelector} from "react-redux";
+import {useSelector} from 'react-redux';
 import {Expense} from '../../../Types';
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {selectExpense} from "../../../store/expenseActions";
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {selectExpense} from '../../../store/expenseActions';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Zoom from '@mui/material/Zoom';
@@ -48,15 +48,15 @@ const ZoomTransition = React.forwardRef(function ZoomTransition(
 
 
 const MergeExpenses: FC<MergeExpensesProps> = ({
-        expenses,
-        open,
-        onClose,
-        onMergeComplete
-    }): ReactElement => {
-    const [selectedTag, setSelectedTag] = useState<string>("");
-    const [selectedVendor, setSelectedVendor] = useState<string>("");
+    expenses,
+    open,
+    onClose,
+    onMergeComplete
+}): ReactElement => {
+    const [selectedTag, setSelectedTag] = useState<string>('');
+    const [selectedVendor, setSelectedVendor] = useState<string>('');
     const [totalCost, setTotalCost] = useState<number>(0);
-    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [showError, setShowError] = useState<boolean>(false);
 
     // Get tagList from Redux store instead of props
@@ -74,15 +74,15 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
             setTotalCost(total);
 
             // Reset selected values when modal opens
-            setSelectedVendor("");
-            setSelectedTag("");
+            setSelectedVendor('');
+            setSelectedTag('');
         }
     }, [expenses, open]);
 
     const onSaveMergedExpense = () => {
         // Validate vendor selection
         if (!selectedVendor) {
-            setErrorMessage("Please select a vendor first");
+            setErrorMessage('Please select a vendor first');
             setShowError(true);
             return;
         }
@@ -105,7 +105,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
         };
 
         // Log the merged expense for debugging
-        console.log("Merged Expense:", mergedExpense);
+        console.log('Merged Expense:', mergedExpense);
 
         // Delete all original expenses from the database
         expenses.forEach(exp => {

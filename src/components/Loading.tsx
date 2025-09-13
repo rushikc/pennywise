@@ -20,7 +20,7 @@ export default function Loading() {
 
     return (
         <div className="d-flex-center pt-10">
-            <CircularProgress style={{ marginTop: '1rem' }} />
+            <CircularProgress style={{marginTop: '1rem'}}/>
         </div>
     );
 }

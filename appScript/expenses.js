@@ -80,9 +80,9 @@ function extractVendorFromSnippet(snippet, vendorRegexPatterns) {
  */
 async function myExpenseFunction() {
 
-    const Config = "config";
-    const LastGmailId = "lastGmailId";
-    const VendorTag = "vendorTag";
+    const Config = 'config';
+    const LastGmailId = 'lastGmailId';
+    const VendorTag = 'vendorTag';
 
     // usually returns last 100 mails
     let res = Gmail.Users.Messages.list('me');
@@ -105,16 +105,16 @@ async function myExpenseFunction() {
     if (res_doc) {
         mailId = res_doc.value;
     } else {
-        mailId = "";
+        mailId = '';
     }
 
-    console.log("Last mail id ", mailId);
+    console.log('Last mail id ', mailId);
 
     let lastMailIdIndex = mailIdList.indexOf(mailId);
     // mailIdList = mailIdList.slice(70);
     mailIdList = mailIdList.slice(lastMailIdIndex + 1);
-    console.log("Pending mail id list ", mailIdList);
-    console.log("Pending mail id length", mailIdList.length);
+    console.log('Pending mail id list ', mailIdList);
+    console.log('Pending mail id length', mailIdList.length);
     // return;
 
     const emailParsingConfig = JSON.parse(UrlFetchApp.fetch(
@@ -128,7 +128,7 @@ async function myExpenseFunction() {
 
         let snippet = res.snippet;
 
-        console.log("Email snippet ", snippet);
+        console.log('Email snippet ', snippet);
 
         for (const hdfcIndex in emailParsingConfig.v1.config) {
             const config = emailParsingConfig.v1.config[hdfcIndex];
@@ -185,7 +185,7 @@ async function myExpenseFunction() {
                         expense = getExpense(Number(res.internalDate), config.type, mailId);
                         expense.costType = config.costType;
 
-                        expense.cost = Number(cost)
+                        expense.cost = Number(cost);
                         expense.vendor = vendor.toUpperCase().substring(0, 50);
 
                         const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
@@ -220,7 +220,7 @@ async function myExpenseFunction() {
 
     if (lastMailId) {
         console.log('Post execution last mail id ', lastMailId);
-        setOneDoc("config", "lastGmailId", lastMailId, accessToken);
+        setOneDoc('config', 'lastGmailId', lastMailId, accessToken);
     }
 
 
@@ -234,7 +234,7 @@ const getExpense = (date, type, mailId) => {
     return {
         cost: 0, costType: 'debit', vendor: null, tag: null, type, date, modifiedDate: date, user: 'xyz', mailId
     };
-}
+};
 
 
 /**
@@ -242,10 +242,10 @@ const getExpense = (date, type, mailId) => {
  * This function is triggered when the web app accesses AppScript.
  */
 function doGet() {
-    Logger.log("doGet function called.");
-    myExpenseFunction().then(() => Logger.log("executed expense function"));
+    Logger.log('doGet function called.');
+    myExpenseFunction().then(() => Logger.log('executed expense function'));
 
     // Return a ContentService response with the email and a 200 OK status
-    return ContentService.createTextOutput("Started function")
+    return ContentService.createTextOutput('Started function')
         .setMimeType(ContentService.MimeType.TEXT);
 }
