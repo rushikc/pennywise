@@ -12,424 +12,424 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-
 @use '../../styles/theme.scss';
 
 .statistics-container {
-  padding: 16px;
-  margin-bottom: 120px;
+    padding: 16px;
+    margin-bottom: 120px;
 }
 
 .statistics-header {
-  padding-bottom: 10px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: center;
 }
 
 .summary-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
 
-  motion-div {
-    flex: 1;
-  }
+    motion-div {
+        flex: 1;
+    }
 }
 
 .total-card,
 .daily-card,
 .monthly-card {
-  padding: 16px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-  .MuiBox-root {
+    padding: 16px;
+    border-radius: 8px;
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    margin-top: 8px;
-  }
-
-  .MuiBox-root:last-child {
+    flex-direction: column;
     align-items: center;
-  }
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .MuiBox-root {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .MuiBox-root:last-child {
+        align-items: center;
+    }
 }
 
 .total-card {
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #3a7bd5, #00d2ff) !important;
-  box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3) !important;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff) !important;
+    box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3) !important;
 
-  .MuiTypography-subtitle2,
-  .MuiTypography-caption {
-    color: rgba(255, 255, 255, 0.85);
-  }
+    .MuiTypography-subtitle2,
+    .MuiTypography-caption {
+        color: rgba(255, 255, 255, 0.85);
+    }
 }
 
 .daily-card {
-  flex: 1;
-  background: linear-gradient(135deg, #11998e, #38ef7d) !important;
-  box-shadow: 0 4px 20px rgba(17, 153, 142, 0.3) !important;
+    flex: 1;
+    background: linear-gradient(135deg, #11998e, #38ef7d) !important;
+    box-shadow: 0 4px 20px rgba(17, 153, 142, 0.3) !important;
 
-  .MuiTypography-subtitle2,
-  .MuiTypography-caption {
-    color: rgba(255, 255, 255, 0.85);
-  }
+    .MuiTypography-subtitle2,
+    .MuiTypography-caption {
+        color: rgba(255, 255, 255, 0.85);
+    }
 }
 
 .monthly-card {
-  flex: 1;
-  background: linear-gradient(135deg, #834d9b, #d04ed6) !important;
-  box-shadow: 0 4px 20px rgba(131, 77, 155, 0.3) !important;
+    flex: 1;
+    background: linear-gradient(135deg, #834d9b, #d04ed6) !important;
+    box-shadow: 0 4px 20px rgba(131, 77, 155, 0.3) !important;
 
-  .MuiTypography-subtitle2,
-  .MuiTypography-caption {
-    color: rgba(255, 255, 255, 0.85);
-  }
+    .MuiTypography-subtitle2,
+    .MuiTypography-caption {
+        color: rgba(255, 255, 255, 0.85);
+    }
 }
 
 .line-chart-container {
-  margin-bottom: 20px;
-  height: 410px;
-  margin-top: 24px;
+    margin-bottom: 20px;
+    height: 410px;
+    margin-top: 24px;
 }
 
 
 .pie-chart-container {
-  padding-bottom: 20px;
-  //height: 300px;
-  margin-top: 24px;
+    padding-bottom: 20px;
+    //height: 300px;
+    margin-top: 24px;
 }
 
 .chart-paper {
-  padding: 16px;
-  border-radius: 8px;
-  height: 100%;
-  background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+    padding: 16px;
+    border-radius: 8px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
 }
 
 .chart-title {
-  margin-bottom: 8px;
-  font-weight: 500;
+    margin-bottom: 8px;
+    font-weight: 500;
 }
 
 .info-banner-text {
-  margin-bottom: 1.5rem !important;
-  color: var(--text-secondary);
-  padding: 0.75rem;
-  background-color: var(--bg-tertiary);
-  border-radius: 8px;
-  border-left: 4px solid var(--accent-blue);
+    margin-bottom: 1.5rem !important;
+    color: var(--text-secondary);
+    padding: 0.75rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-blue);
 }
 
 /* Buttons container for Filter, Selection, and Group By buttons */
 .buttons-container {
-  position: fixed;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 90;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Chart header styling for title and inline selection button */
 .chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding: 0 0 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 0 8px 0;
 
-  .chart-title {
-    margin-bottom: 0;
-    font-weight: 500;
-  }
+    .chart-title {
+        margin-bottom: 0;
+        font-weight: 500;
+    }
 }
 
 /* Inline selection button styling next to chart title */
 .selection-button-inline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  .MuiIconButton-root {
-    width: 32px;
-    height: 32px;
-    background-color: var(--accent-blue) !important;
-    color: var(--bg-primary) !important;
-    box-shadow: 0 2px 8px rgba(58, 123, 213, 0.3);
-    border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
-    transition: all 0.3s ease;
+    .MuiIconButton-root {
+        width: 32px;
+        height: 32px;
+        background-color: var(--accent-blue) !important;
+        color: var(--bg-primary) !important;
+        box-shadow: 0 2px 8px rgba(58, 123, 213, 0.3);
+        border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
+        transition: all 0.3s ease;
 
-    &:hover {
-      background-color: var(--accent-blue) !important;
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(58, 123, 213, 0.4);
+        &:hover {
+            background-color: var(--accent-blue) !important;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(58, 123, 213, 0.4);
+        }
+
+        &:disabled {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-secondary) !important;
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border-color);
+        }
+
+        .MuiSvgIcon-root {
+            font-size: 18px;
+        }
     }
-
-    &:disabled {
-      background-color: var(--bg-secondary) !important;
-      color: var(--text-secondary) !important;
-      transform: none;
-      box-shadow: none;
-      border-color: var(--border-color);
-    }
-
-    .MuiSvgIcon-root {
-      font-size: 18px;
-    }
-  }
 }
 
 .filter-button, .group-by-button {
-  padding-top: 10px;
+    padding-top: 10px;
 
-  .MuiChip-root {
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
-    box-shadow: var(--box-shadow);
-    height: 40px;
-    padding: 0 15px;
-    border: 1px solid var(--border-color);
-    font-weight: 400;
-    min-width: 120px;
-    justify-content: center;
+    .MuiChip-root {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        box-shadow: var(--box-shadow);
+        height: 40px;
+        padding: 0 15px;
+        border: 1px solid var(--border-color);
+        font-weight: 400;
+        min-width: 120px;
+        justify-content: center;
 
-    .MuiChip-icon {
-      color: var(--accent-blue);
+        .MuiChip-icon {
+            color: var(--accent-blue);
+        }
+
+        &:hover {
+            background-color: var(--group-header-hover);
+            border-color: var(--border-color-dark);
+        }
     }
-
-    &:hover {
-      background-color: var(--group-header-hover);
-      border-color: var(--border-color-dark);
-    }
-  }
 }
 
 /* Selection button styling to match the design pattern */
 .selection-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  .MuiIconButton-root {
-    width: 48px;
-    height: 48px;
-    background-color: var(--accent-blue) !important;
-    color: white !important;
-    box-shadow: var(--box-shadow);
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    .MuiIconButton-root {
+        width: 48px;
+        height: 48px;
+        background-color: var(--accent-blue) !important;
+        color: white !important;
+        box-shadow: var(--box-shadow);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
 
-    &:hover {
-      background-color: var(--accent-blue) !important;
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+        &:hover {
+            background-color: var(--accent-blue) !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+        }
+
+        &:disabled {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-secondary) !important;
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border-color);
+        }
+
+        .MuiSvgIcon-root {
+            font-size: 20px;
+        }
     }
-
-    &:disabled {
-      background-color: var(--bg-secondary) !important;
-      color: var(--text-secondary) !important;
-      transform: none;
-      box-shadow: none;
-      border-color: var(--border-color);
-    }
-
-    .MuiSvgIcon-root {
-      font-size: 20px;
-    }
-  }
 }
 
 .filter-panel, .group-by-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  margin: auto;
-  max-width: 600px;
-  bottom: 56px;
-  background-color: var(--group-header-bg);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-  padding-bottom: 20px;
-  animation: slideUp 0.2s ease-out;
-  border: 1px solid var(--border-color);
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: auto;
+    max-width: 600px;
+    bottom: 56px;
+    background-color: var(--group-header-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    padding-bottom: 20px;
+    animation: slideUp 0.2s ease-out;
+    border: 1px solid var(--border-color);
 
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border-color);
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--border-color);
 
-    .panel-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text-primary);
+        .panel-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .close-button {
+            color: var(--accent-blue);
+            background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+            transition: all 0.2s ease;
+            padding: 4px;
+            margin-right: -4px;
+
+            &:hover {
+                transform: scale(1.1);
+                background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+                border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+            }
+
+            .MuiSvgIcon-root {
+                font-size: 20px;
+            }
+        }
     }
 
-    .close-button {
-      color: var(--accent-blue);
-      background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
-      transition: all 0.2s ease;
-      padding: 4px;
-      margin-right: -4px;
+    .panel-section {
+        padding: 0 20px;
+        margin-top: 15px;
 
-      &:hover {
-        transform: scale(1.1);
-        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
-        border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
-      }
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
 
-      .MuiSvgIcon-root {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .panel-section {
-    padding: 0 20px;
-    margin-top: 15px;
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
-      padding-left: 5px;
+        &:first-of-type {
+            margin-top: 5px;
+        }
     }
 
-    &:first-of-type {
-      margin-top: 5px;
+    .filter-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px 20px 10px;
+
+        .filter-chip {
+            &.MuiChip-outlined {
+                border-color: var(--border-color);
+                background-color: var(--bg-secondary);
+            }
+        }
     }
-  }
 
-  .filter-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px 20px 10px;
+    .group-by-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 5px 0;
 
-    .filter-chip {
-      &.MuiChip-outlined {
-        border-color: var(--border-color);
-        background-color: var(--bg-secondary);
-      }
+        .filter-chip {
+            margin: 0;
+
+            &.MuiChip-outlined {
+                border-color: var(--border-color);
+                background-color: var(--bg-secondary);
+            }
+        }
     }
-  }
-
-  .group-by-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 5px 0;
-
-    .filter-chip {
-      margin: 0;
-      &.MuiChip-outlined {
-        border-color: var(--border-color);
-        background-color: var(--bg-secondary);
-      }
-    }
-  }
 }
 
 /* Animation for sliding up panels */
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 // Selection Panel Styles
 .selection-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  margin: auto;
-  max-width: 600px;
-  bottom: 56px;
-  background-color: var(--group-header-bg);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-  padding-bottom: 20px;
-  animation: slideUp 0.2s ease-out;
-  border: 1px solid var(--border-color);
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: auto;
+    max-width: 600px;
+    bottom: 56px;
+    background-color: var(--group-header-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    padding-bottom: 20px;
+    animation: slideUp 0.2s ease-out;
+    border: 1px solid var(--border-color);
 
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border-color);
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--border-color);
 
-    .panel-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text-primary);
+        .panel-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .close-button {
+            color: var(--accent-blue);
+            background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
+            padding: 4px;
+            margin-right: -4px;
+
+            &:hover {
+                transform: scale(1.1);
+                color: var(--text-white);
+                background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+                border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+            }
+
+            .MuiSvgIcon-root {
+                font-size: 20px;
+            }
+        }
     }
 
-    .close-button {
-      color: var(--accent-blue);
-      background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
-      transition: all 0.2s ease;
-      border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
-      padding: 4px;
-      margin-right: -4px;
+    .selection-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 15px 20px 10px;
+        max-height: 400px;
+        overflow-y: auto;
 
-      &:hover {
-        transform: scale(1.1);
-        color: var(--text-white);
-        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
-        border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
-      }
+        .selection-chip {
+            margin: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
 
-      .MuiSvgIcon-root {
-        font-size: 20px;
-      }
+            &:hover {
+                transform: translateY(-1px);
+            }
+
+            &.MuiChip-outlined {
+                border-color: var(--border-color);
+                background-color: var(--bg-secondary);
+            }
+        }
     }
-  }
-
-  .selection-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 15px 20px 10px;
-    max-height: 400px;
-    overflow-y: auto;
-
-    .selection-chip {
-      margin: 0;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        transform: translateY(-1px);
-      }
-
-      &.MuiChip-outlined {
-        border-color: var(--border-color);
-        background-color: var(--bg-secondary);
-      }
-    }
-  }
 }

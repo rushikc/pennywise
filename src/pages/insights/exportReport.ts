@@ -12,11 +12,11 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {Expense} from "../../Types";
-import * as ExcelJS from "exceljs";
-import {saveAs} from "file-saver";
-import {filterOptions} from "../dataValidations";
-import {getCurrentDate} from "../../utility/utility";
+import {Expense} from '../../Types';
+import * as ExcelJS from 'exceljs';
+import {saveAs} from 'file-saver';
+import {filterOptions} from '../dataValidations';
+import {getCurrentDate} from '../../utility/utility';
 import {json2csv} from 'json-2-csv';
 
 /**
@@ -39,7 +39,7 @@ interface FormattedExpense {
  */
 const validateExpenses = (expenses: Expense[]): boolean => {
     if (!expenses || expenses.length === 0) {
-        console.warn("No expense data to export");
+        console.warn('No expense data to export');
         return false;
     }
     return true;
@@ -92,17 +92,17 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
 
         // Create a new workbook and worksheet
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Expenses");
+        const worksheet = workbook.addWorksheet('Expenses');
 
         // Define columns with headers and widths
         worksheet.columns = [
-            { header: 'Date', key: 'Date', width: 12 },
-            { header: 'Time', key: 'Time', width: 12 },
-            { header: 'Vendor', key: 'Vendor', width: 30 },
-            { header: 'Amount', key: 'Amount', width: 10 },
-            { header: 'Type', key: 'Type', width: 10 },
-            { header: 'PaymentMode', key: 'PaymentMode', width: 15 },
-            { header: 'Tag', key: 'Tag', width: 15 },
+            {header: 'Date', key: 'Date', width: 12},
+            {header: 'Time', key: 'Time', width: 12},
+            {header: 'Vendor', key: 'Vendor', width: 30},
+            {header: 'Amount', key: 'Amount', width: 10},
+            {header: 'Type', key: 'Type', width: 10},
+            {header: 'PaymentMode', key: 'PaymentMode', width: 15},
+            {header: 'Tag', key: 'Tag', width: 15},
         ];
 
         // Add data rows
@@ -112,21 +112,21 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
 
         // Style the header row
         const headerRow = worksheet.getRow(1);
-        headerRow.font = { bold: true };
+        headerRow.font = {bold: true};
         headerRow.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: 'FFE0E0E0' }
+            fgColor: {argb: 'FFE0E0E0'}
         };
 
         // Add borders to all cells
         worksheet.eachRow((row) => {
             row.eachCell((cell) => {
                 cell.border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                    right: { style: 'thin' }
+                    top: {style: 'thin'},
+                    left: {style: 'thin'},
+                    bottom: {style: 'thin'},
+                    right: {style: 'thin'}
                 };
             });
         });
@@ -170,7 +170,7 @@ export const exportAsCSV = (expenses: Expense[], timeRange: string): void => {
         const filename = generateFilename(timeRange, 'csv');
 
         // Create Blob and trigger download
-        const dataBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const dataBlob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
         saveAs(dataBlob, filename);
 
         console.log(`Successfully exported ${expenses.length} expenses as CSV for time range: ${timeRange}`);

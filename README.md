@@ -161,7 +161,7 @@ pennywise/
 │   ├── api/              # API clients and data fetching
 │   │   ├── ExpenseAPI.ts
 │   │   └── FinanceIndexDB.ts
-��   ├── components/       # Reusable UI components
+│   ├── components/       # Reusable UI components
 │   ├── firebase/         # Firebase configuration & utilities
 │   ├── hooks/            # Custom React hooks
 │   ├── pages/            # Application pages & views

@@ -12,8 +12,8 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-export const EXPENSE_LAST_UPDATE = "expenseLastUpdate";
-export const TAG_LAST_UPDATE = "tagLastUpdate";
+export const EXPENSE_LAST_UPDATE = 'expenseLastUpdate';
+export const TAG_LAST_UPDATE = 'tagLastUpdate';
 
 // Line colors for the chart - Extended to support 15+ different colors
 export const CHART_COLORS = [

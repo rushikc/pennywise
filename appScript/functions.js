@@ -32,7 +32,7 @@ GNU General Public License for more details, or get a copy at
  */
 const addExpense = (expense, accessToken) => {
     return callCloudFunction('addExpenseData', expense, accessToken);
-}
+};
 
 
 /**
@@ -49,9 +49,9 @@ const setOneDoc = (collection, key, value, accessToken) => {
         key,
         collection,
         json: {value}
-    }
+    };
     return callCloudFunction('setOneDoc', payload, accessToken);
-}
+};
 
 
 /**
@@ -66,9 +66,9 @@ const getOneDoc = (collection, key, accessToken) => {
     const payload = {
         key,
         collection
-    }
+    };
     return callCloudFunction('getOneDoc', payload, accessToken);
-}
+};
 
 
 /**
@@ -81,9 +81,9 @@ const getOneDoc = (collection, key, accessToken) => {
 const getAllDoc = (collection, accessToken) => {
     const payload = {
         collection
-    }
+    };
     return callCloudFunction('getAllDoc', payload, accessToken);
-}
+};
 
 
 /**
@@ -121,4 +121,4 @@ const callCloudFunction = (functionName, payload, accessToken) => {
         }
     }
     return null;
-}
+};

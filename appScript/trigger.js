@@ -43,6 +43,6 @@ function createTrigger() {
         .everyHours(1) // Runs every hour
         .create();
 
-    Logger.log("Hourly trigger for 'myExpenseFunction' created.");
+    Logger.log('Hourly trigger for \'myExpenseFunction\' created.');
 
 }

@@ -88,7 +88,7 @@ function base64Decode(inputData) {
         try {
             return Utilities.newBlob(Utilities.base64Decode(base64)).getDataAsString();
         } catch (e) {
-            console.error("Error decoding Base64 string:", e, "Input was:", inputData);
+            console.error('Error decoding Base64 string:', e, 'Input was:', inputData);
             return null;
         }
     } else if (Array.isArray(inputData) && inputData.length > 0 && typeof inputData[0] === 'number') {
@@ -96,11 +96,11 @@ function base64Decode(inputData) {
             const uint8Array = new Uint8Array(inputData);
             return Utilities.newBlob(uint8Array).getDataAsString();
         } catch (e) {
-            console.error("Error converting byte array to string:", e, "Input was:", inputData);
+            console.error('Error converting byte array to string:', e, 'Input was:', inputData);
             return null;
         }
     } else {
-        console.warn("base64Decode received invalid or empty input:", inputData);
+        console.warn('base64Decode received invalid or empty input:', inputData);
         return null;
     }
 }
@@ -140,7 +140,7 @@ function extractPlainTextFromHtml(html) {
     text = text.replace(/&lt;/g, '<');
     text = text.replace(/&gt;/g, '>');
     text = text.replace(/&quot;/g, '"');
-    text = text.replace(/&#39;/g, "'"); // Single quote
+    text = text.replace(/&#39;/g, '\''); // Single quote
     text = text.replace(/&nbsp;/g, ' '); // Non-breaking space
     text = text.replace(/&copy;/g, '©'); // Copyright symbol
     text = text.replace(/&reg;/g, '®'); // Registered symbol

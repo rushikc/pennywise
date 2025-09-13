@@ -44,7 +44,7 @@ export class ExpenseAPI {
             // console.debug("Document written with expense: ", JSONCopy(expense));
 
             expense.modifiedDate = Date.now(); // date to epoch
-            expense.cost = Number(expense.cost.toFixed(2)); 
+            expense.cost = Number(expense.cost.toFixed(2));
 
             const docRef = doc(db, "expense", key);
             const {id, ...expenseWithoutId} = expense;

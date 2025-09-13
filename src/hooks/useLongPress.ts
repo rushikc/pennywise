@@ -13,11 +13,11 @@
  * <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 
 type LongPressOptions = {
-  shouldPreventDefault?: boolean;
-  delay?: number;
+ shouldPreventDefault?: boolean;
+ delay?: number;
 };
 
 /**
@@ -29,81 +29,83 @@ type LongPressOptions = {
  * @returns Event handlers to attach to the target element
  */
 export function useLongPress(
-  onLongPress: () => void,
-  onClick?: () => void,
-  { shouldPreventDefault = true, delay = 500 }: LongPressOptions = {}
+ onLongPress: () => void,
+ onClick?: () => void,
+ {shouldPreventDefault = true, delay = 500}: LongPressOptions = {}
 ) {
-  const [longPressTriggered, setLongPressTriggered] = useState(false);
-  const timeout = useRef<ReturnType<typeof setTimeout>>();
-  const target = useRef<EventTarget>();
+ const [longPressTriggered, setLongPressTriggered] = useState(false);
+ const timeout = useRef<ReturnType<typeof setTimeout>>();
+ const target = useRef<EventTarget>();
 
-  // Start the long press timer
-  const start = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      // Prevent default behavior if configured to do so
-      if (shouldPreventDefault && e.target) {
-        e.target.addEventListener('touchend', preventDefault, { passive: false });
-        target.current = e.target;
-      }
+ // Prevent default for touch events
+ const preventDefault = useCallback((e: Event) => {
+  if (e && e.cancelable) {
+   e.preventDefault();
+  }
+ }, []);
 
-      // Set a timer for the long press
-      timeout.current = setTimeout(() => {
-        onLongPress();
-        setLongPressTriggered(true);
-      }, delay);
-    },
-    [onLongPress, delay, shouldPreventDefault]
-  );
 
-  // Clear the long press timer
-  const clear = useCallback(
-    (e: React.MouseEvent | React.TouchEvent, shouldTriggerClick = true) => {
-      // Clear the timeout
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      }
+ // Start the long press timer
+ const start = useCallback(
+  (e: React.MouseEvent | React.TouchEvent) => {
+   // Prevent default behavior if configured to do so
+   if (shouldPreventDefault && e.target) {
+    e.target.addEventListener('touchend', preventDefault, {passive: false});
+    target.current = e.target;
+   }
 
-      // Trigger click if appropriate
-      if (shouldTriggerClick && !longPressTriggered && onClick) {
-        onClick();
-      }
+   // Set a timer for the long press
+   timeout.current = setTimeout(() => {
+    onLongPress();
+    setLongPressTriggered(true);
+   }, delay);
+  },
+  [shouldPreventDefault, delay, preventDefault, onLongPress]
+ );
 
-      // Reset the triggered state
-      setLongPressTriggered(false);
+ // Clear the long press timer
+ const clear = useCallback(
+  (e: React.MouseEvent | React.TouchEvent, shouldTriggerClick = true) => {
+   // Clear the timeout
+   if (timeout.current) {
+    clearTimeout(timeout.current);
+   }
 
-      // Clean up event listeners
-      if (shouldPreventDefault && target.current) {
-        (target.current as Element).removeEventListener('touchend', preventDefault);
-      }
-    },
-    [shouldPreventDefault, onClick, longPressTriggered]
-  );
+   // Trigger click if appropriate
+   if (shouldTriggerClick && !longPressTriggered && onClick) {
+    onClick();
+   }
 
-  // Prevent default for touch events
-  const preventDefault = useCallback((e: Event) => {
-    if (e && e.cancelable) {
-      e.preventDefault();
-    }
-  }, []);
+   // Reset the triggered state
+   setLongPressTriggered(false);
 
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      }
-      if (target.current) {
-        (target.current as Element).removeEventListener('touchend', preventDefault);
-      }
-    };
-  }, [preventDefault]);
+   // Clean up event listeners
+   if (shouldPreventDefault && target.current) {
+    (target.current as Element).removeEventListener('touchend', preventDefault);
+   }
+  },
+  [longPressTriggered, onClick, shouldPreventDefault, preventDefault]
+ );
 
-  // Return event handlers to be spread onto the target element
-  return {
-    onMouseDown: (e: React.MouseEvent) => start(e),
-    onTouchStart: (e: React.TouchEvent) => start(e),
-    onMouseUp: (e: React.MouseEvent) => clear(e),
-    onMouseLeave: (e: React.MouseEvent) => clear(e, false),
-    onTouchEnd: (e: React.TouchEvent) => clear(e)
+
+ // Clean up on unmount
+ useEffect(() => {
+  return () => {
+   if (timeout.current) {
+    clearTimeout(timeout.current);
+   }
+   if (target.current) {
+    (target.current as Element).removeEventListener('touchend', preventDefault);
+   }
   };
+ }, [preventDefault]);
+
+ // Return event handlers to be spread onto the target element
+ return {
+  onMouseDown: (e: React.MouseEvent) => start(e),
+  onTouchStart: (e: React.TouchEvent) => start(e),
+  onMouseUp: (e: React.MouseEvent) => clear(e),
+  onMouseLeave: (e: React.MouseEvent) => clear(e, false),
+  onTouchEnd: (e: React.TouchEvent) => clear(e)
+ };
 }

@@ -12,9 +12,9 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppConfig, BankConfig, Expense, VendorTag} from "../Types";
-import {FinanceIndexDB} from "../api/FinanceIndexDB";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {AppConfig, BankConfig, Expense, VendorTag} from '../Types';
+import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
 interface InitialState {
@@ -42,7 +42,7 @@ const initialState: InitialState = {
     },
     isTagModal: false,
     tagList: [],
-}
+};
 
 
 export const expenseSlice = createSlice({
@@ -68,7 +68,7 @@ export const expenseSlice = createSlice({
             if (tagIndex > -1) {
                 state.vendorTagList[tagIndex].tag = tagObj.tag;
             } else {
-                state.vendorTagList.push(tagObj)
+                state.vendorTagList.push(tagObj);
             }
 
             void FinanceIndexDB.addVendorTag(tagObj);
@@ -82,7 +82,7 @@ export const expenseSlice = createSlice({
             if (expenseIndex > -1) {
                 state.expenseList[expenseIndex].tag = expense.tag;
             } else {
-                state.expenseList.push(expense)
+                state.expenseList.push(expense);
             }
         },
 
@@ -90,7 +90,7 @@ export const expenseSlice = createSlice({
             const expense = action.payload;
             const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
-            console.log("Deleting expense", expense, "at index", expenseIndex);
+            console.log('Deleting expense', expense, 'at index', expenseIndex);
             if (expenseIndex > -1) {
                 state.expenseList.slice(expenseIndex, 1);
             }
@@ -100,7 +100,11 @@ export const expenseSlice = createSlice({
             state.isTagModal = false;
         },
 
-        setExpenseState: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] , darkMode: boolean}>) => {
+        setExpenseState: (state, action: PayloadAction<{
+            expenseList: Expense[],
+            vendorTagList: VendorTag[],
+            darkMode: boolean
+        }>) => {
             state.expenseList = action.payload.expenseList;
             state.vendorTagList = action.payload.vendorTagList;
             state.appConfig.darkMode = action.payload.darkMode;
@@ -122,8 +126,8 @@ export const expenseSlice = createSlice({
             state.tagList = state.tagList.filter(tag => tag !== action.payload);
         },
 
-        mergeSaveExpense: (state, action: PayloadAction<{originalExpenses: Expense[], mergedExpense: Expense}>) => {
-            const { originalExpenses, mergedExpense } = action.payload;
+        mergeSaveExpense: (state, action: PayloadAction<{ originalExpenses: Expense[], mergedExpense: Expense }>) => {
+            const {originalExpenses, mergedExpense} = action.payload;
 
             // Get the IDs of expenses to be removed
             const expenseIdsToRemove = originalExpenses.map(exp => exp.id);
@@ -141,4 +145,4 @@ export const expenseSlice = createSlice({
             state.appConfig.darkMode = !state.appConfig.darkMode;
         },
     }
-})
+});
