@@ -233,7 +233,7 @@ const extractVendorFromSnippet = (snippet, vendorRegexPatterns) => {
  */
 const getExpense = (date, type, mailId) => {
     return {
-        cost: 0, costType: 'debit', vendor: null, tag: null, type, date, modifiedDate: date, user: 'xyz', mailId
+        cost: 0, costType: 'debit', vendor: null, tag: null, type, date, modifiedDate: Date.now(), user: 'xyz', mailId
     };
 };
 
