@@ -99,17 +99,23 @@ let modalRoot: HTMLElement | null = null;
 // Error handling utility
 export const ErrorHandlers = {
   // Handle API errors, especially 4XX series
-  handleApiError: (error: any) => {
+  handleApiError: (error: unknown) => {
     console.error('API Error:', error);
 
     // Check if it's a Firebase/API error with status code
-    const status = error?.code || error?.response?.status;
+    let status: unknown = undefined;
+    if (typeof error === 'object' && error !== null) {
+      status = (error as { code?: unknown; response?: { status?: unknown } }).code ||
+               (error as { code?: unknown; response?: { status?: unknown } }).response?.status;
+    }
     const isAuthError =
       status === 401 ||
       status === 403 ||
-      status?.includes('permission-denied') ||
-      status?.includes('unauthenticated') ||
-      status?.includes('auth/');
+      (typeof status === 'string' && (
+        status.includes('permission-denied') ||
+        status.includes('unauthenticated') ||
+        status.includes('auth/')
+      ));
 
     if (isAuthError || (typeof status === 'number' && status >= 400 && status < 500)) {
       ErrorHandlers.showAccessDeniedModal();
