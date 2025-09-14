@@ -90,8 +90,11 @@ export class ExpenseAPI {
     try {
       const docRef = doc(db, collectionName, key);
       const docSnap = await getDoc(docRef);
-      // @ts-ignore
-      return docSnap.data();
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        return null;
+      }
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error getting document: ', e);

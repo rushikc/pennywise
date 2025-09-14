@@ -80,8 +80,7 @@ const AutoTagExpenses: React.FC = () => {
 
   const DateSpecificSection = () => (
     <Paper elevation={0} className="reload-section-paper">
-      <Typography variant="subtitle1" gutterBottom fontWeight="medium"
-                  className="section-title">
+      <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
         Auto-tag Expenses by Date
       </Typography>
       <Box className="date-reload-container">

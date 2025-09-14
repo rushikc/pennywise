@@ -69,7 +69,7 @@ declare global {
 }
 
 
-const Home: FC<{}> = (): ReactElement => {
+const Home: FC<Record<string, never>> = (): ReactElement => {
   const {expenseList, isAppLoading} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
@@ -787,8 +787,7 @@ const ExpenseItem: FC<{
   // Create a minimal synthetic event object once instead of recreating it in each handler
   const createSyntheticEvent = useCallback(() => {
     return {
-      stopPropagation: () => {
-      }
+      stopPropagation: () => { /* intentionally empty for synthetic event */ }
     } as React.MouseEvent;
   }, []);
 

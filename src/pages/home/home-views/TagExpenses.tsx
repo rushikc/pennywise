@@ -45,8 +45,8 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
-      let _vendor = expense.vendor;
-      let _tag = expense.tag;
+      const _vendor = expense.vendor;
+      const _tag = expense.tag;
 
       let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
