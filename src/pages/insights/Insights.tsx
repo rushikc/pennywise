@@ -279,7 +279,9 @@ const Insights: React.FC = () => {
       if (!expensesByDate.has(dateStr)) {
         expensesByDate.set(dateStr, []);
       }
-      expensesByDate.get(dateStr)!.push(expense);
+      const dateExpenses = expensesByDate.get(dateStr) ?? [];
+      dateExpenses.push(expense);
+      expensesByDate.set(dateStr, dateExpenses);
     });
 
     if (groupBy === 'days') {
@@ -321,7 +323,9 @@ const Insights: React.FC = () => {
         if (!groupMetrics.has(groupKey)) {
           groupMetrics.set(groupKey, []);
         }
-        groupMetrics.get(groupKey)!.push(Number(expense.cost));
+        const groupValues = groupMetrics.get(groupKey) ?? [];
+        groupValues.push(Number(expense.cost));
+        groupMetrics.set(groupKey, groupValues);
       }
     });
 
@@ -332,8 +336,8 @@ const Insights: React.FC = () => {
     } else {
       let uniqueGroups = Array.from(groupMetrics.keys());
       uniqueGroups.sort((a, b) => {
-        const totalA = groupMetrics.get(a)!.reduce((sum, val) => sum + val, 0);
-        const totalB = groupMetrics.get(b)!.reduce((sum, val) => sum + val, 0);
+        const totalA = (groupMetrics.get(a) ?? []).reduce((sum, val) => sum + val, 0);
+        const totalB = (groupMetrics.get(b) ?? []).reduce((sum, val) => sum + val, 0);
         return totalB - totalA;
       });
 
@@ -344,7 +348,7 @@ const Insights: React.FC = () => {
     }
 
     const pieChartData = targetGroups.map(group => {
-      const values = groupMetrics.get(group) || [0];
+      const values = groupMetrics.get(group) ?? [0];
       const totalValue = values.reduce((sum, val) => sum + val, 0);
       return {
         name: group,

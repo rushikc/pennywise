@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {AppBar, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
-import React from 'react';
+import React, {Suspense} from 'react';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import {FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
@@ -26,6 +26,7 @@ import Login from './pages/login/Login';
 import {AuthProvider, useAuth} from './pages/login/AuthContext';
 import {loadInitialAppData} from './pages/dataValidations';
 import {routes} from './routes';
+import Loading from './components/Loading';
 
 
 function App() {
@@ -60,25 +61,27 @@ function App() {
           isTagModal && <TagExpenses/>
         }
 
-        <Routes>
-          <Route path="/login" element={<Login/>}/>
-          {routes.map((route) => (
-            <Route
-              key={route.key}
-              path={route.path}
-              element={
-                route.isProtected ? (
-                  <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/login" element={<Login/>}/>
+            {routes.map((route) => (
+              <Route
+                key={route.key}
+                path={route.path}
+                element={
+                  route.isProtected ? (
+                    <ProtectedRoute>
+                      <route.component/>
+                    </ProtectedRoute>
+                  ) : (
                     <route.component/>
-                  </ProtectedRoute>
-                ) : (
-                  <route.component/>
-                )
-              }
-            />
-          ))}
-          <Route path="/" element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
-        </Routes>
+                  )
+                }
+              />
+            ))}
+            <Route path="/" element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
+          </Routes>
+        </Suspense>
         <ThemeManager/>
 
         {/* Using the bottom nav component that safely uses useAuth hook */}

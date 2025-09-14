@@ -32,7 +32,7 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const TagExpenses: FC<any> = (): ReactElement => {
+const TagExpenses: FC = (): ReactElement => {
 
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);

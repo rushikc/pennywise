@@ -12,18 +12,17 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-// pages
-import Home from './pages/home/Home';
-import Settings from './pages/setting/Settings';
-import Insights from './pages/insights/Insights';
-import Configuration from './pages/setting/setting-views/Configuration';
-import ManageTags from './pages/setting/setting-views/ManageTags';
-import ManageVendorTags from './pages/setting/setting-views/ManageVendorTags';
-import ReloadExpense from './pages/setting/setting-views/ReloadExpense';
-import AutoTagExpenses from './pages/setting/setting-views/AutoTagExpenses';
 
-// other
-import {FC} from 'react';
+import {FC, lazy} from 'react';
+
+const Home = lazy(() => import('./pages/home/Home'));
+const Settings = lazy(() => import('./pages/setting/Settings'));
+const Insights = lazy(() => import('./pages/insights/Insights'));
+const Configuration = lazy(() => import('./pages/setting/setting-views/Configuration'));
+const ManageTags = lazy(() => import('./pages/setting/setting-views/ManageTags'));
+const ManageVendorTags = lazy(() => import('./pages/setting/setting-views/ManageVendorTags'));
+const ReloadExpense = lazy(() => import('./pages/setting/setting-views/ReloadExpense'));
+const AutoTagExpenses = lazy(() => import('./pages/setting/setting-views/AutoTagExpenses'));
 
 // interface
 interface Route {

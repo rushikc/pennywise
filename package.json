@@ -57,6 +57,7 @@
     "css-minimizer-webpack-plugin": "^7.0.2",
     "dotenv": "^16.4.5",
     "react-scripts": "^5.0.1",
+    "source-map-explorer": "^2.5.3",
     "terser-webpack-plugin": "^5.3.14"
   },
   "scripts": {
