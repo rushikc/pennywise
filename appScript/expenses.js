@@ -22,57 +22,6 @@
 // noinspection JSUnresolvedReference
 
 
-/**
- * Applies regex patterns to a string and returns the first valid match
- *
- * @param {string} snippet - The text to apply regex patterns to
- * @param {string[]} regexPatterns - Array of regex patterns to try
- * @param {function} validationFn - Function to validate the match
- * @returns {string|null} - The first valid match or null if no match found
- */
-function applyRegexPatterns(snippet, regexPatterns, validationFn) {
-    for (const pattern of regexPatterns) {
-        try {
-            const match = snippet.match(new RegExp(pattern));
-            if (match && match[1]) {
-                const result = match[1];
-                if (validationFn(result)) {
-                    return result;
-                }
-            }
-        } catch (regexError) {
-            console.log(`-> Regex failed: ${pattern}`, regexError.message);
-        }
-    }
-    return null;
-}
-
-/**
- * Extracts cost information from an email snippet using regex patterns
- *
- * @param {string} snippet - The email snippet to extract cost from
- * @param {string[]} costRegexPatterns - Array of regex patterns to try
- * @returns {string|null} - The extracted cost as a string, or null if not found
- */
-function extractCostFromSnippet(snippet, costRegexPatterns) {
-    return applyRegexPatterns(snippet, costRegexPatterns, (match) => {
-        const parsedCost = Number(match);
-        return !isNaN(parsedCost) && parsedCost > 0;
-    });
-}
-
-/**
- * Extracts vendor information from an email snippet using regex patterns
- *
- * @param {string} snippet - The email snippet to extract vendor from
- * @param {string[]} vendorRegexPatterns - Array of regex patterns to try
- * @returns {string|null} - The extracted vendor as a string, or null if not found
- */
-function extractVendorFromSnippet(snippet, vendorRegexPatterns) {
-    return applyRegexPatterns(snippet, vendorRegexPatterns, (match) => {
-        return match && match.trim() !== '';
-    });
-}
 
 
 /**
@@ -111,7 +60,7 @@ async function myExpenseFunction() {
     console.log('Last mail id ', mailId);
 
     let lastMailIdIndex = mailIdList.indexOf(mailId);
-    // mailIdList = mailIdList.slice(70);
+    // mailIdList = mailIdList.slice(70); // For testing: process last 30 mails
     mailIdList = mailIdList.slice(lastMailIdIndex + 1);
     console.log('Pending mail id list ', mailIdList);
     console.log('Pending mail id length', mailIdList.length);
@@ -224,6 +173,58 @@ async function myExpenseFunction() {
     }
 
 
+}
+
+/**
+ * Applies regex patterns to a string and returns the first valid match
+ *
+ * @param {string} snippet - The text to apply regex patterns to
+ * @param {string[]} regexPatterns - Array of regex patterns to try
+ * @param {function} validationFn - Function to validate the match
+ * @returns {string|null} - The first valid match or null if no match found
+ */
+const applyRegexPatterns = (snippet, regexPatterns, validationFn) => {
+    for (const pattern of regexPatterns) {
+        try {
+            const match = snippet.match(new RegExp(pattern));
+            if (match && match[1]) {
+                const result = match[1];
+                if (validationFn(result)) {
+                    return result;
+                }
+            }
+        } catch (regexError) {
+            console.log(`-> Regex failed: ${pattern}`, regexError.message);
+        }
+    }
+    return null;
+}
+
+/**
+ * Extracts cost information from an email snippet using regex patterns
+ *
+ * @param {string} snippet - The email snippet to extract cost from
+ * @param {string[]} costRegexPatterns - Array of regex patterns to try
+ * @returns {string|null} - The extracted cost as a string, or null if not found
+ */
+const extractCostFromSnippet = (snippet, costRegexPatterns)=>  {
+    return applyRegexPatterns(snippet, costRegexPatterns, (match) => {
+        const parsedCost = Number(match);
+        return !isNaN(parsedCost) && parsedCost > 0;
+    });
+}
+
+/**
+ * Extracts vendor information from an email snippet using regex patterns
+ *
+ * @param {string} snippet - The email snippet to extract vendor from
+ * @param {string[]} vendorRegexPatterns - Array of regex patterns to try
+ * @returns {string|null} - The extracted vendor as a string, or null if not found
+ */
+const extractVendorFromSnippet = (snippet, vendorRegexPatterns) => {
+    return applyRegexPatterns(snippet, vendorRegexPatterns, (match) => {
+        return match && match.trim() !== '';
+    });
 }
 
 

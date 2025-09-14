@@ -24,8 +24,8 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
-                ignoredActions: ['expense/updateExpense'],
-                ignoredPaths: ['payload.date']
+                ignoredActions: [],
+                ignoredPaths: []
             }
         })
 });
