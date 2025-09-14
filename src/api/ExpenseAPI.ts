@@ -40,7 +40,7 @@ export class ExpenseAPI {
 
       // console.log('Creating expense...', expense);
 
-      let key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
+      const key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
       // console.debug("Document written with expense: ", JSONCopy(expense));
 
       expense.modifiedDate = Date.now(); // date to epoch
@@ -70,7 +70,7 @@ export class ExpenseAPI {
    * Sets a single document in a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  static setOneDoc = async (key: string, val: any, collectionName: string = 'config') => {
+  static setOneDoc = async (key: string, val: any, collectionName = 'config') => {
     try {
       const docRef = doc(db, collectionName, key);
       await setDoc(docRef, val);
@@ -86,7 +86,7 @@ export class ExpenseAPI {
    * Retrieves a single document from a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  static getOneDoc = async (key: string, collectionName: string = 'config') => {
+  static getOneDoc = async (key: string, collectionName = 'config') => {
     try {
       const docRef = doc(db, collectionName, key);
       const docSnap = await getDoc(docRef);
@@ -104,7 +104,7 @@ export class ExpenseAPI {
    * If no collection is specified, it defaults to the 'config' collection.
    * Returns true on successful deletion, false otherwise.
    */
-  static deleteOneDoc = async (key: string, collectionName: string = 'config') => {
+  static deleteOneDoc = async (key: string, collectionName = 'config') => {
     try {
       const docRef = doc(db, collectionName, key);
       await deleteDoc(docRef);
@@ -175,10 +175,10 @@ export class ExpenseAPI {
    */
   static getExpenseList = async (overrideLastDate: number | undefined = undefined): Promise<Expense[]> => {
     try {
-      let table = 'expense';
+      const table = 'expense';
 
       let indexDocList: any[] = [];
-      let fireDocList: any[] = [];
+      const fireDocList: any[] = [];
 
       let lastUpdatedDate = getUnixTimestamp('2020-01-01'); // to fetch all expenses
 
@@ -209,7 +209,7 @@ export class ExpenseAPI {
 
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          let document = doc.data();
+          const document = doc.data();
           document.id = doc.id;
           fireDocList.push(document);
         });
@@ -242,7 +242,7 @@ export class ExpenseAPI {
    */
   static getTagList = async () => {
     try {
-      let table = 'config';
+      const table = 'config';
 
       const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
       const tagList: string[] = tagObject?.tagList || [];
@@ -260,7 +260,7 @@ export class ExpenseAPI {
    */
   static updateTagList = async (tags: string[]) => {
     try {
-      let table = 'config';
+      const table = 'config';
       await ExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
 
     } catch (e) {
@@ -360,10 +360,10 @@ export class ExpenseAPI {
    */
   static getVendorTagList = async (): Promise<VendorTag[]> => {
     try {
-      let table = 'vendorTag';
+      const table = 'vendorTag';
 
       let indexDocList: any[] = [];
-      let fireDocList: any[] = [];
+      const fireDocList: any[] = [];
 
       let lastUpdatedDate = getUnixTimestamp('2020-01-01'); // to fetch all expenses
       let isLastUpdateAvailable = false;
@@ -394,7 +394,7 @@ export class ExpenseAPI {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           // console.debug(doc.id, " => ", doc.data());
-          let document = doc.data();
+          const document = doc.data();
           document.id = doc.id;
           fireDocList.push(document);
         });

@@ -29,15 +29,11 @@ export const getDayJs = (date: Date = new Date()) => {
   return dayjs(date);
 };
 
-export const getDayJsToDate = (date: Dayjs) => {
-  return dayjs().toDate();
-};
-
 export const getUnixTimestamp = (date: Date | string) => {
   return dayjs(date).unix() * 1000;
 };
 
-export const getCurrentDate = (format: string = 'YYYY-MM-DD') => {
+export const getCurrentDate = (format = 'YYYY-MM-DD') => {
   return dayjs().format(format);
 };
 
@@ -82,7 +78,7 @@ export const getISODate = (seconds: number): Date => {
 };
 
 
-export const getDateTimeSecFromISO = (isoTime: string): string => {
+export const getDateTimeSecFromISO = (isoTime: string) => {
   // Using dayjs to parse ISO string and format with localized short datetime with seconds
   return dayjs(isoTime).format('MM/DD/YYYY, hh:mm:ss A');
 };
@@ -90,29 +86,22 @@ export const getDateTimeSecFromISO = (isoTime: string): string => {
 
 //sort
 
-
-export const sortBy2Key = (array: any[], key: string, subKey: string) => {
-  return array.sort((function (a, b) {
-    //@ts-ignore
+export const sortBy2Key = <T extends Record<string, any>>(array: T[], key: string, subKey: string) => {
+  return array.sort((a, b) => {
     return (b[key][subKey] - a[key][subKey]);
-  }));
+  });
 };
 
-
-export const sortByKey = (array: any[], key: string) => {
-  return array.sort((function (a, b) {
-    //@ts-ignore
+export const sortByKey = <T extends Record<string, any>>(array: T[], key: string) => {
+  return array.sort((a, b) => {
     return (b[key] - a[key]);
-  }));
+  });
 };
 
-
-export const sortByKeyDate = (array: any[], key: string) => {
-
-  return array.sort((function (a, b) {
-    //@ts-ignore
+export const sortByKeyDate = <T extends Record<string, any>>(array: T[], key: string) => {
+  return array.sort((a, b) => {
     return (b[key] - a[key]);
-  }));
+  });
 };
 
 export const JSONCopy = (Obj: any) => {

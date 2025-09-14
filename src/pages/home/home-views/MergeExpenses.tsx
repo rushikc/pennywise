@@ -91,7 +91,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
 
     // Create a new merged expense with properties from the selected vendor's expense
-    let mergedExpense: Expense = {
+    const mergedExpense: Expense = {
       id: vendorExpense.id,
       vendor: selectedVendor,
       tag: selectedTag || vendorExpense.tag, // Use selected tag or keep original
@@ -160,9 +160,9 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
             </Typography>
 
             <Typography variant="h5">
-                            <span className={`tag-expense-cost ${totalCost < 0 ? 'negative' : ''}`}>
-                              {totalCost < 0 ? '- ' : '+ '}₹{Math.abs(totalCost).toFixed(2)}
-                            </span>
+              <span className={`tag-expense-cost ${totalCost < 0 ? 'negative' : ''}`}>
+                {totalCost < 0 ? '- ' : '+ '}₹{Math.abs(totalCost).toFixed(2)}
+              </span>
             </Typography>
 
             <Typography variant="caption" className="tag-expense-merge-info">

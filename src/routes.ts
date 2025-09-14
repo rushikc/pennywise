@@ -31,7 +31,7 @@ interface Route {
   title: string,
   path: string,
   enabled: boolean,
-  component: FC<{}>,
+  component: FC<Record<string, never>>,
   isProtected: boolean,
 }
 

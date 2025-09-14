@@ -69,7 +69,7 @@ declare global {
 }
 
 
-const Home: FC<any> = (): ReactElement => {
+const Home: FC<{}> = (): ReactElement => {
   const {expenseList, isAppLoading} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
@@ -262,7 +262,7 @@ const Home: FC<any> = (): ReactElement => {
     const sortedExpenses = sortByKeyDate(filtered, 'date');
     setDateFilteredExpenses(sortedExpenses);
 
-    console.log('Filtered Expenses:', sortedExpenses);
+    // console.log('Filtered Expenses:', sortedExpenses);
 
   }, [expenseList, selectedRange]);
 

@@ -62,7 +62,7 @@ const TagExpenses: FC<any> = (): ReactElement => {
       }
     }
 
-    let expenseNew = JSONCopy(expense);
+    const expenseNew = JSONCopy(expense);
     console.log('Saving expense with tag:', expenseNew);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);

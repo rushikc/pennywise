@@ -117,13 +117,12 @@ const AutoTagExpenses: React.FC = () => {
 
   const AutoTagAllSection = () => (
     <Paper elevation={0} className="reload-section-paper">
-      <Typography variant="subtitle1" gutterBottom fontWeight="medium"
-                  className="section-title">
+      <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
         Auto-tag All Past Expenses
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
         This action will go through all past expenses and apply tags based on your
-        vendor-tag mappings available in 'Manage Vendor Tags'.
+        vendor-tag mappings available in &apos;Manage Vendor Tags&apos;.
       </Typography>
       <Button
         onClick={handleAutoTagAll}
@@ -168,7 +167,7 @@ const AutoTagExpenses: React.FC = () => {
       <Alert severity="info" sx={{mb: 2}}>
         This feature automatically assigns tags to your past expenses based on the vendor
         names you have available in
-        'Manage Vendor Tags'. It helps in organizing your old expenses without manual
+        &apos;Manage Vendor Tags&apos;. It helps in organizing your old expenses without manual
         tagging.
       </Alert>
       <Stack spacing={3}>

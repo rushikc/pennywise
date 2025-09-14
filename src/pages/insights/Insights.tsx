@@ -88,9 +88,10 @@ const Insights: React.FC = () => {
   }, []);
 
   // Filter expenses based on selected time range
-  const getFilteredExpenses = useCallback(() =>
-      filterExpensesByDate(expenses, timeRange)
-    , [expenses, timeRange]);
+  const getFilteredExpenses = useCallback(
+    () => filterExpensesByDate(expenses, timeRange),
+    [expenses, timeRange]
+  );
 
   // Calculate total spending
   const getTotalSpending = () => {

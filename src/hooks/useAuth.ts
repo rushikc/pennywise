@@ -46,7 +46,7 @@ export const useAuth = (redirectToLogin = true) => {
 
       if (user) {
         // User is signed in - enhance the profile image quality
-        let photoUrl = user.photoURL;
+        const photoUrl = user.photoURL;
 
         // if (photoUrl && photoUrl.includes('googleusercontent.com')) {
         //   photoUrl = photoUrl.replace(/=s\d+-c/, '=s400-c');

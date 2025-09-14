@@ -197,7 +197,7 @@ export const groupExpenses = (
       groupLabel = expense.vendor;
       break;
 
-    case 'cost':
+    case 'cost': {
       // Create cost ranges (0-100, 100-500, 500-1000, 1000+)
       const cost = Number(expense.cost);
       if (cost <= 100) {
@@ -214,6 +214,7 @@ export const groupExpenses = (
         groupLabel = '₹1000+';
       }
       break;
+    }
 
     case 'tags':
       // Use tag as key, or "untagged" for null tags
