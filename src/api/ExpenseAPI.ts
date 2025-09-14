@@ -197,9 +197,8 @@ export class ExpenseAPI {
 
             console.log("lastUpdatedDate ", lastUpdatedDate);
 
-            // return null;
 
-            const q = query(collection(db, table), where("modifiedDate", ">", lastUpdatedDate));
+            const q = query(collection(db, table), where("modifiedDate", ">=", lastUpdatedDate));
             const querySnapshot = await getDocs(q);
 
             const queryResultLen = querySnapshot.docs.length;
@@ -210,7 +209,6 @@ export class ExpenseAPI {
 
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    // console.debug(doc.id, " => ", doc.data());
                     let document = doc.data();
                     document.id = doc.id;
                     fireDocList.push(document)
