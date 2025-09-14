@@ -30,99 +30,99 @@ import {routes} from './routes';
 
 function App() {
 
-    FinanceIndexDB.initDB();
+  FinanceIndexDB.initDB();
 
-    const {appConfig} = useSelector(selectExpense);
+  const {appConfig} = useSelector(selectExpense);
 
-    const darkTheme = createTheme({
-        palette: {
-            mode: 'dark',
-        },
-    });
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
 
-    const lightTheme = createTheme({
-        palette: {
-            mode: 'light',
-        },
-    });
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+    },
+  });
 
-    // Use the appropriate theme based on bankConfig.darkMode
-    const theme = appConfig.darkMode ? darkTheme : lightTheme;
+  // Use the appropriate theme based on bankConfig.darkMode
+  const theme = appConfig.darkMode ? darkTheme : lightTheme;
 
 
-    const {isTagModal} = useSelector(selectExpense);
+  const {isTagModal} = useSelector(selectExpense);
 
-    return (
-        <AuthProvider>
-            <ThemeProvider theme={theme}>
-                <CssBaseline/>
-                {
-                    isTagModal && <TagExpenses/>
-                }
+  return (
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        {
+          isTagModal && <TagExpenses/>
+        }
 
-                <Routes>
-                    <Route path="/login" element={<Login/>}/>
-                    {routes.map((route) => (
-                        <Route
-                            key={route.key}
-                            path={route.path}
-                            element={
-                                route.isProtected ? (
-                                    <ProtectedRoute>
-                                        <route.component/>
-                                    </ProtectedRoute>
-                                ) : (
-                                    <route.component/>
-                                )
-                            }
-                        />
-                    ))}
-                    <Route path="/" element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
-                </Routes>
-                <ThemeManager/>
+        <Routes>
+          <Route path="/login" element={<Login/>}/>
+          {routes.map((route) => (
+            <Route
+              key={route.key}
+              path={route.path}
+              element={
+                route.isProtected ? (
+                  <ProtectedRoute>
+                    <route.component/>
+                  </ProtectedRoute>
+                ) : (
+                  <route.component/>
+                )
+              }
+            />
+          ))}
+          <Route path="/" element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
+        </Routes>
+        <ThemeManager/>
 
-                {/* Using the bottom nav component that safely uses useAuth hook */}
-                <BottomNavAuth/>
-            </ThemeProvider>
-        </AuthProvider>
-    );
+        {/* Using the bottom nav component that safely uses useAuth hook */}
+        <BottomNavAuth/>
+      </ThemeProvider>
+    </AuthProvider>
+  );
 }
 
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const {currentUser, loading} = useAuth();
-    const {isAppLoading} = useSelector(selectExpense);
-    const location = useLocation();
+  const {currentUser, loading} = useAuth();
+  const {isAppLoading} = useSelector(selectExpense);
+  const location = useLocation();
 
-    if (loading) return null;
+  if (loading) return null;
 
-    if (!currentUser) {
-        return <Navigate to="/login" state={{from: location}} replace/>;
-    }
+  if (!currentUser) {
+    return <Navigate to="/login" state={{from: location}} replace/>;
+  }
 
-    // console.log("isAppLoading in ProtectedRoute:", isAppLoading);
+  // console.log("isAppLoading in ProtectedRoute:", isAppLoading);
 
-    if (isAppLoading) {
-        loadInitialAppData();
-        return null; // or a loading spinner
-    }
+  if (isAppLoading) {
+    loadInitialAppData();
+    return null; // or a loading spinner
+  }
 
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
 
 // Bottom navigation wrapper that uses auth context
 const BottomNavAuth = () => {
-    const {currentUser} = useAuth();
+  const {currentUser} = useAuth();
 
-    if (!currentUser) return null;
+  if (!currentUser) return null;
 
-    return (
-        <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
-            <BottomNav/>
-        </AppBar>
-    );
+  return (
+    <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
+      <BottomNav/>
+    </AppBar>
+  );
 };
 
 

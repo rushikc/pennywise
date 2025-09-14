@@ -24,19 +24,19 @@ import {Provider} from 'react-redux';
 const container = document.getElementById('root');
 
 if (container) {
-    const root = createRoot(container);
+  const root = createRoot(container);
 
-    root.render(
-        <Provider store={store}>
-            <BrowserRouter>
-                <App/>
-            </BrowserRouter>
-        </Provider>,
-    );
+  root.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <App/>
+      </BrowserRouter>
+    </Provider>,
+  );
 } else {
-    throw new Error(
-        'Root element with ID \'root\' was not found in the document',
-    );
+  throw new Error(
+    'Root element with ID \'root\' was not found in the document',
+  );
 }
 
 

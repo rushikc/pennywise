@@ -19,51 +19,51 @@ $red: var(--accent-red);
 $purple-light: var(--accent-purple);
 
 .tag-text-red {
-    font-size: 11px;
-    border: solid $red 1px;
-    border-radius: 10px;
-    padding: 3px 5px;
-    color: $red;
+  font-size: 11px;
+  border: solid $red 1px;
+  border-radius: 10px;
+  padding: 3px 5px;
+  color: $red;
 }
 
 .tag-text-purple-light {
-    font-size: 12px;
-    border: solid $purple-light 1px;
-    border-radius: 10px;
-    padding: 3px 5px;
-    color: var(--text-secondary);
+  font-size: 12px;
+  border: solid $purple-light 1px;
+  border-radius: 10px;
+  padding: 3px 5px;
+  color: var(--text-secondary);
 }
 
 .button-class {
-    width: 200px
+  width: 200px
 }
 
 .d-flex-center {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .font-600 {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .font-12 {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .font-15 {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .pt-10 {
-    padding-top: 10rem;
+  padding-top: 10rem;
 }
 
 .no-padding {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .no-padding-margin {
-    padding: 0 !important;
-    margin: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }

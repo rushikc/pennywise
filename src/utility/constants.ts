@@ -17,18 +17,18 @@ export const TAG_LAST_UPDATE = 'tagLastUpdate';
 
 // Line colors for the chart - Extended to support 15+ different colors
 export const CHART_COLORS = [
-    '#FF6B6B',                       // Coral Red
-    '#96CEB4',                       // Mint Green
-    '#FFEAA7',                       // Light Yellow
-    '#DDA0DD',                       // Plum
-    '#98D8C8',                       // Mint
-    '#F7DC6F',                       // Gold
-    '#BB8FCE',                       // Light Purple
-    '#85C1E9',                       // Light Blue
-    '#F8C471',                       // Peach
-    '#82E0AA',                       // Light Green
-    '#F1948A',                       // Salmon
-    '#AED6F1',                       // Pale Blue
-    '#A9DFBF',                       // Pale Green
-    '#4ECDC4',                       // Teal
+  '#FF6B6B',                       // Coral Red
+  '#96CEB4',                       // Mint Green
+  '#FFEAA7',                       // Light Yellow
+  '#DDA0DD',                       // Plum
+  '#98D8C8',                       // Mint
+  '#F7DC6F',                       // Gold
+  '#BB8FCE',                       // Light Purple
+  '#85C1E9',                       // Light Blue
+  '#F8C471',                       // Peach
+  '#82E0AA',                       // Light Green
+  '#F1948A',                       // Salmon
+  '#AED6F1',                       // Pale Blue
+  '#A9DFBF',                       // Pale Green
+  '#4ECDC4',                       // Teal
 ];

@@ -31,7 +31,7 @@
     }
   },
   "rules": {
-    "indent": ["error", "space"],
+    "indent": ["error", 2],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "no-console": ["warn", { "allow": ["info","warn", "error"] }],

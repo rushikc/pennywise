@@ -23,13 +23,13 @@ import {json2csv} from 'json-2-csv';
  * Represents a formatted expense record for export
  */
 interface FormattedExpense {
-    Date: string;
-    Time: string;
-    Vendor: string;
-    Amount: number;
-    Type: string;
-    PaymentMode: string;
-    Tag: string;
+  Date: string;
+  Time: string;
+  Vendor: string;
+  Amount: number;
+  Type: string;
+  PaymentMode: string;
+  Tag: string;
 }
 
 /**
@@ -38,11 +38,11 @@ interface FormattedExpense {
  * @returns true if expenses can be exported, false otherwise
  */
 const validateExpenses = (expenses: Expense[]): boolean => {
-    if (!expenses || expenses.length === 0) {
-        console.warn('No expense data to export');
-        return false;
-    }
-    return true;
+  if (!expenses || expenses.length === 0) {
+    console.warn('No expense data to export');
+    return false;
+  }
+  return true;
 };
 
 /**
@@ -51,15 +51,15 @@ const validateExpenses = (expenses: Expense[]): boolean => {
  * @returns Formatted expenses
  */
 const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
-    return expenses.map(expense => ({
-        Date: new Date(expense.date).toLocaleDateString(),
-        Time: new Date(expense.date).toLocaleTimeString(),
-        Vendor: expense.vendor,
-        Amount: expense.cost,
-        Type: expense.costType,
-        PaymentMode: expense.type,
-        Tag: expense.tag || 'Untagged',
-    }));
+  return expenses.map(expense => ({
+    Date: new Date(expense.date).toLocaleDateString(),
+    Time: new Date(expense.date).toLocaleTimeString(),
+    Vendor: expense.vendor,
+    Amount: expense.cost,
+    Type: expense.costType,
+    PaymentMode: expense.type,
+    Tag: expense.tag || 'Untagged',
+  }));
 };
 
 /**
@@ -69,12 +69,12 @@ const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
  * @returns Generated filename
  */
 const generateFilename = (timeRange: string, fileType: string): string => {
-    const rangeLabel = filterOptions.find(opt => opt.id === timeRange)?.label || timeRange;
-    const dateStr = getCurrentDate('YYYYMMDD_HHmmss');
+  const rangeLabel = filterOptions.find(opt => opt.id === timeRange)?.label || timeRange;
+  const dateStr = getCurrentDate('YYYYMMDD_HHmmss');
 
-    return `Pennywise_${rangeLabel}_range_${dateStr}.${fileType}`
-        .replace(' ', '')
-        .toLowerCase();
+  return `Pennywise_${rangeLabel}_range_${dateStr}.${fileType}`
+    .replace(' ', '')
+    .toLowerCase();
 };
 
 /**
@@ -83,70 +83,70 @@ const generateFilename = (timeRange: string, fileType: string): string => {
  * @param timeRange The selected time range for filtering
  */
 export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Promise<void> => {
-    if (!validateExpenses(expenses)) {
-        return;
-    }
+  if (!validateExpenses(expenses)) {
+    return;
+  }
 
-    try {
-        const formattedExpenses = formatExpenses(expenses);
+  try {
+    const formattedExpenses = formatExpenses(expenses);
 
-        // Create a new workbook and worksheet
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Expenses');
+    // Create a new workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Expenses');
 
-        // Define columns with headers and widths
-        worksheet.columns = [
-            {header: 'Date', key: 'Date', width: 12},
-            {header: 'Time', key: 'Time', width: 12},
-            {header: 'Vendor', key: 'Vendor', width: 30},
-            {header: 'Amount', key: 'Amount', width: 10},
-            {header: 'Type', key: 'Type', width: 10},
-            {header: 'PaymentMode', key: 'PaymentMode', width: 15},
-            {header: 'Tag', key: 'Tag', width: 15},
-        ];
+    // Define columns with headers and widths
+    worksheet.columns = [
+      {header: 'Date', key: 'Date', width: 12},
+      {header: 'Time', key: 'Time', width: 12},
+      {header: 'Vendor', key: 'Vendor', width: 30},
+      {header: 'Amount', key: 'Amount', width: 10},
+      {header: 'Type', key: 'Type', width: 10},
+      {header: 'PaymentMode', key: 'PaymentMode', width: 15},
+      {header: 'Tag', key: 'Tag', width: 15},
+    ];
 
-        // Add data rows
-        formattedExpenses.forEach(expense => {
-            worksheet.addRow(expense);
-        });
+    // Add data rows
+    formattedExpenses.forEach(expense => {
+      worksheet.addRow(expense);
+    });
 
-        // Style the header row
-        const headerRow = worksheet.getRow(1);
-        headerRow.font = {bold: true};
-        headerRow.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: {argb: 'FFE0E0E0'}
+    // Style the header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = {bold: true};
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: {argb: 'FFE0E0E0'}
+    };
+
+    // Add borders to all cells
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: {style: 'thin'},
+          left: {style: 'thin'},
+          bottom: {style: 'thin'},
+          right: {style: 'thin'}
         };
+      });
+    });
 
-        // Add borders to all cells
-        worksheet.eachRow((row) => {
-            row.eachCell((cell) => {
-                cell.border = {
-                    top: {style: 'thin'},
-                    left: {style: 'thin'},
-                    bottom: {style: 'thin'},
-                    right: {style: 'thin'}
-                };
-            });
-        });
+    const filename = generateFilename(timeRange, 'xlsx');
 
-        const filename = generateFilename(timeRange, 'xlsx');
+    // Generate Excel file buffer
+    const buffer = await workbook.xlsx.writeBuffer();
 
-        // Generate Excel file buffer
-        const buffer = await workbook.xlsx.writeBuffer();
+    // Create a Blob and trigger download
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    saveAs(blob, filename);
 
-        // Create a Blob and trigger download
-        const blob = new Blob([buffer], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-        saveAs(blob, filename);
-
-        console.log(`Successfully exported ${expenses.length} expenses as XLSX for time range: ${timeRange}`);
-    } catch (error) {
-        console.error('Error exporting expenses as XLSX:', error);
-        alert('Failed to export XLSX. Please try again.');
-    }
+    console.log(`Successfully exported ${expenses.length} expenses as XLSX for time range: ${timeRange}`);
+  } catch (error) {
+    console.error('Error exporting expenses as XLSX:', error);
+    alert('Failed to export XLSX. Please try again.');
+  }
 };
 
 /**
@@ -155,27 +155,27 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
  * @param timeRange The selected time range for filtering
  */
 export const exportAsCSV = (expenses: Expense[], timeRange: string): void => {
-    if (!validateExpenses(expenses)) {
-        return;
-    }
+  if (!validateExpenses(expenses)) {
+    return;
+  }
 
-    try {
-        const formattedExpenses = formatExpenses(expenses);
+  try {
+    const formattedExpenses = formatExpenses(expenses);
 
-        // Convert JSON to CSV
-        const csv = json2csv(formattedExpenses, {
-            emptyFieldValue: ''
-        });
+    // Convert JSON to CSV
+    const csv = json2csv(formattedExpenses, {
+      emptyFieldValue: ''
+    });
 
-        const filename = generateFilename(timeRange, 'csv');
+    const filename = generateFilename(timeRange, 'csv');
 
-        // Create Blob and trigger download
-        const dataBlob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-        saveAs(dataBlob, filename);
+    // Create Blob and trigger download
+    const dataBlob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+    saveAs(dataBlob, filename);
 
-        console.log(`Successfully exported ${expenses.length} expenses as CSV for time range: ${timeRange}`);
-    } catch (error) {
-        console.error('Error exporting expenses as CSV:', error);
-        alert('Failed to export CSV. Please try again.');
-    }
+    console.log(`Successfully exported ${expenses.length} expenses as CSV for time range: ${timeRange}`);
+  } catch (error) {
+    console.error('Error exporting expenses as CSV:', error);
+    alert('Failed to export CSV. Please try again.');
+  }
 };

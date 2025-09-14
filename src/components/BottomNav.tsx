@@ -22,47 +22,47 @@ import {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
 export default function BottomNav() {
-    const [value, setValue] = React.useState('home');
-    const navigate = useNavigate();
-    const location = useLocation();
+  const [value, setValue] = React.useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    // Update the state based on URL path when component mounts or URL changes
-    useEffect(() => {
-        const path = location.pathname;
+  // Update the state based on URL path when component mounts or URL changes
+  useEffect(() => {
+    const path = location.pathname;
 
-        // Map URL paths to navigation values
-        if (path.includes('stats')) {
-            setValue('stats');
-        } else if (path.includes('profile')) {
-            setValue('profile');
-        } else {
-            // Default to home for any other paths
-            setValue('home');
-        }
-    }, [location]);
+    // Map URL paths to navigation values
+    if (path.includes('stats')) {
+      setValue('stats');
+    } else if (path.includes('profile')) {
+      setValue('profile');
+    } else {
+      // Default to home for any other paths
+      setValue('home');
+    }
+  }, [location]);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        navigate(newValue);
-        setValue(newValue);
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    navigate(newValue);
+    setValue(newValue);
+  };
 
-    return (
-        <BottomNavigation value={value} onChange={handleChange}>
-            <BottomNavigationAction
-                label="Home"
-                value="home"
-                icon={<HomeIcon/>}
-            />
-            <BottomNavigationAction
-                label="Stats"
-                value="stats"
-                icon={<SpaceDashboardIcon/>}
-            />
-            <BottomNavigationAction
-                label="Profile"
-                value="profile"
-                icon={<AccountCircleIcon/>}
-            />
-        </BottomNavigation>
-    );
+  return (
+    <BottomNavigation value={value} onChange={handleChange}>
+      <BottomNavigationAction
+        label="Home"
+        value="home"
+        icon={<HomeIcon/>}
+      />
+      <BottomNavigationAction
+        label="Stats"
+        value="stats"
+        icon={<SpaceDashboardIcon/>}
+      />
+      <BottomNavigationAction
+        label="Profile"
+        value="profile"
+        icon={<AccountCircleIcon/>}
+      />
+    </BottomNavigation>
+  );
 }
