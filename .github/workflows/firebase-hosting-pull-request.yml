@@ -28,7 +28,7 @@ jobs:
 
       - name: Lint code (fail on errors but not warnings)
         if: steps.lint_check.outputs.lint_exists == 'true'
-        run: npm run lint -- --quiet --max-warnings=9999
+        run: npm run lint
 
       - name: Build project
         run: npm run build

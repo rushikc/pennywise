@@ -85,25 +85,28 @@ export const getDateTimeSecFromISO = (isoTime: string) => {
 
 
 //sort
-
+// eslint-disable-next-line
 export const sortBy2Key = <T extends Record<string, any>>(array: T[], key: string, subKey: string) => {
   return array.sort((a, b) => {
     return (b[key][subKey] - a[key][subKey]);
   });
 };
 
+// eslint-disable-next-line
 export const sortByKey = <T extends Record<string, any>>(array: T[], key: string) => {
   return array.sort((a, b) => {
     return (b[key] - a[key]);
   });
 };
 
+// eslint-disable-next-line
 export const sortByKeyDate = <T extends Record<string, any>>(array: T[], key: string) => {
   return array.sort((a, b) => {
     return (b[key] - a[key]);
   });
 };
 
+// eslint-disable-next-line
 export const JSONCopy = (Obj: any) => {
   return JSON.parse(JSON.stringify(Obj));
 };
@@ -126,6 +129,7 @@ export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {
  * @param message Primary message to display
  * @param optionalParams Additional parameters to log
  */
+// eslint-disable-next-line
 export const devWarn = (message?: any, ...optionalParams: any[]): void => {
   console.warn(message, ...optionalParams);
 };

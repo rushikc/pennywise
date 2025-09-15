@@ -113,6 +113,7 @@ export class FinanceIndexDB {
   /**
    * Retrieves a single data entry from a specified object store using a key.
    */
+  // eslint-disable-next-line
   static getData = async (storeName: TableNames, keyPath: string): Promise<any> => {
 
     console.debug('getData IndexedDB - ', storeName, keyPath);
@@ -131,6 +132,7 @@ export class FinanceIndexDB {
   /**
    * Retrieves all data from a specified object store.
    */
+  // eslint-disable-next-line
   static getAllData = async (storeName: TableNames): Promise<any[]> => {
 
     console.debug('getAllData IndexedDB - ', storeName);
