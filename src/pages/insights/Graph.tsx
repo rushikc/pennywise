@@ -14,7 +14,7 @@
  */
 
 import React from 'react';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import {Box, Paper, Typography, useTheme} from '@mui/material';
 import {
   CartesianGrid,
   Cell,
@@ -27,11 +27,12 @@ import {
   Tooltip,
   XAxis,
   YAxis
-} from "recharts";
+} from 'recharts';
 
 // Interface for line graph data
 interface LineDataPoint {
   date: string;
+
   [key: string]: string | number;
 }
 
@@ -55,10 +56,10 @@ interface PieGraphProps {
   title?: string;
 }
 
-export const LineGraph: React.FC<LineGraphProps> = ({ 
-  data, 
-  lineKeys, 
-  title = "Spending Trends" 
+export const LineGraph: React.FC<LineGraphProps> = ({
+  data,
+  lineKeys,
+  title = 'Spending Trends'
 }) => {
   const theme = useTheme();
 
@@ -139,9 +140,9 @@ export const LineGraph: React.FC<LineGraphProps> = ({
   );
 };
 
-export const PieGraph: React.FC<PieGraphProps> = ({ 
-  data, 
-  title = "Group Distribution" 
+export const PieGraph: React.FC<PieGraphProps> = ({
+  data,
+  title = 'Group Distribution'
 }) => {
   const theme = useTheme();
 

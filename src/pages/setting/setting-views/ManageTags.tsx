@@ -33,11 +33,11 @@ import {
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
-import {ArrowBack as BackIcon, RemoveCircleOutline} from "@mui/icons-material";
+import {ArrowBack as BackIcon, RemoveCircleOutline} from '@mui/icons-material';
 import {useSelector} from 'react-redux';
 import {addTag, deleteTag, selectExpense, setTagList} from '../../../store/expenseActions';
 import './settingViews.scss';
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 
 const ManageTags: React.FC = () => {
   const navigate = useNavigate();
@@ -194,7 +194,7 @@ const ManageTags: React.FC = () => {
         <DialogTitle>Delete Tag</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the tag "{tagToDelete}"?
+            Are you sure you want to delete the tag ${tagToDelete}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

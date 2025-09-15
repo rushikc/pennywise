@@ -13,16 +13,16 @@ GNU General Public License for more details, or get a copy at
 */
 
 
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectExpense } from '../store/expenseActions';
+import {useEffect} from 'react';
+import {useSelector} from 'react-redux';
+import {selectExpense} from '../store/expenseActions';
 
 /**
  * ThemeManager component that applies the current theme to the document
  * based on the darkMode setting in the Redux store
  */
 const ThemeManager = () => {
-  const { appConfig } = useSelector(selectExpense);
+  const {appConfig} = useSelector(selectExpense);
 
   useEffect(() => {
     // Apply theme to the document element

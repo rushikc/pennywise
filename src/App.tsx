@@ -12,28 +12,29 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {AppBar, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
-import React from "react";
-import {Navigate, Route, Routes, useLocation} from "react-router-dom";
-import {FinanceIndexDB} from "./api/FinanceIndexDB";
+import {AppBar, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
+import React, {Suspense} from 'react';
+import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
+import {FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
-import BottomNav from "./components/BottomNav";
-import ThemeManager from "./components/ThemeManager";
-import TagExpenses from "./pages/home/home-views/TagExpenses";
-import {selectExpense} from "./store/expenseActions";
-import {useSelector} from "react-redux";
-import Login from "./pages/login/Login";
-import {AuthProvider, useAuth} from "./pages/login/AuthContext";
-import {loadInitialAppData} from "./pages/dataValidations";
-import {routes} from "./routes";
+import BottomNav from './components/BottomNav';
+import ThemeManager from './components/ThemeManager';
+import TagExpenses from './pages/home/home-views/TagExpenses';
+import {selectExpense} from './store/expenseActions';
+import {useSelector} from 'react-redux';
+import Login from './pages/login/Login';
+import {AuthProvider, useAuth} from './pages/login/AuthContext';
+import {loadInitialAppData} from './pages/dataValidations';
+import {routes} from './routes';
+import Loading from './components/Loading';
 
 
 function App() {
 
   FinanceIndexDB.initDB();
 
-  // define theme1
-  const { appConfig } = useSelector(selectExpense);
+  const {appConfig} = useSelector(selectExpense);
+
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
@@ -53,38 +54,40 @@ function App() {
   const {isTagModal} = useSelector(selectExpense);
 
   return (
-      <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline/>
-          {
-            isTagModal && <TagExpenses/>
-          }
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        {
+          isTagModal && <TagExpenses/>
+        }
 
+        <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/login" element={<Login/>}/>
             {routes.map((route) => (
-                <Route
-                    key={route.key}
-                    path={route.path}
-                    element={
-                      route.isProtected ? (
-                          <ProtectedRoute>
-                            <route.component/>
-                          </ProtectedRoute>
-                      ) : (
-                          <route.component/>
-                      )
-                    }
-                />
+              <Route
+                key={route.key}
+                path={route.path}
+                element={
+                  route.isProtected ? (
+                    <ProtectedRoute>
+                      <route.component/>
+                    </ProtectedRoute>
+                  ) : (
+                    <route.component/>
+                  )
+                }
+              />
             ))}
-            <Route path='/' element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
+            <Route path="/" element={<ProtectedRoute><Navigate to="/home"/></ProtectedRoute>}/>
           </Routes>
-          <ThemeManager/>
+        </Suspense>
+        <ThemeManager/>
 
-          {/* Using the bottom nav component that safely uses useAuth hook */}
-          <BottomNavAuth/>
-        </ThemeProvider>
-      </AuthProvider>
+        {/* Using the bottom nav component that safely uses useAuth hook */}
+        <BottomNavAuth/>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
@@ -124,7 +127,6 @@ const BottomNavAuth = () => {
     </AppBar>
   );
 };
-
 
 
 export default App;

@@ -31,7 +31,7 @@ import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
-import {ExpenseAPI} from "../../api/ExpenseAPI";
+import {ExpenseAPI} from '../../api/ExpenseAPI';
 
 /**
  * Settings page component with user profile and settings options

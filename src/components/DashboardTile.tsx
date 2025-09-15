@@ -13,10 +13,10 @@ GNU General Public License for more details, or get a copy at
 */
 
 import React from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import {Avatar, Box, Typography} from '@mui/material';
 
 
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion';
 
 export interface DashboardTileProps {
   id: string;
@@ -40,7 +40,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
   isLast = false
 }) => {
   const itemVariants = {
-    hidden: { y: 10, opacity: 0 },
+    hidden: {y: 10, opacity: 0},
     visible: {
       y: 0,
       opacity: 1,
@@ -61,7 +61,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
       >
         <Avatar
           className="dashboard-option-icon"
-          style={{ color }}
+          style={{color}}
         >
           {icon}
         </Avatar>
@@ -74,7 +74,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
           </Typography>
         </Box>
       </motion.div>
-      {!isLast && <div className="dashboard-option-divider" />}
+      {!isLast && <div className="dashboard-option-divider"/>}
     </React.Fragment>
   );
 };

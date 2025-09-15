@@ -44,37 +44,37 @@ GNU General Public License for more details, or get a copy at
  * @return {string|null} The decoded email body text, or null if not found.
  */
 function findBody(parts) {
-    if (!parts || parts.length === 0) {
-        return null;
-    }
-
-    let htmlBody = null;
-    let plainTextBody = null;
-
-    for (const part of parts) {
-        if (part.body && part.body.data) {
-            if (part.mimeType === 'text/html') {
-                htmlBody = base64Decode(part.body.data);
-            } else if (part.mimeType === 'text/plain') {
-                plainTextBody = base64Decode(part.body.data);
-            }
-        }
-
-        if (part.parts && part.parts.length > 0) {
-            const nestedBody = findBody(part.parts);
-            if (nestedBody) {
-                return nestedBody;
-            }
-        }
-    }
-
-    if (htmlBody) {
-        return htmlBody;
-    } else if (plainTextBody) {
-        return plainTextBody;
-    }
-
+  if (!parts || parts.length === 0) {
     return null;
+  }
+
+  let htmlBody = null;
+  let plainTextBody = null;
+
+  for (const part of parts) {
+    if (part.body && part.body.data) {
+      if (part.mimeType === 'text/html') {
+        htmlBody = base64Decode(part.body.data);
+      } else if (part.mimeType === 'text/plain') {
+        plainTextBody = base64Decode(part.body.data);
+      }
+    }
+
+    if (part.parts && part.parts.length > 0) {
+      const nestedBody = findBody(part.parts);
+      if (nestedBody) {
+        return nestedBody;
+      }
+    }
+  }
+
+  if (htmlBody) {
+    return htmlBody;
+  } else if (plainTextBody) {
+    return plainTextBody;
+  }
+
+  return null;
 }
 
 /**
@@ -83,26 +83,26 @@ function findBody(parts) {
  * @return {string|null} The decoded plain text, or null if decoding fails or input is invalid.
  */
 function base64Decode(inputData) {
-    if (typeof inputData === 'string' && inputData.length > 0) {
-        const base64 = inputData.replace(/-/g, '+').replace(/_/g, '/');
-        try {
-            return Utilities.newBlob(Utilities.base64Decode(base64)).getDataAsString();
-        } catch (e) {
-            console.error("Error decoding Base64 string:", e, "Input was:", inputData);
-            return null;
-        }
-    } else if (Array.isArray(inputData) && inputData.length > 0 && typeof inputData[0] === 'number') {
-        try {
-            const uint8Array = new Uint8Array(inputData);
-            return Utilities.newBlob(uint8Array).getDataAsString();
-        } catch (e) {
-            console.error("Error converting byte array to string:", e, "Input was:", inputData);
-            return null;
-        }
-    } else {
-        console.warn("base64Decode received invalid or empty input:", inputData);
-        return null;
+  if (typeof inputData === 'string' && inputData.length > 0) {
+    const base64 = inputData.replace(/-/g, '+').replace(/_/g, '/');
+    try {
+      return Utilities.newBlob(Utilities.base64Decode(base64)).getDataAsString();
+    } catch (e) {
+      console.error('Error decoding Base64 string:', e, 'Input was:', inputData);
+      return null;
     }
+  } else if (Array.isArray(inputData) && inputData.length > 0 && typeof inputData[0] === 'number') {
+    try {
+      const uint8Array = new Uint8Array(inputData);
+      return Utilities.newBlob(uint8Array).getDataAsString();
+    } catch (e) {
+      console.error('Error converting byte array to string:', e, 'Input was:', inputData);
+      return null;
+    }
+  } else {
+    console.warn('base64Decode received invalid or empty input:', inputData);
+    return null;
+  }
 }
 
 /**
@@ -112,48 +112,48 @@ function base64Decode(inputData) {
  * @return {string} The extracted plain text.
  */
 function extractPlainTextFromHtml(html) {
-    if (!html || typeof html !== 'string') {
-        return '';
-    }
+  if (!html || typeof html !== 'string') {
+    return '';
+  }
 
-    let text = html;
+  let text = html;
 
-    // Remove <style> tags and their content
-    text = text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
-    // Remove <script> tags and their content
-    text = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
-    // Remove HTML comments
-    text = text.replace(/<!--[\s\S]*?-->/g, '');
+  // Remove <style> tags and their content
+  text = text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+  // Remove <script> tags and their content
+  text = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  // Remove HTML comments
+  text = text.replace(/<!--[\s\S]*?-->/g, '');
 
-    // 1. Replace <br> and <p> tags with newlines to preserve some formatting
-    text = text.replace(/<br\s*\/?>/gi, '\n');
-    text = text.replace(/<p[^>]*>/gi, '\n\n');
-    text = text.replace(/<\/p>/gi, '');
+  // 1. Replace <br> and <p> tags with newlines to preserve some formatting
+  text = text.replace(/<br\s*\/?>/gi, '\n');
+  text = text.replace(/<p[^>]*>/gi, '\n\n');
+  text = text.replace(/<\/p>/gi, '');
 
-    // 2. Remove all other HTML tags
-    text = text.replace(/<[^>]*>/g, '');
+  // 2. Remove all other HTML tags
+  text = text.replace(/<[^>]*>/g, '');
 
-    // 3. Decode common HTML entities (a simplified approach for Apps Script)
-    // Utilities.newBlob(text, 'text/html').getDataAsString() can sometimes help,
-    // but it's not a general HTML parser. Manual replacements are more reliable here.
-    text = text.replace(/&amp;/g, '&');
-    text = text.replace(/&lt;/g, '<');
-    text = text.replace(/&gt;/g, '>');
-    text = text.replace(/&quot;/g, '"');
-    text = text.replace(/&#39;/g, "'"); // Single quote
-    text = text.replace(/&nbsp;/g, ' '); // Non-breaking space
-    text = text.replace(/&copy;/g, '©'); // Copyright symbol
-    text = text.replace(/&reg;/g, '®'); // Registered symbol
-    text = text.replace(/&trade;/g, '™'); // Trademark symbol
-    text = text.replace(/&mdash;/g, '—'); // Em dash
-    text = text.replace(/&ndash;/g, '–'); // En dash
+  // 3. Decode common HTML entities (a simplified approach for Apps Script)
+  // Utilities.newBlob(text, 'text/html').getDataAsString() can sometimes help,
+  // but it's not a general HTML parser. Manual replacements are more reliable here.
+  text = text.replace(/&amp;/g, '&');
+  text = text.replace(/&lt;/g, '<');
+  text = text.replace(/&gt;/g, '>');
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, '\''); // Single quote
+  text = text.replace(/&nbsp;/g, ' '); // Non-breaking space
+  text = text.replace(/&copy;/g, '©'); // Copyright symbol
+  text = text.replace(/&reg;/g, '®'); // Registered symbol
+  text = text.replace(/&trade;/g, '™'); // Trademark symbol
+  text = text.replace(/&mdash;/g, '—'); // Em dash
+  text = text.replace(/&ndash;/g, '–'); // En dash
 
-    // Handle numeric and hexadecimal entities (e.g., &#x20AC; or &#8364;) - a basic approach
-    text = text.replace(/&#(\d+);/g, (match, code) => String.fromCharCode(parseInt(code, 10)));
-    text = text.replace(/&#x([0-9a-fA-F]+);/g, (match, code) => String.fromCharCode(parseInt(code, 16)));
+  // Handle numeric and hexadecimal entities (e.g., &#x20AC; or &#8364;) - a basic approach
+  text = text.replace(/&#(\d+);/g, (match, code) => String.fromCharCode(parseInt(code, 10)));
+  text = text.replace(/&#x([0-9a-fA-F]+);/g, (match, code) => String.fromCharCode(parseInt(code, 16)));
 
-    // 4. Normalize whitespace: replace multiple spaces/newlines with single space
-    text = text.replace(/\s+/g, ' ').trim();
+  // 4. Normalize whitespace: replace multiple spaces/newlines with single space
+  text = text.replace(/\s+/g, ' ').trim();
 
-    return text;
+  return text;
 }

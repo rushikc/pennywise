@@ -51,17 +51,17 @@ export default function BottomNav() {
       <BottomNavigationAction
         label="Home"
         value="home"
-        icon={<HomeIcon />}
+        icon={<HomeIcon/>}
       />
       <BottomNavigationAction
         label="Stats"
         value="stats"
-        icon={<SpaceDashboardIcon />}
+        icon={<SpaceDashboardIcon/>}
       />
       <BottomNavigationAction
         label="Profile"
         value="profile"
-        icon={<AccountCircleIcon />}
+        icon={<AccountCircleIcon/>}
       />
     </BottomNavigation>
   );

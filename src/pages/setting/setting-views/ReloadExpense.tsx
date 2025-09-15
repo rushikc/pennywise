@@ -19,8 +19,8 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {getUnixTimestamp} from "../../../utility/utility";
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
@@ -46,11 +46,11 @@ const ReloadExpense: React.FC = () => {
   const handleReloadAll = async () => {
     setLoading(true);
     try {
-      console.log("Reloading all expenses");
+      console.log('Reloading all expenses');
       await ExpenseAPI.getExpenseList(getUnixTimestamp('2020-01-01'));
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to reload all expenses:", error);
+      console.error('Failed to reload all expenses:', error);
     } finally {
       setLoading(false);
     }
@@ -61,11 +61,11 @@ const ReloadExpense: React.FC = () => {
 
     setLoading(true);
     try {
-      console.log("Reloading expenses for:", selectedDate);
+      console.log('Reloading expenses for:', selectedDate);
       await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to reload expenses for selected date:", error);
+      console.error('Failed to reload expenses for selected date:', error);
     } finally {
       setLoading(false);
     }
@@ -85,8 +85,8 @@ const ReloadExpense: React.FC = () => {
             slotProps={{
               textField: {
                 fullWidth: true,
-                size: "small",
-                className: "reload-date-picker"
+                size: 'small',
+                className: 'reload-date-picker'
               }
             }}
           />
@@ -113,8 +113,10 @@ const ReloadExpense: React.FC = () => {
         Reload All Expenses
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
-        Caution: Reloading all expense data from Firebase can be costly. Repeated operations, particularly with large
-        datasets, may significantly impact your billing due to increased Cloud Reads. Please use this option sparingly.
+        Caution: Reloading all expense data from Firebase can be costly. Repeated operations, particularly with
+        large
+        datasets, may significantly impact your billing due to increased Cloud Reads. Please use this option
+        sparingly.
       </Typography>
       <Button
         onClick={handleReloadAll}

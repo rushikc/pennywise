@@ -13,7 +13,7 @@
  * <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 type LongPressOptions = {
   shouldPreventDefault?: boolean;
@@ -31,18 +31,26 @@ type LongPressOptions = {
 export function useLongPress(
   onLongPress: () => void,
   onClick?: () => void,
-  { shouldPreventDefault = true, delay = 500 }: LongPressOptions = {}
+  {shouldPreventDefault = true, delay = 500}: LongPressOptions = {}
 ) {
   const [longPressTriggered, setLongPressTriggered] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>();
   const target = useRef<EventTarget>();
+
+  // Prevent default for touch events
+  const preventDefault = useCallback((e: Event) => {
+    if (e && e.cancelable) {
+      e.preventDefault();
+    }
+  }, []);
+
 
   // Start the long press timer
   const start = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
       // Prevent default behavior if configured to do so
       if (shouldPreventDefault && e.target) {
-        e.target.addEventListener('touchend', preventDefault, { passive: false });
+        e.target.addEventListener('touchend', preventDefault, {passive: false});
         target.current = e.target;
       }
 
@@ -52,7 +60,7 @@ export function useLongPress(
         setLongPressTriggered(true);
       }, delay);
     },
-    [onLongPress, delay, shouldPreventDefault]
+    [shouldPreventDefault, delay, preventDefault, onLongPress]
   );
 
   // Clear the long press timer
@@ -76,15 +84,9 @@ export function useLongPress(
         (target.current as Element).removeEventListener('touchend', preventDefault);
       }
     },
-    [shouldPreventDefault, onClick, longPressTriggered]
+    [longPressTriggered, onClick, shouldPreventDefault, preventDefault]
   );
 
-  // Prevent default for touch events
-  const preventDefault = useCallback((e: Event) => {
-    if (e && e.cancelable) {
-      e.preventDefault();
-    }
-  }, []);
 
   // Clean up on unmount
   useEffect(() => {

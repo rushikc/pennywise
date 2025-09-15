@@ -12,7 +12,7 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Box, Button, Chip, Container, IconButton, Paper, Stack, Typography, useTheme} from '@mui/material';
 import {motion} from 'framer-motion';
 import {FileDownload, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
@@ -22,7 +22,7 @@ import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
 import {exportAsCSV, exportAsXLSX} from './exportReport';
 
-import Loading from "../../components/Loading";
+import Loading from '../../components/Loading';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
 import {
@@ -36,7 +36,7 @@ import {
 } from '../dataValidations';
 import '../home/Home.scss';
 import './Insights.scss';
-import {Expense} from "../../Types";
+import {Expense} from '../../Types';
 import {
   CartesianGrid,
   Cell,
@@ -49,8 +49,8 @@ import {
   Tooltip,
   XAxis,
   YAxis
-} from "recharts";
-import {CHART_COLORS} from "../../utility/constants";
+} from 'recharts';
+import {CHART_COLORS} from '../../utility/constants';
 
 // Interface for line graph data
 interface LineDataPoint {
@@ -88,14 +88,15 @@ const Insights: React.FC = () => {
   }, []);
 
   // Filter expenses based on selected time range
-  const getFilteredExpenses = useCallback(() =>
-    filterExpensesByDate(expenses, timeRange)
-  , [expenses, timeRange]);
+  const getFilteredExpenses = useCallback(
+    () => filterExpensesByDate(expenses, timeRange),
+    [expenses, timeRange]
+  );
 
   // Calculate total spending
   const getTotalSpending = () => {
     const filtered = getFilteredExpenses();
-    console.log("Total spending Filtered Expenses: ", filtered);
+    console.log('Total spending Filtered Expenses: ', filtered);
     return filtered.reduce((sum, expense) => sum + Number(expense.cost), 0).toFixed(2);
   };
 
@@ -268,7 +269,7 @@ const Insights: React.FC = () => {
       return {lineChartData: [], pieChartData: [], lineKeys: []};
     }
 
-    console.log("prepareChartData ", calculation);
+    console.log('prepareChartData ', calculation);
     const expensesByDate = new Map<string, Expense[]>();
     expenses.forEach(expense => {
       const dateStr = new Date(expense.date).toLocaleDateString('en-US', {
@@ -278,7 +279,9 @@ const Insights: React.FC = () => {
       if (!expensesByDate.has(dateStr)) {
         expensesByDate.set(dateStr, []);
       }
-      expensesByDate.get(dateStr)!.push(expense);
+      const dateExpenses = expensesByDate.get(dateStr) ?? [];
+      dateExpenses.push(expense);
+      expensesByDate.set(dateStr, dateExpenses);
     });
 
     if (groupBy === 'days') {
@@ -320,7 +323,9 @@ const Insights: React.FC = () => {
         if (!groupMetrics.has(groupKey)) {
           groupMetrics.set(groupKey, []);
         }
-        groupMetrics.get(groupKey)!.push(Number(expense.cost));
+        const groupValues = groupMetrics.get(groupKey) ?? [];
+        groupValues.push(Number(expense.cost));
+        groupMetrics.set(groupKey, groupValues);
       }
     });
 
@@ -331,8 +336,8 @@ const Insights: React.FC = () => {
     } else {
       let uniqueGroups = Array.from(groupMetrics.keys());
       uniqueGroups.sort((a, b) => {
-        const totalA = groupMetrics.get(a)!.reduce((sum, val) => sum + val, 0);
-        const totalB = groupMetrics.get(b)!.reduce((sum, val) => sum + val, 0);
+        const totalA = (groupMetrics.get(a) ?? []).reduce((sum, val) => sum + val, 0);
+        const totalB = (groupMetrics.get(b) ?? []).reduce((sum, val) => sum + val, 0);
         return totalB - totalA;
       });
 
@@ -343,7 +348,7 @@ const Insights: React.FC = () => {
     }
 
     const pieChartData = targetGroups.map(group => {
-      const values = groupMetrics.get(group) || [0];
+      const values = groupMetrics.get(group) ?? [0];
       const totalValue = values.reduce((sum, val) => sum + val, 0);
       return {
         name: group,
@@ -607,7 +612,7 @@ const Insights: React.FC = () => {
                     onClick={toggleSelectionPanel}
                     size="small"
                   >
-                    <TuneIcon />
+                    <TuneIcon/>
                   </IconButton>
                 </div>
               </div>
@@ -652,11 +657,11 @@ const Insights: React.FC = () => {
       {/* Info Banner */}
       <Typography variant="body2" className="info-banner-text">
         Reports are downloaded based on the selected range, current range is
-        <strong>{" "+ filterOptions.find(o => o.id === timeRange)?.label}</strong>
+        <strong>{' ' + filterOptions.find(o => o.id === timeRange)?.label}</strong>
       </Typography>
 
       {/* Export Buttons Row */}
-      <Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
+      <Stack direction="row" spacing={2} sx={{mt: 2, mb: 3}}>
         <motion.div
           initial={{opacity: 0, y: 20}}
           animate={{opacity: 1, y: 0}}
@@ -666,7 +671,7 @@ const Insights: React.FC = () => {
           <Button
             variant="contained"
             fullWidth
-            startIcon={<FileDownload />}
+            startIcon={<FileDownload/>}
             onClick={() => exportAsXLSX(getFilteredExpenses(), timeRange)}
             sx={{
               backgroundColor: theme.palette.primary.main,
@@ -690,7 +695,7 @@ const Insights: React.FC = () => {
           <Button
             variant="contained"
             fullWidth
-            startIcon={<FileDownload />}
+            startIcon={<FileDownload/>}
             onClick={() => exportAsCSV(getFilteredExpenses(), timeRange)}
             sx={{
               backgroundColor: theme.palette.primary.main,
@@ -787,7 +792,7 @@ const FilterPanel: React.FC<{
             key={option.id}
             label={option.label}
             color="primary"
-            variant={selectedRange === option.id ? "filled" : "outlined"}
+            variant={selectedRange === option.id ? 'filled' : 'outlined'}
             onClick={() => onRangeChange(option.id)}
             className="filter-chip"
           />
@@ -824,7 +829,7 @@ const GroupByPanel: React.FC<{
               key={option.id}
               label={option.label}
               color="primary"
-              variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+              variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
               onClick={() => onGroupByChange(option.id)}
               className="filter-chip"
             />
@@ -840,7 +845,7 @@ const GroupByPanel: React.FC<{
               key={option.id}
               label={option.label}
               color="primary"
-              variant={selectedCalculation === option.id ? "filled" : "outlined"}
+              variant={selectedCalculation === option.id ? 'filled' : 'outlined'}
               onClick={() => onCalculationChange(option.id)}
               className="filter-chip"
             />
@@ -883,8 +888,8 @@ const SelectionPanel: React.FC<{
           <Chip
             key={item}
             label={item}
-            color={selectedItems.includes(item) ? "primary" : "default"}
-            variant={selectedItems.includes(item) ? "filled" : "outlined"}
+            color={selectedItems.includes(item) ? 'primary' : 'default'}
+            variant={selectedItems.includes(item) ? 'filled' : 'outlined'}
             onClick={() => handleItemToggle(item)}
             className="selection-chip"
           />

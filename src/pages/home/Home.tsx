@@ -27,9 +27,9 @@ import AddIcon from '@mui/icons-material/Add';
 import {Avatar, Chip, Fab, IconButton, InputAdornment, TextField, Zoom} from '@mui/material';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, {FC, ReactElement, useEffect, useRef, useState, useCallback} from "react";
+import React, {FC, ReactElement, useCallback, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Col, Row} from "reactstrap";
+import {Col, Row} from 'reactstrap';
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
 import {
@@ -55,10 +55,10 @@ import {
 import './Home.scss';
 import MergeExpenses from './home-views/MergeExpenses';
 import AddExpense from './home-views/AddExpense';
-import {ExpenseAPI} from "../../api/ExpenseAPI";
-import {CreditCard, Sort} from "@mui/icons-material";
-import Container from "@mui/material/Container";
-import {useLongPress} from "../../hooks/useLongPress";
+import {ExpenseAPI} from '../../api/ExpenseAPI';
+import {CreditCard, Sort} from '@mui/icons-material';
+import Container from '@mui/material/Container';
+import {useLongPress} from '../../hooks/useLongPress';
 
 // Add interface to extend Window type
 declare global {
@@ -69,7 +69,7 @@ declare global {
 }
 
 
-const Home: FC<any> = (): ReactElement => {
+const Home: FC<Record<string, never>> = (): ReactElement => {
   const {expenseList, isAppLoading} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
@@ -116,7 +116,7 @@ const Home: FC<any> = (): ReactElement => {
         console.error('Error reloading expenses:', error);
         setLoading(false);
       });
-  }
+  };
 
   const toggleFilters = () => {
     if (selectionMode) return; // Don't show filters in selection mode
@@ -262,7 +262,7 @@ const Home: FC<any> = (): ReactElement => {
     const sortedExpenses = sortByKeyDate(filtered, 'date');
     setDateFilteredExpenses(sortedExpenses);
 
-    console.log('Filtered Expenses:', sortedExpenses);
+    // console.log('Filtered Expenses:', sortedExpenses);
 
   }, [expenseList, selectedRange]);
 
@@ -410,12 +410,12 @@ const Home: FC<any> = (): ReactElement => {
   // Handle group by option selection
   const handleGroupByChange = (option: GroupByOption) => {
     setIsRegrouping(true);
-    if (option === "days" && selectedSortBy !== null) {
+    if (option === 'days' && selectedSortBy !== null) {
       setSelectedGroupBy(option);
-      setSelectedSortBy("date");
+      setSelectedSortBy('date');
     } else {
       setSelectedGroupBy(option);
-      setSelectedSortBy("count");
+      setSelectedSortBy('count');
     }
     setShowGroupByOptions(false);
   };
@@ -509,7 +509,7 @@ const Home: FC<any> = (): ReactElement => {
       <div className="home-list">
         {filteredExpenses.length === 0 ? (
           <div className="no-expenses">
-            {searchTerm ? "No matching expenses found" : "No expenses found for selected period"}
+            {searchTerm ? 'No matching expenses found' : 'No expenses found for selected period'}
           </div>
         ) : (
           Object.entries(groupedExpenses)
@@ -519,7 +519,7 @@ const Home: FC<any> = (): ReactElement => {
                 (selectedSortBy === 'date' || selectedSortBy == null))
                 return keyB.localeCompare(keyA);
 
-              return selectedSortBy === "cost" ?
+              return selectedSortBy === 'cost' ?
                 groupDataB.totalAmount - groupDataA.totalAmount :
                 groupDataB.expenses.length - groupDataA.expenses.length;
             })
@@ -649,7 +649,7 @@ const Home: FC<any> = (): ReactElement => {
         <Fab
           color="primary"
           size="medium"
-          aria-label={allCollapsed ? "expand all groups" : "collapse all groups"}
+          aria-label={allCollapsed ? 'expand all groups' : 'collapse all groups'}
           onClick={toggleAllGroupsCollapse}
           className="collapse-all-button"
         >
@@ -703,7 +703,7 @@ const FilterPanel: FC<{
             key={option.id}
             label={option.label}
             color="primary"
-            variant={selectedRange === option.id ? "filled" : "outlined"}
+            variant={selectedRange === option.id ? 'filled' : 'outlined'}
             onClick={() => onRangeChange(option.id)}
             className="filter-chip"
           />
@@ -747,7 +747,7 @@ const GroupByPanel: FC<{
               key={option.id}
               label={option.label}
               color="primary"
-              variant={selectedGroupBy === option.id ? "filled" : "outlined"}
+              variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
               onClick={() => onGroupByChange(option.id)}
               className="filter-chip"
             />
@@ -764,7 +764,7 @@ const GroupByPanel: FC<{
               key={option.id}
               label={option.label}
               color="primary"
-              variant={selectedSortBy === option.id ? "filled" : "outlined"}
+              variant={selectedSortBy === option.id ? 'filled' : 'outlined'}
               onClick={() => onSortByChange(option.id)}
               className="filter-chip"
             />
@@ -782,11 +782,13 @@ const ExpenseItem: FC<{
   selectionMode: boolean;
   onSelect: (expense: Expense, e: React.MouseEvent) => void;
   onView: (expense: Expense) => void;
-}> = ({ expense, isSelected, selectionMode, onSelect, onView }) => {
+}> = ({expense, isSelected, selectionMode, onSelect, onView}) => {
 
   // Create a minimal synthetic event object once instead of recreating it in each handler
   const createSyntheticEvent = useCallback(() => {
-    return { stopPropagation: () => {} } as React.MouseEvent;
+    return {
+      stopPropagation: () => { /* intentionally empty for synthetic event */ }
+    } as React.MouseEvent;
   }, []);
 
   // Handle long press on expense row - activates selection mode
@@ -804,7 +806,7 @@ const ExpenseItem: FC<{
   }, [expense, selectionMode, onSelect, onView, createSyntheticEvent]);
 
   // Setup long press gesture handlers
-  const longPressHandlers = useLongPress(handleLongPress, handleClick, { delay: 500 });
+  const longPressHandlers = useLongPress(handleLongPress, handleClick, {delay: 500});
 
 
   return (
@@ -825,8 +827,8 @@ const ExpenseItem: FC<{
           <Col>
             <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
           </Col>
-          <Col xs="auto" className='d-flex justify-content-end mr-2'>
-            <span className='expense-type'>
+          <Col xs="auto" className="d-flex justify-content-end mr-2">
+            <span className="expense-type">
               {expense.costType === 'debit' ? '-' : '+'}
             </span>
             <span className="expense-currency">₹</span>

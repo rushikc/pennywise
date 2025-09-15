@@ -12,14 +12,14 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {FC, ReactElement, useState} from "react";
+import {FC, ReactElement, useState} from 'react';
 import './TagExpenses.scss';
 
-import Button from "@mui/material/Button";
-import {useSelector} from "react-redux";
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {hideTagExpense, selectExpense, setTagMap, updateExpense} from "../../../store/expenseActions";
-import {getDateMonthTime, JSONCopy} from "../../../utility/utility";
+import Button from '@mui/material/Button';
+import {useSelector} from 'react-redux';
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {hideTagExpense, selectExpense, setTagMap, updateExpense} from '../../../store/expenseActions';
+import {getDateMonthTime, JSONCopy} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -32,7 +32,7 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 
 
-const TagExpenses: FC<any> = (): ReactElement => {
+const TagExpenses: FC = (): ReactElement => {
 
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
@@ -45,8 +45,8 @@ const TagExpenses: FC<any> = (): ReactElement => {
 
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
-      let _vendor = expense.vendor;
-      let _tag = expense.tag;
+      const _vendor = expense.vendor;
+      const _tag = expense.tag;
 
       let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
@@ -62,8 +62,8 @@ const TagExpenses: FC<any> = (): ReactElement => {
       }
     }
 
-    let expenseNew = JSONCopy(expense);
-    console.log("Saving expense with tag:", expenseNew);
+    const expenseNew = JSONCopy(expense);
+    console.log('Saving expense with tag:', expenseNew);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);
     updateExpense(expenseNew);

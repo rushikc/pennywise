@@ -12,7 +12,7 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -192,7 +192,7 @@ const ManageVendorTags: React.FC = () => {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon/>
                   </InputAdornment>
                 ),
               },
@@ -214,7 +214,7 @@ const ManageVendorTags: React.FC = () => {
 
         {loading ? (
           <Box className="loading-container">
-            <CircularProgress className="loading-indicator" />
+            <CircularProgress className="loading-indicator"/>
           </Box>
         ) : filteredVendorTags.length === 0 ? (
           <Typography variant="body1" className="empty-cards-message">

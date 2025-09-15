@@ -43,7 +43,7 @@ import {
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
-import {BankConfig} from "../../../Types";
+import {BankConfig} from '../../../Types';
 import './settingViews.scss';
 
 const Configuration: React.FC = () => {
@@ -292,7 +292,7 @@ const Configuration: React.FC = () => {
                 <ListItemText
                   primary={`HDFC ****${cardDigits}`}
                   primaryTypographyProps={{
-                    className: "card-text"
+                    className: 'card-text'
                   }}
                 />
               </ListItem>

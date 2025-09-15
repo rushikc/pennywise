@@ -12,7 +12,6 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-
 @use '../../styles/theme.scss';
 
 .statistics-container {
@@ -22,8 +21,8 @@ GNU General Public License for more details, or get a copy at
 
 .statistics-header {
   padding-bottom: 10px;
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .summary-row {
@@ -337,6 +336,7 @@ GNU General Public License for more details, or get a copy at
 
     .filter-chip {
       margin: 0;
+
       &.MuiChip-outlined {
         border-color: var(--border-color);
         background-color: var(--bg-secondary);

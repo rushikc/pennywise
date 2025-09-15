@@ -51,7 +51,7 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
           bgcolor: 'primary.main'
         }}
       >
-        <AccountIcon sx={{ fontSize: size * 0.6 }} />
+        <AccountIcon sx={{fontSize: size * 0.6}}/>
       </Avatar>
     );
   }

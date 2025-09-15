@@ -12,133 +12,137 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppConfig, BankConfig, Expense, VendorTag} from "../Types";
-import {FinanceIndexDB} from "../api/FinanceIndexDB";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {AppConfig, BankConfig, Expense, VendorTag} from '../Types';
+import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
 interface InitialState {
-    expenseList: Expense[],
-    expense: Expense | null,
-    vendorTagList: VendorTag[],
-    bankConfig: BankConfig,
-    appConfig: AppConfig,
-    isAppLoading: boolean,
-    isTagModal: boolean,
-    tagList: string[],
+  expenseList: Expense[],
+  expense: Expense | null,
+  vendorTagList: VendorTag[],
+  bankConfig: BankConfig,
+  appConfig: AppConfig,
+  isAppLoading: boolean,
+  isTagModal: boolean,
+  tagList: string[],
 }
 
 const initialState: InitialState = {
-    expenseList: [],
-    expense: null,
-    vendorTagList: [],
-    isAppLoading: true,
-    appConfig: {
-        darkMode: false
-    },
-    bankConfig: {
-        enableUpi: false,
-        creditCards: [],
-    },
-    isTagModal: false,
-    tagList: [],
-}
+  expenseList: [],
+  expense: null,
+  vendorTagList: [],
+  isAppLoading: true,
+  appConfig: {
+    darkMode: false
+  },
+  bankConfig: {
+    enableUpi: false,
+    creditCards: [],
+  },
+  isTagModal: false,
+  tagList: [],
+};
 
 
 export const expenseSlice = createSlice({
-    name: 'expense',
-    initialState: initialState,
+  name: 'expense',
+  initialState: initialState,
 
-    reducers: {
+  reducers: {
 
-        setExpenseList: (state, action: PayloadAction<Expense[]>) => {
-            state.expenseList = action.payload;
-        },
+    setExpenseList: (state, action: PayloadAction<Expense[]>) => {
+      state.expenseList = action.payload;
+    },
 
-        setTagExpense: (state, action: PayloadAction<Expense>) => {
-            state.expense = action.payload;
-            state.isTagModal = true;
-        },
-
-
-        setTagMap: (state, action: PayloadAction<VendorTag>) => {
-            const tagObj = action.payload;
-            const tagIndex = state.vendorTagList.findIndex(t => t.vendor === tagObj.vendor);
-
-            if (tagIndex > -1) {
-                state.vendorTagList[tagIndex].tag = tagObj.tag;
-            } else {
-                state.vendorTagList.push(tagObj)
-            }
-
-            void FinanceIndexDB.addVendorTag(tagObj);
-
-        },
-
-        updateExpense: (state, action: PayloadAction<Expense>) => {
-            const expense = action.payload;
-            const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
-
-            if (expenseIndex > -1) {
-                state.expenseList[expenseIndex].tag = expense.tag;
-            } else {
-                state.expenseList.push(expense)
-            }
-        },
-
-        deleteExpense: (state, action: PayloadAction<Expense>) => {
-            const expense = action.payload;
-            const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
-
-            console.log("Deleting expense", expense, "at index", expenseIndex);
-            if (expenseIndex > -1) {
-                state.expenseList.slice(expenseIndex, 1);
-            }
-        },
-
-        hideTagExpense: (state) => {
-            state.isTagModal = false;
-        },
-
-        setExpenseState: (state, action: PayloadAction<{ expenseList: Expense[], vendorTagList: VendorTag[] , darkMode: boolean}>) => {
-            state.expenseList = action.payload.expenseList;
-            state.vendorTagList = action.payload.vendorTagList;
-            state.appConfig.darkMode = action.payload.darkMode;
-            state.isAppLoading = false;
-        },
+    setTagExpense: (state, action: PayloadAction<Expense>) => {
+      state.expense = action.payload;
+      state.isTagModal = true;
+    },
 
 
-        setTagList: (state, action: PayloadAction<string[]>) => {
-            state.tagList = action.payload;
-        },
+    setTagMap: (state, action: PayloadAction<VendorTag>) => {
+      const tagObj = action.payload;
+      const tagIndex = state.vendorTagList.findIndex(t => t.vendor === tagObj.vendor);
 
-        addTag: (state, action: PayloadAction<string>) => {
-            if (!state.tagList.includes(action.payload)) {
-                state.tagList.push(action.payload);
-            }
-        },
+      if (tagIndex > -1) {
+        state.vendorTagList[tagIndex].tag = tagObj.tag;
+      } else {
+        state.vendorTagList.push(tagObj);
+      }
 
-        deleteTag: (state, action: PayloadAction<string>) => {
-            state.tagList = state.tagList.filter(tag => tag !== action.payload);
-        },
+      void FinanceIndexDB.addVendorTag(tagObj);
 
-        mergeSaveExpense: (state, action: PayloadAction<{originalExpenses: Expense[], mergedExpense: Expense}>) => {
-            const { originalExpenses, mergedExpense } = action.payload;
+    },
 
-            // Get the IDs of expenses to be removed
-            const expenseIdsToRemove = originalExpenses.map(exp => exp.id);
+    updateExpense: (state, action: PayloadAction<Expense>) => {
+      const expense = action.payload;
+      const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
-            // Filter out the original expenses
-            state.expenseList = state.expenseList.filter(expense =>
-                !expenseIdsToRemove.includes(expense.id)
-            );
+      if (expenseIndex > -1) {
+        state.expenseList[expenseIndex].tag = expense.tag;
+      } else {
+        state.expenseList.push(expense);
+      }
+    },
 
-            // Add the merged expense
-            state.expenseList.push(mergedExpense);
-        },
+    deleteExpense: (state, action: PayloadAction<Expense>) => {
+      const expense = action.payload;
+      const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
-        toggleDarkMode: (state) => {
-            state.appConfig.darkMode = !state.appConfig.darkMode;
-        },
-    }
-})
+      console.log('Deleting expense', expense, 'at index', expenseIndex);
+      if (expenseIndex > -1) {
+        state.expenseList.slice(expenseIndex, 1);
+      }
+    },
+
+    hideTagExpense: (state) => {
+      state.isTagModal = false;
+    },
+
+    setExpenseState: (state, action: PayloadAction<{
+      expenseList: Expense[],
+      vendorTagList: VendorTag[],
+      darkMode: boolean
+    }>) => {
+      state.expenseList = action.payload.expenseList;
+      state.vendorTagList = action.payload.vendorTagList;
+      state.appConfig.darkMode = action.payload.darkMode;
+      state.isAppLoading = false;
+    },
+
+
+    setTagList: (state, action: PayloadAction<string[]>) => {
+      state.tagList = action.payload;
+    },
+
+    addTag: (state, action: PayloadAction<string>) => {
+      if (!state.tagList.includes(action.payload)) {
+        state.tagList.push(action.payload);
+      }
+    },
+
+    deleteTag: (state, action: PayloadAction<string>) => {
+      state.tagList = state.tagList.filter(tag => tag !== action.payload);
+    },
+
+    mergeSaveExpense: (state, action: PayloadAction<{ originalExpenses: Expense[], mergedExpense: Expense }>) => {
+      const {originalExpenses, mergedExpense} = action.payload;
+
+      // Get the IDs of expenses to be removed
+      const expenseIdsToRemove = originalExpenses.map(exp => exp.id);
+
+      // Filter out the original expenses
+      state.expenseList = state.expenseList.filter(expense =>
+        !expenseIdsToRemove.includes(expense.id)
+      );
+
+      // Add the merged expense
+      state.expenseList.push(mergedExpense);
+    },
+
+    toggleDarkMode: (state) => {
+      state.appConfig.darkMode = !state.appConfig.darkMode;
+    },
+  }
+});

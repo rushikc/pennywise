@@ -12,11 +12,11 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import { useState, useEffect } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
-import { FinanceIndexDB } from '../api/FinanceIndexDB';
+import {useEffect, useState} from 'react';
+import {onAuthStateChanged, User} from 'firebase/auth';
+import {auth} from '../firebase/firebaseConfig';
+import {useNavigate} from 'react-router-dom';
+import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 export interface UserProfile {
   name: string;
@@ -46,7 +46,7 @@ export const useAuth = (redirectToLogin = true) => {
 
       if (user) {
         // User is signed in - enhance the profile image quality
-        let photoUrl = user.photoURL;
+        const photoUrl = user.photoURL;
 
         // if (photoUrl && photoUrl.includes('googleusercontent.com')) {
         //   photoUrl = photoUrl.replace(/=s\d+-c/, '=s400-c');
@@ -81,7 +81,7 @@ export const useAuth = (redirectToLogin = true) => {
       FinanceIndexDB.initDB();
       // Then sign out from Firebase
       await auth.signOut();
-      return { success: true };
+      return {success: true};
     } catch (error) {
       console.error('Error signing out:', error);
       return {
@@ -91,5 +91,5 @@ export const useAuth = (redirectToLogin = true) => {
     }
   };
 
-  return { currentUser, userProfile, isLoading, signOut };
+  return {currentUser, userProfile, isLoading, signOut};
 };

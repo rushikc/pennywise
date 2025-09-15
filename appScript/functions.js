@@ -31,8 +31,8 @@ GNU General Public License for more details, or get a copy at
  * @returns {object|string|null} - The response from the cloud function.
  */
 const addExpense = (expense, accessToken) => {
-    return callCloudFunction('addExpenseData', expense, accessToken);
-}
+  return callCloudFunction('addExpenseData', expense, accessToken);
+};
 
 
 /**
@@ -45,13 +45,13 @@ const addExpense = (expense, accessToken) => {
  * @returns {object|string|null} - The response from the cloud function.
  */
 const setOneDoc = (collection, key, value, accessToken) => {
-    const payload = {
-        key,
-        collection,
-        json: {value}
-    }
-    return callCloudFunction('setOneDoc', payload, accessToken);
-}
+  const payload = {
+    key,
+    collection,
+    json: {value}
+  };
+  return callCloudFunction('setOneDoc', payload, accessToken);
+};
 
 
 /**
@@ -63,12 +63,12 @@ const setOneDoc = (collection, key, value, accessToken) => {
  * @returns {object|string|null} - The response from the cloud function.
  */
 const getOneDoc = (collection, key, accessToken) => {
-    const payload = {
-        key,
-        collection
-    }
-    return callCloudFunction('getOneDoc', payload, accessToken);
-}
+  const payload = {
+    key,
+    collection
+  };
+  return callCloudFunction('getOneDoc', payload, accessToken);
+};
 
 
 /**
@@ -79,11 +79,11 @@ const getOneDoc = (collection, key, accessToken) => {
  * @returns {object|string|null} - The response from the cloud function.
  */
 const getAllDoc = (collection, accessToken) => {
-    const payload = {
-        collection
-    }
-    return callCloudFunction('getAllDoc', payload, accessToken);
-}
+  const payload = {
+    collection
+  };
+  return callCloudFunction('getAllDoc', payload, accessToken);
+};
 
 
 /**
@@ -95,30 +95,30 @@ const getAllDoc = (collection, accessToken) => {
  * @returns {object|string|null} - The parsed JSON response, the raw content, or null if no content.
  */
 const callCloudFunction = (functionName, payload, accessToken) => {
-    const url = `https://${PROJECT_REGION}-${PROJECT_ID}.cloudfunctions.net/${functionName}`;
+  const url = `https://${PROJECT_REGION}-${PROJECT_ID}.cloudfunctions.net/${functionName}`;
 
-    const options = {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(payload),
-        'muteHttpExceptions': true
+  const options = {
+    'method': 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(payload),
+    'muteHttpExceptions': true
+  };
+
+  if (accessToken) {
+    options.headers = {
+      'Authorization': 'Bearer ' + accessToken
     };
+  }
 
-    if (accessToken) {
-        options.headers = {
-            'Authorization': 'Bearer ' + accessToken
-        };
+  const resp = UrlFetchApp.fetch(url, options);
+  const content = resp.getContentText();
+
+  if (content) {
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      return content;
     }
-
-    const resp = UrlFetchApp.fetch(url, options);
-    const content = resp.getContentText();
-
-    if (content) {
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            return content;
-        }
-    }
-    return null;
-}
+  }
+  return null;
+};

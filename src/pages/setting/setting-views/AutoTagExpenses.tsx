@@ -19,8 +19,8 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {getUnixTimestamp} from "../../../utility/utility";
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
@@ -37,7 +37,10 @@ const AutoTagExpenses: React.FC = () => {
 
   useEffect(() => {
     if (success) {
+
+
       const timer = setTimeout(() => {
+
         setSuccess(false);
         setProcessedCount(0);
       }, 3500);
@@ -48,12 +51,12 @@ const AutoTagExpenses: React.FC = () => {
   const handleAutoTagAll = async () => {
     setLoading(true);
     try {
-      console.log("Auto-tagging all expenses");
+      console.log('Auto-tagging all expenses');
       const count = await ExpenseAPI.autoTagPastExpenses(getUnixTimestamp('2020-01-01'));
       setProcessedCount(count);
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to auto-tag all expenses:", error);
+      console.error('Failed to auto-tag all expenses:', error);
     } finally {
       setLoading(false);
     }
@@ -64,12 +67,12 @@ const AutoTagExpenses: React.FC = () => {
 
     setLoading(true);
     try {
-      console.log("Auto-tagging expenses for:", selectedDate);
+      console.log('Auto-tagging expenses for:', selectedDate);
       const count = await ExpenseAPI.autoTagPastExpenses(getUnixTimestamp(selectedDate.toDate()));
       setProcessedCount(count);
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to auto-tag expenses for selected date:", error);
+      console.error('Failed to auto-tag expenses for selected date:', error);
     } finally {
       setLoading(false);
     }
@@ -89,8 +92,8 @@ const AutoTagExpenses: React.FC = () => {
             slotProps={{
               textField: {
                 fullWidth: true,
-                size: "small",
-                className: "reload-date-picker"
+                size: 'small',
+                className: 'reload-date-picker'
               }
             }}
           />
@@ -117,7 +120,8 @@ const AutoTagExpenses: React.FC = () => {
         Auto-tag All Past Expenses
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
-        This action will go through all past expenses and apply tags based on your vendor-tag mappings available in 'Manage Vendor Tags'.
+        This action will go through all past expenses and apply tags based on your
+        vendor-tag mappings available in &apos;Manage Vendor Tags&apos;.
       </Typography>
       <Button
         onClick={handleAutoTagAll}
@@ -160,8 +164,10 @@ const AutoTagExpenses: React.FC = () => {
         </Typography>
       </Box>
       <Alert severity="info" sx={{mb: 2}}>
-        This feature automatically assigns tags to your past expenses based on the vendor names you have available in
-        'Manage Vendor Tags'. It helps in organizing your old expenses without manual tagging.
+        This feature automatically assigns tags to your past expenses based on the vendor
+        names you have available in
+        &apos;Manage Vendor Tags&apos;. It helps in organizing your old expenses without manual
+        tagging.
       </Alert>
       <Stack spacing={3}>
         <DateSpecificSection/>

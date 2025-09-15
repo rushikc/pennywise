@@ -15,7 +15,6 @@ GNU General Public License for more details, or get a copy at
 */
 
 
-
 // This script is used to fetch expenses from Gmail and update the database locally.
 // you need to valid desktop service account credentials to make below code work.
 
