@@ -1,5 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   webpack: {
@@ -38,6 +39,58 @@ module.exports = {
         // Enable minimization
         webpackConfig.optimization.minimize = true;
 
+        // Configure code splitting
+        webpackConfig.optimization.splitChunks = {
+          chunks: 'all',
+          maxInitialRequests: Infinity,
+          minSize: 20000,
+          maxSize: 150000, // Target smaller bundle sizes
+          cacheGroups: {
+            mui: {
+              test: /[\\/]node_modules[\\/](@mui|@emotion)[\\/]/,
+              name: 'mui',
+              priority: 20,
+              chunks: 'all',
+            },
+            firebase: {
+              test: /[\\/]node_modules[\\/](firebase|@firebase)[\\/]/,
+              name: 'firebase',
+              priority: 20,
+              chunks: 'all',
+            },
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
+              name: 'react-vendor',
+              priority: 20,
+              chunks: 'all',
+            },
+            redux: {
+              test: /[\\/]node_modules[\\/](@reduxjs|react-redux)[\\/]/,
+              name: 'redux',
+              priority: 20,
+              chunks: 'all',
+            },
+            recharts: {
+              test: /[\\/]node_modules[\\/](recharts)[\\/]/,
+              name: 'recharts',
+              priority: 20,
+              chunks: 'all',
+            },
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              priority: 10,
+              chunks: 'all',
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              priority: 5,
+              reuseExistingChunk: true,
+            },
+          },
+        };
+
         // Configure minimizers
         webpackConfig.optimization.minimizer = [
           // JavaScript minification with Terser
@@ -51,6 +104,8 @@ module.exports = {
                 warnings: false,
                 comparisons: false,
                 inline: 2,
+                drop_console: true, // Remove console logs
+                drop_debugger: true, // Remove debugger statements
               },
               mangle: {
                 safari10: true,
@@ -61,6 +116,7 @@ module.exports = {
                 ascii_only: true,
               },
             },
+            extractComments: false, // Avoid license files
             parallel: true,
           }),
           // CSS minification
@@ -76,6 +132,20 @@ module.exports = {
             },
           }),
         ];
+
+        // Add BundleAnalyzerPlugin for bundle analysis
+        if (!webpackConfig.plugins) {
+          webpackConfig.plugins = [];
+        }
+        webpackConfig.plugins.push(
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-analysis-report.html',
+            openAnalyzer: false,
+            generateStatsFile: true,
+            statsFilename: 'bundle-stats.json',
+          })
+        );
       }
       return webpackConfig;
     },
