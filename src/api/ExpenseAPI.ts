@@ -180,8 +180,8 @@ export class ExpenseAPI {
     try {
       const table = 'expense';
 
-      let indexDocList: any[] = [];
-      const fireDocList: any[] = [];
+      let indexDocList: Expense[] = [];
+      const fireDocList: Expense[] = [];
 
       let lastUpdatedDate = getUnixTimestamp('2020-01-01'); // to fetch all expenses
 
@@ -213,8 +213,19 @@ export class ExpenseAPI {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           const document = doc.data();
-          document.id = doc.id;
-          fireDocList.push(document);
+          const expense: Expense = {
+            id: doc.id,
+            tag: document.tag || '',
+            mailId: document.mailId || '',
+            cost: document.cost || 0,
+            costType: document.costType || 'debit',
+            date: document.date || Date.now(),
+            modifiedDate: document.modifiedDate || Date.now(),
+            user: document.user || '',
+            type: document.type || '',
+            vendor: document.vendor || ''
+          };
+          fireDocList.push(expense);
         });
 
         await FinanceIndexDB.addExpenseList(fireDocList);
@@ -247,7 +258,7 @@ export class ExpenseAPI {
     try {
       const table = 'config';
 
-      const tagObject: any = await ExpenseAPI.getOneDoc('tags', table);
+      const tagObject = await ExpenseAPI.getOneDoc('tags', table);
       const tagList: string[] = tagObject?.tagList || [];
 
       return tagList;
@@ -278,7 +289,7 @@ export class ExpenseAPI {
    */
   static getBankConfig = async (): Promise<BankConfig> => {
     try {
-      const bankConfig: any = await ExpenseAPI.getOneDoc('bankConfig', 'config');
+      const bankConfig = await ExpenseAPI.getOneDoc('bankConfig', 'config');
 
       // Return default config if not found
       if (!bankConfig) {
@@ -288,8 +299,14 @@ export class ExpenseAPI {
         };
       }
 
-      console.debug('Retrieved bank config:', bankConfig);
-      return bankConfig;
+      // Cast the document data to BankConfig type
+      const typedConfig: BankConfig = {
+        enableUpi: bankConfig.enableUpi ?? false,
+        creditCards: bankConfig.creditCards ?? []
+      };
+
+      console.debug('Retrieved bank config:', typedConfig);
+      return typedConfig;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error getting bank config:', e);
@@ -323,7 +340,7 @@ export class ExpenseAPI {
   static getDarkModeConfig = async (): Promise<boolean> => {
 
     try {
-      const darkModeConfig: any = await ExpenseAPI.getOneDoc('darkMode', 'config');
+      const darkModeConfig = await ExpenseAPI.getOneDoc('darkMode', 'config');
       // Return default config if not found
       if (!darkModeConfig) {
         return false; // Default to light mode
@@ -365,8 +382,8 @@ export class ExpenseAPI {
     try {
       const table = 'vendorTag';
 
-      let indexDocList: any[] = [];
-      const fireDocList: any[] = [];
+      let indexDocList: VendorTag[] = [];
+      const fireDocList: VendorTag[] = [];
 
       let lastUpdatedDate = getUnixTimestamp('2020-01-01'); // to fetch all expenses
       let isLastUpdateAvailable = false;
@@ -398,8 +415,13 @@ export class ExpenseAPI {
           // doc.data() is never undefined for query doc snapshots
           // console.debug(doc.id, " => ", doc.data());
           const document = doc.data();
-          document.id = doc.id;
-          fireDocList.push(document);
+          const vendorTag: VendorTag = {
+            id: doc.id,
+            vendor: document.vendor || '',
+            tag: document.tag || '',
+            date: document.date || Date.now()
+          };
+          fireDocList.push(vendorTag);
         });
 
         fireDocList.forEach(val => FinanceIndexDB.addVendorTag(val));
@@ -471,7 +493,7 @@ export class ExpenseAPI {
    * The IndexedDB deletion is based on the expense's mailId.
    * Returns true on successful deletion, false otherwise.
    */
-  static deleteExpense = async (expense: any): Promise<boolean> => {
+  static deleteExpense = async (expense: Expense): Promise<boolean> => {
     try {
       // First, delete from Firebase
       const docRef = doc(db, 'expense', expense.id);
