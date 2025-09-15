@@ -12,7 +12,7 @@
     "@mui/x-date-pickers": "^7.29.4",
     "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "1.8.2",
+    "axios": "1.12.0",
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
