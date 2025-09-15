@@ -16,7 +16,7 @@
   <a href="#project-structure">Project Structure</a> •
   <a href="#getting-started">Getting Started</a> •
   <a href="#Future Roadmap">Future Roadmap</a> •
-  <a href="#support-by-donating">Support by Donating</a> 
+  <a href="#support-by-donating">Support by Donating</a>
 </p>
 
 ---
@@ -59,7 +59,7 @@ a user-friendly experience with robust features, including offline support and s
 
 <p align="center">
   <a
-    href="https://pennywiserc.web.app/"
+    href="https://pennywise-static.web.app"
     target="_blank"
     rel="noopener noreferrer"
     style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;"
@@ -181,7 +181,7 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ### Overview
 
-1. **User Authentication**: 
+1. **User Authentication**:
   - Users authenticate using Google OAuth
 2. **Data Fetching**:
   - On app initialization, data is fetched from Firebase Firestore
