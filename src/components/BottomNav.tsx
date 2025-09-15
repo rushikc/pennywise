@@ -17,7 +17,7 @@ import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import * as React from 'react';
+import React from 'react';
 import {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 

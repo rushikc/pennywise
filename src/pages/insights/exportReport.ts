@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {Expense} from '../../Types';
-import * as ExcelJS from 'exceljs';
+import {Workbook} from 'exceljs';
 import {saveAs} from 'file-saver';
 import {filterOptions} from '../dataValidations';
 import {getCurrentDate} from '../../utility/utility';
@@ -91,7 +91,7 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
     const formattedExpenses = formatExpenses(expenses);
 
     // Create a new workbook and worksheet
-    const workbook = new ExcelJS.Workbook();
+    const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Expenses');
 
     // Define columns with headers and widths
