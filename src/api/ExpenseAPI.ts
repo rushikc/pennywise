@@ -47,6 +47,8 @@ export class ExpenseAPI {
       expense.cost = Number(expense.cost.toFixed(2));
 
       const docRef = doc(db, 'expense', key);
+
+      // eslint-disable-next-line
       const {id, ...expenseWithoutId} = expense;
       await setDoc(docRef, expenseWithoutId);
 
@@ -70,7 +72,12 @@ export class ExpenseAPI {
    * Sets a single document in a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  static setOneDoc = async (key: string, val: any, collectionName = 'config') => {
+
+  static setOneDoc = async (
+    key: string,
+    // eslint-disable-next-line
+    val: any,
+    collectionName = 'config') => {
     try {
       const docRef = doc(db, collectionName, key);
       await setDoc(docRef, val);
