@@ -12,9 +12,9 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { firebaseConfig } from "./firebase-public";
+import {initializeApp} from 'firebase/app';
+import {getAuth, GoogleAuthProvider} from 'firebase/auth';
+import {firebaseConfig} from './firebase-public';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

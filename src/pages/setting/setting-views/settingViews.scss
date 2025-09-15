@@ -15,377 +15,377 @@ GNU General Public License for more details, or get a copy at
 // ManageTags styling
 
 .manage-tags-container {
-    max-width: 600px;
-    margin: 2rem auto;
+  max-width: 600px;
+  margin: 2rem auto;
 }
 
 .manage-tags-paper {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 5rem;
 }
 
 .manage-tags-title {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .tag-list {
-    width: 100%;
+  width: 100%;
 }
 
 .tag-item {
-    margin-bottom: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    padding-right: 4px;
-    background-color: var(--bg-card); /* Use theme variable */
-    box-shadow: var(--box-shadow);
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  padding-right: 4px;
+  background-color: var(--bg-card); /* Use theme variable */
+  box-shadow: var(--box-shadow);
 
-    &.is-dragging {
-        background-color: var(--bg-tertiary); /* Use theme variable for dragging */
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
-    }
+  &.is-dragging {
+    background-color: var(--bg-tertiary); /* Use theme variable for dragging */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  }
 }
 
 
 .add-tag-button {
-    width: 100%;
+  width: 100%;
 }
 
 .tag-dialog-content {
-    min-width: 300px;
+  min-width: 300px;
 }
 
 // Configuration styling
 
 .config-container {
-    padding-bottom: 10rem;
-    padding-top: 2rem;
+  padding-bottom: 10rem;
+  padding-top: 2rem;
 }
 
 .config-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .back-button {
-    margin-right: 1rem;
-    color: var(--accent-blue);
+  margin-right: 1rem;
+  color: var(--accent-blue);
 }
 
 .section-paper {
-    padding: 1.5rem;
-    border-radius: 16px;
-    margin-bottom: 1.5rem;
-    background: var(--bg-card);
-    box-shadow: var(--box-shadow);
-    position: relative;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card);
+  box-shadow: var(--box-shadow);
+  position: relative;
 
-    &.bank-section {
-        margin-bottom: 1.5rem;
-    }
+  &.bank-section {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .section-title {
-    margin-bottom: 1rem !important;
-    font-weight: 500;
-    color: var(--text-primary);
+  margin-bottom: 1rem !important;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .add-card-button {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 .loading-container {
-    display: flex;
-    justify-content: center;
-    padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
 }
 
 .loading-indicator {
-    color: var(--accent-blue);
+  color: var(--accent-blue);
 
-    &.mini {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: 16px;
-        height: 16px;
-    }
+  &.mini {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .card-list-item {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-    background-color: var(--bg-tertiary);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background-color: var(--bg-tertiary);
 
-    &:hover {
-        background-color: var(--group-header-hover);
-    }
+  &:hover {
+    background-color: var(--group-header-hover);
+  }
 }
 
 .card-icon {
-    margin-right: 1rem;
-    color: var(--accent-blue);
+  margin-right: 1rem;
+  color: var(--accent-blue);
 }
 
 .delete-button {
-    color: var(--accent-red);
+  color: var(--accent-red);
 
-    svg {
-        color: var(--accent-red);
-        fill: var(--accent-red);
-    }
+  svg {
+    color: var(--accent-red);
+    fill: var(--accent-red);
+  }
 }
 
 .card-text {
-    color: var(--text-primary);
-    font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 .empty-cards-message {
-    text-align: center;
-    padding: 1rem 0;
-    color: var(--text-primary);
+  text-align: center;
+  padding: 1rem 0;
+  color: var(--text-primary);
 }
 
 // Dialog styling
 .card-dialog {
-    .MuiPaper-root {
-        background-color: var(--bg-card);
-        border-radius: 16px;
-    }
+  .MuiPaper-root {
+    background-color: var(--bg-card);
+    border-radius: 16px;
+  }
 }
 
 .dialog-title {
-    color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 .dialog-text {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
 }
 
 .text-field {
-    .MuiOutlinedInput-root {
-        color: var(--text-primary);
+  .MuiOutlinedInput-root {
+    color: var(--text-primary);
 
-        fieldset {
-            border-color: var(--border-color);
-        }
-
-        &:hover fieldset {
-            border-color: var(--accent-blue);
-        }
-
-        &.Mui-focused fieldset {
-            border-color: var(--accent-blue);
-        }
+    fieldset {
+      border-color: var(--border-color);
     }
 
-    .MuiFormLabel-root {
-        color: var(--accent-blue);
+    &:hover fieldset {
+      border-color: var(--accent-blue);
     }
 
-    .MuiFormHelperText-root {
-        color: var(--accent-red);
+    &.Mui-focused fieldset {
+      border-color: var(--accent-blue);
     }
+  }
+
+  .MuiFormLabel-root {
+    color: var(--accent-blue);
+  }
+
+  .MuiFormHelperText-root {
+    color: var(--accent-red);
+  }
 }
 
 .dialog-actions {
-    padding: 0 1.5rem 1rem;
+  padding: 0 1.5rem 1rem;
 }
 
 .cancel-button {
-    color: var(--accent-blue);
+  color: var(--accent-blue);
 }
 
 .save-button {
-    background-color: var(--bg-tertiary);
+  background-color: var(--bg-tertiary);
 
-    &:hover {
-        background-color: var(--group-header-hover);
-    }
+  &:hover {
+    background-color: var(--group-header-hover);
+  }
 }
 
 // ManageVendorTags styling
 
 .search-field {
-    margin-bottom: 1rem !important;
-    margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important;
 }
 
 .message-text {
-    margin-bottom: 0.5rem;
-    color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
 }
 
 .vendor-name-display {
-    margin-bottom: 1rem;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 15px;
-    background-color: var(--bg-tertiary);
-    border-radius: 8px;
-    width: 100%;
-    box-shadow: var(--box-shadow);
-    word-break: break-word;
-    overflow-wrap: break-word;
-    color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 15px;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: var(--box-shadow);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  color: var(--text-primary);
 }
 
 .tag-expense-category-label {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .tag-expense-chip-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .tag-expense-chip {
-    min-width: 80px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 80px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &.selected {
-        font-weight: 500;
-    }
+  &.selected {
+    font-weight: 500;
+  }
 }
 
 // ReloadExpense styling
 
 .reload-section-paper {
-    padding: 1.5rem;
-    border-radius: 16px;
-    background-color: var(--bg-card) !important;
-    box-shadow: var(--box-shadow) !important;
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background-color: var(--bg-card) !important;
+  box-shadow: var(--box-shadow) !important;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .date-reload-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
-    @media (min-width: 600px) {
-        flex-direction: row;
-        align-items: center;
-    }
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .reload-date-picker {
-    .MuiOutlinedInput-root {
-        background-color: var(--bg-tertiary);
-        color: var(--text-primary);
+  .MuiOutlinedInput-root {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
 
-        fieldset {
-            border-color: var(--border-color);
-        }
-
-        &:hover fieldset {
-            border-color: var(--accent-blue);
-        }
-
-        &.Mui-focused fieldset {
-            border-color: var(--accent-blue);
-        }
+    fieldset {
+      border-color: var(--border-color);
     }
 
-    .MuiInputLabel-root {
-        color: var(--text-secondary);
+    &:hover fieldset {
+      border-color: var(--accent-blue);
     }
 
-    .MuiSvgIcon-root {
-        color: var(--accent-blue);
+    &.Mui-focused fieldset {
+      border-color: var(--accent-blue);
     }
+  }
+
+  .MuiInputLabel-root {
+    color: var(--text-secondary);
+  }
+
+  .MuiSvgIcon-root {
+    color: var(--accent-blue);
+  }
 }
 
 .reload-button {
-    height: 44px;
-    font-weight: 500;
-    border-radius: 8px;
-    min-width: 180px;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.2s ease;
+  height: 44px;
+  font-weight: 500;
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.2s ease;
 
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-    }
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
 
-    &:disabled {
-        background-color: var(--bg-tertiary);
-        color: var(--text-secondary);
-    }
+  &:disabled {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+  }
 }
 
 .reload-all-button {
-    height: 44px;
-    font-weight: 500;
-    border-radius: 8px;
-    min-width: 180px;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.2s ease;
+  height: 44px;
+  font-weight: 500;
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.2s ease;
 
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-    }
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
 
-    &:disabled {
-        background-color: var(--bg-tertiary);
-        color: var(--text-secondary);
-    }
+  &:disabled {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+  }
 }
 
 .reload-warning-text {
-    margin-bottom: 1.5rem !important;
-    color: var(--text-secondary);
-    padding: 0.75rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-yellow);
+  margin-bottom: 1.5rem !important;
+  color: var(--text-secondary);
+  padding: 0.75rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-yellow);
 }
 
 .success-message {
-    padding: 1rem;
-    border-radius: 8px;
-    background-color: rgba(var(--accent-green-rgb), 0.2);
-    border: 1px solid var(--accent-green);
-    color: var(--text-primary);
-    animation: fadeIn 0.3s ease-in;
-    box-shadow: var(--box-shadow);
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: rgba(var(--accent-green-rgb), 0.2);
+  border: 1px solid var(--accent-green);
+  color: var(--text-primary);
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: var(--box-shadow);
 
-    .MuiSvgIcon-root {
-        color: var(--accent-green);
-    }
+  .MuiSvgIcon-root {
+    color: var(--accent-green);
+  }
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

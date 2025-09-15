@@ -24,7 +24,6 @@ yarn-error.log*
 appScript/env.js
 .clasp.json
 .firebaserc
-package-lock.json
 
 # IDE files
 .idea/
