@@ -13,10 +13,9 @@ GNU General Public License for more details, or get a copy at
 */
 
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
-import * as React from 'react';
+import React from 'react';
 
 export default function Loading() {
-
 
   return (
     <div className="d-flex-center pt-10">
