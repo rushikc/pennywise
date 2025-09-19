@@ -66,7 +66,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       costType: 'debit', // Default to debit
       mailId: uuid,
       user: 'manual',
-      type: 'manual'
+      type: 'manual',
+      operation: 'update'
     };
 
     // Save the expense

@@ -101,15 +101,17 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       costType: totalCost < 0 ? 'debit' : 'credit',
       mailId: vendorExpense.mailId,
       user: vendorExpense.user,
-      type: vendorExpense.type
+      type: vendorExpense.type,
+      operation: 'merged'
     };
 
     // Log the merged expense for debugging
     console.log('Merged Expense:', mergedExpense);
 
-    // Delete all original expenses from the database
+    // Soft delete all original expenses from the database
     expenses.forEach(exp => {
-      void ExpenseAPI.deleteExpense(exp);
+      exp.operation = 'delete';
+      void ExpenseAPI.addExpense(exp);
     });
 
     // Add the new merged expense to the database

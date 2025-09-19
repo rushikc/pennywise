@@ -20,6 +20,8 @@ import {getDateJsIdFormat, getUnixTimestamp} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, Expense, VendorTag} from '../Types';
+import firebase from 'firebase/compat';
+import DocumentData = firebase.firestore.DocumentData;
 
 
 const app = initializeApp(firebaseConfig);
@@ -67,6 +69,34 @@ export class ExpenseAPI {
     }
   };
 
+
+  /**
+   * Deletes an expense from both Firestore and IndexedDB.
+   * The IndexedDB deletion is based on the expense's mailId.
+   * Returns true on successful deletion, false otherwise.
+   */
+  // static deleteExpense = async (expense: Expense): Promise<boolean> => {
+  //   try {
+  //     // First, delete from Firebase
+  //     const docRef = doc(db, 'expense', expense.id);
+  //     await deleteDoc(docRef);
+  //     console.debug('Expense deleted from Firebase with key: ', expense.id);
+  //
+  //     // Then, delete from IndexedDB
+  //     if (expense.mailId) {
+  //       await FinanceIndexDB.deleteExpense(expense.mailId);
+  //       console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
+  //     } else {
+  //       console.warn('No mailId found for expense, skipping IndexedDB deletion');
+  //     }
+  //
+  //     return true;
+  //   } catch (e) {
+  //     ErrorHandlers.handleApiError(e);
+  //     console.error('Error deleting expense: ', e);
+  //     return false;
+  //   }
+  // };
 
   /**
    * Sets a single document in a specified Firestore collection.
@@ -219,18 +249,19 @@ export class ExpenseAPI {
 
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          const document = doc.data();
+          const document: DocumentData = doc.data();
           const expense: Expense = {
             id: doc.id,
-            tag: document.tag || '',
-            mailId: document.mailId || '',
-            cost: document.cost || 0,
-            costType: document.costType || 'debit',
-            date: document.date || Date.now(),
-            modifiedDate: document.modifiedDate || Date.now(),
-            user: document.user || '',
-            type: document.type || '',
-            vendor: document.vendor || ''
+            tag: document.tag,
+            mailId: document.mailId,
+            cost: document.cost,
+            costType: document.costType,
+            date: document.date,
+            modifiedDate: document.modifiedDate,
+            user: document.user,
+            type: document.type,
+            vendor: document.vendor,
+            operation: document.operation
           };
           fireDocList.push(expense);
         });
@@ -247,8 +278,10 @@ export class ExpenseAPI {
       console.log('Firebase query for expenses - ', table, fireDocList);
       console.log('IndexDB query for expenses - ', table, indexDocList);
 
+      indexDocList = indexDocList.filter(item => item.operation !== 'delete');
 
       console.debug('FinalList query for expenses - ', table, indexDocList);
+
       return indexDocList;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -495,33 +528,6 @@ export class ExpenseAPI {
     }
   };
 
-  /**
-   * Deletes an expense from both Firestore and IndexedDB.
-   * The IndexedDB deletion is based on the expense's mailId.
-   * Returns true on successful deletion, false otherwise.
-   */
-  static deleteExpense = async (expense: Expense): Promise<boolean> => {
-    try {
-      // First, delete from Firebase
-      const docRef = doc(db, 'expense', expense.id);
-      await deleteDoc(docRef);
-      console.debug('Expense deleted from Firebase with key: ', expense.id);
-
-      // Then, delete from IndexedDB
-      if (expense.mailId) {
-        await FinanceIndexDB.deleteExpense(expense.mailId);
-        console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
-      } else {
-        console.warn('No mailId found for expense, skipping IndexedDB deletion');
-      }
-
-      return true;
-    } catch (e) {
-      ErrorHandlers.handleApiError(e);
-      console.error('Error deleting expense: ', e);
-      return false;
-    }
-  };
 
   /**
    * Automatically applies tags to past expenses based on vendor-to-tag mappings.

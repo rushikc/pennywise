@@ -33,11 +33,11 @@ import {Col, Row} from 'reactstrap';
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
 import {
-  deleteExpense,
   mergeSaveExpense,
   selectExpense,
   setExpenseList,
-  setTagExpense
+  setTagExpense,
+  updateExpense
 } from '../../store/expenseActions';
 import {getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
@@ -174,14 +174,16 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setLoading(true); // Show loading state while deleting
 
     try {
+
       // Delete each selected expense using the ExpenseAPI
-      const deletePromises = selectedExpenses.map(expense =>
-        ExpenseAPI.deleteExpense(expense)
-      );
+      const deletePromises = selectedExpenses.map(expense => {
+        expense.operation = 'delete';
+        ExpenseAPI.addExpense(expense);
+      });
 
       // Wait for all delete operations to complete
       await Promise.all(deletePromises);
-      selectedExpenses.forEach(expense => deleteExpense(expense));
+      selectedExpenses.forEach(expense => updateExpense(expense));
 
     } catch (error) {
       console.error('Error deleting expenses:', error);
@@ -208,6 +210,9 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
     // Exit selection mode
     cancelSelection();
+
+    reloadExpenseList();
+
   };
 
   // Scroll to top function

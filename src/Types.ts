@@ -25,8 +25,9 @@ export interface Expense {
   modifiedDate: number,
   // date: Date,
   user: string, // user who created the expense
-  type: string, // upi, credit, cash, etc.
-  vendor: string // vendor name for the expense
+  type: string, // payment medium - upi, credit, e-mandate, cash, etc.
+  vendor: string, // vendor name for the expense
+  operation: string, // add, update, delete
 }
 
 export interface VendorTag {
