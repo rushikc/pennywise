@@ -39,7 +39,7 @@ import {
   setTagExpense,
   updateExpense
 } from '../../store/expenseActions';
-import {getDateMonth, sortByKeyDate} from '../../utility/utility';
+import {formatVendorName, getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
   filterExpensesByDate,
@@ -177,8 +177,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
       // Delete each selected expense using the ExpenseAPI
       const deletePromises = selectedExpenses.map(expense => {
-        expense.operation = 'delete';
-        ExpenseAPI.addExpense(expense);
+        ExpenseAPI.addExpense(expense, 'delete');
       });
 
       // Wait for all delete operations to complete
@@ -831,7 +830,7 @@ const ExpenseItem: FC<{
       <Col className="content-col">
         <Row className="expense-row-header">
           <Col className="vendor-name-col">
-            <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
+            <span className="vendor-name">{formatVendorName(expense.vendor)[0]}</span>
           </Col>
           <Col xs="auto" className="expense-cost-col">
             <span className="expense-type">

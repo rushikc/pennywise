@@ -29,6 +29,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Zoom from '@mui/material/Zoom';
 import {TransitionProps} from '@mui/material/transitions';
+import {formatVendorName} from '../../../utility/utility';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -110,8 +111,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
     // Soft delete all original expenses from the database
     expenses.forEach(exp => {
-      exp.operation = 'delete';
-      void ExpenseAPI.addExpense(exp);
+      void ExpenseAPI.addExpense(exp, 'delete');
     });
 
     // Add the new merged expense to the database
@@ -129,12 +129,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     setShowError(false);
   };
 
-  const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.substring(0, 20)
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase())
-      .toLowerCase() : '';
-  };
 
   // Get unique vendors from selected expenses
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));

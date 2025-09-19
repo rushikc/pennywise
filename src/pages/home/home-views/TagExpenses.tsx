@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {hideTagExpense, selectExpense, setTagMap, updateExpense} from '../../../store/expenseActions';
-import {getDateMonthTime, JSONCopy} from '../../../utility/utility';
+import {formatVendorName, getDateMonthTime, JSONCopy} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -70,13 +70,6 @@ const TagExpenses: FC = (): ReactElement => {
     hideTagExpense();
   };
 
-  const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.substring(0, 20)
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase())
-      .toLowerCase() : '';
-  };
-
   return (
     <Dialog
       open={isTagModal}
@@ -92,7 +85,10 @@ const TagExpenses: FC = (): ReactElement => {
         <Fade in={isTagModal} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              {formatVendorName(expense.vendor)}
+              {formatVendorName(expense.vendor)[0]}
+            </Typography>
+            <Typography variant="subtitle1" className="tag-expense-vendor">
+              {formatVendorName(expense.vendor)[1]}
             </Typography>
             <Typography variant="body2" className="tag-expense-date">
               {getDateMonthTime(expense.date)}
