@@ -210,7 +210,6 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
     // Exit selection mode
     cancelSelection();
-
     reloadExpenseList();
 
   };
@@ -819,20 +818,22 @@ const ExpenseItem: FC<{
       className={`expense-row ${isSelected ? 'selected' : ''}`}
       {...longPressHandlers}
     >
-      <Avatar className={`expense-avatar ${isSelected ? 'selected' : ''}`}>
-        {isSelected ?
-          <CheckCircleIcon fontSize="inherit"/> :
-          expense.type === 'credit-card' ?
-            <CreditCard fontSize="inherit"/> :
-            <CurrencyRupeeIcon fontSize="inherit"/>
-        }
-      </Avatar>
-      <Col>
+      <Col xs="auto" className="avatar-col">
+        <Avatar className={`expense-avatar ${isSelected ? 'selected' : ''}`}>
+          {isSelected ?
+            <CheckCircleIcon fontSize="inherit"/> :
+            expense.type === 'credit-card' ?
+              <CreditCard fontSize="inherit"/> :
+              <CurrencyRupeeIcon fontSize="inherit"/>
+          }
+        </Avatar>
+      </Col>
+      <Col className="content-col">
         <Row className="expense-row-header">
-          <Col>
+          <Col className="vendor-name-col">
             <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
           </Col>
-          <Col xs="auto" className="d-flex justify-content-end mr-2">
+          <Col xs="auto" className="expense-cost-col">
             <span className="expense-type">
               {expense.costType === 'debit' ? '-' : '+'}
             </span>

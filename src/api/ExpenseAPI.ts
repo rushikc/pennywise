@@ -20,8 +20,10 @@ import {getDateJsIdFormat, getUnixTimestamp} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, Expense, VendorTag} from '../Types';
-import firebase from 'firebase/compat';
-import DocumentData = firebase.firestore.DocumentData;
+
+// DocumentDB from Firebase document types
+// eslint-disable-next-line
+export type DocumentData = { [field: string]: any };
 
 
 const app = initializeApp(firebaseConfig);
