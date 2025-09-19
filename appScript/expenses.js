@@ -13,13 +13,6 @@
  * <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
 
-/// <reference path="functions.js" />
-/* eslint-disable */
-// noinspection JSUnresolvedReference
-// noinspection SpellCheckingInspection
-// noinspection JSUnusedGlobalSymbols
-// noinspection JDuplicatedCode
-// noinspection JSUnresolvedReference
 
 
 /**
@@ -133,7 +126,7 @@ async function myExpenseFunction() {
             expense.costType = config.costType;
 
             expense.cost = Number(cost);
-            expense.vendor = vendor.toUpperCase().substring(0, 50);
+            expense.vendor = vendor.toUpperCase().substring(0, 100);
 
             const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
 
@@ -231,7 +224,16 @@ const extractVendorFromSnippet = (snippet, vendorRegexPatterns) => {
  */
 const getExpense = (date, type, mailId) => {
   return {
-    cost: 0, costType: 'debit', vendor: null, tag: null, type, date, modifiedDate: Date.now(), user: 'xyz', mailId
+    cost: 0,
+    costType: 'debit',
+    vendor: null,
+    tag: null,
+    type,
+    date,
+    modifiedDate: Date.now(),
+    user: USER_ID,
+    mailId,
+
   };
 };
 

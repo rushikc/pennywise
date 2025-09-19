@@ -1,15 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-// noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
-/// <reference path="functions.js" />
-/* eslint-disable */
-// noinspection JSUnresolvedReference
-// noinspection SpellCheckingInspection
-// noinspection JSUnusedGlobalSymbols
-// noinspection JDuplicatedCode
-// noinspection JSUnresolvedReference
-
-
 /*
 Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
 

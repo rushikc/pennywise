@@ -16,7 +16,7 @@ import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {firebaseConfig} from '../firebase/firebase-public';
-import {getDateJsIdFormat, getUnixTimestamp} from '../utility/utility';
+import {getDateJsIdFormat, getUnixTimestamp, JSONCopy} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, Expense, VendorTag} from '../Types';
@@ -38,17 +38,16 @@ export class ExpenseAPI {
    * updates the modified date, and then saves the expense.
    * Returns the expense object with the generated ID.
    */
-  static addExpense = async (expense: Expense): Promise<Expense> => {
+  static addExpense = async (_expense: Expense, operation = 'update'): Promise<Expense> => {
 
     try {
 
-      // console.log('Creating expense...', expense);
-
+      const expense = JSONCopy(_expense);
       const key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
-      // console.debug("Document written with expense: ", JSONCopy(expense));
 
       expense.modifiedDate = Date.now(); // date to epoch
       expense.cost = Number(expense.cost.toFixed(2));
+      expense.operation = operation;
 
       const docRef = doc(db, 'expense', key);
 
@@ -67,7 +66,7 @@ export class ExpenseAPI {
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error adding document: ', e);
-      return expense;
+      return _expense;
     }
   };
 
@@ -95,7 +94,7 @@ export class ExpenseAPI {
   //     return true;
   //   } catch (e) {
   //     ErrorHandlers.handleApiError(e);
-  //     console.error('Error deleting expense: ', e);
+  //     console.error('Error deleting expense:', e);
   //     return false;
   //   }
   // };
