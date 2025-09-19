@@ -40,6 +40,15 @@ GNU General Public License for more details, or get a copy at
   text-transform: capitalize;
 }
 
+.tag-expense-vendor-upi {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  color: var(--text-tertiary);
+  letter-spacing: 0.2px !important;
+  //margin-bottom: 0.5em !important;
+  text-transform: capitalize;
+}
+
 .tag-expense-date {
   color: var(--text-muted);
   font-size: 0.85rem;

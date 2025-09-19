@@ -30,6 +30,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 
 const TagExpenses: FC = (): ReactElement => {
@@ -42,6 +44,15 @@ const TagExpenses: FC = (): ReactElement => {
   if (expense == null || !isTagModal) {
     return <></>;
   }
+
+  const copyToClipboard = async (str: string) => {
+    try {
+      await navigator.clipboard.writeText(str);
+      // You could add a toast notification here if desired
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
@@ -70,6 +81,8 @@ const TagExpenses: FC = (): ReactElement => {
     hideTagExpense();
   };
 
+  const vendorNames = formatVendorName(expense.vendor);
+
   return (
     <Dialog
       open={isTagModal}
@@ -85,11 +98,25 @@ const TagExpenses: FC = (): ReactElement => {
         <Fade in={isTagModal} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              {formatVendorName(expense.vendor)[0]}
+              {vendorNames[0]}
             </Typography>
-            <Typography variant="subtitle1" className="tag-expense-vendor">
-              {formatVendorName(expense.vendor)[1]}
-            </Typography>
+            {
+              vendorNames[1] &&
+              <div className="d-flex justify-content-center">
+                <Typography variant="subtitle1" className="tag-expense-vendor-upi">
+                  {vendorNames[1]}
+                </Typography>
+                <IconButton
+                  aria-label="copy vendor name"
+                  className="tag-expense-copy-vendor"
+                  onClick={() => copyToClipboard(vendorNames[1])}
+                  size="small"
+                  sx={{padding: '4px'}}
+                >
+                  <ContentCopyIcon fontSize="small"/>
+                </IconButton>
+              </div>
+            }
             <Typography variant="body2" className="tag-expense-date">
               {getDateMonthTime(expense.date)}
             </Typography>
