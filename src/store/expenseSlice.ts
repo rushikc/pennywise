@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppConfig, BankConfig, Expense, VendorTag} from '../Types';
+import {AppConfig, BankConfig, Expense, VendorTag, Alert} from '../Types';
 import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
@@ -26,6 +26,7 @@ interface InitialState {
   isAppLoading: boolean,
   isTagModal: boolean,
   tagList: string[],
+  alerts: Alert[],
 }
 
 const initialState: InitialState = {
@@ -42,6 +43,7 @@ const initialState: InitialState = {
   },
   isTagModal: false,
   tagList: [],
+  alerts: [],
 };
 
 
@@ -144,5 +146,30 @@ export const expenseSlice = createSlice({
     toggleDarkMode: (state) => {
       state.appConfig.darkMode = !state.appConfig.darkMode;
     },
+
+    addAlert: (state, action: PayloadAction<Omit<Alert, 'id'> | Alert>) => {
+      let newAlert: Alert;
+      if ('id' in action.payload) {
+        // Alert already has an id
+        newAlert = action.payload as Alert;
+      } else {
+        // Generate id for the alert
+        const alertId = crypto.randomUUID();
+        newAlert = {
+          id: alertId,
+          ...action.payload
+        };
+      }
+      state.alerts.push(newAlert);
+    },
+
+    removeAlert: (state, action: PayloadAction<string>) => {
+      state.alerts = state.alerts.filter(alert => alert.id !== action.payload);
+    },
+
+    clearAllAlerts: (state) => {
+      state.alerts = [];
+    },
   }
 });
+

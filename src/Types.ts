@@ -41,6 +41,11 @@ export interface VendorTag {
 
 export type TagList = string[];
 
+export interface Alert {
+  id: string;
+  type: 'success' | 'error' | 'info' | 'warning';
+  message: string;
+}
 
 export interface BankConfig {
   enableUpi: boolean;

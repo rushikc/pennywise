@@ -16,12 +16,14 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button, CircularProgress, Container, IconButton, Paper, Stack, Typography} from '@mui/material';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {createTimedAlert} from '../../../store/alertActions';
+import {AppDispatch} from '../../../store/store';
 import './settingViews.scss';
 
 /**
@@ -30,27 +32,19 @@ import './settingViews.scss';
  */
 const ReloadExpense: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        setSuccess(false);
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
 
   const handleReloadAll = async () => {
     setLoading(true);
     try {
       console.log('Reloading all expenses');
       await ExpenseAPI.getExpenseList(getUnixTimestamp('2020-01-01'));
-      setSuccess(true);
+      createTimedAlert({type: 'success', message: 'All expenses reloaded successfully.'}, dispatch);
     } catch (error) {
       console.error('Failed to reload all expenses:', error);
+      createTimedAlert({type: 'error', message: 'Failed to reload expenses. Please try again later.'}, dispatch);
     } finally {
       setLoading(false);
     }
@@ -63,9 +57,13 @@ const ReloadExpense: React.FC = () => {
     try {
       console.log('Reloading expenses for:', selectedDate);
       await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
-      setSuccess(true);
+      createTimedAlert({
+        type: 'success',
+        message: `Expenses for ${dayjs(selectedDate).format('MMM DD, YYYY')} reloaded successfully.`
+      }, dispatch);
     } catch (error) {
       console.error('Failed to reload expenses for selected date:', error);
+      createTimedAlert({type: 'error', message: 'Failed to reload expenses. Please try again later.'}, dispatch);
     } finally {
       setLoading(false);
     }
@@ -130,21 +128,6 @@ const ReloadExpense: React.FC = () => {
     </Paper>
   );
 
-  const SuccessMessage: React.FC = () => {
-    if (!success) return null;
-
-    return (
-      <Paper elevation={0} className="success-message">
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <CheckCircleIcon/>
-          <Typography variant="body2">
-            Reload successful!
-          </Typography>
-        </Stack>
-      </Paper>
-    );
-  };
-
   return (
     <Container className="config-container" maxWidth="sm">
       <Box className="config-header">
@@ -161,7 +144,6 @@ const ReloadExpense: React.FC = () => {
       <Stack spacing={3}>
         <DateSpecificSection/>
         <ReloadAllSection/>
-        <SuccessMessage/>
       </Stack>
     </Container>
   );
