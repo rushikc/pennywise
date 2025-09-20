@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Alert as MuiAlert, Box, IconButton, Stack} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -30,7 +30,7 @@ import {removeAlert} from '../store/alertActions';
  * Supports stacking multiple alerts and auto-removal after timeout
  */
 const AlertComponent: React.FC = () => {
-  const dispatch = useDispatch();
+
   const alerts = useSelector((state: RootState) => state.expense.alerts);
 
   // Don't render anything if no alerts

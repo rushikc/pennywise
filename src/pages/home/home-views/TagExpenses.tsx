@@ -32,6 +32,7 @@ import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {createTimedAlert} from '../../../store/alertActions';
 
 
 const TagExpenses: FC = (): ReactElement => {
@@ -48,8 +49,10 @@ const TagExpenses: FC = (): ReactElement => {
   const copyToClipboard = async (str: string) => {
     try {
       await navigator.clipboard.writeText(str);
+      createTimedAlert({message: 'Copied to clipboard', type: 'success'});
       // You could add a toast notification here if desired
     } catch (err) {
+      createTimedAlert({message: 'Failed to copy text', type: 'success'});
       console.error('Failed to copy text: ', err);
     }
   };

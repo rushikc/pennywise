@@ -12,19 +12,17 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {Dispatch} from '@reduxjs/toolkit';
 import {Alert} from '../Types';
 import {expenseSlice} from './expenseSlice';
+import {store} from './store';
 
 /**
  * Creates an alert that automatically removes itself after a specified timeout
  * @param alert - Alert object without id (id will be generated automatically)
  * @param timeout - Timeout in milliseconds (default: 3000ms)
- * @param dispatch - Redux dispatch function
  */
 export const createTimedAlert = (
   alert: Omit<Alert, 'id'>,
-  dispatch: Dispatch,
   timeout = 3000
 ) => {
   // Generate the id here so we can use it for removal
@@ -32,16 +30,16 @@ export const createTimedAlert = (
   const alertWithId: Alert = {id: alertId, ...alert};
 
   // Dispatch the alert with id
-  dispatch(expenseSlice.actions.addAlert(alertWithId));
+  store.dispatch(expenseSlice.actions.addAlert(alertWithId));
 
   // Set timeout to remove the alert
   setTimeout(() => {
-    dispatch(expenseSlice.actions.removeAlert(alertId));
+    store.dispatch(expenseSlice.actions.removeAlert(alertId));
   }, timeout);
 
   return alertId;
 };
 
 export const removeAlert = (alertId: string) => {
-  return expenseSlice.actions.removeAlert(alertId);
+  store.dispatch(expenseSlice.actions.removeAlert(alertId));
 };
