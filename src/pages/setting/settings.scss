@@ -221,8 +221,81 @@ GNU General Public License for more details, or get a copy at
   z-index: 10;
 }
 
+
 .version-text {
   font-weight: 500;
   color: var(--text-secondary);
   letter-spacing: 0.5px;
+}
+
+.build-time-text {
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+  font-size: 0.65rem;
+  opacity: 0.8;
+}
+
+// App Info Modal styles
+.app-info-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background-color: var(--bg-card) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--box-shadow) !important;
+  outline: none;
+
+  .MuiTypography-h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .MuiTypography-body2 {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.5;
+
+    strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    a {
+      color: var(--accent-blue);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Modal close button styles
+.modal-close-button {
+  background-color: var(--accent-blue) !important;
+  //color: var(--text-white) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    background-color: var(--accent-blue-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  .MuiSvgIcon-root {
+    font-size: 18px;
+  }
 }

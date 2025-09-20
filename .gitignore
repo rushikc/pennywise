@@ -8,27 +8,32 @@
 .next/
 /out/
 
-#- Miscellaneous
+# Auto-generated files
+/src/buildInfo.ts
+
+# Miscellaneous
 .DS_Store
-**/*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 .env
 .env*
-!/.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+#appscript
 appScript/env.js
 .clasp.json
-.firebaserc
 
-# IDE files
-.idea/
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
 .vscode/
+.idea/
 
-
-# Test reports
-/coverage
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log

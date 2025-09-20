@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import React, {useState} from 'react';
-import {Alert, Box, Container, Paper, Snackbar, Typography} from '@mui/material';
+import {Alert, Backdrop, Box, Button, Container, Fade, Modal, Paper, Snackbar, Typography} from '@mui/material';
 import {
   AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
@@ -32,6 +32,7 @@ import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
+import {buildInfo} from '../../buildInfo';
 
 /**
  * Settings page component with user profile and settings options
@@ -41,9 +42,33 @@ const Settings: React.FC = () => {
   const {appConfig} = useSelector(selectExpense);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
+  const [isAppInfoModalOpen, setIsAppInfoModalOpen] = useState(false);
 
   // Use the custom hook for authentication
   const {userProfile, signOut, isLoading} = useAuth();
+
+  // Get build time in IST timezone
+  const getBuildTimeIST = () => {
+    const date = new Date(buildInfo.buildTime);
+    return date.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  };
+
+  const handleVersionClick = () => {
+    setIsAppInfoModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAppInfoModalOpen(false);
+  };
 
   // Handle sign out
   const handleSignOut = async () => {
@@ -249,18 +274,72 @@ const Settings: React.FC = () => {
         </Alert>
       </Snackbar>
 
-      {/* Version display */}
+      {/* Version display - clickable to show app info */}
       <Paper
         elevation={0}
         className="version-display"
+        onClick={handleVersionClick}
+        sx={{cursor: 'pointer'}}
       >
         <Typography
           variant="caption"
           className="version-text"
         >
-          Pennywise v1.0.0
+          Pennywise v{buildInfo.version}
         </Typography>
       </Paper>
+
+      {/* App Info Modal */}
+      <Modal
+        open={isAppInfoModalOpen}
+        onClose={handleCloseModal}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{timeout: 500}}
+      >
+        <Fade in={isAppInfoModalOpen}>
+          <Paper className="app-info-modal p-2">
+            <Box p={2}>
+              <Typography variant="h6" gutterBottom>
+                Pennywise App
+              </Typography>
+              <Typography variant="body2" paragraph>
+                <strong>Version:</strong> Pennywise v{buildInfo.version}
+              </Typography>
+              <Typography variant="body2" paragraph>
+                <strong>Build Time:</strong> {getBuildTimeIST()}
+              </Typography>
+              <Typography variant="body2" paragraph>
+                <strong>Author:</strong> rushikc
+              </Typography>
+              <Typography variant="body2" paragraph>
+                <strong>Contact:</strong> rushikc.dev@gmail.com
+              </Typography>
+              <Typography variant="body2" paragraph>
+                <strong>Github: </strong>
+                <a
+                  href="https://github.com/rushikc/pennywise"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://github.com/rushikc/pennywise
+                </a>
+              </Typography>
+
+              {/* Close Button at the end */}
+              <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                  onClick={handleCloseModal}
+                  variant="contained"
+                  className="modal-close-button"
+                >
+                  Close
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Fade>
+      </Modal>
     </Container>
   );
 };
