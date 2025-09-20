@@ -13,8 +13,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
-
+//eslint-disable-next-line node/no-missing-require
 const fs = require('fs');
+//eslint-disable-next-line node/no-missing-require
 const path = require('path');
 
 // Get the current timestamp
@@ -56,7 +57,7 @@ export interface BuildInfo {
   buildTimestamp: number;
 }
 
-export const buildInfo: BuildInfo = ${JSON.stringify(buildInfo, null, 2)};
+export const buildInfo: BuildInfo = ${JSON.stringify(buildInfo, null, 2).replace(/"/g, "'")};
 
 export const getBuildInfo = (): BuildInfo => buildInfo;
 
@@ -77,4 +78,3 @@ fs.writeFileSync(buildInfoPath, buildInfoContent);
 
 console.log('Build info generated successfully!');
 console.log('Version:', buildInfo.version);
-console.log('Build Time:', buildInfo.buildTime);
