@@ -134,11 +134,16 @@ export const formatVendorName = (vendor: string) => {
   if (match && !isEmpty(match[1]) && !isEmpty(match[2])) {
     // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
     const upiId = match[1];
-    const name = match[2];
+    let name = match[2];
+    if (name.includes('manual entry')) {
+      name = 'manual entry'; // to discard any UUID text before manual entry
+    }
     return [name.toLowerCase(), upiId.toLowerCase().trim()];
   }
 
-  // console.log('Final vendor2:', vendor.toLowerCase());
+  if (vendor.includes('manual entry')) {
+    vendor = 'manual entry';
+  }
 
   // Default formatting for non-UPI vendors
   return [vendor.toLowerCase()];
@@ -151,7 +156,7 @@ export const formatString = (str: string) => {
 };
 
 export const isEmpty = (str: string | undefined | null) => {
-  return str && str.trim().length === 0 ;
+  return str && str.trim().length === 0;
 };
 
 

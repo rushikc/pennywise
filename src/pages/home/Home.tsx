@@ -33,6 +33,7 @@ import {Col, Row} from 'reactstrap';
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
 import {
+  deleteExpense,
   mergeSaveExpense,
   selectExpense,
   setExpenseList,
@@ -182,14 +183,14 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
       // Wait for all delete operations to complete
       await Promise.all(deletePromises);
-      selectedExpenses.forEach(expense => updateExpense(expense));
+      selectedExpenses.forEach(expense => deleteExpense(expense));
 
     } catch (error) {
       console.error('Error deleting expenses:', error);
     } finally {
       // setLoading(false);
       cancelSelection();
-      reloadExpenseList();
+      setTimeout(reloadExpenseList, 500);
     }
   };
 
