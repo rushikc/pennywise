@@ -37,8 +37,7 @@ import {
   mergeSaveExpense,
   selectExpense,
   setExpenseList,
-  setTagExpense,
-  updateExpense
+  setTagExpense
 } from '../../store/expenseActions';
 import {formatVendorName, getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
@@ -790,7 +789,8 @@ const ExpenseItem: FC<{
   // Create a minimal synthetic event object once instead of recreating it in each handler
   const createSyntheticEvent = useCallback(() => {
     return {
-      stopPropagation: () => { /* intentionally empty for synthetic event */ }
+      stopPropagation: () => { /* intentionally empty for synthetic event */
+      }
     } as React.MouseEvent;
   }, []);
 
