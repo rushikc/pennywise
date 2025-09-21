@@ -210,8 +210,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
     // Exit selection mode
     cancelSelection();
-    reloadExpenseList();
-
+    setTimeout(reloadExpenseList, 500);
   };
 
   // Scroll to top function
