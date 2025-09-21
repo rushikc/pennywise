@@ -58,7 +58,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     const uuid = uuidv4();
     const newExpense: Expense = {
       id: 'manual', // will be overridden by ExpenseAPI logic
-      vendor: 'manual entry', // As specified, set vendor as "manual"
+      vendor: crypto.randomUUID().substring(0,4) + ' manual entry', // As specified, set vendor as "manual"
       date: Date.now(),
       modifiedDate: Date.now(),
       cost: parseFloat(cost),
