@@ -182,6 +182,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
       // Wait for all delete operations to complete
       await Promise.all(deletePromises);
+
       selectedExpenses.forEach(expense => deleteExpense(expense));
 
     } catch (error) {

@@ -80,7 +80,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     }
   }, [expenses, open]);
 
-  const onSaveMergedExpense = () => {
+  const onSaveMergedExpense = async () => {
     // Validate vendor selection
     if (!selectedVendor) {
       setErrorMessage('Please select a vendor first');
@@ -110,12 +110,15 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     console.log('Merged Expense:', mergedExpense);
 
     // Soft delete all original expenses from the database
+    const promiseList: Promise<Expense>[] = [];
     expenses.forEach(exp => {
-      void ExpenseAPI.addExpense(exp, 'delete');
+      promiseList.push(ExpenseAPI.addExpense(exp, 'delete'));
     });
 
+    await Promise.all(promiseList);
+
     // Add the new merged expense to the database
-    void ExpenseAPI.addExpense(mergedExpense);
+    await ExpenseAPI.addExpense(mergedExpense);
 
     // Complete the merge process
     if (onMergeComplete) {
