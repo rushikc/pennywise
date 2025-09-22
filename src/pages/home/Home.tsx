@@ -39,7 +39,7 @@ import {
   setExpenseList,
   setTagExpense
 } from '../../store/expenseActions';
-import {getDateMonth, sortByKeyDate} from '../../utility/utility';
+import {formatVendorName, getDateMonth, sortByKeyDate} from '../../utility/utility';
 import {
   DateRange,
   filterExpensesByDate,
@@ -174,13 +174,15 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setLoading(true); // Show loading state while deleting
 
     try {
+
       // Delete each selected expense using the ExpenseAPI
-      const deletePromises = selectedExpenses.map(expense =>
-        ExpenseAPI.deleteExpense(expense)
-      );
+      const deletePromises = selectedExpenses.map(expense => {
+        ExpenseAPI.addExpense(expense, 'delete');
+      });
 
       // Wait for all delete operations to complete
       await Promise.all(deletePromises);
+
       selectedExpenses.forEach(expense => deleteExpense(expense));
 
     } catch (error) {
@@ -188,7 +190,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     } finally {
       // setLoading(false);
       cancelSelection();
-      reloadExpenseList();
+      setTimeout(reloadExpenseList, 500);
     }
   };
 
@@ -208,6 +210,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
     // Exit selection mode
     cancelSelection();
+    setTimeout(reloadExpenseList, 500);
   };
 
   // Scroll to top function
@@ -787,7 +790,8 @@ const ExpenseItem: FC<{
   // Create a minimal synthetic event object once instead of recreating it in each handler
   const createSyntheticEvent = useCallback(() => {
     return {
-      stopPropagation: () => { /* intentionally empty for synthetic event */ }
+      stopPropagation: () => { /* intentionally empty for synthetic event */
+      }
     } as React.MouseEvent;
   }, []);
 
@@ -814,20 +818,22 @@ const ExpenseItem: FC<{
       className={`expense-row ${isSelected ? 'selected' : ''}`}
       {...longPressHandlers}
     >
-      <Avatar className={`expense-avatar ${isSelected ? 'selected' : ''}`}>
-        {isSelected ?
-          <CheckCircleIcon fontSize="inherit"/> :
-          expense.type === 'credit-card' ?
-            <CreditCard fontSize="inherit"/> :
-            <CurrencyRupeeIcon fontSize="inherit"/>
-        }
-      </Avatar>
-      <Col>
+      <Col xs="auto" className="avatar-col">
+        <Avatar className={`expense-avatar ${isSelected ? 'selected' : ''}`}>
+          {isSelected ?
+            <CheckCircleIcon fontSize="inherit"/> :
+            expense.type === 'credit-card' ?
+              <CreditCard fontSize="inherit"/> :
+              <CurrencyRupeeIcon fontSize="inherit"/>
+          }
+        </Avatar>
+      </Col>
+      <Col className="content-col">
         <Row className="expense-row-header">
-          <Col>
-            <span className="vendor-name">{expense.vendor.toLowerCase()}</span>
+          <Col className="vendor-name-col">
+            <span className="vendor-name">{formatVendorName(expense.vendor)[0]}</span>
           </Col>
-          <Col xs="auto" className="d-flex justify-content-end mr-2">
+          <Col xs="auto" className="expense-cost-col">
             <span className="expense-type">
               {expense.costType === 'debit' ? '-' : '+'}
             </span>

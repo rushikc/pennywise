@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {hideTagExpense, selectExpense, setTagMap, updateExpense} from '../../../store/expenseActions';
-import {getDateMonthTime, JSONCopy} from '../../../utility/utility';
+import {formatVendorName, getDateMonthTime, JSONCopy} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -30,6 +30,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {createTimedAlert} from '../../../store/alertActions';
 
 
 const TagExpenses: FC = (): ReactElement => {
@@ -42,6 +45,17 @@ const TagExpenses: FC = (): ReactElement => {
   if (expense == null || !isTagModal) {
     return <></>;
   }
+
+  const copyToClipboard = async (str: string) => {
+    try {
+      await navigator.clipboard.writeText(str);
+      createTimedAlert({message: 'Copied to clipboard', type: 'success'});
+      // You could add a toast notification here if desired
+    } catch (err) {
+      createTimedAlert({message: 'Failed to copy text', type: 'success'});
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
@@ -70,12 +84,7 @@ const TagExpenses: FC = (): ReactElement => {
     hideTagExpense();
   };
 
-  const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.substring(0, 20)
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase())
-      .toLowerCase() : '';
-  };
+  const vendorNames = formatVendorName(expense.vendor);
 
   return (
     <Dialog
@@ -92,8 +101,25 @@ const TagExpenses: FC = (): ReactElement => {
         <Fade in={isTagModal} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              {formatVendorName(expense.vendor)}
+              {vendorNames[0]}
             </Typography>
+            {
+              vendorNames[1] &&
+              <div className="d-flex justify-content-center">
+                <Typography variant="subtitle1" className="tag-expense-vendor-upi">
+                  {vendorNames[1]}
+                </Typography>
+                <IconButton
+                  aria-label="copy vendor name"
+                  className="tag-expense-copy-vendor"
+                  onClick={() => copyToClipboard(vendorNames[1])}
+                  size="small"
+                  sx={{padding: '4px'}}
+                >
+                  <ContentCopyIcon fontSize="small"/>
+                </IconButton>
+              </div>
+            }
             <Typography variant="body2" className="tag-expense-date">
               {getDateMonthTime(expense.date)}
             </Typography>

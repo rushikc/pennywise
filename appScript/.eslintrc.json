@@ -1,0 +1,73 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "GmailApp": "readonly",
+    "DriveApp": "readonly",
+    "SpreadsheetApp": "readonly",
+    "CalendarApp": "readonly",
+    "DocumentApp": "readonly",
+    "ScriptApp": "readonly",
+    "PropertiesService": "readonly",
+    "Utilities": "readonly",
+    "UrlFetchApp": "readonly",
+    "Logger": "readonly",
+    "Session": "readonly",
+    "HtmlService": "readonly",
+    "CardService": "readonly",
+    "ContentService": "readonly",
+    "console": "readonly",
+    "Gmail": "readonly",
+    "getAllDoc": "readonly",
+    "getOneDoc": "readonly",
+    "setOneDoc": "readonly",
+    "addExpense": "readonly",
+    "findBody": "readonly",
+    "extractPlainTextFromHtml": "readonly",
+    "PROJECT_REGION": "readonly",
+    "PROJECT_ID": "readonly",
+    "USER_ID": "readonly"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-undef": "error",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-restricted-globals": "off"
+  }
+}

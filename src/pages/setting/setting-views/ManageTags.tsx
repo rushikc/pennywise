@@ -111,7 +111,6 @@ const ManageTags: React.FC = () => {
         </Typography>
       </Box>
       <Paper elevation={3} className="manage-tags-paper">
-
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="tags">
             {(provided) => (

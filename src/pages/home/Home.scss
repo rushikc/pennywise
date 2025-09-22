@@ -89,7 +89,7 @@ GNU General Public License for more details, or get a copy at
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: 16px 13px 16px 25px;
   background: var(--group-header-bg);
   cursor: pointer;
   transition: background-color 0.2s;
@@ -159,13 +159,14 @@ GNU General Public License for more details, or get a copy at
   background: var(--bg-secondary);
   border-radius: 0; /* Remove border radius for items inside group */
   box-shadow: none; /* Remove individual shadow */
-  padding: 18px 22px; /* Slightly reduced padding */
+  padding: 18px 15px; /* Slightly reduced padding */
   align-items: center;
   cursor: pointer;
   transition: background-color 0.2s;
   margin: 0;
   min-height: 0;
   border-bottom: 1px solid var(--bg-tertiary);
+  display: flex; /* Ensure proper flex layout */
 
   &:last-child {
     border-bottom: none;
@@ -185,6 +186,18 @@ GNU General Public License for more details, or get a copy at
       color: var(--text-white);
     }
   }
+}
+
+.avatar-col {
+  flex-shrink: 0; /* Prevent avatar column from shrinking */
+  padding-right: 12px; /* Add some spacing between avatar and content */
+  padding-left: 0;
+}
+
+.content-col {
+  flex: 1; /* Take up all remaining space */
+  min-width: 0; /* Allow content to shrink below natural width */
+  padding-left: 0; /* Remove default bootstrap padding */
 }
 
 /* First and last items in group get rounded corners */
@@ -220,8 +233,25 @@ GNU General Public License for more details, or get a copy at
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 161px; /* Increased from 146px by 10% */
   display: inline-block;
+}
+
+.vendor-name-col {
+  flex: 1;
+  min-width: 0; /* Allows flex item to shrink below its content size */
+
+  .vendor-name {
+    max-width: 100%; /* Use full available width */
+    width: 100%;
+  }
+}
+
+.expense-cost-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+  flex-shrink: 0; /* Prevent cost column from shrinking */
 }
 
 .expense-type {

@@ -10,13 +10,13 @@
   <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#demo">Demo</a> •
-  <a href="#Security-&-Cost">Security & Cost</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#Security-and-Cost">Security and Cost</a> •
   <a href="#technology-stack">Tech Stack</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#project-structure">Project Structure</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#Future Roadmap">Future Roadmap</a> •
-  <a href="#support-by-donating">Support by Donating</a>
+  <a href="#Future-Roadmap">Future Roadmap</a> •
+  <a href="#support-the-project">Support Project</a>
 </p>
 
 ---
@@ -80,7 +80,7 @@ For detailed setup instructions, please refer below guide (30-60 min setup time)
   </a>
 </p>
 
-## Security & Cost
+## Security and Cost
 
 Pennywise is designed with your data privacy and security as a top priority. Unlike many other financial apps, Pennywise
 gives you complete control over your data and infrastructure. Here’s what makes our approach to security different:

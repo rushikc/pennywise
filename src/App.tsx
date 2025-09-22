@@ -19,6 +19,7 @@ import {FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
 import BottomNav from './components/BottomNav';
 import ThemeManager from './components/ThemeManager';
+import AlertComponent from './components/Alert';
 import TagExpenses from './pages/home/home-views/TagExpenses';
 import {selectExpense} from './store/expenseActions';
 import {useSelector} from 'react-redux';
@@ -83,6 +84,9 @@ function App() {
           </Routes>
         </Suspense>
         <ThemeManager/>
+
+        {/* Global Alert component for displaying alerts */}
+        <AlertComponent/>
 
         {/* Using the bottom nav component that safely uses useAuth hook */}
         <BottomNavAuth/>

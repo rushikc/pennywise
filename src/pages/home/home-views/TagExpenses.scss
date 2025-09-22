@@ -32,11 +32,20 @@ GNU General Public License for more details, or get a copy at
 }
 
 .tag-expense-vendor {
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
   color: var(--text-primary);
-  letter-spacing: 0.2px;
-  margin-bottom: 0.5em;
+  letter-spacing: 0.2px !important;
+  //margin-bottom: 0.5em !important;
+  text-transform: capitalize;
+}
+
+.tag-expense-vendor-upi {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  color: var(--text-tertiary);
+  letter-spacing: 0.2px !important;
+  //margin-bottom: 0.5em !important;
   text-transform: capitalize;
 }
 

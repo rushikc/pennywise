@@ -29,6 +29,7 @@ import './settingViews.scss';
  * based on the vendor-tag mappings.
  */
 const AutoTagExpenses: React.FC = () => {
+
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
