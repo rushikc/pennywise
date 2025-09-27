@@ -127,18 +127,21 @@ export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {
 export const formatVendorName = (vendor: string) => {
   if (!vendor) return '';
 
-  // Check if vendor starts with UPI ID pattern (contains @ followed by alphanumeric characters)
-  const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+  // Check if vendor contains UPI ID pattern (name followed by UPI ID)
+  // New format: "NAME UPI_ID@BANK" where name comes first
+  // const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+  const upiPattern = /^(.+)\s+([^\s@]+@[^\s@]+)$/;
   const match = vendor.match(upiPattern);
 
   if (match && !isEmpty(match[1]) && !isEmpty(match[2])) {
-    // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
-    const upiId = match[1];
-    let name = match[2];
+    // Name comes first, then UPI ID
+    let name = match[1].trim();
+    const upiId = match[2].trim();
+
     if (name.includes('manual entry')) {
       name = 'manual entry'; // to discard any UUID text before manual entry
     }
-    return [name.toLowerCase(), upiId.toLowerCase().trim()];
+    return [name.toLowerCase(), upiId.toLowerCase()];
   }
 
   if (vendor.includes('manual entry')) {

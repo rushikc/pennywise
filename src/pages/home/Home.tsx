@@ -201,15 +201,15 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
   };
 
   // Handle merge completion
-  const handleMergeComplete = (mergedExpense: Expense) => {
-    // Close the merge dialog
-    setShowMergeDialog(false);
-
-    // Update the Redux store directly - more efficient than API call
-    mergeSaveExpense(selectedExpenses, mergedExpense);
+  const handleMergeComplete = () => {
+    // setLoading(true);
 
     // Exit selection mode
     cancelSelection();
+
+    // Close the merge dialog
+    setShowMergeDialog(false);
+
     setTimeout(reloadExpenseList, 500);
   };
 
