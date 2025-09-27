@@ -126,6 +126,18 @@ async function myExpenseFunction() {
             expense.costType = config.costType;
 
             expense.cost = Number(cost);
+
+            // Check if vendor starts with UPI ID pattern (contains @ followed by alphanumeric characters)
+            const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+            const match = vendor.match(upiPattern);
+
+            if (match && match[1].trim().length !== 0 && match[2].trim().length !== 0) {
+              // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
+              const upiId = match[1].trim();
+              let name = match[2].trim();
+              vendor = `${name} ${upiId}`;
+            }
+
             expense.vendor = vendor.toUpperCase().substring(0, 100);
 
             const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
