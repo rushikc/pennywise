@@ -250,12 +250,7 @@ GNU General Public License for more details, or get a copy at
   color: var(--text-primary);
 }
 
-.tag-expense-chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
+
 
 .tag-expense-chip {
   min-width: 80px;

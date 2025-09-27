@@ -25,11 +25,10 @@ import {useSelector} from 'react-redux';
 import {Expense} from '../../../Types';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {selectExpense} from '../../../store/expenseActions';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import Zoom from '@mui/material/Zoom';
 import {TransitionProps} from '@mui/material/transitions';
 import {formatVendorName} from '../../../utility/utility';
+import {createTimedAlert} from '../../../store/alertActions';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -57,8 +56,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [totalCost, setTotalCost] = useState<number>(0);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [showError, setShowError] = useState<boolean>(false);
 
   // Get tagList from Redux store instead of props
   const {tagList} = useSelector(selectExpense);
@@ -83,8 +80,10 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const onSaveMergedExpense = async () => {
     // Validate vendor selection
     if (!selectedVendor) {
-      setErrorMessage('Please select a vendor first');
-      setShowError(true);
+      createTimedAlert({
+        type: 'error',
+        message: 'Please select a vendor first'
+      });
       return;
     }
 
@@ -127,11 +126,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       onClose();
     }
   };
-
-  const handleCloseError = () => {
-    setShowError(false);
-  };
-
 
   // Get unique vendors from selected expenses
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));
@@ -238,17 +232,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
           Cancel
         </Button>
       </DialogActions>
-
-      <Snackbar
-        open={showError}
-        autoHideDuration={6000}
-        onClose={handleCloseError}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-      >
-        <Alert onClose={handleCloseError} severity="error" sx={{width: '100%'}}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
 };
