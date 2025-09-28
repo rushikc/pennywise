@@ -163,6 +163,11 @@ export const isEmpty = (str: string | undefined | null) => {
 };
 
 
+export const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+
 /**
  * Custom development warning function (clone of console.warn)
  * @param message Primary message to display
