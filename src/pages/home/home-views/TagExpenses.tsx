@@ -42,6 +42,8 @@ const TagExpenses: FC = (): ReactElement => {
 
   const {vendorTagList, expense, isTagModal, tagList} = useSelector(selectExpense);
 
+  console.log('current expense to tag:', expense);
+
   if (expense == null || !isTagModal) {
     return <></>;
   }

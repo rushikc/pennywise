@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import React, {useState} from 'react';
-import {Alert, Backdrop, Box, Button, Container, Fade, Modal, Paper, Snackbar, Typography} from '@mui/material';
+import {Backdrop, Box, Button, Container, Fade, Modal, Paper, Typography} from '@mui/material';
 import {
   AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
@@ -33,6 +33,7 @@ import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {buildInfo} from '../../buildInfo';
+import {createTimedAlert} from '../../store/alertActions';
 
 /**
  * Settings page component with user profile and settings options
@@ -40,8 +41,6 @@ import {buildInfo} from '../../buildInfo';
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const {appConfig} = useSelector(selectExpense);
-  const [isSigningOut, setIsSigningOut] = useState(false);
-  const [signOutError, setSignOutError] = useState<string | null>(null);
   const [isAppInfoModalOpen, setIsAppInfoModalOpen] = useState(false);
 
   // Use the custom hook for authentication
@@ -73,19 +72,27 @@ const Settings: React.FC = () => {
   // Handle sign out
   const handleSignOut = async () => {
     try {
-      setIsSigningOut(true);
+      createTimedAlert({
+        type: 'info',
+        message: 'Signing out...'
+      });
+
       const result = await signOut();
 
       if (!result.success && result.error) {
-        setSignOutError(result.error);
+        createTimedAlert({
+          type: 'error',
+          message: result.error
+        });
       } else {
         navigate('/login');
       }
     } catch (error) {
-      setSignOutError('Failed to sign out. Please try again.');
+      createTimedAlert({
+        type: 'error',
+        message: 'Failed to sign out. Please try again.'
+      });
       console.error('Error signing out:', error);
-    } finally {
-      setIsSigningOut(false);
     }
   };
 
@@ -250,29 +257,6 @@ const Settings: React.FC = () => {
           />
         ))}
       </motion.div>
-
-
-      {/* Sign out progress and error handling */}
-      <Snackbar
-        open={isSigningOut}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-        autoHideDuration={6000}
-        onClose={() => setSignOutError(null)}
-      >
-        <Alert onClose={() => setSignOutError(null)} severity="info" sx={{width: '100%'}}>
-          Signing out...
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={Boolean(signOutError)}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-        autoHideDuration={6000}
-        onClose={() => setSignOutError(null)}
-      >
-        <Alert onClose={() => setSignOutError(null)} severity="error" sx={{width: '100%'}}>
-          {signOutError}
-        </Alert>
-      </Snackbar>
 
       {/* Version display - clickable to show app info */}
       <Paper

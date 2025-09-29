@@ -135,7 +135,7 @@ GNU General Public License for more details, or get a copy at
 .tag-expense-chip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
   justify-content: center;
   margin-bottom: 16px;
   align-items: flex-start; /* Ensure vertical alignment is consistent */
@@ -145,7 +145,7 @@ GNU General Public License for more details, or get a copy at
   border-radius: 12px !important;
   font-weight: 500 !important;
   font-size: 13px !important;
-  padding: 2px 12px !important;
+  padding: 2px 5px !important;
   height: 32px !important;
   transition: all 0.2s ease !important;
   margin: 2px 0 !important; /* Prevent any default margins from MUI */

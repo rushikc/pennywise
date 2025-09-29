@@ -14,7 +14,6 @@
  */
 
 
-
 /**
  * Processes Gmail messages to extract expense data and store it in a database.
  */
@@ -131,19 +130,27 @@ async function myExpenseFunction() {
             const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
             const match = vendor.match(upiPattern);
 
+            let upiId;
+            let name;
             if (match && match[1].trim().length !== 0 && match[2].trim().length !== 0) {
               // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
-              const upiId = match[1].trim();
-              let name = match[2].trim();
+              upiId = match[1].trim();
+              name = match[2].trim();
               vendor = `${name} ${upiId}`;
             }
 
             expense.vendor = vendor.toUpperCase().substring(0, 100);
 
-            const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
+            const vendorMatch = vendorTag.find(({vendor}) => expense.vendor === vendor);
 
-            if (obj) {
-              expense.tag = obj.tag;
+            if (vendorMatch) {
+              expense.tag = vendorMatch.tag;
+            } else if (upiId) {
+              // vendor name might have changed, but UPI ID might have remained same
+              const vendorUpiMatch = vendorTag.find(({vendor}) => vendor.includes(upiId));
+              if (vendorUpiMatch) {
+                expense.tag = vendorUpiMatch.tag;
+              }
             }
 
             await addExpense(expense, accessToken);
