@@ -14,7 +14,8 @@
  */
 
 import React from 'react';
-import {Box, Paper, Typography, useTheme} from '@mui/material';
+import {Box, Paper, Typography, useTheme, IconButton} from '@mui/material';
+import TuneIcon from '@mui/icons-material/Tune';
 import {
   CartesianGrid,
   Cell,
@@ -54,6 +55,7 @@ interface LineGraphProps {
 interface PieGraphProps {
   data: PieDataPoint[];
   title?: string;
+  onSelectionToggle?: () => void;
 }
 
 export const LineGraph: React.FC<LineGraphProps> = ({
@@ -142,7 +144,8 @@ export const LineGraph: React.FC<LineGraphProps> = ({
 
 export const PieGraph: React.FC<PieGraphProps> = ({
   data,
-  title = 'Group Distribution'
+  title = 'Group Distribution',
+  onSelectionToggle
 }) => {
   const theme = useTheme();
 
@@ -167,9 +170,21 @@ export const PieGraph: React.FC<PieGraphProps> = ({
   return (
     <Box className="pie-chart-container">
       <Paper className="chart-paper" elevation={3}>
-        <Typography variant="subtitle2" className="chart-title">
-          {title}
-        </Typography>
+        <div className="chart-header">
+          <Typography variant="subtitle2" className="chart-title">
+            {title}
+          </Typography>
+          {onSelectionToggle && (
+            <div className="selection-button-inline">
+              <IconButton
+                onClick={onSelectionToggle}
+                size="small"
+              >
+                <TuneIcon/>
+              </IconButton>
+            </div>
+          )}
+        </div>
         <ResponsiveContainer width="100%" height={330}>
           <PieChart>
             <Pie
@@ -179,7 +194,8 @@ export const PieGraph: React.FC<PieGraphProps> = ({
               cx="50%"
               cy="50%"
               style={{marginTop: 20}}
-              outerRadius={100}
+              outerRadius={70}
+              innerRadius={55}
               fill={theme.palette.primary.main}
               label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
             >
