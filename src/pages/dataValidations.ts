@@ -29,6 +29,8 @@ export type CalculationOption = 'average' | 'median';
 
 export const loadInitialAppData = () => {
 
+  console.log('Load Initial AppData');
+
   void ExpenseAPI.processData();
 
   const vendorTagApi = ExpenseAPI.getVendorTagList();

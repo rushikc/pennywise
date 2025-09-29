@@ -65,7 +65,7 @@ export class ExpenseAPI {
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error adding document: ', e);
+      console.error('Error adding document: ', e, _expense);
       return _expense;
     }
   };
@@ -76,28 +76,28 @@ export class ExpenseAPI {
    * The IndexedDB deletion is based on the expense's mailId.
    * Returns true on successful deletion, false otherwise.
    */
-  // static deleteExpense = async (expense: Expense): Promise<boolean> => {
-  //   try {
-  //     // First, delete from Firebase
-  //     const docRef = doc(db, 'expense', expense.id);
-  //     await deleteDoc(docRef);
-  //     console.debug('Expense deleted from Firebase with key: ', expense.id);
-  //
-  //     // Then, delete from IndexedDB
-  //     if (expense.mailId) {
-  //       await FinanceIndexDB.deleteExpense(expense.mailId);
-  //       console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
-  //     } else {
-  //       console.warn('No mailId found for expense, skipping IndexedDB deletion');
-  //     }
-  //
-  //     return true;
-  //   } catch (e) {
-  //     ErrorHandlers.handleApiError(e);
-  //     console.error('Error deleting expense:', e);
-  //     return false;
-  //   }
-  // };
+  static deleteExpense = async (expense: Expense): Promise<boolean> => {
+    try {
+      // First, delete from Firebase
+      const docRef = doc(db, 'expense', expense.id);
+      await deleteDoc(docRef);
+      console.debug('Expense deleted from Firebase with key: ', expense.id);
+
+      // Then, delete from IndexedDB
+      if (expense.mailId) {
+        await FinanceIndexDB.deleteExpense(expense.mailId);
+        console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
+      } else {
+        console.warn('No mailId found for expense, skipping IndexedDB deletion');
+      }
+
+      return true;
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error deleting expense:', e);
+      return false;
+    }
+  };
 
   /**
    * Sets a single document in a specified Firestore collection.
@@ -163,48 +163,7 @@ export class ExpenseAPI {
    * This function is typically used for one-off data manipulation tasks.
    */
   static processData = async () => {
-    try {
-      console.debug('Process Data Init');
-
-
-      // const q = query(collection(db, "expense"), where("date", ">", new Date("2020-01-01")));
-      // const q = query(collection(db, "expense"));
-      // const querySnapshot = await getDocs(q);
-      //
-      // const queryResultLen = querySnapshot.docs.length;
-      // console.debug("Query Result Length: ", queryResultLen);
-      // let count = 0;
-      // if (queryResultLen) {
-      //
-      //
-      //     querySnapshot.forEach((doc) => {
-      //         // doc.data() is never undefined for query doc snapshots
-      //         let document = doc.data();
-      //         if(document.modifiedDate === undefined) {
-      //         //     document.date = document.date.seconds * 1000;
-      //             // const date = new Date(doc.id.substring(0,19));
-      //
-      //             console.debug(doc.id, " => ", JSONCopy(document));
-      //             document['modifiedDate'] = document.date;
-      //
-      //             console.debug("modified => ", JSONCopy(document));
-      //
-      //
-      //             if(count < 700) {
-      //                 ExpenseAPI.setOneDoc(doc.id, document, 'expense');
-      //                 count++;
-      //             }
-      //         }
-      //
-      //     });
-      //     console.debug("Total Documents Processed: ", count);
-      // }
-
-      // console.debug("expense list ", tags);
-    } catch (e) {
-      ErrorHandlers.handleApiError(e);
-      console.error('Error processing data: ', e);
-    }
+    console.log('ExpenseAPI processData');
   };
 
 

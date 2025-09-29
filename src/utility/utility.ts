@@ -163,7 +163,7 @@ export const isEmpty = (str: string | undefined | null) => {
 };
 
 
-export const sleep = (ms: number) => {
+export const sleep = async (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
