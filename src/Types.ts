@@ -61,3 +61,24 @@ export interface Config {
 export interface AppConfig {
   darkMode: boolean;
 }
+
+export interface Budget {
+  id: string;
+  name: string;
+  amount: number;
+  tagList: string[];
+}
+
+export interface BudgetProgress {
+  budget: Budget;
+  spent: number;
+  remaining: number;
+  percentage: number;
+}
+
+export type MonthYear = {
+  month: number; // 0-11 (January = 0)
+  year: number;
+  label: string; // e.g., "Jan 2024"
+  value: string; // e.g., "2024-01" for filtering
+};

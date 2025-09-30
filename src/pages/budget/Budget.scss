@@ -1,0 +1,300 @@
+/*
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details, or get a copy at
+<https://www.gnu.org/licenses/gpl-3.0.txt>.
+*/
+
+.budget-container {
+  padding: 20px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+
+  .budget-header {
+    position: relative;
+    margin-bottom: 24px;
+
+    .budget-title {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .budget-subtitle {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .filter-button {
+      background-color: var(--bg-secondary);
+      color: var(--accent-blue);
+      border: 1px solid var(--border-color);
+
+      &:hover {
+        background-color: var(--bg-tertiary);
+      }
+    }
+  }
+
+  .filter-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--box-shadow);
+    min-width: 320px;
+    max-width: 400px;
+    margin-top: 8px;
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+
+      h6 {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .close-button {
+        color: var(--text-secondary);
+
+        &:hover {
+          color: var(--text-primary);
+          background-color: var(--bg-secondary);
+        }
+      }
+    }
+
+    .filter-content {
+      padding: 20px;
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 8px;
+
+        .month-chip {
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background-color: var(--bg-secondary);
+          color: var(--text-primary);
+          border-color: var(--border-color);
+
+          &:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateY(-1px);
+          }
+
+          &.MuiChip-filled {
+            background-color: var(--accent-blue);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .budget-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .budget-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: var(--box-shadow);
+        transform: translateY(-2px);
+      }
+
+      .budget-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .budget-name {
+          color: var(--text-primary);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .budget-amount {
+          color: var(--text-secondary);
+          font-weight: 500;
+          background-color: var(--bg-secondary);
+          padding: 4px 8px;
+          border-radius: 6px;
+        }
+      }
+
+      .budget-progress {
+        margin-bottom: 16px;
+
+        .progress-info {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+
+          .spent-amount {
+            color: var(--accent-red);
+            font-weight: 500;
+          }
+
+          .remaining-amount {
+            color: var(--accent-green);
+            font-weight: 500;
+          }
+        }
+
+        .progress-bar-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .progress-bar {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            background-color: var(--bg-secondary);
+
+            .MuiLinearProgress-bar {
+              border-radius: 4px;
+            }
+          }
+
+          .progress-percentage {
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-width: 45px;
+            text-align: right;
+          }
+        }
+      }
+
+      .budget-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        .tag-chip {
+          background-color: var(--bg-secondary);
+          color: var(--text-secondary);
+          border-color: var(--border-color);
+          font-size: 0.75rem;
+
+          &:hover {
+            background-color: var(--bg-tertiary);
+          }
+        }
+      }
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+
+    h6 {
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .MuiTypography-body2 {
+      color: var(--text-muted);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .budget-container {
+    padding: 16px;
+
+    .filter-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-width: none;
+      margin-top: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+
+      .filter-content {
+        flex: 1;
+        overflow-y: auto;
+
+        .month-grid {
+          grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        }
+      }
+    }
+
+    .budget-list {
+      .budget-card {
+        .budget-card-header {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+
+          .budget-amount {
+            align-self: auto;
+          }
+        }
+
+        .budget-progress {
+          .progress-info {
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark theme specific adjustments
+[data-theme="dark"] {
+  .budget-container {
+    .budget-list {
+      .budget-card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+
+    .filter-panel {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+  }
+}

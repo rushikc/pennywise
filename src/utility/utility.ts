@@ -159,7 +159,7 @@ export const formatString = (str: string) => {
 };
 
 export const isEmpty = (str: string | undefined | null) => {
-  return str && str.trim().length === 0;
+  return str === null || str === undefined || str.trim().length === 0;
 };
 
 
