@@ -608,8 +608,8 @@ export class ExpenseAPI {
       if (configData) lastUpdatedDate = Number(configData.value);
       if (overrideLastDate) lastUpdatedDate = overrideLastDate;
 
-      // const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
-      const q = query(collection(db, table));
+      const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
+      // const q = query(collection(db, table));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {
