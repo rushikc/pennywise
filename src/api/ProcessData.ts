@@ -1,13 +1,31 @@
+/*
+Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details, or get a copy at
+<https://www.gnu.org/licenses/gpl-3.0.txt>.
+*/
+
+
 import {DocumentData, ExpenseAPI} from './ExpenseAPI';
 import {collection, getDocs, getFirestore, query} from 'firebase/firestore/lite';
 import {initializeApp} from 'firebase/app';
 import {firebaseConfig} from '../firebase/firebase-public';
 import {isEmpty, JSONCopy, sleep} from '../utility/utility';
 import {ErrorHandlers} from '../components/ErrorHandlers';
+import {Budget} from '../Types';
 
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+
 
 export class ProcessData {
 
@@ -88,6 +106,44 @@ export class ProcessData {
       }
 
       // console.debug("expense list ", tags);
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error processing data: ', e);
+    }
+  };
+
+  static processBudget = async () => {
+    try {
+
+      const budgetList: Budget[] = [
+        {
+          'id': '1234567890abcdef',
+          'name': 'Total',
+          'amount': 50000,
+          'tagList': ['All'],
+          'modifiedDate': Date.now(),
+        },
+        {
+          'id': '1234567890abcded',
+          'name': 'Food',
+          'amount': 30000,
+          'tagList': ['food', 'groceries', 'snacks'],
+          'modifiedDate': Date.now(),
+        },
+        {
+          'id': '1234567890abcdej',
+          'name': 'Travel',
+          'amount': 10000,
+          'tagList': ['transport'],
+          'modifiedDate': Date.now(),
+        }
+      ];
+
+      console.log('Process Data Init');
+      budgetList.forEach(budget => {
+        ExpenseAPI.setOneDoc(crypto.randomUUID(), budget, 'budget');
+      });
+
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error processing data: ', e);

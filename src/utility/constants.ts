@@ -14,6 +14,7 @@ GNU General Public License for more details, or get a copy at
 
 export const EXPENSE_LAST_UPDATE = 'expenseLastUpdate';
 export const TAG_LAST_UPDATE = 'tagLastUpdate';
+export const BUDGET_LAST_UPDATE = 'budgetLastUpdate';
 
 // Line colors for the chart - Extended to support 15+ different colors
 export const CHART_COLORS = [

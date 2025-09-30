@@ -26,29 +26,10 @@ import Loading from '../../components/Loading';
 import './Budget.scss';
 import {isEmpty} from '../../utility/utility';
 
-const budgetList: Budget[] = [
-  {
-    'id': '1234567890abcdef',
-    'name': 'Total',
-    'amount': 50000,
-    'tagList': ['All'],
-  },
-  {
-    'id': '1234567890abcded',
-    'name': 'Food',
-    'amount': 20000,
-    'tagList': ['food', 'groceries', 'snacks']
-  },
-  {
-    'id': '1234567890abcdej',
-    'name': 'Travel',
-    'amount': 10000,
-    'tagList': ['transport'],
-  }
-];
+// Remove the hardcoded budgetList - we'll get it from the store now
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
-  const {expenseList, isAppLoading} = useSelector(selectExpense);
+  const {expenseList, budgetList, isAppLoading} = useSelector(selectExpense);
   const [selectedMonth, setSelectedMonth] = useState<MonthYear | null>(null);
   const [budgetProgress, setBudgetProgress] = useState<BudgetProgress[]>([]);
   const [showFilters, setShowFilters] = useState(false);
@@ -174,13 +155,13 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
 
   // Update filtered expenses and budget progress when data changes
   useEffect(() => {
-    if (expenseList.length > 0 && selectedMonth) {
+    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
       const filtered = filterExpensesByMonth(expenseList, selectedMonth);
       const progress = calculateBudgetProgress(filtered, budgetList);
       setBudgetProgress(progress);
     }
     setLoading(false);
-  }, [expenseList, selectedMonth]);
+  }, [expenseList, budgetList, selectedMonth]);
 
   // Toggle filters function
   const toggleFilters = () => {

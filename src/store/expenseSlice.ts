@@ -13,12 +13,13 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppConfig, BankConfig, Expense, VendorTag, Alert} from '../Types';
+import {AppConfig, BankConfig, Budget, Expense, VendorTag, Alert} from '../Types';
 import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
 interface InitialState {
   expenseList: Expense[],
+  budgetList: Budget[],
   expense: Expense | null,
   vendorTagList: VendorTag[],
   bankConfig: BankConfig,
@@ -31,6 +32,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   expenseList: [],
+  budgetList: [],
   expense: null,
   vendorTagList: [],
   isAppLoading: true,
@@ -170,6 +172,30 @@ export const expenseSlice = createSlice({
     clearAllAlerts: (state) => {
       state.alerts = [];
     },
+
+    setBudgetList: (state, action: PayloadAction<Budget[]>) => {
+      state.budgetList = action.payload;
+    },
+
+    addBudget: (state, action: PayloadAction<Budget>) => {
+      state.budgetList.push(action.payload);
+    },
+
+    updateBudget: (state, action: PayloadAction<Budget>) => {
+      const budget = action.payload;
+      const budgetIndex = state.budgetList.findIndex(b => b.id === budget.id);
+
+      if (budgetIndex > -1) {
+        state.budgetList[budgetIndex] = budget;
+      } else {
+        state.budgetList.push(budget);
+      }
+    },
+
+    deleteBudget: (state, action: PayloadAction<string>) => {
+      state.budgetList = state.budgetList.filter(budget => budget.id !== action.payload);
+    },
   }
 });
 
+export default expenseSlice.reducer;

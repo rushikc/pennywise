@@ -67,6 +67,8 @@ export interface Budget {
   name: string;
   amount: number;
   tagList: string[];
+  modifiedDate: number;
+  operation?: string; // Add operation property for consistency with other entities
 }
 
 export interface BudgetProgress {

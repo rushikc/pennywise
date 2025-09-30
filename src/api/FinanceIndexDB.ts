@@ -12,16 +12,17 @@ GNU General Public License for more details, or get a copy at
 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 */
 
-import {Config, Expense, VendorTag} from '../Types';
+import {Config, Expense, VendorTag, Budget} from '../Types';
 
 const dbName = 'Finance';
-const dbVersion = 4;
+const dbVersion = 5;
 
-type TableNames = 'expense' | 'vendorTag' | 'config';
+type TableNames = 'expense' | 'vendorTag' | 'config' | 'budget';
 type StoreData = {
   expense: Expense;
   vendorTag: VendorTag;
   config: Config;
+  budget: Budget;
 };
 
 export class FinanceIndexDB {
@@ -49,6 +50,7 @@ export class FinanceIndexDB {
 
       db.createObjectStore('vendorTag', {keyPath: 'vendor'});
       db.createObjectStore('config', {keyPath: 'key'});
+      db.createObjectStore('budget', {keyPath: 'id'}); // Create budget store
 
       console.debug('Created finance IndexedDB');
     };
@@ -192,5 +194,22 @@ export class FinanceIndexDB {
     console.debug('deleteExpense IndexedDB - mailId:', mailId);
     await this.executeStoreOperation('expense', (store) => store.delete(mailId));
     console.debug('Successfully deleted expense with mailId:', mailId);
+  };
+
+  /**
+   * Adds a list of budgets to the 'budget' object store.
+   */
+  static addBudgetList = (budgetList: Budget[]): Promise<void> => {
+    console.debug('addBudgetList IndexedDB');
+    return this.batchInsert('budget', budgetList);
+  };
+
+  /**
+   * Deletes a budget from the 'budget' object store by its id.
+   */
+  static deleteBudget = async (budgetId: string): Promise<void> => {
+    console.debug('deleteBudget IndexedDB - budgetId:', budgetId);
+    await this.executeStoreOperation('budget', (store) => store.delete(budgetId));
+    console.debug('Successfully deleted budget with id:', budgetId);
   };
 }
