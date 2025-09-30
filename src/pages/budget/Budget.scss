@@ -153,6 +153,7 @@ GNU General Public License for more details, or get a copy at
         .progress-info {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           margin-bottom: 8px;
 
           .spent-amount {
@@ -271,8 +272,10 @@ GNU General Public License for more details, or get a copy at
 
         .budget-progress {
           .progress-info {
-            flex-direction: column;
-            gap: 4px;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
           }
         }
       }
