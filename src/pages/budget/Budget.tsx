@@ -19,6 +19,7 @@ import {Box, Card, CardContent, Chip, IconButton, LinearProgress, Typography} fr
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
+import {AnimatePresence, motion} from 'framer-motion';
 import {selectExpense} from '../../store/expenseActions';
 import {Budget, BudgetProgress, Expense, MonthYear} from '../../Types';
 import Loading from '../../components/Loading';
@@ -227,57 +228,132 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
       </div>
 
       {/* Budget Cards */}
-      <div className="budget-list">
-        {budgetProgress.map((progress) => (
-          <Card key={progress.budget.id} className="budget-card">
-            <CardContent className="budget-card-content">
-              <div className="budget-card-header">
-                <Typography variant="h6" className="budget-name">
-                  {progress.budget.name}
-                </Typography>
-                <Typography variant="body2" className="budget-amount">
-                  {formatCurrency(progress.budget.amount)}
-                </Typography>
-              </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="budget-list"
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          transition={{duration: 0.4}}
+        >
+          {budgetProgress.map((progress, index) => (
+            <motion.div
+              key={progress.budget.id}
+              initial={{opacity: 0, y: 20}}
+              animate={{opacity: 1, y: 0}}
+              transition={{
+                duration: 0.4,
+                delay: index * 0.05,
+                ease: 'easeOut'
+              }}
+              whileHover={{
+                y: -2,
+                transition: {duration: 0.15, ease: 'easeOut'}
+              }}
+            >
+              <Card className="budget-card">
+                <CardContent>
+                  <motion.div
+                    className="budget-card-header"
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: index * 0.05 + 0.1, duration: 0.3}}
+                  >
+                    <Typography variant="h6" className="budget-name">
+                      {progress.budget.name}
+                    </Typography>
+                    <motion.div
+                      initial={{opacity: 0}}
+                      animate={{opacity: 1}}
+                      transition={{delay: index * 0.05 + 0.15, duration: 0.3}}
+                    >
+                      <Typography variant="body2" className="budget-amount">
+                        {formatCurrency(progress.budget.amount)}
+                      </Typography>
+                    </motion.div>
+                  </motion.div>
 
-              <div className="budget-progress">
-                <Box className="progress-info">
-                  <Typography variant="body2" className="spent-amount">
-                    Spent: {formatCurrency(progress.spent)}
-                  </Typography>
-                  <Typography variant="body2" className="remaining-amount">
-                    Remaining: {formatCurrency(progress.remaining)}
-                  </Typography>
-                </Box>
+                  <motion.div
+                    className="budget-progress"
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: index * 0.05 + 0.2, duration: 0.3}}
+                  >
+                    <Box className="progress-info">
+                      <Typography variant="body2" className="spent-amount">
+                        Spent: {formatCurrency(progress.spent)}
+                      </Typography>
+                      <Typography variant="body2" className="remaining-amount">
+                        Remaining: {formatCurrency(progress.remaining)}
+                      </Typography>
+                    </Box>
 
-                <Box className="progress-bar-container">
-                  <LinearProgress
-                    variant="determinate"
-                    value={Math.min(100, progress.percentage)}
-                    color={getProgressColor(progress.percentage)}
-                    className="progress-bar"
-                  />
-                  <Typography variant="body2" className="progress-percentage">
-                    {progress.percentage.toFixed(1)}%
-                  </Typography>
-                </Box>
-              </div>
+                    <Box className="progress-bar-container">
+                      <motion.div
+                        className="progress-bar-wrapper"
+                        style={{flex: 1}}
+                        initial={{scaleX: 0, originX: 0}}
+                        animate={{scaleX: 1}}
+                        transition={{
+                          delay: index * 0.05 + 0.3,
+                          duration: 0.6,
+                          ease: 'easeOut'
+                        }}
+                      >
+                        <LinearProgress
+                          variant="determinate"
+                          value={Math.min(100, progress.percentage)}
+                          color={getProgressColor(progress.percentage)}
+                          className="progress-bar"
+                        />
+                      </motion.div>
+                      <motion.div
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        transition={{delay: index * 0.05 + 0.5, duration: 0.2}}
+                      >
+                        <Typography variant="body2" className="progress-percentage">
+                          {progress.percentage.toFixed(1)}%
+                        </Typography>
+                      </motion.div>
+                    </Box>
+                  </motion.div>
 
-              <div className="budget-tags">
-                {progress.budget.tagList.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    size="small"
-                    variant="outlined"
-                    className="tag-chip"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  <motion.div
+                    className="budget-tags"
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: index * 0.05 + 0.4, duration: 0.3}}
+                  >
+                    {progress.budget.tagList.map((tag, tagIndex) => (
+                      <motion.div
+                        key={tagIndex}
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        transition={{
+                          delay: index * 0.05 + 0.5 + tagIndex * 0.02,
+                          duration: 0.2
+                        }}
+                        whileHover={{
+                          scale: 1.02,
+                          transition: {duration: 0.1}
+                        }}
+                        whileTap={{scale: 0.98}}
+                      >
+                        <Chip
+                          label={tag}
+                          size="small"
+                          variant="outlined"
+                          className="tag-chip"
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
 
       {budgetProgress.length === 0 && (
         <div className="no-data">

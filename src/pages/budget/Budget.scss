@@ -161,25 +161,43 @@ GNU General Public License for more details, or get a copy at
   .budget-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 
     .budget-card {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      position: relative;
+
+      // Subtle gradient overlay for depth
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
 
       &:hover {
-        box-shadow: var(--box-shadow);
-        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+
+        &::before {
+          opacity: 0.6;
+        }
       }
 
       .budget-card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
 
         .budget-name {
           color: var(--text-primary);
@@ -193,11 +211,16 @@ GNU General Public License for more details, or get a copy at
           background-color: var(--bg-secondary);
           padding: 4px 8px;
           border-radius: 6px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: var(--bg-tertiary);
+          }
         }
       }
 
       .budget-progress {
-        margin-bottom: 12px;
+        margin-bottom: 16px;
 
         .progress-info {
           display: flex;
@@ -221,14 +244,20 @@ GNU General Public License for more details, or get a copy at
           align-items: center;
           gap: 12px;
 
-          .progress-bar {
-            flex: 1;
-            height: 8px;
+          .progress-bar-wrapper {
+            position: relative;
+            overflow: hidden;
             border-radius: 4px;
-            background-color: var(--bg-secondary);
 
-            .MuiLinearProgress-bar {
+            .progress-bar {
+              height: 8px;
               border-radius: 4px;
+              background-color: var(--bg-secondary);
+              transition: all 0.2s ease;
+
+              .MuiLinearProgress-bar {
+                border-radius: 4px;
+              }
             }
           }
 
@@ -251,11 +280,23 @@ GNU General Public License for more details, or get a copy at
           color: var(--text-secondary);
           border-color: var(--border-color);
           font-size: 0.75rem;
+          transition: all 0.15s ease;
+          cursor: pointer;
 
           &:hover {
             background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
           }
         }
+      }
+    }
+
+    // Animation for when cards are loading/changing
+    &.loading {
+      .budget-card {
+        opacity: 0.7;
+        pointer-events: none;
       }
     }
   }
