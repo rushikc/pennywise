@@ -14,7 +14,7 @@ GNU General Public License for more details, or get a copy at
 
 import {expenseSlice} from './expenseSlice';
 import {RootState, store} from './store';
-import {Expense, VendorTag} from '../Types';
+import {Budget, Expense, VendorTag} from '../Types';
 
 
 export const selectExpense = (state: RootState) => state.expense;
@@ -37,3 +37,9 @@ export const mergeSaveExpense = (originalExpenses: Expense[], mergedExpense: Exp
   store.dispatch(expenseSlice.actions.mergeSaveExpense({originalExpenses, mergedExpense}));
 export const deleteExpense = (expense: Expense) => store.dispatch(expenseSlice.actions.deleteExpense(expense));
 export const toggleDarkMode = () => store.dispatch(expenseSlice.actions.toggleDarkMode());
+
+// Budget actions following the same pattern
+export const setBudgetList = (budgets: Budget[]) => store.dispatch(expenseSlice.actions.setBudgetList(budgets));
+export const addBudget = (budget: Budget) => store.dispatch(expenseSlice.actions.addBudget(budget));
+export const updateBudget = (budget: Budget) => store.dispatch(expenseSlice.actions.updateBudget(budget));
+export const deleteBudget = (budgetId: string) => store.dispatch(expenseSlice.actions.deleteBudget(budgetId));

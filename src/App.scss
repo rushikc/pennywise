@@ -67,3 +67,10 @@ $purple-light: var(--accent-purple);
   padding: 0 !important;
   margin: 0 !important;
 }
+
+.page-header {
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+

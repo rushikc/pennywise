@@ -13,13 +13,12 @@ GNU General Public License for more details, or get a copy at
 */
 
 import HomeIcon from '@mui/icons-material/Home';
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import React from 'react';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {AccountBalanceWallet, AnalyticsOutlined} from '@mui/icons-material';
 
 export default function BottomNav() {
   const [value, setValue] = React.useState('home');
@@ -35,6 +34,8 @@ export default function BottomNav() {
       setValue('stats');
     } else if (path.includes('profile')) {
       setValue('profile');
+    } else if (path.includes('budget')) {
+      setValue('budget');
     } else {
       // Default to home for any other paths
       setValue('home');
@@ -49,17 +50,18 @@ export default function BottomNav() {
   return (
     <BottomNavigation value={value} onChange={handleChange}>
       <BottomNavigationAction
-        label="Home"
         value="home"
         icon={<HomeIcon/>}
       />
       <BottomNavigationAction
-        label="Stats"
         value="stats"
-        icon={<SpaceDashboardIcon/>}
+        icon={<AnalyticsOutlined/>}
       />
       <BottomNavigationAction
-        label="Profile"
+        value="budget"
+        icon={<AccountBalanceWallet/>}
+      />
+      <BottomNavigationAction
         value="profile"
         icon={<AccountCircleIcon/>}
       />

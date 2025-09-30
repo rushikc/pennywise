@@ -14,12 +14,12 @@ GNU General Public License for more details, or get a copy at
 
 import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
-import {EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
+import {BUDGET_LAST_UPDATE, EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
 import {firebaseConfig} from '../firebase/firebase-public';
 import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig, Expense, VendorTag} from '../Types';
+import {BankConfig, Budget, Expense, VendorTag} from '../Types';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
@@ -70,7 +70,7 @@ export class ExpenseAPI {
    * Sets a single document in a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   static setOneDoc = async (key: string, val: any, collectionName = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
@@ -95,6 +95,7 @@ export class ExpenseAPI {
    */
   static processData = async () => {
     console.log('ExpenseAPI processData');
+    // ProcessData.processBudget();
   };
 
 
@@ -502,6 +503,131 @@ export class ExpenseAPI {
       ErrorHandlers.handleApiError(e);
       console.error('Error during auto-tagging process: ', e);
       return 0;
+    }
+  };
+
+  /**
+   * Adds a new budget to Firestore and IndexedDB.
+   * It generates a unique key for the budget based on its name,
+   * updates the modified date, and then saves the budget.
+   * Returns the budget object with the generated ID.
+   */
+  static addBudget = async (_budget: Budget, operation = 'update'): Promise<Budget> => {
+    try {
+      const budget = JSONCopy(_budget);
+      const key = budget.name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now();
+
+      budget.modifiedDate = Date.now();
+      budget.operation = operation;
+
+      const docRef = doc(db, 'budget', key);
+
+      // eslint-disable-next-line
+      const {id, ...budgetWithoutId} = budget;
+      await setDoc(docRef, budgetWithoutId);
+
+      await FinanceIndexDB.addBudgetList([budget]);
+
+      // Return a new object with the updated ID instead of modifying the original
+      return {
+        ...budget,
+        id: key
+      };
+
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error adding budget: ', e, _budget);
+      return _budget;
+    }
+  };
+
+  /**
+   * Updates an existing budget in Firestore and IndexedDB.
+   * Returns the updated budget object.
+   */
+  static updateBudget = async (_budget: Budget): Promise<Budget> => {
+    try {
+      const budget = JSONCopy(_budget);
+      budget.modifiedDate = Date.now();
+      budget.operation = 'update';
+
+      const docRef = doc(db, 'budget', budget.id);
+
+      // eslint-disable-next-line
+      const {id, ...budgetWithoutId} = budget;
+      await setDoc(docRef, budgetWithoutId);
+
+      await FinanceIndexDB.addBudgetList([budget]);
+
+      return budget;
+
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error updating budget: ', e, _budget);
+      return _budget;
+    }
+  };
+
+  /**
+   * Deletes a budget from both Firestore and IndexedDB.
+   * Returns true on successful deletion, false otherwise.
+   */
+  static deleteBudget = async (budget: Budget): Promise<boolean> => {
+    try {
+      // First, delete from Firebase
+      const docRef = doc(db, 'budget', budget.id);
+      await deleteDoc(docRef);
+      console.debug('Budget deleted from Firebase with key: ', budget.id);
+
+      // Then, delete from IndexedDB
+      await FinanceIndexDB.deleteBudget(budget.id);
+      console.debug('Budget deleted from IndexedDB with id: ', budget.id);
+
+      return true;
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error deleting budget:', e);
+      return false;
+    }
+  };
+
+  /**
+   * Retrieves a list of budgets from Firestore and IndexedDB.
+   * It fetches budgets modified after the last update timestamp stored in IndexedDB,
+   * updates the local database, and returns the complete list of budgets.
+   * An optional date can be provided to override the last update check.
+   */
+  static getBudgetList = async (overrideLastDate: number | undefined = undefined): Promise<Budget[]> => {
+    try {
+      const table = 'budget';
+      let indexDocList: Budget[];
+      const fireDocList: Budget[] = [];
+      let lastUpdatedDate = getUnixTimestamp('2020-01-01');
+
+      const configData = await FinanceIndexDB.getData('config', BUDGET_LAST_UPDATE);
+      if (configData) lastUpdatedDate = Number(configData.value);
+      if (overrideLastDate) lastUpdatedDate = overrideLastDate;
+
+      const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
+      // const q = query(collection(db, table));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.docs.length) {
+        fireDocList.push(...querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Budget)));
+        await FinanceIndexDB.addBudgetList(fireDocList);
+      }
+
+      await FinanceIndexDB.addConfig([{key: BUDGET_LAST_UPDATE, value: Date.now() - 3600000}]);
+      indexDocList = await FinanceIndexDB.getAllData('budget');
+      indexDocList = indexDocList.filter(item => item.operation !== 'delete');
+      return indexDocList;
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      console.error('Error fetching budget list: ', e);
+      return [];
     }
   };
 }

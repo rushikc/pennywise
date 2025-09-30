@@ -18,6 +18,7 @@ import {FC, lazy} from 'react';
 const Home = lazy(() => import('./pages/home/Home'));
 const Settings = lazy(() => import('./pages/setting/Settings'));
 const Insights = lazy(() => import('./pages/insights/Insights'));
+const Budget = lazy(() => import('./pages/budget/Budget'));
 const Configuration = lazy(() => import('./pages/setting/setting-views/Configuration'));
 const ManageTags = lazy(() => import('./pages/setting/setting-views/ManageTags'));
 const ManageVendorTags = lazy(() => import('./pages/setting/setting-views/ManageVendorTags'));
@@ -57,6 +58,14 @@ export const routes: Array<Route> = [
     path: '/stats',
     enabled: true,
     component: Insights,
+    isProtected: true,
+  },
+  {
+    key: 'budget-route',
+    title: 'Budget',
+    path: '/budget',
+    enabled: true,
+    component: Budget,
     isProtected: true,
   },
   {
