@@ -18,101 +18,150 @@ GNU General Public License for more details, or get a copy at
   color: var(--text-primary);
   min-height: 100vh;
 
-  .budget-header {
-    position: relative;
-    margin-bottom: 24px;
 
-    .budget-title {
+  .budget-card-content {
+    padding: 10px 16px 12px 16px;
+  }
+
+  // Filter button container at bottom - exact styles from Insights.scss
+  .buttons-container {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .filter-button,
+  .group-by-button {
+    padding-top: 10px;
+
+    .MuiChip-root {
+      background-color: var(--bg-tertiary);
       color: var(--text-primary);
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .budget-subtitle {
-      color: var(--text-secondary);
-      font-weight: 400;
-    }
-
-    .filter-button {
-      background-color: var(--bg-secondary);
-      color: var(--accent-blue);
+      box-shadow: var(--box-shadow);
+      height: 40px;
+      padding: 0 15px;
       border: 1px solid var(--border-color);
+      font-weight: 400;
+      min-width: 120px;
+      justify-content: center;
+
+      .MuiChip-icon {
+        color: var(--accent-blue);
+      }
 
       &:hover {
-        background-color: var(--bg-tertiary);
+        background-color: var(--group-header-hover);
+        border-color: var(--border-color-dark);
       }
     }
   }
 
-  .filter-panel {
-    position: absolute;
-    top: 100%;
+  // Updated filter panel styles to match Insights GroupByPanel exactly
+  .group-by-panel {
+    position: fixed;
+    left: 0;
     right: 0;
-    z-index: 1000;
-    background-color: var(--bg-card);
+    margin: auto;
+    max-width: 600px;
+    bottom: 56px;
+    background-color: var(--group-header-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    padding-bottom: 20px;
+    animation: slideUp 0.2s ease-out;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: var(--box-shadow);
-    min-width: 320px;
-    max-width: 400px;
-    margin-top: 8px;
 
-    .filter-header {
+    .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 20px;
+      padding: 10px 20px;
       border-bottom: 1px solid var(--border-color);
 
-      h6 {
+      .panel-title {
+        font-size: 16px;
+        font-weight: 500;
         color: var(--text-primary);
-        font-weight: 600;
-        margin: 0;
       }
 
       .close-button {
-        color: var(--text-secondary);
+        color: var(--accent-blue);
+        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+        transition: all 0.2s ease;
+        padding: 4px;
+        margin-right: -4px;
 
         &:hover {
-          color: var(--text-primary);
-          background-color: var(--bg-secondary);
+          transform: scale(1.1);
+          background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+          border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+        }
+
+        .MuiSvgIcon-root {
+          font-size: 20px;
         }
       }
     }
 
-    .filter-content {
-      padding: 20px;
+    .panel-section {
+      padding: 0 20px;
+      margin-top: 15px;
 
-      .month-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 8px;
+      .section-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 10px;
+        padding-left: 5px;
+      }
 
-        .month-chip {
-          cursor: pointer;
-          transition: all 0.2s ease;
-          background-color: var(--bg-secondary);
-          color: var(--text-primary);
-          border-color: var(--border-color);
+      &:first-of-type {
+        margin-top: 5px;
+      }
 
-          &:hover {
-            background-color: var(--bg-tertiary);
-            transform: translateY(-1px);
-          }
+      .group-by-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 5px 0;
 
-          &.MuiChip-filled {
-            background-color: var(--accent-blue);
-            color: white;
+        .filter-chip {
+          margin: 0;
+
+          &.MuiChip-outlined {
+            border-color: var(--border-color);
+            background-color: var(--bg-secondary);
           }
         }
       }
+    }
+  }
+
+  /* Animation for sliding up panels */
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
 
   .budget-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
 
     .budget-card {
       background-color: var(--bg-card);
@@ -130,7 +179,7 @@ GNU General Public License for more details, or get a copy at
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 10px;
 
         .budget-name {
           color: var(--text-primary);
@@ -148,7 +197,7 @@ GNU General Public License for more details, or get a copy at
       }
 
       .budget-progress {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
 
         .progress-info {
           display: flex;

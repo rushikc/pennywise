@@ -14,8 +14,8 @@ GNU General Public License for more details, or get a copy at
 
 import React, {FC, ReactElement, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Col, Container, Row} from 'reactstrap';
-import {Box, Card, CardContent, Chip, Fade, IconButton, LinearProgress, Typography} from '@mui/material';
+import {Container} from 'reactstrap';
+import {Box, Card, CardContent, Chip, IconButton, LinearProgress, Typography} from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
@@ -50,9 +50,9 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   const {expenseList, isAppLoading} = useSelector(selectExpense);
   const [selectedMonth, setSelectedMonth] = useState<MonthYear | null>(null);
   const [budgetProgress, setBudgetProgress] = useState<BudgetProgress[]>([]);
-  const [monthOptions, setMonthOptions] = useState<MonthYear[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState<'current' | 'last3'>('current');
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -130,8 +130,10 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     });
   };
 
-  // Handle outside clicks to close filter panel
+  // Handle outside clicks to close filter panel and scroll events
   useEffect(() => {
+    if (!showFilters) return; // Skip if filters not shown
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         filterPanelRef.current &&
@@ -143,19 +145,20 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
       }
     };
 
-    if (showFilters) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    const handleScroll = () => setShowFilters(false);
 
+    // Add and clean up event listeners
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('scroll', handleScroll, true);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('scroll', handleScroll, true);
     };
   }, [showFilters]);
 
   // Initialize component
   useEffect(() => {
     const options = generateMonthOptions();
-    setMonthOptions(options);
 
     // Set current month as default
     const currentMonth = dayjs();
@@ -178,14 +181,25 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     setLoading(false);
   }, [expenseList, selectedMonth]);
 
+  // Toggle filters function
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  // Handle year segment selection
+  const handleYearSegmentChange = (yearType: 'current' | 'last3') => {
+    setSelectedYear(yearType);
+  };
+
+  // Handle month selection
   const handleMonthSelect = (month: MonthYear) => {
     setSelectedMonth(month);
     setShowFilters(false);
   };
 
   const getProgressColor = (percentage: number): 'success' | 'warning' | 'error' => {
-    if (percentage <= 50) return 'success';
-    if (percentage <= 80) return 'warning';
+    if (percentage <= 85) return 'success';
+    if (percentage <= 100) return 'warning';
     return 'error';
   };
 
@@ -204,68 +218,19 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
 
   return (
     <Container fluid className="budget-container">
-      <div className="budget-header">
-        <Row className="align-items-center mb-3">
-          <Col>
-            <div className="d-flex align-items-baseline gap-3">
-              <Typography variant="h4" className="budget-title">
-                Budget Overview
-              </Typography>
-              <Typography variant="subtitle1" className="budget-subtitle">
-                {selectedMonth ? selectedMonth.label : 'Select a month'}
-              </Typography>
-            </div>
-          </Col>
-          <Col xs="auto">
-            <div ref={filterButtonRef}>
-              <IconButton
-                onClick={() => setShowFilters(!showFilters)}
-                className="filter-button"
-                color="primary"
-              >
-                <FilterListIcon/>
-              </IconButton>
-            </div>
-          </Col>
-        </Row>
-
-        {/* Filter Panel */}
-        <Fade in={showFilters}>
-          <div className="filter-panel" ref={filterPanelRef}>
-            <div className="filter-header">
-              <Typography variant="h6">Filter by Month</Typography>
-              <IconButton
-                size="small"
-                onClick={() => setShowFilters(false)}
-                className="close-button"
-              >
-                <CloseIcon/>
-              </IconButton>
-            </div>
-
-            <div className="filter-content">
-              <div className="month-grid">
-                {monthOptions.map((month) => (
-                  <Chip
-                    key={month.value}
-                    label={month.label}
-                    onClick={() => handleMonthSelect(month)}
-                    variant={selectedMonth?.value === month.value ? 'filled' : 'outlined'}
-                    color={selectedMonth?.value === month.value ? 'primary' : 'default'}
-                    className="month-chip"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </Fade>
+      <div style={{paddingBottom: 10}}>
+        <div className="page-header">
+          <Typography variant="h5" fontWeight="bold">
+            Budget Overview
+          </Typography>
+        </div>
       </div>
 
       {/* Budget Cards */}
       <div className="budget-list">
         {budgetProgress.map((progress) => (
           <Card key={progress.budget.id} className="budget-card">
-            <CardContent>
+            <CardContent className="budget-card-content">
               <div className="budget-card-header">
                 <Typography variant="h6" className="budget-name">
                   {progress.budget.name}
@@ -324,7 +289,137 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
           </Typography>
         </div>
       )}
+
+      {/* Filter button container at bottom */}
+      <div className="buttons-container">
+        <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
+          <Chip
+            icon={<FilterListIcon/>}
+            label={selectedMonth ? selectedMonth.label : 'Select Month'}
+            color="primary"
+            clickable
+          />
+        </div>
+      </div>
+
+      {/* Filter panel */}
+      <FilterPanel
+        show={showFilters}
+        onClose={() => setShowFilters(false)}
+        selectedMonth={selectedMonth}
+        selectedYear={selectedYear}
+        onMonthChange={handleMonthSelect}
+        onYearSegmentChange={handleYearSegmentChange}
+        panelRef={filterPanelRef}
+      />
     </Container>
+  );
+};
+
+// Filter Panel Component
+const FilterPanel: FC<{
+  show: boolean;
+  onClose: () => void;
+  selectedMonth: MonthYear | null;
+  selectedYear: 'current' | 'last3';
+  onMonthChange: (month: MonthYear) => void;
+  onYearSegmentChange: (yearType: 'current' | 'last3') => void;
+  panelRef: React.RefObject<HTMLDivElement>;
+}> = ({show, onClose, selectedMonth, onMonthChange, panelRef}) => {
+  const currentDate = dayjs();
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  // Initialize with current year and current month selected
+  const [selectedYear, setSelectedYear] = useState<number>(currentDate.year());
+
+  // Calculate last 3 years dynamically (2025, 2024, 2023)
+  const getLast3Years = () => {
+    const currentYear = currentDate.year();
+    return [currentYear, currentYear - 1, currentYear - 2];
+  };
+
+  // Generate month options for selected year
+  const generateMonthOptions = (year: number): MonthYear[] => {
+    const options: MonthYear[] = [];
+
+    // Determine how many months to show based on whether it's current year or not
+    const maxMonth = year === currentDate.year() ? currentDate.month() : 11;
+
+    for (let month = 0; month <= maxMonth; month++) {
+      options.push({
+        month,
+        year,
+        label: `${monthNames[month]} ${year}`, // Changed from just monthNames[month] to include year
+        value: `${year}-${String(month + 1).padStart(2, '0')}`
+      });
+    }
+
+    return options;
+  };
+
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+  };
+
+  const handleMonthChange = (month: MonthYear) => {
+    onMonthChange(month);
+  };
+
+  const years = getLast3Years();
+  const monthOptions = generateMonthOptions(selectedYear);
+
+  if (!show) return null;
+
+  return (
+    <div className="group-by-panel" ref={panelRef}>
+      <div className="panel-header">
+        <span className="panel-title">Filter by date</span>
+        <IconButton
+          size="small"
+          className="close-button"
+          onClick={onClose}
+        >
+          <CloseIcon/>
+        </IconButton>
+      </div>
+
+      {/* Years section */}
+      <div className="panel-section">
+        <div className="section-title">Year</div>
+        <div className="group-by-options">
+          {years.map(year => (
+            <Chip
+              key={year}
+              label={year.toString()}
+              color="primary"
+              variant={selectedYear === year ? 'filled' : 'outlined'}
+              onClick={() => handleYearChange(year)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Months section */}
+      <div className="panel-section">
+        <div className="section-title">Month</div>
+        <div className="group-by-options">
+          {monthOptions.map(option => (
+            <Chip
+              key={option.value}
+              label={option.label}
+              color="primary"
+              variant={selectedMonth?.value === option.value ? 'filled' : 'outlined'}
+              onClick={() => handleMonthChange(option)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

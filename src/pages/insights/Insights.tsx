@@ -418,7 +418,7 @@ const Insights: React.FC = () => {
   return (
     <Container maxWidth="sm" className="statistics-container">
       <div style={{paddingBottom: 10}}>
-        <div className="statistics-header">
+        <div className="page-header">
           <Typography variant="h5" fontWeight="bold">
             Expense Insights
           </Typography>
