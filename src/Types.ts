@@ -18,8 +18,8 @@ export interface Expense {
   mailId: string, // unique identifier for the expense from mail id
   cost: number, // expense cost
   costType: 'credit' | 'debit',
-  //  unix timestamp
-  // ex => 1752566845000,  unix timestamp
+  // unix timestamp
+  // ex => 1752566845000, unix timestamp
   // to get JS Date object, new Date(1752566845000)
   date: number,
   modifiedDate: number,
@@ -35,7 +35,6 @@ export interface VendorTag {
   vendor: string,
   tag: string,
   date: number // unix timestamp
-  // date: Date
 }
 
 
