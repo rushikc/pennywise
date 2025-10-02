@@ -23,6 +23,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {selectExpense} from '../../store/expenseActions';
 import {Budget, BudgetProgress, Expense, MonthYear} from '../../Types';
 import Loading from '../../components/Loading';
+import EditBudget from './EditBudget';
 import './Budget.scss';
 import {isEmpty} from '../../utility/utility';
 
@@ -35,6 +36,9 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState<'current' | 'last3'>('current');
+  // EditBudget modal state
+  const [editBudgetOpen, setEditBudgetOpen] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -194,6 +198,45 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     }).format(amount);
   };
 
+  // Handle budget card click to open edit modal
+  const handleBudgetCardClick = (budget: Budget) => {
+    setSelectedBudget(budget);
+    setEditBudgetOpen(true);
+  };
+
+  // Handle budget update/delete callbacks
+  const handleBudgetUpdated = (updatedBudget: Budget) => {
+    // The store has already been updated by the EditBudget component
+    // Recalculate budget progress with the updated budget list and current expenses
+    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+      const filtered = filterExpensesByMonth(expenseList, selectedMonth);
+      const progress = calculateBudgetProgress(filtered, budgetList);
+      setBudgetProgress(progress);
+    }
+
+    // Reset selected budget to clear any stale references
+    setSelectedBudget(null);
+
+    // Close the modal if it's still open
+    setEditBudgetOpen(false);
+  };
+
+  const handleBudgetDeleted = (budgetId: string) => {
+    // The store has already been updated by the EditBudget component
+    // Recalculate budget progress with the updated budget list (minus deleted budget)
+    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+      // Filter out the deleted budget from current progress
+      const updatedProgress = budgetProgress.filter(progress => progress.budget.id !== budgetId);
+      setBudgetProgress(updatedProgress);
+    }
+
+    // Reset selected budget since it may have been the deleted one
+    setSelectedBudget(null);
+
+    // Close the modal if it's still open
+    setEditBudgetOpen(false);
+  };
+
   if (isAppLoading || isLoading) {
     return <Loading/>;
   }
@@ -231,7 +274,17 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                 transition: {duration: 0.15, ease: 'easeOut'}
               }}
             >
-              <Card className="budget-card">
+              <Card
+                className="budget-card"
+                onClick={() => handleBudgetCardClick(progress.budget)}
+                sx={{
+                  cursor: 'pointer',
+                  transition: 'box-shadow 0.2s ease-in-out',
+                  '&:hover': {
+                    boxShadow: 4
+                  }
+                }}
+              >
                 <CardContent>
                   <motion.div
                     className="budget-card-header"
@@ -368,6 +421,15 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
         onMonthChange={handleMonthSelect}
         onYearSegmentChange={handleYearSegmentChange}
         panelRef={filterPanelRef}
+      />
+
+      {/* Edit Budget Modal - Pass selectedBudget to EditBudget component */}
+      <EditBudget
+        open={editBudgetOpen}
+        onClose={() => setEditBudgetOpen(false)}
+        budget={selectedBudget}
+        onBudgetUpdated={handleBudgetUpdated}
+        onBudgetDeleted={handleBudgetDeleted}
       />
     </Container>
   );

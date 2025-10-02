@@ -173,6 +173,16 @@ GNU General Public License for more details, or get a copy at
   transition: all 0.2s ease !important;
 }
 
+.tag-delete-btn {
+  background-color: var(--accent-red) !important;
+  color: var(--bg-primary) !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 6px 20px !important;
+  box-shadow: 0 4px 12px rgba(var(--accent-green-rgb), 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
 .tag-save-btn:hover:not([disabled]) {
   background-color: var(--accent-green) !important;
   opacity: 0.9 !important;
@@ -189,7 +199,7 @@ GNU General Public License for more details, or get a copy at
   border-radius: 12px !important;
   padding: 6px 20px !important;
   font-weight: 500 !important;
-  border-color: var(--border-color) !important;
+  border: 1px solid var(--border-color-dark) !important;
   color: var(--text-primary) !important;
 }
 
