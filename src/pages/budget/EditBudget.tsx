@@ -16,7 +16,7 @@ import {FC, ReactElement, useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
-import {selectExpense, updateBudget, deleteBudget} from '../../store/expenseActions';
+import {addBudget, deleteBudget, selectExpense, updateBudget} from '../../store/expenseActions';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -26,7 +26,6 @@ import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import TextField from '@mui/material/TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {Budget} from '../../Types';
 import {createTimedAlert} from '../../store/alertActions';
 
@@ -51,6 +50,9 @@ const EditBudget: FC<EditBudgetModalProps> = ({
 
   // Get tag list from the store
   const {tagList} = useSelector(selectExpense);
+
+  // Determine if this is add mode (budget is null) or edit mode
+  const isAddMode = budget === null;
 
   // Initialize form when budget changes or modal opens
   useEffect(() => {
@@ -81,36 +83,58 @@ const EditBudget: FC<EditBudgetModalProps> = ({
   };
 
   const onSaveBudget = async () => {
-    if (!budget) return;
-
-    const updatedBudget: Budget = {
-      ...budget,
+    const budgetData = {
       name: budgetName.trim(),
       amount: parseFloat(amount),
       tagList: selectedTags,
       modifiedDate: Date.now(),
-      operation: 'update'
     };
 
     try {
-      const result = await ExpenseAPI.updateBudget(updatedBudget);
-      updateBudget(result);
+      if (isAddMode) {
+        // Create new budget
+        const newBudget: Budget = {
+          ...budgetData,
+          id: Date.now().toString(), // Simple ID generation
+          modifiedDate: Date.now(),
+          operation: 'create'
+        };
 
-      if (onBudgetUpdated) {
-        onBudgetUpdated(result);
+        const result = await ExpenseAPI.addBudget(newBudget);
+        addBudget(result);
+
+        createTimedAlert({
+          type: 'success',
+          message: 'Budget created successfully!'
+        });
+      } else if (budget) {
+        // Update existing budget
+        const updatedBudget: Budget = {
+          ...budget!,
+          ...budgetData,
+          operation: 'update'
+        };
+
+        const result = await ExpenseAPI.updateBudget(updatedBudget);
+        updateBudget(result);
+
+        createTimedAlert({
+          type: 'success',
+          message: 'Budget updated successfully!'
+        });
       }
 
-      createTimedAlert({
-        type: 'success',
-        message: 'Budget updated successfully!'
-      });
+      if (onBudgetUpdated && budget) {
+        onBudgetUpdated(budget!);
+      }
+
       onClose();
     } catch (error) {
       createTimedAlert({
         type: 'error',
-        message: 'Failed to update budget. Please try again.'
+        message: `Failed to ${isAddMode ? 'create' : 'update'} budget. Please try again.`
       });
-      console.error('Error updating budget:', error);
+      console.error(`Error ${isAddMode ? 'creating' : 'updating'} budget:`, error);
     }
   };
 
@@ -149,12 +173,10 @@ const EditBudget: FC<EditBudgetModalProps> = ({
 
   const isFormValid = () => {
     return budgetName.trim() !== '' &&
-           !isNaN(parseFloat(amount)) &&
-           parseFloat(amount) > 0 &&
-           selectedTags.length > 0;
+      !isNaN(parseFloat(amount)) &&
+      parseFloat(amount) > 0 &&
+      selectedTags.length > 0;
   };
-
-  if (!budget) return <></>;
 
   return (
     <Dialog
@@ -171,7 +193,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
         <Fade in={open} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              Edit Budget
+              {isAddMode ? 'Add Budget' : 'Edit Budget'}
             </Typography>
 
             <TextField
@@ -198,56 +220,42 @@ const EditBudget: FC<EditBudgetModalProps> = ({
                 }
               }}
             />
-          </div>
-        </Fade>
 
-        <Fade in={open} timeout={600}>
-          <div>
-            <Typography variant="subtitle1" className="tag-expense-category-label">
-              Select categories
-            </Typography>
-            <div className="tag-expense-chip-list">
-              {tagList.map((tag, index) => (
-                <Chip
-                  key={index}
-                  label={tag}
-                  clickable
-                  color={selectedTags.includes(tag) ? 'primary' : 'default'}
-                  variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
-                  onClick={() => handleTagToggle(tag)}
-                  className={`tag-expense-chip${selectedTags.includes(tag) ? ' selected' : ''}`}
-                  aria-label={`Toggle tag ${tag}`}
-                  size="medium"
-                  sx={{
-                    minWidth: '80px',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                />
-              ))}
+            <div style={{marginTop: 16}}>
+              <Typography variant="body2" style={{marginBottom: 8}}>
+                Select Tags:
+              </Typography>
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: 8}}>
+                {tagList.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    clickable
+                    color={selectedTags.includes(tag) ? 'primary' : 'default'}
+                    onClick={() => handleTagToggle(tag)}
+                    variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </Fade>
       </DialogContent>
 
-      <DialogActions className="tag-expense-dialog-actions" sx={{ justifyContent: 'center', gap: 1 }}>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={onDeleteBudget}
-          className="tag-delete-btn"
-          sx={{ minWidth: '80px' }}
-        >
-          Delete
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!isFormValid()}
-          onClick={onSaveBudget}
-          className="tag-save-btn"
-          sx={{ minWidth: '90px' }}
-        >
-          Save
-        </Button>
+      <DialogActions>
+        {/* Only show delete button when editing existing budget (not in add mode) */}
+        {!isAddMode && (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={onDeleteBudget}
+            className="tag-delete-btn"
+            sx={{ minWidth: '80px' }}
+          >
+            Delete
+          </Button>
+        )}
+
         <Button
           variant="outlined"
           onClick={onClose}
@@ -255,6 +263,16 @@ const EditBudget: FC<EditBudgetModalProps> = ({
           sx={{ minWidth: '80px' }}
         >
           Cancel
+        </Button>
+
+        <Button
+          variant="contained"
+          disabled={!isFormValid()}
+          onClick={onSaveBudget}
+          className="tag-save-btn"
+          sx={{ minWidth: '90px' }}
+        >
+          {isAddMode ? 'Create' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>

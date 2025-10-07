@@ -318,6 +318,23 @@ GNU General Public License for more details, or get a copy at
       color: var(--text-muted);
     }
   }
+
+  // Add Budget button styles
+  .add-budget-button {
+    position: fixed;
+    bottom: 130px;
+    right: 35px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+
+    .MuiFab-root {
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
 }
 
 // Responsive design

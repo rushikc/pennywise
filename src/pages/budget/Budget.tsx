@@ -15,9 +15,10 @@ GNU General Public License for more details, or get a copy at
 import React, {FC, ReactElement, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Container} from 'reactstrap';
-import {Box, Card, CardContent, Chip, IconButton, LinearProgress, Typography} from '@mui/material';
+import {Box, Card, CardContent, Chip, Fab, IconButton, LinearProgress, Typography} from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import dayjs from 'dayjs';
 import {AnimatePresence, motion} from 'framer-motion';
 import {selectExpense} from '../../store/expenseActions';
@@ -205,7 +206,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   };
 
   // Handle budget update/delete callbacks
-  const handleBudgetUpdated = (updatedBudget: Budget) => {
+  const handleBudgetUpdated = () => {
     // The store has already been updated by the EditBudget component
     // Recalculate budget progress with the updated budget list and current expenses
     if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
@@ -410,6 +411,20 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
             clickable
           />
         </div>
+      </div>
+
+      {/* Add Budget button - Positioned independently at bottom right */}
+      <div className="add-budget-button">
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={() => {
+            setSelectedBudget(null);
+            setEditBudgetOpen(true);
+          }}
+        >
+          <AddIcon/>
+        </Fab>
       </div>
 
       {/* Filter panel */}
