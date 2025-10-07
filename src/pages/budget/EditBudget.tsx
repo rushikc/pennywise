@@ -96,7 +96,6 @@ const EditBudget: FC<EditBudgetModalProps> = ({
         const newBudget: Budget = {
           ...budgetData,
           id: Date.now().toString(), // Simple ID generation
-          modifiedDate: Date.now(),
           operation: 'create'
         };
 
@@ -107,10 +106,10 @@ const EditBudget: FC<EditBudgetModalProps> = ({
           type: 'success',
           message: 'Budget created successfully!'
         });
-      } else if (budget) {
+      } else {
         // Update existing budget
         const updatedBudget: Budget = {
-          ...budget!,
+          ...budget,
           ...budgetData,
           operation: 'update'
         };
@@ -125,7 +124,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
       }
 
       if (onBudgetUpdated && budget) {
-        onBudgetUpdated(budget!);
+        onBudgetUpdated(budget);
       }
 
       onClose();
@@ -250,7 +249,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
             color="error"
             onClick={onDeleteBudget}
             className="tag-delete-btn"
-            sx={{ minWidth: '80px' }}
+            sx={{minWidth: '80px'}}
           >
             Delete
           </Button>
@@ -260,7 +259,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
           variant="outlined"
           onClick={onClose}
           className="tag-close-btn"
-          sx={{ minWidth: '80px' }}
+          sx={{minWidth: '80px'}}
         >
           Cancel
         </Button>
@@ -270,7 +269,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
           disabled={!isFormValid()}
           onClick={onSaveBudget}
           className="tag-save-btn"
-          sx={{ minWidth: '90px' }}
+          sx={{minWidth: '90px'}}
         >
           {isAddMode ? 'Create' : 'Save'}
         </Button>

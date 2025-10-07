@@ -244,12 +244,10 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
 
   return (
     <Container fluid className="budget-container">
-      <div style={{paddingBottom: 10}}>
-        <div className="page-header">
-          <Typography variant="h5" fontWeight="bold">
-            Budget Overview
-          </Typography>
-        </div>
+      <div className="page-header">
+        <Typography variant="h5" fontWeight="bold">
+          Budget Overview
+        </Typography>
       </div>
 
       {/* Budget Cards */}
@@ -278,13 +276,6 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
               <Card
                 className="budget-card"
                 onClick={() => handleBudgetCardClick(progress.budget)}
-                sx={{
-                  cursor: 'pointer',
-                  transition: 'box-shadow 0.2s ease-in-out',
-                  '&:hover': {
-                    boxShadow: 4
-                  }
-                }}
               >
                 <CardContent>
                   <motion.div
@@ -325,7 +316,6 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                     <Box className="progress-bar-container">
                       <motion.div
                         className="progress-bar-wrapper"
-                        style={{flex: 1}}
                         initial={{scaleX: 0, originX: 0}}
                         animate={{scaleX: 1}}
                         transition={{

@@ -18,6 +18,10 @@ GNU General Public License for more details, or get a copy at
   color: var(--text-primary);
   min-height: 100vh;
 
+  // Page header styles
+  .page-header {
+    padding-bottom: 10px;
+  }
 
   .budget-card-content {
     padding: 10px 16px 12px 16px;
@@ -171,6 +175,7 @@ GNU General Public License for more details, or get a copy at
       transition: all 0.2s ease;
       overflow: hidden;
       position: relative;
+      cursor: pointer;
 
       // Subtle gradient overlay for depth
       &::before {
@@ -186,7 +191,7 @@ GNU General Public License for more details, or get a copy at
       }
 
       &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
         &::before {
           opacity: 0.6;
@@ -248,6 +253,7 @@ GNU General Public License for more details, or get a copy at
             position: relative;
             overflow: hidden;
             border-radius: 4px;
+            flex: 1; // Move inline style here
 
             .progress-bar {
               height: 8px;
@@ -325,86 +331,86 @@ GNU General Public License for more details, or get a copy at
     bottom: 130px;
     right: 35px;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease;
 
     .MuiFab-root {
+
       &:hover {
         transform: scale(1.05);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       }
     }
   }
-}
 
-// Responsive design
-@media (max-width: 768px) {
-  .budget-container {
-    padding: 16px;
+  // Responsive design
+  @media (max-width: 768px) {
+    .budget-container {
+      padding: 16px;
 
-    .filter-panel {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      max-width: none;
-      margin-top: 0;
-      border-radius: 0;
-      display: flex;
-      flex-direction: column;
+      .filter-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: none;
+        margin-top: 0;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
 
-      .filter-content {
-        flex: 1;
-        overflow-y: auto;
+        .filter-content {
+          flex: 1;
+          overflow-y: auto;
 
-        .month-grid {
-          grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        }
-      }
-    }
-
-    .budget-list {
-      .budget-card {
-        .budget-card-header {
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-
-          .budget-amount {
-            align-self: auto;
+          .month-grid {
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
           }
         }
+      }
 
-        .budget-progress {
-          .progress-info {
+      .budget-list {
+        .budget-card {
+          .budget-card-header {
             flex-direction: row;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
+
+            .budget-amount {
+              align-self: auto;
+            }
+          }
+
+          .budget-progress {
+            .progress-info {
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              gap: 8px;
+            }
           }
         }
       }
     }
   }
-}
 
-// Dark theme specific adjustments
-[data-theme="dark"] {
-  .budget-container {
-    .budget-list {
-      .budget-card {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  // Dark theme specific adjustments
+  [data-theme="dark"] {
+    .budget-container {
+      .budget-list {
+        .budget-card {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
-        &:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          }
         }
       }
-    }
 
-    .filter-panel {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      .filter-panel {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
     }
   }
 }
