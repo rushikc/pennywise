@@ -15,10 +15,12 @@ GNU General Public License for more details, or get a copy at
 
 .MuiDialog-paper {
   border-radius: 8px !important;
+  width: 100% !important;
+  margin: 10px !important;
 }
 
 .tag-expense-dialog-content {
-  padding-bottom: 0;
+  padding: 20px 10px !important;
 }
 
 .tag-expense-summary {

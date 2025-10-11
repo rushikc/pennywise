@@ -836,7 +836,7 @@ const ExpenseItem: FC<{
           </Col>
           <Col xs="auto" className="expense-cost-col">
             <span className="expense-type">
-              {expense.costType === 'debit' ? '-' : '+'}
+              {expense.costType === 'debit' ? '' : '+'}
             </span>
             <span className="expense-currency">₹</span>
             <span className="expense-cost">{expense.cost}</span>
