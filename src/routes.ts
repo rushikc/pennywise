@@ -13,7 +13,7 @@ const Budget = lazy(() => import('./pages/budget/Budget'));
 const Configuration = lazy(() => import('./pages/setting/setting-views/Configuration'));
 const ManageTags = lazy(() => import('./pages/setting/setting-views/ManageTags'));
 const ManageVendorTags = lazy(() => import('./pages/setting/setting-views/ManageVendorTags'));
-const ReloadExpense = lazy(() => import('./pages/setting/setting-views/ReloadExpense'));
+const ReloadExpense = lazy(() => import('./pages/setting/setting-views/./ReloadData'));
 const AutoTagExpenses = lazy(() => import('./pages/setting/setting-views/AutoTagExpenses'));
 
 // interface

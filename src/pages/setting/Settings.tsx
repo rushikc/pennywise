@@ -115,8 +115,8 @@ const Settings: React.FC = () => {
     },
     {
       id: 'reload',
-      title: 'Reload Expense',
-      subtitle: 'Reload your expense data',
+      title: 'Reload Data',
+      subtitle: 'Reload your expense, local cache data',
       icon: <ReloadIcon/>,
       route: '/reload-expense',
       color: '#ffa726'

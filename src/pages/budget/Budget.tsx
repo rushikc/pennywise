@@ -19,7 +19,6 @@ import EditBudget from './EditBudget';
 import './Budget.scss';
 import {isEmpty} from '../../utility/utility';
 
-// Remove the hardcoded budgetList - we'll get it from the store now
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
 
@@ -162,17 +161,14 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     setLoading(false);
   }, [expenseList, budgetList, selectedMonth]);
 
-  // Toggle filters function
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
 
-  // Handle year segment selection
   const handleYearSegmentChange = (yearType: 'current' | 'last3') => {
     setSelectedYear(yearType);
   };
 
-  // Handle month selection
   const handleMonthSelect = (month: MonthYear) => {
     setSelectedMonth(month);
     setShowFilters(false);

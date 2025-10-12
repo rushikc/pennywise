@@ -10,16 +10,17 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {FinanceIndexDB} from '../../../api/FinanceIndexDB';
 import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import {createTimedAlert} from '../../../store/alertActions';
 import './settingViews.scss';
 
 /**
- * ReloadExpense component allows users to reload expense data
+ * ReloadData component allows users to reload expense data
  * either for a specific date or all expenses.
  */
-const ReloadExpense: React.FC = () => {
+const ReloadData: React.FC = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,18 @@ const ReloadExpense: React.FC = () => {
     } catch (error) {
       console.error('Failed to reload expenses for selected date:', error);
       createTimedAlert({type: 'error', message: 'Failed to reload expenses. Please try again later.'});
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClearCache = async () => {
+    setLoading(true);
+    try {
+      await FinanceIndexDB.clearIndexedDBData();
+      createTimedAlert({type: 'success', message: 'Cache deleted successfully.'});
+    } catch (error) {
+      createTimedAlert({type: 'error', message: 'Clearing cache failed.'});
     } finally {
       setLoading(false);
     }
@@ -116,6 +129,28 @@ const ReloadExpense: React.FC = () => {
     </Paper>
   );
 
+  const ClearCacheSection = () => (
+    <Paper elevation={0} className="reload-section-paper">
+      <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
+        Clear Local Cache (IndexedDB)
+      </Typography>
+      <Typography variant="body2" className="reload-warning-text">
+        Warning: This action completely erases all locally cached data including expenses,
+        vendor tags, configurations, and budgets stored in your browser IndexedDB.
+        This will force the app to reload all data from Firebase on next use,
+      </Typography>
+      <Button
+        onClick={handleClearCache}
+        color="warning"
+        variant="contained"
+        disabled={loading}
+        className="clear-cache-button"
+      >
+        {loading ? <CircularProgress size={24}/> : 'Clear Cache'}
+      </Button>
+    </Paper>
+  );
+
   return (
     <Container className="config-container" maxWidth="sm">
       <Box className="config-header">
@@ -132,9 +167,10 @@ const ReloadExpense: React.FC = () => {
       <Stack spacing={3}>
         <DateSpecificSection/>
         <ReloadAllSection/>
+        <ClearCacheSection/>
       </Stack>
     </Container>
   );
 };
 
-export default ReloadExpense;
+export default ReloadData;
