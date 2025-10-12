@@ -95,7 +95,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
         // Create new budget
         const newBudget: Budget = {
           ...budgetData,
-          id: Date.now().toString(), // Simple ID generation
+          id: '', // ID will be set by ExpenseAPI
           operation: 'create'
         };
 

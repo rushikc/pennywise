@@ -70,8 +70,11 @@ export class ExpenseAPI {
    * Sets a single document in a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  // eslint-disable-next-line
-  static setOneDoc = async (key: string, val: any, collectionName = 'config') =>
+  static setOneDoc = async (
+    key: string,
+    // eslint-disable-next-line
+    val: any,
+    collectionName = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
   /**
@@ -122,13 +125,11 @@ export class ExpenseAPI {
       const {id, ...expenseWithoutId} = expense;
       await setDoc(docRef, expenseWithoutId);
 
+      expense.id = key;
       await FinanceIndexDB.addExpenseList([expense]);
 
       // Return a new object with the updated ID instead of modifying the original
-      return {
-        ...expense,
-        id: key
-      };
+      return expense;
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -526,13 +527,10 @@ export class ExpenseAPI {
       const {id, ...budgetWithoutId} = budget;
       await setDoc(docRef, budgetWithoutId);
 
+      budget.id = key;
       await FinanceIndexDB.addBudgetList([budget]);
 
-      // Return a new object with the updated ID instead of modifying the original
-      return {
-        ...budget,
-        id: key
-      };
+      return budget;
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);

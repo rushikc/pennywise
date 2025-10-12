@@ -31,12 +31,14 @@ import {isEmpty} from '../../utility/utility';
 // Remove the hardcoded budgetList - we'll get it from the store now
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
+
   const {expenseList, budgetList, isAppLoading} = useSelector(selectExpense);
   const [selectedMonth, setSelectedMonth] = useState<MonthYear | null>(null);
   const [budgetProgress, setBudgetProgress] = useState<BudgetProgress[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState<'current' | 'last3'>('current');
+
   // EditBudget modal state
   const [editBudgetOpen, setEditBudgetOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
@@ -44,6 +46,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
+
 
   // Generate month options for the last 3 years
   const generateMonthOptions = (): MonthYear[] => {
