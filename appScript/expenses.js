@@ -67,9 +67,10 @@ async function myExpenseFunction() {
 
     let snippet = res.snippet;
 
-    console.log('Email snippet ', snippet);
+    console.log('Email snippet ', res.snippet);
 
     for (const hdfcIndex in emailParsingConfig.v1.config) {
+
       const config = emailParsingConfig.v1.config[hdfcIndex];
 
       let expense = null;
@@ -88,6 +89,7 @@ async function myExpenseFunction() {
       if (subStringFound) {
         type = config.type;
         try {
+
           console.log('-> Matched config strings: ', config.snippetStrings);
 
           // Extract the full email body instead of using the snippet for extraction
@@ -130,27 +132,20 @@ async function myExpenseFunction() {
             const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
             const match = vendor.match(upiPattern);
 
-            let upiId;
-            let name;
             if (match && match[1].trim().length !== 0 && match[2].trim().length !== 0) {
               // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
-              upiId = match[1].trim();
-              name = match[2].trim();
+              const upiId = match[1].trim();
+              let name = match[2].trim();
               vendor = `${name} ${upiId}`;
             }
 
             expense.vendor = vendor.toUpperCase().substring(0, 100);
+            expense.user = extractUsername(getMailSenderReceiver(res).receiverEmail);
 
-            const vendorMatch = vendorTag.find(({vendor}) => expense.vendor === vendor);
+            const obj = vendorTag.find(({vendor}) => expense.vendor === vendor);
 
-            if (vendorMatch) {
-              expense.tag = vendorMatch.tag;
-            } else if (upiId) {
-              // vendor name might have changed, but UPI ID might have remained same
-              const vendorUpiMatch = vendorTag.find(({vendor}) => vendor.includes(upiId));
-              if (vendorUpiMatch) {
-                expense.tag = vendorUpiMatch.tag;
-              }
+            if (obj) {
+              expense.tag = obj.tag;
             }
 
             await addExpense(expense, accessToken);
@@ -239,6 +234,82 @@ const extractVendorFromSnippet = (snippet, vendorRegexPatterns) => {
 
 
 /**
+ * Extracts the clean email address from a string that may contain a display name
+ * (e.g., "HDFC Bank InstaAlerts <alerts@hdfcbank.net>").
+ * @param {string} emailString The full email string from the header.
+ * @returns {string} The clean email address.
+ */
+function extractEmailAddress(emailString) {
+  if (!emailString) return '';
+  const match = emailString.match(/<([^>]+)>/);
+  if (match) {
+    return match[1].trim();
+  }
+  return emailString.trim().toLowerCase();
+}
+
+
+/**
+ * Retrieves the sender and receiver email addresses from a Gmail Message object.
+ * @returns {object} An object containing the sender and receiver emails.
+ * @param res
+ */
+function getMailSenderReceiver(res) {
+
+  let sender = '';
+  let receiver = '';
+
+  if (res && res.payload && res.payload.headers) {
+    let headers = res.payload.headers;
+
+    for (let i = 0; i < headers.length; i++) {
+      let header = headers[i];
+
+      if (header.name === 'From') {
+        sender = header.value;
+      }
+
+      if (header.name === 'To') {
+        receiver = header.value;
+      }
+
+      if (sender && receiver) {
+        break;
+      }
+    }
+  }
+
+  const senderEmail = extractEmailAddress(sender);
+  const receiverEmail = extractEmailAddress(receiver);
+
+  return {
+    sender,
+    receiver,
+    senderEmail,
+    receiverEmail
+  };
+}
+
+/**
+ * Extracts the username (the part before the '@') from a full email address.
+ * * For example: "RUSHI743@gmail.com" -> "RUSHI743"
+ *
+ * @param {string} emailAddress The full email address string.
+ * @returns {string} The extracted username, or an empty string if the input is invalid.
+ */
+function extractUsername(emailAddress) {
+  if (!emailAddress || typeof emailAddress !== 'string') {
+    Logger.log('Error: Invalid input provided to extractUsername.');
+    return '';
+  }
+  const atIndex = emailAddress.indexOf('@');
+  if (atIndex !== -1) {
+    return emailAddress.substring(0, atIndex).trim().toLowerCase();
+  }
+  return emailAddress.trim().toLowerCase();
+}
+
+/**
  * Creates an expense object with default values.
  */
 const getExpense = (date, type, mailId) => {
@@ -250,7 +321,7 @@ const getExpense = (date, type, mailId) => {
     type,
     date,
     modifiedDate: Date.now(),
-    user: USER_ID,
+    user: '',
     mailId,
 
   };
@@ -261,11 +332,11 @@ const getExpense = (date, type, mailId) => {
  * Handles GET requests to the web app.
  * This function is triggered when the web app accesses AppScript.
  */
-function doGet() {
-  Logger.log('doGet function called.');
-  myExpenseFunction().then(() => Logger.log('executed expense function'));
-
-  // Return a ContentService response with the email and a 200 OK status
-  return ContentService.createTextOutput('Started function')
-    .setMimeType(ContentService.MimeType.TEXT);
-}
+// function doGet() {
+//   Logger.log('doGet function called.');
+//   myExpenseFunction().then(() => Logger.log('executed expense function'));
+//
+//   // Return a ContentService response with the email and a 200 OK status
+//   return ContentService.createTextOutput('Started function')
+//     .setMimeType(ContentService.MimeType.TEXT);
+// }

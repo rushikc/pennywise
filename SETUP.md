@@ -8,8 +8,8 @@ This guide will walk you through setting up the Pennywise project on a Linux/Mic
   requires adding a billing account to your Firebase project, for which a credit card is mandatory.
 
 
-- **Govt ID Verification**: Please note that a Google Cloud billing account requires valid ID verification. 
-  While this is not an immediate blocker, and you can proceed with the initial setup, 
+- **Govt ID Verification**: Please note that a Google Cloud billing account requires valid ID verification.
+  While this is not an immediate blocker, and you can proceed with the initial setup,
   Google will eventually require verification to continue using the services (it will stop services after few weeks).
   You will get email from Google cloud team with detailed steps.
 
@@ -57,11 +57,11 @@ You can get the project files either by cloning the repository using Git or by d
 
 - ** With VS Code:**
   1. Open Visual Studio Code.
-  2. Follow this guide to clone a repository - 
+  2. Follow this guide to clone a repository -
   3. https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_clone-a-repository-locally
   4. Repository URL mentioned below
    ```bash
-      https://github.com/rushikc/pennywise.git 
+      https://github.com/rushikc/pennywise.git
    ```
   ![VSCODE](public/docs/pics/vscode.png)
 
@@ -245,7 +245,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
   ![Create web app](public/docs/pics/ff4.png)
 
-  - After registering your app, you will see a configuration snippet. 
+  - After registering your app, you will see a configuration snippet.
   - Copy this snippet highlighted in blue in below screenshot.
 
   ![Create web app](public/docs/pics/ff5.png)
@@ -296,7 +296,7 @@ To interact with Firebase services from your terminal, you need to install the F
 
 
   - **Update Project ID Firebase config:**
-     
+
       - Create a file `.firebaserc` under root directory.
       - Add the following content to the `.firebaserc` file:
       - Replace the `actual-project-id` with your actual Firebase project ID.
@@ -307,7 +307,7 @@ To interact with Firebase services from your terminal, you need to install the F
             }
         }
     ```
-- 
+-
 - **Install npm dependency**
   Run the following command to install all necessary dependencies:
   ```bash
@@ -315,7 +315,7 @@ To interact with Firebase services from your terminal, you need to install the F
   ```
 
 - **Set up Environment Files:**
-  
+
   1. **Create a `.env` file in the functions folder:**
      - Create a new file named `.env` in the `functions` folder
      - Add the following content to the file:
@@ -323,15 +323,14 @@ To interact with Firebase services from your terminal, you need to install the F
      USER_EMAIL=your-actual-mail@gmail.com
      ```
      - Replace `your-actual-mail@gmail.com` with your actual email address.
-     
+
   2. **Create  the `env.js` file in the appScript folder:**
      - Create a new file named `env.js` in the `appScript` folder
      - Add the following content to the file:
      ```javascript
      const PROJECT_ID = 'your-project-id'; // Replace with your actual project ID
-     const USER_ID = 'pennywise'; // Replace with your actual user ID
      const PROJECT_REGION = 'us-central1';
-     
+
      ```
      - Replace `your-project-id` with your actual Firebase project ID.
      - Replace `pennywise` with your user if , it will be used in expense JSON in firestore,  you can add your name, nickname or anything which you want to use as user id.
@@ -342,7 +341,7 @@ To interact with Firebase services from your terminal, you need to install the F
   ```bash
   npm run build
   ```
-  
+
 -  **Firebase Login:**
    Run the following command to log in to Firebase:
       ```bash
@@ -357,7 +356,7 @@ To interact with Firebase services from your terminal, you need to install the F
    ```bash
    firebase deploy
    ```
-   
+
 - **Artifact Storage:**
   - If you get below question, just enter 1 as backup days & Enter
   ```txt
@@ -375,12 +374,12 @@ To interact with Firebase services from your terminal, you need to install the F
 
     service cloud.firestore {
     match /databases/{database}/documents {
-  
+
         function isMyEmail() {
           // It's good practice to also check email_verified for stronger security
           return request.auth.token.email == "your-email@gmail.com" && request.auth.token.email_verified == true;
         }
-  
+
         // This single rule applies to ALL documents in the database
         // and grants read/write access ONLY if the user is authenticated
         // and their email matches to your mail AND it's verified.
@@ -390,7 +389,7 @@ To interact with Firebase services from your terminal, you need to install the F
       }
     }
       ```
-    
+
 ### AppScript Setup
 
 1. **Enable the Google Apps Script API:**
@@ -423,7 +422,7 @@ To interact with Firebase services from your terminal, you need to install the F
     ```bash
     clasp create --title "Pennywise App Script" --type standalone
     ```
-   
+
    6. **Update appsscript.json:**
        - Open the `appsscript.json` file in the `appScript` directory.
        - Replace its content with the following:
@@ -458,7 +457,7 @@ To interact with Firebase services from your terminal, you need to install the F
 
 6. **Push Local Code to Apps Script:**
    To upload your local code to the newly created Apps Script project, run:
-   
+
     ```bash
     clasp push
     ```
