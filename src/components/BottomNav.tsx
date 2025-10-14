@@ -1,25 +1,15 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import HomeIcon from '@mui/icons-material/Home';
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import React from 'react';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {AccountBalanceWallet, AnalyticsOutlined} from '@mui/icons-material';
 
 export default function BottomNav() {
   const [value, setValue] = React.useState('home');
@@ -35,6 +25,8 @@ export default function BottomNav() {
       setValue('stats');
     } else if (path.includes('profile')) {
       setValue('profile');
+    } else if (path.includes('budget')) {
+      setValue('budget');
     } else {
       // Default to home for any other paths
       setValue('home');
@@ -49,17 +41,18 @@ export default function BottomNav() {
   return (
     <BottomNavigation value={value} onChange={handleChange}>
       <BottomNavigationAction
-        label="Home"
         value="home"
         icon={<HomeIcon/>}
       />
       <BottomNavigationAction
-        label="Stats"
         value="stats"
-        icon={<SpaceDashboardIcon/>}
+        icon={<AnalyticsOutlined/>}
       />
       <BottomNavigationAction
-        label="Profile"
+        value="budget"
+        icon={<AccountBalanceWallet/>}
+      />
+      <BottomNavigationAction
         value="profile"
         icon={<AccountCircleIcon/>}
       />

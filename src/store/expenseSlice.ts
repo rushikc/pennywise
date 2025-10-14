@@ -1,24 +1,16 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppConfig, BankConfig, Expense, VendorTag, Alert} from '../Types';
+import {AppConfig, BankConfig, Budget, Expense, VendorTag, Alert} from '../Types';
 import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
 interface InitialState {
   expenseList: Expense[],
+  budgetList: Budget[],
   expense: Expense | null,
   vendorTagList: VendorTag[],
   bankConfig: BankConfig,
@@ -31,6 +23,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   expenseList: [],
+  budgetList: [],
   expense: null,
   vendorTagList: [],
   isAppLoading: true,
@@ -170,6 +163,30 @@ export const expenseSlice = createSlice({
     clearAllAlerts: (state) => {
       state.alerts = [];
     },
+
+    setBudgetList: (state, action: PayloadAction<Budget[]>) => {
+      state.budgetList = action.payload;
+    },
+
+    addBudget: (state, action: PayloadAction<Budget>) => {
+      state.budgetList.push(action.payload);
+    },
+
+    updateBudget: (state, action: PayloadAction<Budget>) => {
+      const budget = action.payload;
+      const budgetIndex = state.budgetList.findIndex(b => b.id === budget.id);
+
+      if (budgetIndex > -1) {
+        state.budgetList[budgetIndex] = budget;
+      } else {
+        state.budgetList.push(budget);
+      }
+    },
+
+    deleteBudget: (state, action: PayloadAction<string>) => {
+      state.budgetList = state.budgetList.filter(budget => budget.id !== action.payload);
+    },
   }
 });
 
+export default expenseSlice.reducer;

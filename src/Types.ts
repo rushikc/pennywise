@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 export interface Expense {
@@ -18,8 +9,8 @@ export interface Expense {
   mailId: string, // unique identifier for the expense from mail id
   cost: number, // expense cost
   costType: 'credit' | 'debit',
-  //  unix timestamp
-  // ex => 1752566845000,  unix timestamp
+  // unix timestamp
+  // ex => 1752566845000, unix timestamp
   // to get JS Date object, new Date(1752566845000)
   date: number,
   modifiedDate: number,
@@ -35,7 +26,6 @@ export interface VendorTag {
   vendor: string,
   tag: string,
   date: number // unix timestamp
-  // date: Date
 }
 
 
@@ -62,3 +52,26 @@ export interface Config {
 export interface AppConfig {
   darkMode: boolean;
 }
+
+export interface Budget {
+  id: string;
+  name: string;
+  amount: number;
+  tagList: string[];
+  modifiedDate: number;
+  operation?: string; // Add operation property for consistency with other entities
+}
+
+export interface BudgetProgress {
+  budget: Budget;
+  spent: number;
+  remaining: number;
+  percentage: number;
+}
+
+export type MonthYear = {
+  month: number; // 0-11 (January = 0)
+  year: number;
+  label: string; // e.g., "Jan 2024"
+  value: string; // e.g., "2024-01" for filtering
+};

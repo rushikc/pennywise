@@ -2,24 +2,15 @@ import {Expense} from '../Types';
 import dayjs from 'dayjs';
 import {getDateMonth, sortByKeyDate} from '../utility/utility';
 import {ExpenseAPI} from '../api/ExpenseAPI';
-import {setExpenseState, setTagList} from '../store/expenseActions';
+import {setBudgetList, setExpenseState, setTagList} from '../store/expenseActions';
 
 // Define date range options
 export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d' | '1800d';
 
 export type GroupByOption = 'days' | 'vendor' | 'cost' | 'tags';
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 export type SortByOption = 'cost' | 'count' | 'date' | null;
@@ -29,24 +20,30 @@ export type CalculationOption = 'average' | 'median';
 
 export const loadInitialAppData = () => {
 
+  console.log('Load Initial AppData');
+
   void ExpenseAPI.processData();
 
   const vendorTagApi = ExpenseAPI.getVendorTagList();
   const expenseApi = ExpenseAPI.getExpenseList();
+  const budgetApi = ExpenseAPI.getBudgetList();
   const tagListApi = ExpenseAPI.getTagList();
   const darkModeApi = ExpenseAPI.getDarkModeConfig();
 
-  Promise.all([vendorTagApi, expenseApi, tagListApi, darkModeApi]).then((res) => {
+  Promise.all([vendorTagApi, expenseApi, budgetApi, tagListApi, darkModeApi]).then((res) => {
 
     const vendorTagResult = res[0];
     const expenseResult = res[1];
-    const tagList = res[2];
-    const darkMode = res[3];
+    const budgetResult = res[2];
+    const tagList = res[3];
+    const darkMode = res[4];
     const expenseList = sortByKeyDate(expenseResult, 'date');
 
     console.log('Vendor Tag Result:', vendorTagResult);
     console.log('Expense List:', expenseList);
+    console.log('Budget List:', budgetResult);
     setExpenseState(expenseList, vendorTagResult, darkMode);
+    setBudgetList(budgetResult);
     setTagList(tagList);
 
   }).catch((res1) => alert(res1));

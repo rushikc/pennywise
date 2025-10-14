@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -17,10 +8,10 @@ import {Box, Button, Chip, Container, IconButton, Paper, Stack, Typography, useT
 import {motion} from 'framer-motion';
 import {FileDownload, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
-import TuneIcon from '@mui/icons-material/Tune';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {sortByKeyDate} from '../../utility/utility';
 import {exportAsCSV, exportAsXLSX} from './exportReport';
+import {LineGraph, PieGraph} from './Graph';
 
 import Loading from '../../components/Loading';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -37,33 +28,13 @@ import {
 import '../home/Home.scss';
 import './Insights.scss';
 import {Expense} from '../../Types';
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts';
-import {CHART_COLORS} from '../../utility/constants';
 
 // Interface for line graph data
 interface LineDataPoint {
   date: string;
-
   [key: string]: string | number;
 }
 
-const truncate = (str: string, n: number) => {
-  return str.length > n ? str.slice(0, n - 1) + '...' : str;
-};
-
-// Insights component
 const Insights: React.FC = () => {
   const theme = useTheme();
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -96,7 +67,6 @@ const Insights: React.FC = () => {
   // Calculate total spending
   const getTotalSpending = () => {
     const filtered = getFilteredExpenses();
-    console.log('Total spending Filtered Expenses: ', filtered);
     return filtered.reduce((sum, expense) => sum + Number(expense.cost), 0).toFixed(2);
   };
 
@@ -435,20 +405,10 @@ const Insights: React.FC = () => {
     return <Loading/>;
   }
 
-  // Line colors for the chart - Extended to support 15+ different colors
-  const lineColors = [
-    theme.palette.primary.main,      // Blue
-    theme.palette.secondary.main,    // Purple/Pink
-    theme.palette.error.main,        // Red
-    theme.palette.success.main,      // Green
-    theme.palette.warning.main,      // Orange/Yellow
-    ...CHART_COLORS
-  ];
-
   return (
     <Container maxWidth="sm" className="statistics-container">
       <div style={{paddingBottom: 10}}>
-        <div className="statistics-header">
+        <div className="page-header">
           <Typography variant="h5" fontWeight="bold">
             Expense Insights
           </Typography>
@@ -536,122 +496,18 @@ const Insights: React.FC = () => {
       {/* Chart rendering based on groupBy selection */}
       {selectedGroupBy === 'days' ? (
         // Show Line Chart when groupBy is 'days'
-        <Box className="line-chart-container">
-          {lineChartData.length > 0 ? (
-            <Paper className="chart-paper" elevation={3}>
-              <Typography variant="subtitle2" className="chart-title">
-                Spending Trends
-              </Typography>
-              <ResponsiveContainer width="100%" height="95%">
-                <LineChart
-                  data={lineChartData}
-                  margin={{top: 5, right: 20, left: 10, bottom: 5}}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
-                  <XAxis
-                    dataKey="date"
-                    stroke={theme.palette.text.secondary}
-                    tick={{fontSize: 12}}
-                    tickLine={{stroke: theme.palette.divider}}
-                  />
-                  <YAxis
-                    stroke={theme.palette.text.secondary}
-                    tick={{fontSize: 12}}
-                    tickLine={{stroke: theme.palette.divider}}
-                    width={50}
-                    tickFormatter={(value) => `₹${value}`}
-                    domain={['auto', 'auto']}
-                    allowDataOverflow={false}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: theme.palette.background.paper,
-                      border: `1px solid ${theme.palette.divider}`,
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="bottom"
-                    wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-                    formatter={(value) => truncate(value, 20)}
-                  />
-                  {lineKeys.map((key, index) => (
-                    <Line
-                      key={key}
-                      type="monotone"
-                      dataKey={key}
-                      stroke={lineColors[index % lineColors.length]}
-                      activeDot={{r: 8}}
-                      strokeWidth={2}
-                      dot={{strokeWidth: 2}}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </Paper>
-          ) : (
-            <Paper className="chart-paper empty-chart" elevation={3}>
-              <Typography variant="body1" color="text.secondary">
-                No data available for the selected filters
-              </Typography>
-            </Paper>
-          )}
-        </Box>
+        <LineGraph
+          data={lineChartData}
+          lineKeys={lineKeys}
+          title="Spending Trends"
+        />
       ) : (
         // Show Pie Chart when groupBy is not 'days'
-        pieChartData.length > 0 ? (
-          <Box className="pie-chart-container">
-            <Paper className="chart-paper" elevation={3}>
-              <div className="chart-header">
-                <Typography variant="subtitle2" className="chart-title">
-                  Group Distribution
-                </Typography>
-                {/* Selection Button - Moved to right side of title */}
-                <div className="selection-button-inline">
-                  <IconButton
-                    onClick={toggleSelectionPanel}
-                    size="small"
-                  >
-                    <TuneIcon/>
-                  </IconButton>
-                </div>
-              </div>
-              <ResponsiveContainer width="100%" height={330}>
-                <PieChart>
-                  <Pie
-                    data={pieChartData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    style={{marginTop: 20}}
-                    outerRadius={100}
-                    fill={theme.palette.primary.main}
-                    label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
-                  >
-                    {pieChartData.map((_entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={lineColors[index % lineColors.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend
-                    verticalAlign="bottom"
-                    wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-                    formatter={(value) => truncate(value, 20)}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </Paper>
-          </Box>
-        ) : (
-          <Paper className="chart-paper empty-chart" elevation={3}>
-            <Typography variant="body1" color="text.secondary">
-              No data available for the selected filters
-            </Typography>
-          </Paper>
-        )
+        <PieGraph
+          data={pieChartData}
+          title="Group Distribution"
+          onSelectionToggle={toggleSelectionPanel}
+        />
       )}
 
       {/* Info Banner */}

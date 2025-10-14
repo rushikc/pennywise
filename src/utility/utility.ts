@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import dayjs, {Dayjs} from 'dayjs';
@@ -127,18 +118,26 @@ export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {
 export const formatVendorName = (vendor: string) => {
   if (!vendor) return '';
 
-  // Check if vendor starts with UPI ID pattern (contains @ followed by alphanumeric characters)
-  const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+  // Check if vendor contains UPI ID pattern (name followed by UPI ID)
+  // New format: "NAME UPI_ID@BANK" where name comes first
+  // const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+  const upiPattern = /^(.+)\s+([^\s@]+@[^\s@]+)$/;
   const match = vendor.match(upiPattern);
 
   if (match && !isEmpty(match[1]) && !isEmpty(match[2])) {
-    // If UPI ID is found at the beginning, reverse the order: name + UPI_ID
-    const upiId = match[1];
-    const name = match[2];
-    return [name.toLowerCase(), upiId.toLowerCase().trim()];
+    // Name comes first, then UPI ID
+    let name = match[1].trim();
+    const upiId = match[2].trim();
+
+    if (name.includes('manual entry')) {
+      name = 'manual entry'; // to discard any UUID text before manual entry
+    }
+    return [name.toLowerCase(), upiId.toLowerCase()];
   }
 
-  // console.log('Final vendor2:', vendor.toLowerCase());
+  if (vendor.includes('manual entry')) {
+    vendor = 'manual entry';
+  }
 
   // Default formatting for non-UPI vendors
   return [vendor.toLowerCase()];
@@ -151,7 +150,12 @@ export const formatString = (str: string) => {
 };
 
 export const isEmpty = (str: string | undefined | null) => {
-  return str && str.trim().length === 0 ;
+  return str === null || str === undefined || str.trim().length === 0;
+};
+
+
+export const sleep = async (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 

@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 
@@ -18,10 +9,11 @@ import {FC, lazy} from 'react';
 const Home = lazy(() => import('./pages/home/Home'));
 const Settings = lazy(() => import('./pages/setting/Settings'));
 const Insights = lazy(() => import('./pages/insights/Insights'));
+const Budget = lazy(() => import('./pages/budget/Budget'));
 const Configuration = lazy(() => import('./pages/setting/setting-views/Configuration'));
 const ManageTags = lazy(() => import('./pages/setting/setting-views/ManageTags'));
 const ManageVendorTags = lazy(() => import('./pages/setting/setting-views/ManageVendorTags'));
-const ReloadExpense = lazy(() => import('./pages/setting/setting-views/ReloadExpense'));
+const ReloadExpense = lazy(() => import('./pages/setting/setting-views/./ReloadData'));
 const AutoTagExpenses = lazy(() => import('./pages/setting/setting-views/AutoTagExpenses'));
 
 // interface
@@ -57,6 +49,14 @@ export const routes: Array<Route> = [
     path: '/stats',
     enabled: true,
     component: Insights,
+    isProtected: true,
+  },
+  {
+    key: 'budget-route',
+    title: 'Budget',
+    path: '/budget',
+    enabled: true,
+    component: Budget,
     isProtected: true,
   },
   {

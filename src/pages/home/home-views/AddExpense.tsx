@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {FC, ReactElement, useEffect, useState} from 'react';
@@ -58,7 +49,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     const uuid = uuidv4();
     const newExpense: Expense = {
       id: 'manual', // will be overridden by ExpenseAPI logic
-      vendor: 'manual entry', // As specified, set vendor as "manual"
+      vendor: crypto.randomUUID().substring(0,4) + ' manual entry', // As specified, set vendor as "manual"
       date: Date.now(),
       modifiedDate: Date.now(),
       cost: parseFloat(cost),

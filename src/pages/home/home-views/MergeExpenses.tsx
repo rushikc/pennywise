@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {FC, ReactElement, useEffect, useState} from 'react';
@@ -25,11 +16,10 @@ import {useSelector} from 'react-redux';
 import {Expense} from '../../../Types';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {selectExpense} from '../../../store/expenseActions';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import Zoom from '@mui/material/Zoom';
 import {TransitionProps} from '@mui/material/transitions';
 import {formatVendorName} from '../../../utility/utility';
+import {createTimedAlert} from '../../../store/alertActions';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -57,8 +47,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [totalCost, setTotalCost] = useState<number>(0);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [showError, setShowError] = useState<boolean>(false);
 
   // Get tagList from Redux store instead of props
   const {tagList} = useSelector(selectExpense);
@@ -80,11 +68,13 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     }
   }, [expenses, open]);
 
-  const onSaveMergedExpense = () => {
+  const onSaveMergedExpense = async () => {
     // Validate vendor selection
     if (!selectedVendor) {
-      setErrorMessage('Please select a vendor first');
-      setShowError(true);
+      createTimedAlert({
+        type: 'error',
+        message: 'Please select a vendor first'
+      });
       return;
     }
 
@@ -110,12 +100,15 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     console.log('Merged Expense:', mergedExpense);
 
     // Soft delete all original expenses from the database
+    const promiseList: Promise<Expense>[] = [];
     expenses.forEach(exp => {
-      void ExpenseAPI.addExpense(exp, 'delete');
+      promiseList.push(ExpenseAPI.addExpense(exp, 'delete'));
     });
 
+    await Promise.all(promiseList);
+
     // Add the new merged expense to the database
-    void ExpenseAPI.addExpense(mergedExpense);
+    await ExpenseAPI.addExpense(mergedExpense);
 
     // Complete the merge process
     if (onMergeComplete) {
@@ -124,11 +117,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       onClose();
     }
   };
-
-  const handleCloseError = () => {
-    setShowError(false);
-  };
-
 
   // Get unique vendors from selected expenses
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));
@@ -235,17 +223,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
           Cancel
         </Button>
       </DialogActions>
-
-      <Snackbar
-        open={showError}
-        autoHideDuration={6000}
-        onClose={handleCloseError}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-      >
-        <Alert onClose={handleCloseError} severity="error" sx={{width: '100%'}}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
 };
