@@ -67,7 +67,6 @@ const Insights: React.FC = () => {
   // Calculate total spending
   const getTotalSpending = () => {
     const filtered = getFilteredExpenses();
-    console.log('Total spending Filtered Expenses: ', filtered);
     return filtered.reduce((sum, expense) => sum + Number(expense.cost), 0).toFixed(2);
   };
 

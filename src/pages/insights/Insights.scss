@@ -173,30 +173,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   }
 }
 
-.filter-button, .group-by-button {
-  padding-top: 10px;
 
-  .MuiChip-root {
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
-    box-shadow: var(--box-shadow);
-    height: 40px;
-    padding: 0 15px;
-    border: 1px solid var(--border-color);
-    font-weight: 400;
-    min-width: 120px;
-    justify-content: center;
-
-    .MuiChip-icon {
-      color: var(--accent-blue);
-    }
-
-    &:hover {
-      background-color: var(--group-header-hover);
-      border-color: var(--border-color-dark);
-    }
-  }
-}
 
 /* Selection button styling to match the design pattern */
 .selection-button {

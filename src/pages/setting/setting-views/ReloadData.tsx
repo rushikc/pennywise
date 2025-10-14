@@ -46,10 +46,15 @@ const ReloadData: React.FC = () => {
     try {
       console.log('Reloading expenses for:', selectedDate);
       await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
+      await FinanceIndexDB.clearIndexedDBData();
       createTimedAlert({
         type: 'success',
         message: `Expenses for ${dayjs(selectedDate).format('MMM DD, YYYY')} reloaded successfully.`
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+
     } catch (error) {
       console.error('Failed to reload expenses for selected date:', error);
       createTimedAlert({type: 'error', message: 'Failed to reload expenses. Please try again later.'});

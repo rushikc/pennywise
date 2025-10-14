@@ -89,14 +89,14 @@ const Settings: React.FC = () => {
 
   // Define dashboard tiles configuration
   const dashboardTiles = [
-    {
-      id: 'config',
-      title: 'Configuration',
-      subtitle: 'Configure app preferences',
-      icon: <ConfigIcon/>,
-      route: '/config',
-      color: '#f48fb1'
-    },
+    // {
+    //   id: 'config',
+    //   title: 'Configuration',
+    //   subtitle: 'Configure app preferences',
+    //   icon: <ConfigIcon/>,
+    //   route: '/config',
+    //   color: '#f48fb1'
+    // },
     {
       id: 'tags',
       title: 'Tags',
@@ -278,19 +278,19 @@ const Settings: React.FC = () => {
               <Typography variant="h6" gutterBottom>
                 Pennywise App
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" >
                 <strong>Version:</strong> Pennywise v{buildInfo.version}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" >
                 <strong>Build Time:</strong> {getBuildTimeIST()}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" >
                 <strong>Author:</strong> rushikc
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" >
                 <strong>Contact:</strong> rushikc.dev@gmail.com
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" >
                 <strong>Github: </strong>
                 <a
                   href="https://github.com/rushikc/pennywise"
