@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useState} from 'react';
@@ -20,8 +11,7 @@ import {
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
-  Refresh as ReloadIcon,
-  Settings as ConfigIcon
+  Refresh as ReloadIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
@@ -98,14 +88,14 @@ const Settings: React.FC = () => {
 
   // Define dashboard tiles configuration
   const dashboardTiles = [
-    {
-      id: 'config',
-      title: 'Configuration',
-      subtitle: 'Configure app preferences',
-      icon: <ConfigIcon/>,
-      route: '/config',
-      color: '#f48fb1'
-    },
+    // {
+    //   id: 'config',
+    //   title: 'Configuration',
+    //   subtitle: 'Configure app preferences',
+    //   icon: <ConfigIcon/>,
+    //   route: '/config',
+    //   color: '#f48fb1'
+    // },
     {
       id: 'tags',
       title: 'Tags',
@@ -124,8 +114,8 @@ const Settings: React.FC = () => {
     },
     {
       id: 'reload',
-      title: 'Reload Expense',
-      subtitle: 'Reload your expense data',
+      title: 'Reload Data',
+      subtitle: 'Reload your expense, local cache data',
       icon: <ReloadIcon/>,
       route: '/reload-expense',
       color: '#ffa726'
@@ -287,19 +277,19 @@ const Settings: React.FC = () => {
               <Typography variant="h6" gutterBottom>
                 Pennywise App
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2">
                 <strong>Version:</strong> Pennywise v{buildInfo.version}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2">
                 <strong>Build Time:</strong> {getBuildTimeIST()}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2">
                 <strong>Author:</strong> rushikc
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2">
                 <strong>Contact:</strong> rushikc.dev@gmail.com
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2">
                 <strong>Github: </strong>
                 <a
                   href="https://github.com/rushikc/pennywise"

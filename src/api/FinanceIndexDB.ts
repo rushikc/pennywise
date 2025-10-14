@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {Config, Expense, VendorTag, Budget} from '../Types';
@@ -118,7 +109,7 @@ export class FinanceIndexDB {
    * Adds a list of expenses to the 'expense' object store.
    */
   static addExpenseList = (expenseList: Expense[]): Promise<void> => {
-    console.debug('addExpenseList IndexedDB');
+    // console.debug('addExpenseList IndexedDB');
     return this.batchInsert('expense', expenseList);
   };
 
@@ -126,7 +117,7 @@ export class FinanceIndexDB {
    * Adds a vendor tag to the 'vendorTag' object store.
    */
   static addVendorTag = (vendorTag: VendorTag): Promise<void> => {
-    console.debug('addVendorTag IndexedDB');
+    // console.debug('addVendorTag IndexedDB');
     return this.executeStoreOperation('vendorTag', (store) => store.put(vendorTag))
       .then(() => undefined);
   };
@@ -135,7 +126,7 @@ export class FinanceIndexDB {
    * Adds a list of configurations to the 'config' object store.
    */
   static addConfig = (configList: Config[]): Promise<void> => {
-    console.debug('addConfig IndexedDB');
+    // console.debug('addConfig IndexedDB');
     return this.batchInsert('config', configList);
   };
 
@@ -154,7 +145,7 @@ export class FinanceIndexDB {
    * Retrieves all data from a specified object store.
    */
   static getAllData = <T extends TableNames>(storeName: T): Promise<StoreData[T][]> => {
-    console.debug('getAllData IndexedDB - ', storeName);
+    // console.debug('getAllData IndexedDB - ', storeName);
     return this.executeStoreOperation(storeName, (store) => store.getAll(), 'readonly');
   };
 
@@ -191,7 +182,7 @@ export class FinanceIndexDB {
    * Deletes an expense from the 'expense' object store by its mailId.
    */
   static deleteExpense = async (mailId: string): Promise<void> => {
-    console.debug('deleteExpense IndexedDB - mailId:', mailId);
+    // console.debug('deleteExpense IndexedDB - mailId:', mailId);
     await this.executeStoreOperation('expense', (store) => store.delete(mailId));
     console.debug('Successfully deleted expense with mailId:', mailId);
   };
@@ -200,7 +191,7 @@ export class FinanceIndexDB {
    * Adds a list of budgets to the 'budget' object store.
    */
   static addBudgetList = (budgetList: Budget[]): Promise<void> => {
-    console.debug('addBudgetList IndexedDB');
+    // console.debug('addBudgetList IndexedDB');
     return this.batchInsert('budget', budgetList);
   };
 
@@ -208,8 +199,8 @@ export class FinanceIndexDB {
    * Deletes a budget from the 'budget' object store by its id.
    */
   static deleteBudget = async (budgetId: string): Promise<void> => {
-    console.debug('deleteBudget IndexedDB - budgetId:', budgetId);
+    // console.debug('deleteBudget IndexedDB - budgetId:', budgetId);
     await this.executeStoreOperation('budget', (store) => store.delete(budgetId));
-    console.debug('Successfully deleted budget with id:', budgetId);
+    // console.debug('Successfully deleted budget with id:', budgetId);
   };
 }

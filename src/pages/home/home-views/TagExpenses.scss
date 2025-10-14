@@ -1,24 +1,17 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 
 .MuiDialog-paper {
   border-radius: 8px !important;
+  width: 100% !important;
+  margin: 10px !important;
 }
 
 .tag-expense-dialog-content {
-  padding-bottom: 0;
+  padding: 20px 10px !important;
 }
 
 .tag-expense-summary {
@@ -173,6 +166,16 @@ GNU General Public License for more details, or get a copy at
   transition: all 0.2s ease !important;
 }
 
+.tag-delete-btn {
+  background-color: var(--accent-red) !important;
+  color: var(--bg-primary) !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 6px 20px !important;
+  box-shadow: 0 4px 12px rgba(var(--accent-green-rgb), 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
 .tag-save-btn:hover:not([disabled]) {
   background-color: var(--accent-green) !important;
   opacity: 0.9 !important;
@@ -189,7 +192,7 @@ GNU General Public License for more details, or get a copy at
   border-radius: 12px !important;
   padding: 6px 20px !important;
   font-weight: 500 !important;
-  border-color: var(--border-color) !important;
+  border: 1px solid var(--border-color-dark) !important;
   color: var(--text-primary) !important;
 }
 

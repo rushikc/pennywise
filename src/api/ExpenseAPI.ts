@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {initializeApp} from 'firebase/app';
@@ -70,8 +61,11 @@ export class ExpenseAPI {
    * Sets a single document in a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  // eslint-disable-next-line
-  static setOneDoc = async (key: string, val: any, collectionName = 'config') =>
+  static setOneDoc = async (
+    key: string,
+    // eslint-disable-next-line
+    val: any,
+    collectionName = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
   /**
@@ -122,13 +116,11 @@ export class ExpenseAPI {
       const {id, ...expenseWithoutId} = expense;
       await setDoc(docRef, expenseWithoutId);
 
+      expense.id = key;
       await FinanceIndexDB.addExpenseList([expense]);
 
       // Return a new object with the updated ID instead of modifying the original
-      return {
-        ...expense,
-        id: key
-      };
+      return expense;
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -526,13 +518,10 @@ export class ExpenseAPI {
       const {id, ...budgetWithoutId} = budget;
       await setDoc(docRef, budgetWithoutId);
 
+      budget.id = key;
       await FinanceIndexDB.addBudgetList([budget]);
 
-      // Return a new object with the updated ID instead of modifying the original
-      return {
-        ...budget,
-        id: key
-      };
+      return budget;
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -609,7 +598,6 @@ export class ExpenseAPI {
       if (overrideLastDate) lastUpdatedDate = overrideLastDate;
 
       const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
-      // const q = query(collection(db, table));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {

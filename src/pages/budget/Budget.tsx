@@ -1,34 +1,27 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {FC, ReactElement, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Container} from 'reactstrap';
-import {Box, Card, CardContent, Chip, IconButton, LinearProgress, Typography} from '@mui/material';
+import {Box, Card, CardContent, Chip, Fab, IconButton, LinearProgress, Typography} from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import dayjs from 'dayjs';
 import {AnimatePresence, motion} from 'framer-motion';
 import {selectExpense} from '../../store/expenseActions';
 import {Budget, BudgetProgress, Expense, MonthYear} from '../../Types';
 import Loading from '../../components/Loading';
+import EditBudget from './EditBudget';
 import './Budget.scss';
 import {isEmpty} from '../../utility/utility';
 
-// Remove the hardcoded budgetList - we'll get it from the store now
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
+
   const {expenseList, budgetList, isAppLoading} = useSelector(selectExpense);
   const [selectedMonth, setSelectedMonth] = useState<MonthYear | null>(null);
   const [budgetProgress, setBudgetProgress] = useState<BudgetProgress[]>([]);
@@ -36,9 +29,14 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   const [isLoading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState<'current' | 'last3'>('current');
 
+  // EditBudget modal state
+  const [editBudgetOpen, setEditBudgetOpen] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+
   // Refs for handling outside clicks
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
+
 
   // Generate month options for the last 3 years
   const generateMonthOptions = (): MonthYear[] => {
@@ -163,17 +161,14 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     setLoading(false);
   }, [expenseList, budgetList, selectedMonth]);
 
-  // Toggle filters function
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
 
-  // Handle year segment selection
   const handleYearSegmentChange = (yearType: 'current' | 'last3') => {
     setSelectedYear(yearType);
   };
 
-  // Handle month selection
   const handleMonthSelect = (month: MonthYear) => {
     setSelectedMonth(month);
     setShowFilters(false);
@@ -194,18 +189,55 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     }).format(amount);
   };
 
+  // Handle budget card click to open edit modal
+  const handleBudgetCardClick = (budget: Budget) => {
+    setSelectedBudget(budget);
+    setEditBudgetOpen(true);
+  };
+
+  // Handle budget update/delete callbacks
+  const handleBudgetUpdated = () => {
+    // The store has already been updated by the EditBudget component
+    // Recalculate budget progress with the updated budget list and current expenses
+    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+      const filtered = filterExpensesByMonth(expenseList, selectedMonth);
+      const progress = calculateBudgetProgress(filtered, budgetList);
+      setBudgetProgress(progress);
+    }
+
+    // Reset selected budget to clear any stale references
+    setSelectedBudget(null);
+
+    // Close the modal if it's still open
+    setEditBudgetOpen(false);
+  };
+
+  const handleBudgetDeleted = (budgetId: string) => {
+    // The store has already been updated by the EditBudget component
+    // Recalculate budget progress with the updated budget list (minus deleted budget)
+    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+      // Filter out the deleted budget from current progress
+      const updatedProgress = budgetProgress.filter(progress => progress.budget.id !== budgetId);
+      setBudgetProgress(updatedProgress);
+    }
+
+    // Reset selected budget since it may have been the deleted one
+    setSelectedBudget(null);
+
+    // Close the modal if it's still open
+    setEditBudgetOpen(false);
+  };
+
   if (isAppLoading || isLoading) {
     return <Loading/>;
   }
 
   return (
     <Container fluid className="budget-container">
-      <div style={{paddingBottom: 10}}>
-        <div className="page-header">
-          <Typography variant="h5" fontWeight="bold">
-            Budget Overview
-          </Typography>
-        </div>
+      <div className="page-header">
+        <Typography variant="h5" fontWeight="bold">
+          Budget Overview
+        </Typography>
       </div>
 
       {/* Budget Cards */}
@@ -231,7 +263,10 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                 transition: {duration: 0.15, ease: 'easeOut'}
               }}
             >
-              <Card className="budget-card">
+              <Card
+                className="budget-card"
+                onClick={() => handleBudgetCardClick(progress.budget)}
+              >
                 <CardContent>
                   <motion.div
                     className="budget-card-header"
@@ -271,7 +306,6 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                     <Box className="progress-bar-container">
                       <motion.div
                         className="progress-bar-wrapper"
-                        style={{flex: 1}}
                         initial={{scaleX: 0, originX: 0}}
                         animate={{scaleX: 1}}
                         transition={{
@@ -359,6 +393,20 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
         </div>
       </div>
 
+      {/* Add Budget button - Positioned independently at bottom right */}
+      <div className="add-budget-button">
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={() => {
+            setSelectedBudget(null);
+            setEditBudgetOpen(true);
+          }}
+        >
+          <AddIcon/>
+        </Fab>
+      </div>
+
       {/* Filter panel */}
       <FilterPanel
         show={showFilters}
@@ -368,6 +416,15 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
         onMonthChange={handleMonthSelect}
         onYearSegmentChange={handleYearSegmentChange}
         panelRef={filterPanelRef}
+      />
+
+      {/* Edit Budget Modal - Pass selectedBudget to EditBudget component */}
+      <EditBudget
+        open={editBudgetOpen}
+        onClose={() => setEditBudgetOpen(false)}
+        budget={selectedBudget}
+        onBudgetUpdated={handleBudgetUpdated}
+        onBudgetDeleted={handleBudgetDeleted}
       />
     </Container>
   );
