@@ -11,8 +11,7 @@ import {
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
-  Refresh as ReloadIcon,
-  Settings as ConfigIcon
+  Refresh as ReloadIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
@@ -278,19 +277,19 @@ const Settings: React.FC = () => {
               <Typography variant="h6" gutterBottom>
                 Pennywise App
               </Typography>
-              <Typography variant="body2" >
+              <Typography variant="body2">
                 <strong>Version:</strong> Pennywise v{buildInfo.version}
               </Typography>
-              <Typography variant="body2" >
+              <Typography variant="body2">
                 <strong>Build Time:</strong> {getBuildTimeIST()}
               </Typography>
-              <Typography variant="body2" >
+              <Typography variant="body2">
                 <strong>Author:</strong> rushikc
               </Typography>
-              <Typography variant="body2" >
+              <Typography variant="body2">
                 <strong>Contact:</strong> rushikc.dev@gmail.com
               </Typography>
-              <Typography variant="body2" >
+              <Typography variant="body2">
                 <strong>Github: </strong>
                 <a
                   href="https://github.com/rushikc/pennywise"
