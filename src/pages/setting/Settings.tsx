@@ -1,27 +1,17 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useState} from 'react';
-import {Alert, Box, Container, Paper, Snackbar, Typography} from '@mui/material';
+import {Box, Button, Container, Fade, Modal, Paper, Typography} from '@mui/material';
 import {
   AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
-  Refresh as ReloadIcon,
-  Settings as ConfigIcon
+  Refresh as ReloadIcon
 } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
@@ -31,7 +21,35 @@ import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
-import {ExpenseAPI} from "../../api/ExpenseAPI";
+import {ExpenseAPI} from '../../api/ExpenseAPI';
+import {createTimedAlert} from '../../store/alertActions';
+
+// Define the BuildInfo interface
+interface BuildInfo {
+  version: string;
+  buildTime: string;
+  buildTimestamp: number;
+}
+
+// Fallback build info for development when buildInfo.ts doesn't exist
+const fallbackBuildInfo: BuildInfo = {
+  version: '1.1.0', // Should match package.json version
+  buildTime: new Date().toISOString(),
+  buildTimestamp: Date.now()
+};
+
+// Function to get build info with fallback
+const getBuildInfo = (): BuildInfo => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const buildInfoModule = require('../../buildInfo');
+    return buildInfoModule.buildInfo as BuildInfo;
+  } catch {
+    return fallbackBuildInfo;
+  }
+};
+
+const buildInfo: BuildInfo = getBuildInfo();
 
 /**
  * Settings page component with user profile and settings options
@@ -39,42 +57,67 @@ import {ExpenseAPI} from "../../api/ExpenseAPI";
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const {appConfig} = useSelector(selectExpense);
-  const [isSigningOut, setIsSigningOut] = useState(false);
-  const [signOutError, setSignOutError] = useState<string | null>(null);
+  const [isAppInfoModalOpen, setIsAppInfoModalOpen] = useState(false);
 
-  console.log("Profile loaded")
   // Use the custom hook for authentication
   const {userProfile, signOut, isLoading} = useAuth();
+
+  // Get build time in IST timezone
+  const getBuildTimeIST = () => {
+    const date = new Date(buildInfo.buildTime);
+    return date.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  };
+
+  const handleVersionClick = () => {
+    setIsAppInfoModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAppInfoModalOpen(false);
+  };
 
   // Handle sign out
   const handleSignOut = async () => {
     try {
-      setIsSigningOut(true);
+
       const result = await signOut();
 
       if (!result.success && result.error) {
-        setSignOutError(result.error);
+        createTimedAlert({
+          type: 'error',
+          message: result.error
+        });
       } else {
-        // navigate('/login');
+        navigate('/login');
       }
     } catch (error) {
-      setSignOutError('Failed to sign out. Please try again.');
+      createTimedAlert({
+        type: 'error',
+        message: 'Failed to sign out. Please try again.'
+      });
       console.error('Error signing out:', error);
-    } finally {
-      setIsSigningOut(false);
     }
   };
 
   // Define dashboard tiles configuration
   const dashboardTiles = [
-    {
-      id: 'config',
-      title: 'Configuration',
-      subtitle: 'Configure app preferences',
-      icon: <ConfigIcon/>,
-      route: '/config',
-      color: '#f48fb1'
-    },
+    // {
+    //   id: 'config',
+    //   title: 'Configuration',
+    //   subtitle: 'Configure app preferences',
+    //   icon: <ConfigIcon/>,
+    //   route: '/config',
+    //   color: '#f48fb1'
+    // },
     {
       id: 'tags',
       title: 'Tags',
@@ -93,8 +136,8 @@ const Settings: React.FC = () => {
     },
     {
       id: 'reload',
-      title: 'Reload Expense',
-      subtitle: 'Reload your expense data',
+      title: 'Reload Data',
+      subtitle: 'Reload your expense, local cache data',
       icon: <ReloadIcon/>,
       route: '/reload-expense',
       color: '#ffa726'
@@ -227,41 +270,74 @@ const Settings: React.FC = () => {
         ))}
       </motion.div>
 
-
-      {/* Sign out progress and error handling */}
-      <Snackbar
-        open={isSigningOut}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-        autoHideDuration={6000}
-        onClose={() => setSignOutError(null)}
-      >
-        <Alert onClose={() => setSignOutError(null)} severity="info" sx={{width: '100%'}}>
-          Signing out...
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={Boolean(signOutError)}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-        autoHideDuration={6000}
-        onClose={() => setSignOutError(null)}
-      >
-        <Alert onClose={() => setSignOutError(null)} severity="error" sx={{width: '100%'}}>
-          {signOutError}
-        </Alert>
-      </Snackbar>
-
-      {/* Version display */}
+      {/* Version display - clickable to show app info */}
       <Paper
         elevation={0}
         className="version-display"
+        onClick={handleVersionClick}
+        sx={{cursor: 'pointer'}}
       >
         <Typography
           variant="caption"
           className="version-text"
         >
-          Pennywise v1.0.0
+          Pennywise v{buildInfo.version}
         </Typography>
       </Paper>
+
+      {/* App Info Modal */}
+      <Modal
+        open={isAppInfoModalOpen}
+        onClose={handleCloseModal}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={isAppInfoModalOpen}>
+          <Paper className="app-info-modal p-2">
+            <Box p={2}>
+              <Typography variant="h6" gutterBottom>
+                Pennywise App
+              </Typography>
+              <Typography variant="body2">
+                <strong>Version:</strong> Pennywise v{buildInfo.version}
+              </Typography>
+              <Typography variant="body2">
+                <strong>Build Time:</strong> {getBuildTimeIST()}
+              </Typography>
+              <Typography variant="body2">
+                <strong>Author:</strong> rushikc
+              </Typography>
+              <Typography variant="body2">
+                <strong>Contact:</strong> rushikc.dev@gmail.com
+              </Typography>
+              <Typography variant="body2">
+                <strong>Github: </strong>
+                <a
+                  href="https://github.com/rushikc/pennywise"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://github.com/rushikc/pennywise
+                </a>
+              </Typography>
+
+              {/* Close Button at the end */}
+              <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                  onClick={handleCloseModal}
+                  variant="contained"
+                  className="modal-close-button"
+                >
+                  Close
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Fade>
+      </Modal>
     </Container>
   );
 };

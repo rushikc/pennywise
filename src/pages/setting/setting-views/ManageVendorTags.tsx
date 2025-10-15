@@ -1,18 +1,9 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -192,7 +183,7 @@ const ManageVendorTags: React.FC = () => {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon/>
                   </InputAdornment>
                 ),
               },
@@ -214,7 +205,7 @@ const ManageVendorTags: React.FC = () => {
 
         {loading ? (
           <Box className="loading-container">
-            <CircularProgress className="loading-indicator" />
+            <CircularProgress className="loading-indicator"/>
           </Box>
         ) : filteredVendorTags.length === 0 ? (
           <Typography variant="body1" className="empty-cards-message">

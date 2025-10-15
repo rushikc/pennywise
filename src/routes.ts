@@ -13,99 +13,107 @@ GNU General Public License for more details, or get a copy at
 */
 
 // pages
-import Home from "./pages/home/Home";
-import Settings from "./pages/setting/Settings";
-import Insights from "./pages/insights/Insights";
-import Configuration from "./pages/setting/setting-views/Configuration";
-import ManageTags from "./pages/setting/setting-views/ManageTags";
-import ManageVendorTags from "./pages/setting/setting-views/ManageVendorTags";
-import ReloadExpense from "./pages/setting/setting-views/ReloadExpense";
-import AutoTagExpenses from "./pages/setting/setting-views/AutoTagExpenses";
+import Home from './pages/home/Home';
+import Settings from './pages/setting/Settings';
+import Insights from './pages/insights/Insights';
+import Configuration from './pages/setting/setting-views/Configuration';
+import ManageTags from './pages/setting/setting-views/ManageTags';
+import ManageVendorTags from './pages/setting/setting-views/ManageVendorTags';
+import ReloadData from './pages/setting/setting-views/ReloadData';
+import AutoTagExpenses from './pages/setting/setting-views/AutoTagExpenses';
 
-// other
-import {FC} from "react";
+import {FC} from 'react';
+import Budget from './pages/budget/Budget';
 
 // interface
 interface Route {
-    key: string,
-    title: string,
-    path: string,
-    enabled: boolean,
-    component: FC<{}>,
-    isProtected: boolean,
+  key: string,
+  title: string,
+  path: string,
+  enabled: boolean,
+  component: FC<Record<string, never>>,
+  isProtected: boolean,
 }
 
 export const routes: Array<Route> = [
-    {
-        key: 'home-route',
-        title: 'Home',
-        path: '/',
-        enabled: true,
-        component: Home,
-        isProtected: false,
-    },
-    {
-        key: 'home-route',
-        title: 'Home',
-        path: '/home',
-        enabled: true,
-        component: Home,
-        isProtected: false,
-    },
-    {
-        key: 'profile-route',
-        title: 'Profile',
-        path: '/profile',
-        enabled: true,
-        component: Settings,
-        isProtected: false,
-    },
-    {
-        key: 'stats-route',
-        title: 'Stats',
-        path: '/stats',
-        enabled: true,
-        component: Insights,
-        isProtected: false,
-    },
-    {
-        key: 'config-route',
-        title: 'Config',
-        path: '/config',
-        enabled: true,
-        component: Configuration,
-        isProtected: false,
-    },
-    {
-        key: 'setting-tags-route',
-        title: 'Setting Tags',
-        path: '/setting-tags',
-        enabled: true,
-        component: ManageTags,
-        isProtected: false,
-    },
-    {
-        key: 'setting-tag-maps-route',
-        title: 'Setting Tag Maps',
-        path: '/setting-tag-maps',
-        enabled: true,
-        component: ManageVendorTags,
-        isProtected: false,
-    },
-    {
-        key: 'reload-expense-route',
-        title: 'Reload Expense',
-        path: '/reload-expense',
-        enabled: true,
-        component: ReloadExpense,
-        isProtected: false,
-    },
-    {
-        key: 'auto-tag-expenses-route',
-        title: 'Auto Tag Expenses',
-        path: '/auto-tag-expenses',
-        enabled: true,
-        component: AutoTagExpenses,
-        isProtected: false,
-    }
-]
+  {
+    key: 'home-route',
+    title: 'Home',
+    path: '/',
+    enabled: true,
+    component: Home,
+    isProtected: false,
+  },
+  {
+    key: 'home-route',
+    title: 'Home',
+    path: '/home',
+    enabled: true,
+    component: Home,
+    isProtected: false,
+  },
+  {
+    key: 'profile-route',
+    title: 'Profile',
+    path: '/profile',
+    enabled: true,
+    component: Settings,
+    isProtected: false,
+  },
+  {
+    key: 'stats-route',
+    title: 'Stats',
+    path: '/stats',
+    enabled: true,
+    component: Insights,
+    isProtected: false,
+  },
+  {
+    key: 'config-route',
+    title: 'Config',
+    path: '/config',
+    enabled: true,
+    component: Configuration,
+    isProtected: false,
+  },
+  {
+    key: 'setting-tags-route',
+    title: 'Setting Tags',
+    path: '/setting-tags',
+    enabled: true,
+    component: ManageTags,
+    isProtected: false,
+  },
+  {
+    key: 'budget-route',
+    title: 'Budget',
+    path: '/budget',
+    enabled: true,
+    component: Budget,
+    isProtected: true,
+  },
+  {
+    key: 'setting-tag-maps-route',
+    title: 'Setting Tag Maps',
+    path: '/setting-tag-maps',
+    enabled: true,
+    component: ManageVendorTags,
+    isProtected: false,
+  },
+  {
+    key: 'reload-expense-route',
+    title: 'Reload Expense',
+    path: '/reload-expense',
+    enabled: true,
+    component: ReloadData,
+    isProtected: false,
+  },
+  {
+    key: 'auto-tag-expenses-route',
+    title: 'Auto Tag Expenses',
+    path: '/auto-tag-expenses',
+    enabled: true,
+    component: AutoTagExpenses,
+    isProtected: false,
+  }
+];

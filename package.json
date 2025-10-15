@@ -1,7 +1,8 @@
 {
   "name": "finance-app",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
+  "license": "MIT",
   "module": "es2016",
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -12,7 +13,7 @@
     "@mui/x-date-pickers": "^7.29.4",
     "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "1.8.2",
+    "axios": "1.12.0",
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
@@ -57,13 +58,15 @@
     "css-minimizer-webpack-plugin": "^7.0.2",
     "dotenv": "^16.4.5",
     "react-scripts": "^5.0.1",
-    "terser-webpack-plugin": "^5.3.14"
+    "source-map-explorer": "^2.5.3",
+    "terser-webpack-plugin": "^5.3.14",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "node scripts/generate-build-info.js && craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
   },
   "eslintConfig": {
     "extends": [

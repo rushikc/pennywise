@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useEffect, useState} from 'react';
@@ -33,11 +24,11 @@ import {
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
-import {ArrowBack as BackIcon, RemoveCircleOutline} from "@mui/icons-material";
+import {ArrowBack as BackIcon, RemoveCircleOutline} from '@mui/icons-material';
 import {useSelector} from 'react-redux';
 import {addTag, deleteTag, selectExpense, setTagList} from '../../../store/expenseActions';
 import './settingViews.scss';
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 
 const ManageTags: React.FC = () => {
   const navigate = useNavigate();
@@ -111,7 +102,6 @@ const ManageTags: React.FC = () => {
         </Typography>
       </Box>
       <Paper elevation={3} className="manage-tags-paper">
-
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="tags">
             {(provided) => (
@@ -194,7 +184,7 @@ const ManageTags: React.FC = () => {
         <DialogTitle>Delete Tag</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the tag "{tagToDelete}"?
+            Are you sure you want to delete the tag ${tagToDelete}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

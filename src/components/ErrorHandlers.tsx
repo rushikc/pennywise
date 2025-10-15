@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {Box, Button, Modal, Typography} from '@mui/material';
@@ -24,7 +15,7 @@ interface ErrorModalProps {
 }
 
 // Modal component to display error messages
-const ErrorModal: React.FC<ErrorModalProps> = ({ open, onClose, message }) => {
+const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
   const handleSignOut = async () => {
     try {
       await auth.signOut();
@@ -61,13 +52,13 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ open, onClose, message }) => {
           variant="h6"
           component="h2"
           gutterBottom
-          sx={{ color: '#ff5252' }} // Red accent for title
+          sx={{color: '#ff5252'}} // Red accent for title
         >
           Access Denied
         </Typography>
         <Typography
           id="error-modal-description"
-          sx={{ mt: 2, mb: 3, color: '#e0e0e0' }}
+          sx={{mt: 2, mb: 3, color: '#e0e0e0'}}
         >
           {message}
         </Typography>
@@ -99,17 +90,23 @@ let modalRoot: HTMLElement | null = null;
 // Error handling utility
 export const ErrorHandlers = {
   // Handle API errors, especially 4XX series
-  handleApiError: (error: any) => {
+  handleApiError: (error: unknown) => {
     console.error('API Error:', error);
 
     // Check if it's a Firebase/API error with status code
-    const status = error?.code || error?.response?.status;
+    let status: unknown = undefined;
+    if (typeof error === 'object' && error !== null) {
+      status = (error as { code?: unknown; response?: { status?: unknown } }).code ||
+               (error as { code?: unknown; response?: { status?: unknown } }).response?.status;
+    }
     const isAuthError =
       status === 401 ||
       status === 403 ||
-      status?.includes('permission-denied') ||
-      status?.includes('unauthenticated') ||
-      status?.includes('auth/');
+      (typeof status === 'string' && (
+        status.includes('permission-denied') ||
+        status.includes('unauthenticated') ||
+        status.includes('auth/')
+      ));
 
     if (isAuthError || (typeof status === 'number' && status >= 400 && status < 500)) {
       ErrorHandlers.showAccessDeniedModal();

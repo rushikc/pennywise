@@ -1,22 +1,13 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import {Avatar, Box, Typography} from '@mui/material';
 
 
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion';
 
 export interface DashboardTileProps {
   id: string;
@@ -40,7 +31,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
   isLast = false
 }) => {
   const itemVariants = {
-    hidden: { y: 10, opacity: 0 },
+    hidden: {y: 10, opacity: 0},
     visible: {
       y: 0,
       opacity: 1,
@@ -61,7 +52,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
       >
         <Avatar
           className="dashboard-option-icon"
-          style={{ color }}
+          style={{color}}
         >
           {icon}
         </Avatar>
@@ -74,7 +65,7 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
           </Typography>
         </Box>
       </motion.div>
-      {!isLast && <div className="dashboard-option-divider" />}
+      {!isLast && <div className="dashboard-option-divider"/>}
     </React.Fragment>
   );
 };

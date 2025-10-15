@@ -1,15 +1,6 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useEffect, useState} from 'react';
@@ -19,8 +10,8 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {getUnixTimestamp} from "../../../utility/utility";
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
@@ -29,6 +20,7 @@ import './settingViews.scss';
  * based on the vendor-tag mappings.
  */
 const AutoTagExpenses: React.FC = () => {
+
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(false);
@@ -37,7 +29,10 @@ const AutoTagExpenses: React.FC = () => {
 
   useEffect(() => {
     if (success) {
+
+
       const timer = setTimeout(() => {
+
         setSuccess(false);
         setProcessedCount(0);
       }, 3500);
@@ -48,12 +43,12 @@ const AutoTagExpenses: React.FC = () => {
   const handleAutoTagAll = async () => {
     setLoading(true);
     try {
-      console.log("Auto-tagging all expenses");
+      console.log('Auto-tagging all expenses');
       const count = await ExpenseAPI.autoTagPastExpenses(getUnixTimestamp('2020-01-01'));
       setProcessedCount(count);
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to auto-tag all expenses:", error);
+      console.error('Failed to auto-tag all expenses:', error);
     } finally {
       setLoading(false);
     }
@@ -64,12 +59,12 @@ const AutoTagExpenses: React.FC = () => {
 
     setLoading(true);
     try {
-      console.log("Auto-tagging expenses for:", selectedDate);
+      console.log('Auto-tagging expenses for:', selectedDate);
       const count = await ExpenseAPI.autoTagPastExpenses(getUnixTimestamp(selectedDate.toDate()));
       setProcessedCount(count);
       setSuccess(true);
     } catch (error) {
-      console.error("Failed to auto-tag expenses for selected date:", error);
+      console.error('Failed to auto-tag expenses for selected date:', error);
     } finally {
       setLoading(false);
     }
@@ -89,8 +84,8 @@ const AutoTagExpenses: React.FC = () => {
             slotProps={{
               textField: {
                 fullWidth: true,
-                size: "small",
-                className: "reload-date-picker"
+                size: 'small',
+                className: 'reload-date-picker'
               }
             }}
           />
@@ -117,7 +112,8 @@ const AutoTagExpenses: React.FC = () => {
         Auto-tag All Past Expenses
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
-        This action will go through all past expenses and apply tags based on your vendor-tag mappings available in 'Manage Vendor Tags'.
+        This action will go through all past expenses and apply tags based on your
+        vendor-tag mappings available in &apos;Manage Vendor Tags&apos;.
       </Typography>
       <Button
         onClick={handleAutoTagAll}
@@ -160,8 +156,10 @@ const AutoTagExpenses: React.FC = () => {
         </Typography>
       </Box>
       <Alert severity="info" sx={{mb: 2}}>
-        This feature automatically assigns tags to your past expenses based on the vendor names you have available in
-        'Manage Vendor Tags'. It helps in organizing your old expenses without manual tagging.
+        This feature automatically assigns tags to your past expenses based on the vendor
+        names you have available in
+        &apos;Manage Vendor Tags&apos;. It helps in organizing your old expenses without manual
+        tagging.
       </Alert>
       <Stack spacing={3}>
         <DateSpecificSection/>

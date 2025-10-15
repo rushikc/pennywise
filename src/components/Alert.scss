@@ -1,0 +1,135 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+  pointer-events: none;
+
+  @media (max-width: 600px) {
+    top: 10px;
+    right: 20px;
+    left: 20px;
+    max-width: none;
+  }
+}
+
+.alert-stack {
+  position: relative;
+}
+
+.alert-item {
+  pointer-events: auto;
+  transition: all 0.3s ease-in-out;
+  animation: slideIn 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  &:hover {
+    transform: translateY(0) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  // Alert type specific styles
+  &.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+
+    .MuiAlert-icon {
+      color: #28a745;
+    }
+  }
+
+  &.alert-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+
+    .MuiAlert-icon {
+      color: #dc3545;
+    }
+  }
+
+  &.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+
+    .MuiAlert-icon {
+      color: #ffc107;
+    }
+  }
+
+  &.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+
+    .MuiAlert-icon {
+      color: #17a2b8;
+    }
+  }
+
+  // Close button styles
+  .MuiIconButton-root {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Animation for new alerts
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Animation for removing alerts
+.alert-item.alert-exit {
+  animation: slideOut 0.3s ease-in;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// Stacking effect - each alert is slightly offset
+.alert-stack .alert-item:nth-child(n+2) {
+  opacity: 0.9;
+}
+
+.alert-stack .alert-item:nth-child(n+3) {
+  opacity: 0.8;
+}
+
+.alert-stack .alert-item:nth-child(n+4) {
+  opacity: 0.7;
+}
+
+// Limit the number of visible alerts
+.alert-stack .alert-item:nth-child(n+5) {
+  display: none;
+}

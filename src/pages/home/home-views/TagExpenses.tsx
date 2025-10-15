@@ -1,25 +1,16 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {FC, ReactElement, useState} from "react";
+import {FC, ReactElement, useState} from 'react';
 import './TagExpenses.scss';
 
-import Button from "@mui/material/Button";
-import {useSelector} from "react-redux";
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {hideTagExpense, selectExpense, setTagMap, updateExpense} from "../../../store/expenseActions";
-import {getDateMonthTime, JSONCopy} from "../../../utility/utility";
+import Button from '@mui/material/Button';
+import {useSelector} from 'react-redux';
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {hideTagExpense, selectExpense, setTagMap, updateExpense} from '../../../store/expenseActions';
+import {formatVendorName, getDateMonthTime, JSONCopy} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -30,23 +21,39 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {createTimedAlert} from '../../../store/alertActions';
 
 
-const TagExpenses: FC<any> = (): ReactElement => {
+const TagExpenses: FC = (): ReactElement => {
 
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [autoTag, setAutoTag] = useState<boolean>(false);
 
   const {vendorTagList, expense, isTagModal, tagList} = useSelector(selectExpense);
 
+  console.log('current expense to tag:', expense);
+
   if (expense == null || !isTagModal) {
     return <></>;
   }
 
+  const copyToClipboard = async (str: string) => {
+    try {
+      await navigator.clipboard.writeText(str);
+      createTimedAlert({message: 'Copied to clipboard', type: 'success'});
+      // You could add a toast notification here if desired
+    } catch (err) {
+      createTimedAlert({message: 'Failed to copy text', type: 'success'});
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
-      let _vendor = expense.vendor;
-      let _tag = expense.tag;
+      const _vendor = expense.vendor;
+      const _tag = expense.tag;
 
       let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
@@ -62,20 +69,15 @@ const TagExpenses: FC<any> = (): ReactElement => {
       }
     }
 
-    let expenseNew = JSONCopy(expense);
-    console.log("Saving expense with tag:", expenseNew);
+    const expenseNew = JSONCopy(expense);
+    console.log('Saving expense with tag:', expenseNew);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);
     updateExpense(expenseNew);
     hideTagExpense();
   };
 
-  const formatVendorName = (vendor: string) => {
-    return vendor ? vendor.substring(0, 20)
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase())
-      .toLowerCase() : '';
-  };
+  const vendorNames = formatVendorName(expense.vendor);
 
   return (
     <Dialog
@@ -92,8 +94,25 @@ const TagExpenses: FC<any> = (): ReactElement => {
         <Fade in={isTagModal} timeout={400}>
           <div className="tag-expense-summary">
             <Typography variant="subtitle1" className="tag-expense-vendor">
-              {formatVendorName(expense.vendor)}
+              {vendorNames[0]}
             </Typography>
+            {
+              vendorNames[1] &&
+              <div className="d-flex justify-content-center">
+                <Typography variant="subtitle1" className="tag-expense-vendor-upi">
+                  {vendorNames[1]}
+                </Typography>
+                <IconButton
+                  aria-label="copy vendor name"
+                  className="tag-expense-copy-vendor"
+                  onClick={() => copyToClipboard(vendorNames[1])}
+                  size="small"
+                  sx={{padding: '4px'}}
+                >
+                  <ContentCopyIcon fontSize="small"/>
+                </IconButton>
+              </div>
+            }
             <Typography variant="body2" className="tag-expense-date">
               {getDateMonthTime(expense.date)}
             </Typography>

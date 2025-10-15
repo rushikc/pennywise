@@ -1,24 +1,15 @@
 /*
-Copyright (C) 2025 <rushikc> <rushikc.dev@gmail.com>
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; version 3 of the License.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details, or get a copy at
-<https://www.gnu.org/licenses/gpl-3.0.txt>.
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {FC, ReactElement, useEffect, useState} from "react";
+import {FC, ReactElement, useEffect, useState} from 'react';
 import './TagExpenses.scss';
-import Button from "@mui/material/Button";
-import {useSelector} from "react-redux";
-import {ExpenseAPI} from "../../../api/ExpenseAPI";
-import {selectExpense, updateExpense} from "../../../store/expenseActions";
-import {getDateMonthTime} from "../../../utility/utility";
+import Button from '@mui/material/Button';
+import {useSelector} from 'react-redux';
+import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {selectExpense, updateExpense} from '../../../store/expenseActions';
+import {getDateMonthTime} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -28,7 +19,7 @@ import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import TextField from '@mui/material/TextField';
-import {Expense} from "../../../Types";
+import {Expense} from '../../../Types';
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -39,8 +30,8 @@ interface AddExpenseModalProps {
 }
 
 const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): ReactElement => {
-  const [selectedTag, setSelectedTag] = useState<string>("untagged");
-  const [cost, setCost] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<string>('untagged');
+  const [cost, setCost] = useState<string>('');
 
   // Get tag list from the store
   const {tagList} = useSelector(selectExpense);
@@ -48,8 +39,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   // Reset form when modal opens
   useEffect(() => {
     if (open) {
-      setSelectedTag("");
-      setCost("");
+      setSelectedTag('');
+      setCost('');
     }
   }, [open]);
 
@@ -58,15 +49,16 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     const uuid = uuidv4();
     const newExpense: Expense = {
       id: 'manual', // will be overridden by ExpenseAPI logic
-      vendor: "manual entry", // As specified, set vendor as "manual"
+      vendor: crypto.randomUUID().substring(0,4) + ' manual entry', // As specified, set vendor as "manual"
       date: Date.now(),
       modifiedDate: Date.now(),
       cost: parseFloat(cost),
       tag: selectedTag,
-      costType: "debit", // Default to debit
+      costType: 'debit', // Default to debit
       mailId: uuid,
-      user: "manual",
-      type: "manual"
+      user: 'manual',
+      type: 'manual',
+      operation: 'update'
     };
 
     // Save the expense
@@ -154,7 +146,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={cost === "0" || isNaN(parseFloat(cost))}
+          disabled={cost === '0' || isNaN(parseFloat(cost))}
           onClick={onSaveExpense}
           className="tag-save-btn"
         >

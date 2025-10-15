@@ -236,10 +236,10 @@ export const VendorTags: VendorTag[] = [
         "id": "PAYTMQR1ISG72NHXZ@PAYTM RAJEESH P"
     },
     {
-        "vendor": "PAYTMQR28100505010117W4EW57GIOV@PAYTM NATRAJ CHOLE BHATURE INDIRANAGAR",
+        "vendor": "PAYTMQR28100505010117W4EW57GIOV@PAYTM NATRAJ CHOLE BHATURE MARATHAHALLI",
         "tag": "food",
         "date": 1751802345000,
-        "id": "PAYTMQR28100505010117W4EW57GIOV@PAYTM NATRAJ CHOLE BHATURE INDIRANAGAR"
+        "id": "PAYTMQR28100505010117W4EW57GIOV@PAYTM NATRAJ CHOLE BHATURE MARATHAHALLI"
     },
     {
         "vendor": "PAYTMQR2810050501011DSL76X3NJQI@PAYTM",
@@ -464,10 +464,10 @@ export const VendorTags: VendorTag[] = [
         "id": "DDDDDXYZZ15@YBL XYZZ DDDDD APPAS"
     },
     {
-        "vendor": "TW COFFEE",
+        "vendor": "TW COFFEE CMH",
         "tag": "food",
         "date": 1751802345000,
-        "id": "TW COFFEE"
+        "id": "TW COFFEE CMH"
     },
     {
         "vendor": "ZOMATO",

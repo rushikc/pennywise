@@ -1,0 +1,382 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.budget-container {
+  padding: 20px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+
+  // Page header styles
+  .page-header {
+    padding-bottom: 10px;
+  }
+
+  .budget-card-content {
+    padding: 10px 16px 12px 16px;
+  }
+
+  // Filter button container at bottom - exact styles from Insights.scss
+  .buttons-container {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  // Updated filter panel styles to match Insights GroupByPanel exactly
+  .group-by-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: auto;
+    max-width: 600px;
+    bottom: 56px;
+    background-color: var(--group-header-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+    z-index: 300;
+    padding-bottom: 20px;
+    animation: slideUp 0.2s ease-out;
+    border: 1px solid var(--border-color);
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border-color);
+
+      .panel-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .close-button {
+        color: var(--accent-blue);
+        background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
+        transition: all 0.2s ease;
+        padding: 4px;
+        margin-right: -4px;
+
+        &:hover {
+          transform: scale(1.1);
+          background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.25);
+          border-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.5);
+        }
+
+        .MuiSvgIcon-root {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .panel-section {
+      padding: 0 20px;
+      margin-top: 15px;
+
+      .section-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 10px;
+        padding-left: 5px;
+      }
+
+      &:first-of-type {
+        margin-top: 5px;
+      }
+
+      .group-by-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 5px 0;
+
+        .filter-chip {
+          margin: 0;
+
+          &.MuiChip-outlined {
+            border-color: var(--border-color);
+            background-color: var(--bg-secondary);
+          }
+        }
+      }
+    }
+  }
+
+  /* Animation for sliding up panels */
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .budget-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .budget-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+
+      // Subtle gradient overlay for depth
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+        &::before {
+          opacity: 0.6;
+        }
+      }
+
+      .budget-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .budget-name {
+          color: var(--text-primary);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .budget-amount {
+          color: var(--text-secondary);
+          font-weight: 500;
+          background-color: var(--bg-secondary);
+          padding: 4px 8px;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: var(--bg-tertiary);
+          }
+        }
+      }
+
+      .budget-progress {
+        margin-bottom: 16px;
+
+        .progress-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+
+          .spent-amount {
+            color: var(--accent-red);
+            font-weight: 500;
+          }
+
+          .remaining-amount {
+            color: var(--accent-green);
+            font-weight: 500;
+          }
+        }
+
+        .progress-bar-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .progress-bar-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            flex: 1; // Move inline style here
+
+            .progress-bar {
+              height: 8px;
+              border-radius: 4px;
+              background-color: var(--bg-secondary);
+              transition: all 0.2s ease;
+
+              .MuiLinearProgress-bar {
+                border-radius: 4px;
+              }
+            }
+          }
+
+          .progress-percentage {
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-width: 45px;
+            text-align: right;
+          }
+        }
+      }
+
+      .budget-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        .tag-chip {
+          background-color: var(--bg-secondary);
+          color: var(--text-secondary);
+          border-color: var(--border-color);
+          font-size: 0.75rem;
+          transition: all 0.15s ease;
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+          }
+        }
+      }
+    }
+
+    // Animation for when cards are loading/changing
+    &.loading {
+      .budget-card {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+
+    h6 {
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .MuiTypography-body2 {
+      color: var(--text-muted);
+    }
+  }
+
+  // Add Budget button styles
+  .add-budget-button {
+    position: fixed;
+    bottom: 130px;
+    right: 35px;
+    z-index: 200;
+    transition: transform 0.2s ease;
+
+    .MuiFab-root {
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .budget-container {
+      padding: 16px;
+
+      .filter-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: none;
+        margin-top: 0;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+
+        .filter-content {
+          flex: 1;
+          overflow-y: auto;
+
+          .month-grid {
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+          }
+        }
+      }
+
+      .budget-list {
+        .budget-card {
+          .budget-card-header {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+
+            .budget-amount {
+              align-self: auto;
+            }
+          }
+
+          .budget-progress {
+            .progress-info {
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              gap: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Dark theme specific adjustments
+  [data-theme="dark"] {
+    .budget-container {
+      .budget-list {
+        .budget-card {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          }
+        }
+      }
+
+      .filter-panel {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+}

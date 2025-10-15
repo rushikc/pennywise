@@ -10,13 +10,13 @@
   <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#demo">Demo</a> •
-  <a href="#Security-&-Cost">Security & Cost</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#Security-and-Cost">Security and Cost</a> •
   <a href="#technology-stack">Tech Stack</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#project-structure">Project Structure</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#Future Roadmap">Future Roadmap</a> •
-  <a href="#support-by-donating">Support by Donating</a> 
+  <a href="#Future-Roadmap">Future Roadmap</a> •
+  <a href="#support-the-project">Support Project</a>
 </p>
 
 ---
@@ -29,7 +29,7 @@
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
 
 ## Overview
@@ -59,7 +59,7 @@ a user-friendly experience with robust features, including offline support and s
 
 <p align="center">
   <a
-    href="https://pennywiserc.web.app/"
+    href="https://pennywise-static.web.app"
     target="_blank"
     rel="noopener noreferrer"
     style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;"
@@ -80,7 +80,7 @@ For detailed setup instructions, please refer below guide (30-60 min setup time)
   </a>
 </p>
 
-## Security & Cost
+## Security and Cost
 
 Pennywise is designed with your data privacy and security as a top priority. Unlike many other financial apps, Pennywise
 gives you complete control over your data and infrastructure. Here’s what makes our approach to security different:
@@ -161,7 +161,7 @@ pennywise/
 │   ├── api/              # API clients and data fetching
 │   │   ├── ExpenseAPI.ts
 │   │   └── FinanceIndexDB.ts
-��   ├── components/       # Reusable UI components
+│   ├── components/       # Reusable UI components
 │   ├── firebase/         # Firebase configuration & utilities
 │   ├── hooks/            # Custom React hooks
 │   ├── pages/            # Application pages & views
@@ -181,7 +181,7 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ### Overview
 
-1. **User Authentication**: 
+1. **User Authentication**:
   - Users authenticate using Google OAuth
 2. **Data Fetching**:
   - On app initialization, data is fetched from Firebase Firestore
