@@ -15,8 +15,8 @@ export const ExpenseListNew: Expense[] = [
     'id': '30 Jul 25, 10:11 PM ZOMATO'
   },
   {
-    'cost': 2468,
-    'costType': 'debit',
+    'cost': 250,
+    'costType': 'credit',
     'vendor': 'RAHULHP0-1@OKSBI RAHUL HP',
 
     'type': 'upi',
@@ -40,9 +40,9 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 65,
-    'costType': 'debit',
+    'costType': 'credit',
     'vendor': 'MAKTUMXYZZ1@OKAXIS MUKTUM XYZZ',
-
+    'tag': 'badminton',
     'type': 'upi',
     'date': 1754134770000,
     'modifiedDate': 1754134770000,
@@ -114,7 +114,7 @@ export const ExpenseListNew: Expense[] = [
     'cost': 1900,
     'costType': 'debit',
     'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-
+    'tag': 'invest',
     'type': 'upi',
     'date': 1754088029000,
     'modifiedDate': 1754088029000,
@@ -135,42 +135,6 @@ export const ExpenseListNew: Expense[] = [
     'id': '30 Jul 25, 12:26 AM INDMONEYMF'
   },
   {
-    'cost': 2000,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-
-    'type': 'upi',
-    'date': 1754087691000,
-    'modifiedDate': 1754087691000,
-    'user': 'xyz',
-    'mailId': '198578662b979620',
-    'id': '30 Jul 25, 12:21 AM INDMONEYMF'
-  },
-  {
-    'cost': 2000,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-    'tag': 'invest',
-    'type': 'upi',
-    'date': 1754087691000,
-    'modifiedDate': 1754129147256,
-    'user': 'xyz',
-    'mailId': '19857866ec1225bc',
-    'id': '30 Jul 25, 12:21 AM INDMONEYMF'
-  },
-  {
-    'cost': 1500,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-
-    'type': 'upi',
-    'date': 1754087374000,
-    'modifiedDate': 1754087374000,
-    'user': 'xyz',
-    'mailId': '19857818fbdd17d4',
-    'id': '30 Jul 25, 12:16 AM INDMONEYMF'
-  },
-  {
     'cost': 1500,
     'costType': 'debit',
     'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
@@ -181,54 +145,6 @@ export const ExpenseListNew: Expense[] = [
     'user': 'xyz',
     'mailId': '198578197bf2bb12',
     'id': '30 Jul 25, 12:16 AM INDMONEYMF'
-  },
-  {
-    'cost': 1000,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-
-    'type': 'upi',
-    'date': 1754087164000,
-    'modifiedDate': 1754087164000,
-    'user': 'xyz',
-    'mailId': '198577e5933200e1',
-    'id': '30 Jul 25, 12:12 AM INDMONEYMF'
-  },
-  {
-    'cost': 1000,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-    'tag': 'invest',
-    'type': 'upi',
-    'date': 1754087164000,
-    'modifiedDate': 1754129150580,
-    'user': 'xyz',
-    'mailId': '198577e63c3715b7',
-    'id': '30 Jul 25, 12:12 AM INDMONEYMF'
-  },
-  {
-    'cost': 2100,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-    'tag': 'invest',
-    'type': 'upi',
-    'date': 1754086925000,
-    'modifiedDate': 1754086925000,
-    'user': 'xyz',
-    'mailId': '198577ab6cb0fd36',
-    'id': '30 Jul 25, 12:08 AM INDMONEYMF'
-  },
-  {
-    'cost': 2100,
-    'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
-    'tag': 'invest',
-    'type': 'upi',
-    'date': 1754086925000,
-    'modifiedDate': 1754129152926,
-    'user': 'xyz',
-    'mailId': '198577abfc80c625',
-    'id': '30 Jul 25, 12:08 AM INDMONEYMF'
   },
   {
     'cost': 1,
