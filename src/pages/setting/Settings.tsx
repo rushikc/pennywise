@@ -62,10 +62,6 @@ const Settings: React.FC = () => {
   // Handle sign out
   const handleSignOut = async () => {
     try {
-      createTimedAlert({
-        type: 'info',
-        message: 'Signing out...'
-      });
 
       const result = await signOut();
 

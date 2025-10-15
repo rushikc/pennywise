@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import React, {FC, ReactElement, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Container} from 'reactstrap';
+import Container from '@mui/material/Container';
 import {Box, Card, CardContent, Chip, Fab, IconButton, LinearProgress, Typography} from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
@@ -233,7 +233,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   }
 
   return (
-    <Container fluid className="budget-container">
+    <Container maxWidth="sm" className="budget-container">
       <div className="page-header">
         <Typography variant="h5" fontWeight="bold">
           Budget Overview
