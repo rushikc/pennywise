@@ -417,9 +417,15 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
   // Handle sort by option selection
   const handleSortByChange = (option: SortByOption) => {
-    setIsRegrouping(true);
-    setSelectedSortBy(option);
-    setShowGroupByOptions(false);
+    console.log('Option selected:', option);
+    if (option !== selectedSortBy) {
+      setIsRegrouping(true);
+      setSelectedSortBy(option);
+      setShowGroupByOptions(false);
+    } else {
+      setSelectedSortBy(null);
+    }
+
   };
 
   // Render expense item
@@ -723,7 +729,7 @@ const GroupByPanel: FC<{
   return (
     <div className="group-by-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Expenses Options</span>
+        <span className="panel-title">Expense Options</span>
         <IconButton
           size="small"
           className="close-button"
@@ -737,16 +743,18 @@ const GroupByPanel: FC<{
       <div className="panel-section">
         <div className="section-title">Group by</div>
         <div className="group-by-options">
-          {groupByOptions.map(option => (
-            <Chip
-              key={option.id}
-              label={option.label}
-              color="primary"
-              variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
-              onClick={() => onGroupByChange(option.id)}
-              className="filter-chip"
-            />
-          ))}
+          {
+            groupByOptions.map(option => (
+              <Chip
+                key={option.id}
+                label={option.label}
+                color="primary"
+                variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
+                onClick={() => onGroupByChange(option.id)}
+                className="filter-chip"
+              />
+            ))
+          }
         </div>
       </div>
 
