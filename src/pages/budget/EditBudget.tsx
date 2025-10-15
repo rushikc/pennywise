@@ -42,7 +42,7 @@ const EditBudget: FC<EditBudgetModalProps> = ({
   // Get tag list from the store
   const {tagList} = useSelector(selectExpense);
 
-  // Determine if this is add mode (budget is null) or edit mode
+  // Determine if this is added mode (budget is null) or edit mode
   const isAddMode = budget === null;
 
   // Initialize form when budget changes or modal opens

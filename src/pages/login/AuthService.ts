@@ -5,7 +5,6 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {onAuthStateChanged, signInWithPopup, signOut, User} from 'firebase/auth';
 import {auth, googleProvider} from '../../firebase/firebaseConfig';
-import {FinanceIndexDB} from '../../api/FinanceIndexDB';
 
 export const AuthService = {
   // Sign in with Google
@@ -22,7 +21,6 @@ export const AuthService = {
   // Sign out
   signOut: async () => {
     try {
-      await FinanceIndexDB.clearIndexedDBData();
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out', error);

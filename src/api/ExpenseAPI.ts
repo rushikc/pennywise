@@ -16,11 +16,12 @@ import {initializeApp} from 'firebase/app';
 import {doc, getDoc, getFirestore, setDoc} from 'firebase/firestore/lite';
 import {firebaseConfig} from '../firebase/firebase-public';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig, Expense, VendorTag} from '../Types';
+import {BankConfig, Budget, Expense, VendorTag} from '../Types';
 import {VendorTags} from '../data/vendorTag';
 import {TAG_LIST} from '../data/tagList';
 import {JSONCopy} from '../utility/utility';
 import {GET_LATEST_EXPENSE} from '../data/expenseFunctions';
+import {BUDGET_LIST} from '../data/budgetList';
 
 
 const app = initializeApp(firebaseConfig);
@@ -35,7 +36,8 @@ export class ExpenseAPI {
    * updates the modified date, and then saves the expense.
    * Returns the expense object with the generated ID.
    */
-  static addExpense = async (expense: Expense, operation: string = "add") => {
+  static addExpense = async (expense: Expense, operation = 'add') => {
+    console.log('operation ', operation);
     return expense;
   };
 
@@ -116,6 +118,23 @@ export class ExpenseAPI {
     return Promise.resolve(JSONCopy(GET_LATEST_EXPENSE()));
   };
 
+
+  static getBudgetList = async (): Promise<Budget[]> => {
+    return Promise.resolve(JSONCopy(BUDGET_LIST));
+  };
+
+  static updateBudget = async (budget: Budget) => {
+    return budget;
+  };
+
+  static addBudget = async (budget: Budget) => {
+    return budget;
+  };
+
+  static deleteBudget = async (budget: Budget) => {
+    return budget;
+  };
+
   /**
    * Retrieves the list of tags from the 'tags' document in the 'config' collection.
    * Returns an array of strings representing the tags.
@@ -131,6 +150,7 @@ export class ExpenseAPI {
   static updateTagList = async (tags: string[]) => {
     return Math.random();
   };
+
 
   /**
    * Retrieves the bank configuration from the 'bankConfig' document in the 'config' collection.

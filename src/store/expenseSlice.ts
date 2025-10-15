@@ -5,7 +5,6 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppConfig, BankConfig, Budget, Expense, VendorTag, Alert} from '../Types';
-import {FinanceIndexDB} from '../api/FinanceIndexDB';
 
 
 interface InitialState {
@@ -65,8 +64,6 @@ export const expenseSlice = createSlice({
       } else {
         state.vendorTagList.push(tagObj);
       }
-
-      void FinanceIndexDB.addVendorTag(tagObj);
 
     },
 

@@ -10,7 +10,6 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs, {Dayjs} from 'dayjs';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
-import {FinanceIndexDB} from '../../../api/FinanceIndexDB';
 import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import {createTimedAlert} from '../../../store/alertActions';
@@ -46,7 +45,6 @@ const ReloadData: React.FC = () => {
     try {
       console.log('Reloading expenses for:', selectedDate);
       await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
-      await FinanceIndexDB.clearIndexedDBData();
       createTimedAlert({
         type: 'success',
         message: `Expenses for ${dayjs(selectedDate).format('MMM DD, YYYY')} reloaded successfully.`
@@ -66,7 +64,6 @@ const ReloadData: React.FC = () => {
   const handleClearCache = async () => {
     setLoading(true);
     try {
-      await FinanceIndexDB.clearIndexedDBData();
       createTimedAlert({type: 'success', message: 'Cache deleted successfully.'});
     } catch (error) {
       createTimedAlert({type: 'error', message: 'Clearing cache failed.'});
