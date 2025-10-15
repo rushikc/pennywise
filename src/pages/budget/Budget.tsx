@@ -93,7 +93,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
           .filter(expense => !isEmpty(expense.tag))
           .filter(expense => expense.costType === 'debit')
           .filter(expense =>
-            budget.tagList.some(tag => expense.tag.toLowerCase() === tag.toLowerCase())
+            budget.tagList.some(tag => expense.tag?.toLowerCase() === tag.toLowerCase())
           )
           .reduce((sum, expense) => sum + expense.cost, 0);
       }

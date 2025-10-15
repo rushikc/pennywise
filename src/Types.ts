@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 export interface Expense {
   id: string,
-  tag: string, // tag for the expense
+  tag?: string, // tag for the expense
   mailId: string, // unique identifier for the expense from mail id
   cost: number, // expense cost
   costType: 'credit' | 'debit',
@@ -28,8 +28,6 @@ export interface VendorTag {
   date: number // unix timestamp
 }
 
-
-export type TagList = string[];
 
 export interface Alert {
   id: string;
