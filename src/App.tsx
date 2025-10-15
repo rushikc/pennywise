@@ -13,7 +13,7 @@ GNU General Public License for more details, or get a copy at
 */
 
 import {AppBar, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import './App.scss';
 import BottomNav from './components/BottomNav';
@@ -47,6 +47,10 @@ function App() {
   // Use the appropriate theme based on bankConfig.darkMode
   const theme = appConfig.darkMode ? darkTheme : lightTheme;
 
+
+  useEffect(() => {
+    loadInitialAppData();
+  }, []);
 
   const {isTagModal} = useSelector(selectExpense);
 
@@ -112,9 +116,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => 
 
 // Bottom navigation wrapper that uses auth context
 const BottomNavAuth = () => {
-  const {currentUser} = useAuth();
-
-  if (!currentUser) return null;
 
   return (
     <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>

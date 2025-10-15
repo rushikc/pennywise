@@ -11,13 +11,22 @@ export const BUDGET_LIST: Budget[] = [
     tagList: [
       'food',
       'groceries',
-      'snacks',
+      'snacks'
+    ]
+  },
+  {
+    id: 'budget_food_7x9k33',
+    amount: 1700,
+    modifiedDate: 1760214153160,
+    name: 'Drinks',
+    operation: 'update',
+    tagList: [
       'drinks'
     ]
   },
   {
     id: 'budget_travel_4p8n1q',
-    amount: 10000,
+    amount: 4500,
     modifiedDate: 1760214153160,
     name: 'Travel',
     operation: 'add',
@@ -29,7 +38,7 @@ export const BUDGET_LIST: Budget[] = [
     id: 'budget_sports_6w5z3r',
     amount: 10000,
     modifiedDate: 1760214153160,
-    name: 'Sports',
+    name: 'Sports & Fitness',
     operation: 'add',
     tagList: [
       'badminton',
@@ -38,7 +47,7 @@ export const BUDGET_LIST: Budget[] = [
   },
   {
     id: 'budget_health_9m2l7v',
-    amount: 10000,
+    amount: 5000,
     modifiedDate: 1760214153160,
     name: 'Health',
     operation: 'add',

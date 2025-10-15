@@ -1107,6 +1107,18 @@ export const ExpenseListNew: Expense[] = [
     'id': '19 Jul 25, 01:54 PM CAFE COFFE'
   },
   {
+    'cost': 1350,
+    'vendor': 'PAYTM-1554@PTYBL MedicalX',
+    'type': 'upi',
+    'date': 1753186052000,
+    'tag': 'medical',
+    'user': 'arya',
+    'mailId': '1971634addd3a2ab',
+    'costType': 'debit',
+    'modifiedDate': 1753186052000,
+    'id': '19 Jul 25, 01:50 PM PAYTM-7901'
+  },
+  {
     'cost': 55,
     'costType': 'debit',
     'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
@@ -1191,6 +1203,18 @@ export const ExpenseListNew: Expense[] = [
     'id': '18 Jul 25, 03:11 PM PAYTM-7901'
   },
   {
+    'cost': 1300,
+    'costType': 'debit',
+    'vendor': 'PAYTM-79015682@PTYBL UBER',
+    'tag': 'transport',
+    'type': 'upi',
+    'date': 1753104310000,
+    'modifiedDate': 1753104310000,
+    'user': 'arya',
+    'mailId': '1981ce939337dca9',
+    'id': '18 Jul 25, 03:10 PM PAYTM-7901'
+  },
+  {
     'cost': 12,
     'costType': 'debit',
     'vendor': 'PAYTMQR5VJKOR@PTYS VINOD KUMAR C',
@@ -1261,6 +1285,18 @@ export const ExpenseListNew: Expense[] = [
     'user': 'arya',
     'mailId': '19813eac1cdfbeda',
     'id': '16 Jul 25, 09:16 PM COMPANYFOOD IN'
+  },
+  {
+    'cost': 3000,
+    'costType': 'debit',
+    'vendor': 'PAYTM-79015682@PTYBL UBER',
+    'tag': 'transport',
+    'type': 'upi',
+    'date': 1752953414000,
+    'modifiedDate': 1752953414000,
+    'user': 'arya',
+    'mailId': '1981ce939337dca9',
+    'id': '16 Jul 25, 03:10 PM PAYTM-7901'
   },
   {
     'cost': 130,
@@ -5293,6 +5329,18 @@ export const ExpenseListNew: Expense[] = [
     'costType': 'debit',
     'modifiedDate': 1748696847000,
     'id': '28 May 25, 02:53 PM PAYTM-7901'
+  },
+  {
+    'cost': 1250,
+    'vendor': 'PAYTM-1554@PTYBL MedicalX',
+    'type': 'upi',
+    'date': 1748696847000,
+    'tag': 'medical',
+    'user': 'arya',
+    'mailId': '1971634addd3a2ab',
+    'costType': 'debit',
+    'modifiedDate': 1748696847000,
+    'id': '28 May 25, 02:51 PM PAYTM-7901'
   },
   {
     'cost': 140,

@@ -90,7 +90,7 @@ export const routes: Array<Route> = [
     path: '/budget',
     enabled: true,
     component: Budget,
-    isProtected: true,
+    isProtected: false,
   },
   {
     key: 'setting-tag-maps-route',

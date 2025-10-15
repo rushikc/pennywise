@@ -99,6 +99,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setLoading(true);
     ExpenseAPI.getExpenseList()
       .then(expenses => {
+        console.log('Expenses reloaded:', expenses);
         const sortedExpenses = sortByKeyDate(expenses, 'date');
         setExpenseList(sortedExpenses);
         setTimeout(() => setLoading(false), 300);
