@@ -44,7 +44,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
-    z-index: 100;
+    z-index: 300;
     padding-bottom: 20px;
     animation: slideUp 0.2s ease-out;
     border: 1px solid var(--border-color);
@@ -296,7 +296,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     position: fixed;
     bottom: 130px;
     right: 35px;
-    z-index: 1000;
+    z-index: 200;
     transition: transform 0.2s ease;
 
     .MuiFab-root {

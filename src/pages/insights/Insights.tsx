@@ -672,7 +672,7 @@ const GroupByPanel: React.FC<{
   return (
     <div className="group-by-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Group by</span>
+        <span className="panel-title">Insights Options</span>
         <IconButton size="small" className="close-button" onClick={onClose}>
           <CloseIcon/>
         </IconButton>

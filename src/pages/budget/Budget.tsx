@@ -490,7 +490,7 @@ const FilterPanel: FC<{
   return (
     <div className="group-by-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Filter by date</span>
+        <span className="panel-title">Filter by date & year</span>
         <IconButton
           size="small"
           className="close-button"
