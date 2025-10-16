@@ -5,6 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .budget-container {
   padding: 20px;
+  margin-bottom: 80px;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
@@ -132,6 +133,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     display: flex;
     flex-direction: column;
     gap: 16px;
+
 
     .budget-card {
       background-color: var(--bg-card);
@@ -336,6 +338,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
       }
 
       .budget-list {
+
         .budget-card {
           .budget-card-header {
             flex-direction: row;
