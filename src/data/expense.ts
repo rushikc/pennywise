@@ -39,7 +39,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 65,
     'costType': 'credit',
-    'vendor': 'MUKTUM XYZZ MAKTUMXYZZ1@OKAXIS',
+    'vendor': 'MUKTUM RAO MAKTUMXYZZ1@OKAXIS',
     'tag': 'badminton',
     'type': 'upi',
     'date': 1754134770000,
