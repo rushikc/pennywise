@@ -17,8 +17,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 250,
     'costType': 'credit',
-    'vendor': 'RAHULHP0-1@OKSBI RAHUL HP',
-
+    'vendor': 'RAHUL HP RAHULHP0-1@OKSBI',
     'type': 'upi',
     'date': 1754164584000,
     'modifiedDate': 1754164584000,
@@ -29,8 +28,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 45,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5W59XD@PTYS VINOD KUMAR C',
-
+    'vendor': 'VINOD KUMAR C PAYTMQR5W59XD@PTYS',
     'type': 'upi',
     'date': 1754154342000,
     'modifiedDate': 1754154342000,
@@ -41,7 +39,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 65,
     'costType': 'credit',
-    'vendor': 'MAKTUMXYZZ1@OKAXIS MUKTUM XYZZ',
+    'vendor': 'MUKTUM XYZZ MAKTUMXYZZ1@OKAXIS',
     'tag': 'badminton',
     'type': 'upi',
     'date': 1754134770000,
@@ -65,7 +63,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1000,
     'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
+    'vendor': 'INDMONEY INDMONEYMF1@HDFCBANK',
     'tag': 'invest',
     'type': 'upi',
     'date': 1754129002000,
@@ -78,7 +76,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1754108127000,
     'modifiedDate': 1754108127000,
@@ -90,7 +87,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1754108127000,
     'modifiedDate': 1754108127000,
@@ -102,7 +98,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 263.75,
     'costType': 'debit',
     'vendor': 'ZOMATO',
-
     'type': 'credit',
     'date': 1754103560000,
     'modifiedDate': 1754103560000,
@@ -113,7 +108,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1900,
     'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
+    'vendor': 'INDMONEY INDMONEYMF1@HDFCBANK',
     'tag': 'invest',
     'type': 'upi',
     'date': 1754088029000,
@@ -125,7 +120,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1900,
     'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
+    'vendor': 'INDMONEY INDMONEYMF1@HDFCBANK',
     'tag': 'invest',
     'type': 'upi',
     'date': 1754088029000,
@@ -137,7 +132,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1500,
     'costType': 'debit',
-    'vendor': 'INDMONEYMF1@HDFCBANK INDMONEY',
+    'vendor': 'INDMONEY INDMONEYMF1@HDFCBANK',
     'tag': 'invest',
     'type': 'upi',
     'date': 1754087374000,
@@ -149,8 +144,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1,
     'costType': 'debit',
-    'vendor': 'SETUBROKENTUSK@KAYPAY SETU BROKENTUSK TECHNOLOGIES',
-
+    'vendor': 'SETU BROKENTUSK TECHNOLOGIES SETUBROKENTUSK@KAYPAY',
     'type': 'upi',
     'date': 1754086318000,
     'modifiedDate': 1754086318000,
@@ -162,7 +156,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 110,
     'costType': 'debit',
     'vendor': 'COMPANY BLR FOOD SER',
-
     'type': 'credit',
     'date': 1754077922000,
     'modifiedDate': 1754077922000,
@@ -174,7 +167,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 130,
     'costType': 'debit',
     'vendor': 'COMPANY BLR FOOD SER',
-
     'type': 'credit',
     'date': 1754077849000,
     'modifiedDate': 1754077849000,
@@ -185,8 +177,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
-
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'type': 'upi',
     'date': 1754068073000,
     'modifiedDate': 1754068073000,
@@ -197,8 +188,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 69,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
-
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'type': 'upi',
     'date': 1754061862000,
     'modifiedDate': 1754061862000,
@@ -209,8 +199,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 9,
     'costType': 'debit',
-    'vendor': 'MYGFSURNAME22-1@OKICICI MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKICICI',
     'type': 'upi',
     'date': 1754043695000,
     'modifiedDate': 1754043695000,
@@ -221,8 +210,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3602,
     'costType': 'debit',
-    'vendor': 'JIOINAPPDIRECT1@YBL JIO RECHARGE',
-
+    'vendor': 'JIO RECHARGE JIOINAPPDIRECT1@YBL',
     'type': 'upi',
     'date': 1754041180000,
     'modifiedDate': 1754041180000,
@@ -234,7 +222,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 210,
     'costType': 'debit',
     'vendor': 'COMPANY BLR FOOD SER',
-
     'type': 'credit',
     'date': 1753993192000,
     'modifiedDate': 1753993192000,
@@ -245,8 +232,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 42,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
-
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'type': 'upi',
     'date': 1753981531000,
     'modifiedDate': 1753981531000,
@@ -257,8 +243,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
-
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'type': 'upi',
     'date': 1753970767000,
     'modifiedDate': 1753970767000,
@@ -269,8 +254,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 160,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
-
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'type': 'upi',
     'date': 1753968388000,
     'modifiedDate': 1753968388000,
@@ -281,8 +265,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': '0790421A0080769.BQR@KOTAK DERMATOPIA SKIN AND HAIR CLINIC',
-
+    'vendor': 'DERMATOPIA SKIN AND HAIR CLINIC 0790421A0080769.BQR@KOTAK',
     'type': 'upi',
     'date': 1753961553000,
     'modifiedDate': 1753961553000,
@@ -293,8 +276,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 79,
     'costType': 'debit',
-    'vendor': 'DHANANJAYA860@OKSBI DHANANJAYA .',
-
+    'vendor': 'DHANANJAYA . DHANANJAYA860@OKSBI',
     'type': 'upi',
     'date': 1753958679000,
     'modifiedDate': 1753958679000,
@@ -341,8 +323,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 41,
     'costType': 'debit',
-    'vendor': 'MEDPLUSKONNENAAGRAHA.60983628@HDFCBANK MEDPLUSRA',
-
+    'vendor': 'MEDPLUSRA MEDPLUSKONNENAAGRAHA.60983628@HDFCBANK',
     'type': 'upi',
     'date': 1753881683000,
     'modifiedDate': 1753881683000,
@@ -378,7 +359,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1753820555000,
     'modifiedDate': 1753820555000,
@@ -389,8 +369,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 285,
     'costType': 'debit',
-    'vendor': 'Q205221499@YBL CAFE COFFEE DAY INDIRANAGAR 100 FT RD',
-
+    'vendor': 'CAFE COFFEE DAY INDIRANAGAR 100 FT RD Q205221499@YBL',
     'type': 'upi',
     'date': 1753818199000,
     'modifiedDate': 1753818199000,
@@ -413,7 +392,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 60,
     'costType': 'debit',
-    'vendor': 'ARUNPRASANTHM2@OKSBI MR ARUN PRASHANTH A',
+    'vendor': 'MR ARUN PRASHANTH A ARUNPRASANTHM2@OKSBI',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753812714000,
@@ -425,7 +404,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 102,
     'costType': 'debit',
-    'vendor': 'SHOUKATHALIATTARWAHAB-1@OKAXIS TASLEEM JILANI ATTAR',
+    'vendor': 'TASLEEM JILANI ATTAR SHOUKATHALIATTARWAHAB-1@OKAXIS',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753811023000,
@@ -450,7 +429,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1753788737000,
     'modifiedDate': 1753788737000,
@@ -485,7 +463,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 40,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753731613000,
@@ -509,7 +487,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 36,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753710321000,
@@ -521,7 +499,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753708336000,
@@ -533,7 +511,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 206,
     'costType': 'debit',
-    'vendor': 'VENKATARAMREDD493@YBL JOLADARASHI VENKATARAM REDDY',
+    'vendor': 'JOLADARASHI VENKATARAM REDDY VENKATARAMREDD493@YBL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753703694000,
@@ -545,7 +523,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': '0790421A0080769.BQR@KOTAK DERMATOPIA SKIN AND HAIR CLINIC',
+    'vendor': 'DERMATOPIA SKIN AND HAIR CLINIC 0790421A0080769.BQR@KOTAK',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1753701551000,
@@ -557,7 +535,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 91,
     'costType': 'debit',
-    'vendor': 'SS7434201@OKSBI MR SHANKAR D',
+    'vendor': 'MR SHANKAR D SS7434201@OKSBI',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753700153000,
@@ -570,7 +548,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1753660947000,
     'modifiedDate': 1753660947000,
@@ -594,7 +571,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE CLOUD',
-
     'type': 'credit',
     'date': 1753646646000,
     'modifiedDate': 1753646646000,
@@ -641,7 +617,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 30,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1753548186000,
@@ -653,7 +629,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753544386000,
@@ -677,7 +653,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'Q451396149@YBL NAGARAJ SHETTY K',
+    'vendor': 'NAGARAJ SHETTY K Q451396149@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1753527771000,
@@ -689,7 +665,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 58,
     'costType': 'debit',
-    'vendor': '86186544@YBL VENKATESHAPPA R',
+    'vendor': 'VENKATESHAPPA R 86186544@YBL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753527650000,
@@ -701,7 +677,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'Q052541988@YBL SRINIVASAREDDY PANTA',
+    'vendor': 'SRINIVASAREDDY PANTA Q052541988@YBL',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1753527004000,
@@ -713,7 +689,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': '0790421A0080769.BQR@KOTAK DERMATOPIA SKIN AND HAIR CLINIC',
+    'vendor': 'DERMATOPIA SKIN AND HAIR CLINIC 0790421A0080769.BQR@KOTAK',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1753526663000,
@@ -725,7 +701,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 77,
     'costType': 'debit',
-    'vendor': 'SARU84048-1@OKAXIS KETAA P',
+    'vendor': 'KETAA P SARU84048-1@OKAXIS',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753524845000,
@@ -749,7 +725,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753461479000,
@@ -762,7 +738,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2,
     'costType': 'debit',
     'vendor': 'GOOGLE PLAY',
-
     'type': 'credit',
     'date': 1753457372000,
     'modifiedDate': 1753457372000,
@@ -785,7 +760,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753449378000,
@@ -797,7 +772,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753388205000,
@@ -833,7 +808,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753368628000,
@@ -845,7 +820,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1753364724000,
@@ -857,7 +832,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1753290158000,
@@ -869,7 +844,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 60,
     'costType': 'debit',
-    'vendor': 'Q287757047@YBL SENDHOOR COFFEE',
+    'vendor': 'SENDHOOR COFFEE Q287757047@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753287345000,
@@ -917,8 +892,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'costType': 'debit',
-    'vendor': 'PAYTMQR1NBKMK53TS@PAYTM MADURAI IDLY SHOP INDIRANAGAR',
-
+    'vendor': 'MADURAI IDLY SHOP INDIRANAGAR PAYTMQR1NBKMK53TS@PAYTM',
     'type': 'upi',
     'date': 1753270000000,
     'modifiedDate': 1753270000000,
@@ -951,7 +925,7 @@ export const ExpenseListNew: Expense[] = [
     'id': '19 Jul 25, 10:34 PM ZOMATO'
   },
   {
-    'vendor': 'DDDDD1035-1@OKICICI DDDDD SAHNI',
+    'vendor': 'DDDDD SAHNI DDDDD1035-1@OKICICI',
     'tag': 'badminton',
     'cost': 1680,
     'date': 1753207906000,
@@ -965,7 +939,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1753207047000,
@@ -1024,7 +998,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1350,
-    'vendor': 'PAYTM-1554@PTYBL MedicalX',
+    'vendor': 'MedicalX PAYTM-1554@PTYBL',
     'type': 'upi',
     'date': 1753186052000,
     'tag': 'medical',
@@ -1037,7 +1011,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CRO2D@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1753185195000,
@@ -1085,7 +1059,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 22,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753120979000,
@@ -1097,7 +1071,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 40,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753110676000,
@@ -1109,7 +1083,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753104310000,
@@ -1121,7 +1095,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1300,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL UBER',
+    'vendor': 'UBER PAYTM-79015682@PTYBL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1753104310000,
@@ -1133,7 +1107,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5VJKOR@PTYS VINOD KUMAR C',
+    'vendor': 'VINOD KUMAR C PAYTMQR5VJKOR@PTYS',
     'tag': 'snacks',
     'type': 'upi',
     'date': 1753088496000,
@@ -1157,7 +1131,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 35,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1753030416000,
@@ -1181,7 +1155,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1752998443000,
@@ -1205,7 +1179,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3000,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL UBER',
+    'vendor': 'UBER PAYTM-79015682@PTYBL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1752953414000,
@@ -1241,7 +1215,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1752941696000,
@@ -1253,7 +1227,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1752941655000,
@@ -1265,7 +1239,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752933344000,
@@ -1277,8 +1251,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1754,
     'costType': 'debit',
-    'vendor': 'BBPSBP@YBL PHONEPE',
-
+    'vendor': 'PHONEPE BBPSBP@YBL',
     'type': 'upi',
     'date': 1752913507000,
     'modifiedDate': 1752913507000,
@@ -1289,7 +1262,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752871922000,
@@ -1325,7 +1298,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'user': 'arya',
@@ -1349,7 +1322,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'user': 'arya',
@@ -1361,7 +1334,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'user': 'arya',
@@ -1385,7 +1358,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 58,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752767780000,
@@ -1409,7 +1382,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752759888000,
@@ -1421,7 +1394,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 201,
     'costType': 'debit',
-    'vendor': 'AAJAYRAO93@AXL AJAY',
+    'vendor': 'AJAY AAJAYRAO93@AXL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1752756429000,
@@ -1433,7 +1406,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1752750804000,
@@ -1443,7 +1416,7 @@ export const ExpenseListNew: Expense[] = [
     'id': '14 Jul 25, 12:59 PM PAYTMQR5XM'
   },
   {
-    'vendor': 'DDDDD1035-1@OKICICI DDDDD SAHNI',
+    'vendor': 'DDDDD SAHNI DDDDD1035-1@OKICICI',
     'tag': 'badminton',
     'cost': 700,
     'date': 1752694641000,
@@ -1457,7 +1430,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 24,
     'costType': 'debit',
-    'vendor': 'Q184432533@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q184432533@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1752689068000,
@@ -1469,7 +1442,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 260,
     'costType': 'debit',
-    'vendor': 'CHAIDAYS376528.RZP@RXAXIS MOUNTAIN TRAIL FOODS PRIVATE LIMITED',
+    'vendor': 'MOUNTAIN TRAIL FOODS PRIVATE LIMITED CHAIDAYS376528.RZP@RXAXIS',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1752676817000,
@@ -1493,7 +1466,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 105,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CRO2D@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1752671393000,
@@ -1518,7 +1491,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 13161.08,
     'costType': 'debit',
     'vendor': 'RAZ*MANIPAL ACADEMY OF',
-
     'type': 'credit',
     'date': 1752619446000,
     'user': 'arya',
@@ -1529,8 +1501,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 139,
     'costType': 'debit',
-    'vendor': 'Q903619067@YBL SUDARSHAN VS',
-
+    'vendor': 'SUDARSHAN VS Q903619067@YBL',
     'type': 'upi',
     'date': 1752616397000,
     'user': 'arya',
@@ -1541,7 +1512,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1500,
     'costType': 'debit',
-    'vendor': 'FAKENAMESAXENA4-1@OKICICI FAKENAME VINEET SAXENA',
+    'vendor': 'FAKENAME VINEET SAXENA FAKENAMESAXENA4-1@OKICICI',
     'tag': 'food',
     'type': 'upi',
     'date': 1752611051000,
@@ -1553,7 +1524,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 103,
     'costType': 'debit',
-    'vendor': 'SRAJSHEKAR.11@YBL S RAJASHEKHARAIAH',
+    'vendor': 'S RAJASHEKHARAIAH SRAJSHEKAR.11@YBL',
     'tag': 'transport',
     'type': 'upi',
     'date': 1752600424000,
@@ -1589,7 +1560,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1000,
     'costType': 'debit',
-    'vendor': 'PADMANJALIMREDDY@OKHDFCBANK SANDHYA M',
+    'vendor': 'SANDHYA M PADMANJALIMREDDY@OKHDFCBANK',
     'tag': 'rent',
     'type': 'upi',
     'date': 1752523196000,
@@ -1661,7 +1632,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'BHARATPE.9B0E0B0R1G722072@UNITYPE SANNA THIPPAMMA',
+    'vendor': 'SANNA THIPPAMMA BHARATPE.9B0E0B0R1G722072@UNITYPE',
     'tag': 'food',
     'type': 'upi',
     'date': 1752498348000,
@@ -1673,7 +1644,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'JKBMERC00136230@JKB MAHAVEER ELECTRICALS',
+    'vendor': 'MAHAVEER ELECTRICALS JKBMERC00136230@JKB',
     'tag': 'gadgets',
     'type': 'upi',
     'date': 1752498143000,
@@ -1685,7 +1656,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 195,
     'costType': 'debit',
-    'vendor': 'RAMESHWARAMENT@YBL RAMESHWARAM ENTERPRISES',
+    'vendor': 'RAMESHWARAM ENTERPRISES RAMESHWARAMENT@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752489092000,
@@ -1697,7 +1668,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1752480646000,
@@ -1709,8 +1680,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'costType': 'credit',
-    'vendor': 'RAHUL.STEPHEN22@OKHDFCBANK RAHUL S',
-
+    'vendor': 'RAHUL S RAHUL.STEPHEN22@OKHDFCBANK',
     'type': 'upi',
     'date': 1752439064000,
     'user': 'arya',
@@ -1733,7 +1703,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 160,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752414893000,
@@ -1745,7 +1715,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 60,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1752411317000,
@@ -1757,7 +1727,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 232,
     'costType': 'debit',
-    'vendor': 'BHARATPE9M0B7K2B8C912786@YESBANKLTD RAMESH V',
+    'vendor': 'RAMESH V BHARATPE9M0B7K2B8C912786@YESBANKLTD',
     'tag': 'transport',
     'type': 'upi',
     'date': 1752409548000,
@@ -1769,7 +1739,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1752394024000,
@@ -1781,8 +1751,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 133,
     'costType': 'debit',
-    'vendor': 'AFZALAFZAL88480@IBL MOHAMMED AFZAL',
-
+    'vendor': 'MOHAMMED AFZAL AFZALAFZAL88480@IBL',
     'type': 'upi',
     'date': 1752360501000,
     'user': 'arya',
@@ -1793,8 +1762,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 317,
     'costType': 'debit',
-    'vendor': 'HEMANTH.PN@IBL HEMANTH PN',
-
+    'vendor': 'HEMANTH PN HEMANTH.PN@IBL',
     'type': 'upi',
     'date': 1752349193000,
     'user': 'arya',
@@ -1805,8 +1773,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 231,
     'costType': 'debit',
-    'vendor': 'SHASHIP8648@OKAXIS PALANI',
-
+    'vendor': 'PALANI SHASHIP8648@OKAXIS',
     'type': 'upi',
     'date': 1752329943000,
     'user': 'arya',
@@ -1817,7 +1784,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 140,
     'costType': 'debit',
-    'vendor': 'RAMESHWARAMENT@YBL RAMESHWARAM ENTERPRISES',
+    'vendor': 'RAMESHWARAM ENTERPRISES RAMESHWARAMENT@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752313213000,
@@ -1829,7 +1796,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1752307742000,
@@ -1841,7 +1808,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752269213000,
@@ -1877,7 +1844,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752240793000,
@@ -1889,7 +1856,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1752221082000,
@@ -1901,7 +1868,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1752167550000,
@@ -1913,7 +1880,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 90,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752163230000,
@@ -1925,7 +1892,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1752156090000,
@@ -1937,7 +1904,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1752144690000,
@@ -1961,8 +1928,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'GOWDAPREETHAM43@OKAXIS PREETHAM E',
-
+    'vendor': 'PREETHAM E GOWDAPREETHAM43@OKAXIS',
     'type': 'upi',
     'date': 1752089670000,
     'user': 'arya',
@@ -1973,8 +1939,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'XYZZZ7890123@OKICICI XYZZZ CHATTOPADHYAY',
-
+    'vendor': 'XYZZZ CHATTOPADHYAY XYZZZ7890123@OKICICI',
     'type': 'upi',
     'date': 1752089490000,
     'user': 'arya',
@@ -1985,8 +1950,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'Q576243154@YBL MR ABDUL KADAR',
-
+    'vendor': 'MR ABDUL KADAR Q576243154@YBL',
     'type': 'upi',
     'date': 1752080130000,
     'user': 'arya',
@@ -1997,8 +1961,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 80,
     'costType': 'debit',
-    'vendor': 'Q299879714@YBL SATYAJIT GHOSH',
-
+    'vendor': 'SATYAJIT GHOSH Q299879714@YBL',
     'type': 'upi',
     'date': 1752077130000,
     'user': 'arya',
@@ -2033,8 +1996,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': 'RAHUL.STEPHEN22@OKHDFCBANK RAHUL S',
-
+    'vendor': 'RAHUL S RAHUL.STEPHEN22@OKHDFCBANK',
     'type': 'upi',
     'date': 1752065190000,
     'user': 'arya',
@@ -2045,8 +2007,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 407,
     'costType': 'debit',
-    'vendor': 'VARSHA5RAIN@OKSBI VARSHA',
-
+    'vendor': 'VARSHA VARSHA5RAIN@OKSBI',
     'type': 'upi',
     'date': 1752061050000,
     'user': 'arya',
@@ -2057,8 +2018,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'ANANTHRAHUL97@OKICICI A RAHUL',
-
+    'vendor': 'A RAHUL ANANTHRAHUL97@OKICICI',
     'type': 'upi',
     'date': 1752040830000,
     'user': 'arya',
@@ -2069,8 +2029,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'PAYTMQR60GFT8@PTYS DM AND SONS',
-
+    'vendor': 'DM AND SONS PAYTMQR60GFT8@PTYS',
     'type': 'upi',
     'date': 1752011850000,
     'user': 'arya',
@@ -2081,7 +2040,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1320.98,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5D50JI@PTYS DM AND SONS',
+    'vendor': 'DM AND SONS PAYTMQR5D50JI@PTYS',
     'tag': 'petrol',
     'type': 'upi',
     'date': 1752011670000,
@@ -2093,8 +2052,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1673,
     'costType': 'debit',
-    'vendor': 'XYZZZ.V.GOWDA6777-4@OKAXIS XYZZZ GOWDA V',
-
+    'vendor': 'XYZZZ GOWDA V XYZZZ.V.GOWDA6777-4@OKAXIS',
     'type': 'upi',
     'date': 1752007530000,
     'user': 'arya',
@@ -2105,8 +2063,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'GPAY-1124@OKBIZAXIS  BADMINTON ARENA',
-
+    'vendor': ' BADMINTON ARENA GPAY-1124@OKBIZAXIS',
     'type': 'upi',
     'date': 1751999250000,
     'user': 'arya',
@@ -2117,8 +2074,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'Q576243154@YBL MR ABDUL KADAR',
-
+    'vendor': 'MR ABDUL KADAR Q576243154@YBL',
     'type': 'upi',
     'date': 1751994030000,
     'user': 'arya',
@@ -2129,8 +2085,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 68,
     'costType': 'debit',
-    'vendor': 'PAYTM.S19SXXI@PTY ABDUL LATHIF',
-
+    'vendor': 'ABDUL LATHIF PAYTM.S19SXXI@PTY',
     'type': 'upi',
     'date': 1751988030000,
     'user': 'arya',
@@ -2153,7 +2108,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 125,
     'costType': 'debit',
-    'vendor': 'PAYTM.S1IU809@PTY IDC KITCHEN',
+    'vendor': 'IDC KITCHEN PAYTM.S1IU809@PTY',
     'tag': 'food',
     'type': 'upi',
     'date': 1751966130000,
@@ -2165,8 +2120,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 8,
     'costType': 'debit',
-    'vendor': 'PAYTM.S1E6SAV@PTY SHEKAR GOWDA B',
-
+    'vendor': 'SHEKAR GOWDA B PAYTM.S1E6SAV@PTY',
     'type': 'upi',
     'date': 1751961330000,
     'user': 'arya',
@@ -2177,8 +2131,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 785,
     'costType': 'debit',
-    'vendor': 'RAHUL.STEPHEN22@OKHDFCBANK RAHUL S',
-
+    'vendor': 'RAHUL S RAHUL.STEPHEN22@OKHDFCBANK',
     'type': 'upi',
     'date': 1751923590000,
     'user': 'arya',
@@ -2213,7 +2166,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751894550000,
@@ -2225,8 +2178,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'costType': 'debit',
-    'vendor': 'FAKENAMESAXENA4-1@OKICICI FAKENAME VINEET SAXENA',
-
+    'vendor': 'FAKENAME VINEET SAXENA FAKENAMESAXENA4-1@OKICICI',
     'type': 'upi',
     'date': 1751882130000,
     'user': 'arya',
@@ -2237,7 +2189,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751875230000,
@@ -2274,7 +2226,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 385,
     'costType': 'debit',
     'vendor': 'KOBE SIZZLERS',
-
     'type': 'credit',
     'date': 1751833470000,
     'user': 'arya',
@@ -2309,7 +2260,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CRO2D@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751818770000,
@@ -2321,7 +2272,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 40,
     'costType': 'debit',
-    'vendor': 'RAMESHWARAMENT@YBL RAMESHWARAM ENTERPRISES',
+    'vendor': 'RAMESHWARAM ENTERPRISES RAMESHWARAMENT@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751797290000,
@@ -2333,7 +2284,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751785530000,
@@ -2357,7 +2308,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751721150000,
@@ -2369,7 +2320,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20000,
     'costType': 'debit',
-    'vendor': 'PADMANJALIMREDDY@OKHDFCBANK SANDHYA M',
+    'vendor': 'SANDHYA M PADMANJALIMREDDY@OKHDFCBANK',
     'tag': 'rent',
     'type': 'upi',
     'date': 1751713050000,
@@ -2393,7 +2344,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 35,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751648130000,
@@ -2429,7 +2380,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751616630000,
@@ -2442,7 +2393,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 3467.55,
     'costType': 'debit',
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1751584710000,
     'user': 'arya',
@@ -2465,7 +2415,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 30,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1751555547000,
@@ -2477,7 +2427,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 54,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751553471000,
@@ -2501,7 +2451,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751549072000,
@@ -2513,7 +2463,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1751537055000,
@@ -2525,7 +2475,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 80,
     'costType': 'debit',
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1751487985000,
@@ -2549,8 +2499,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 200,
     'costType': 'credit',
-    'vendor': 'GOWDAPREETHAM43@OKAXIS PREETHAM E',
-
+    'vendor': 'PREETHAM E GOWDAPREETHAM43@OKAXIS',
     'type': 'upi',
     'date': 1751484141000,
     'user': 'arya',
@@ -2561,8 +2510,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'GPAY-11240@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-11240@OKBIZAXIS',
     'type': 'upi',
     'date': 1751479751000,
     'user': 'arya',
@@ -2573,8 +2521,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'GPAY-11240@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-11240@OKBIZAXIS',
     'type': 'upi',
     'date': 1751477951000,
     'user': 'arya',
@@ -2585,7 +2532,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1751475566000,
@@ -2597,7 +2544,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CRO2D@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751472966000,
@@ -2609,7 +2556,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 89,
     'costType': 'debit',
-    'vendor': 'CHAIDAYS376528.RZP@RXAXIS MOUNTAIN TRAIL FOODS PRIVATE LIMITED',
+    'vendor': 'MOUNTAIN TRAIL FOODS PRIVATE LIMITED CHAIDAYS376528.RZP@RXAXIS',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1751467638000,
@@ -2633,7 +2580,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2200,
     'costType': 'debit',
-    'vendor': 'Q556131355@YBL KAVYANSH GUPTA',
+    'vendor': 'KAVYANSH GUPTA Q556131355@YBL',
     'tag': 'amenities',
     'type': 'upi',
     'date': 1751453522000,
@@ -2645,7 +2592,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 70,
     'costType': 'debit',
-    'vendor': 'M.KS3657-1@OKICICI MANOJ KUMAR S',
+    'vendor': 'MANOJ KUMAR S M.KS3657-1@OKICICI',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1751451877000,
@@ -2669,8 +2616,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 240,
     'costType': 'credit',
-    'vendor': 'M.KS3657@OKHDFCBANK MANOJ KUMAR S',
-
+    'vendor': 'MANOJ KUMAR S M.KS3657@OKHDFCBANK',
     'type': 'upi',
     'date': 1751450575000,
     'user': 'arya',
@@ -2681,7 +2627,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751441630000,
@@ -2693,7 +2639,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1751385594000,
@@ -2729,7 +2675,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CRO2D@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CRO2D@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751377538000,
@@ -2741,7 +2687,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 199,
     'costType': 'debit',
-    'vendor': 'AIRTEL2.PAYU@HDFCBANK WWW AIRTEL IN',
+    'vendor': 'WWW AIRTEL IN AIRTEL2.PAYU@HDFCBANK',
     'tag': 'amenities',
     'type': 'upi',
     'date': 1751374707000,
@@ -2753,7 +2699,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6CM9PG@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CM9PG@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751360695000,
@@ -2765,7 +2711,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'Q548978782@YBL TRUFFLES INDRANAGAR',
+    'vendor': 'TRUFFLES INDRANAGAR Q548978782@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1751355734000,
@@ -2777,7 +2723,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751355259000,
@@ -2813,7 +2759,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 310,
     'costType': 'debit',
-    'vendor': 'Q052541988@YBL SRINIVASAREDDY PANTA',
+    'vendor': 'SRINIVASAREDDY PANTA Q052541988@YBL',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1751284549000,
@@ -2825,8 +2771,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1500,
     'costType': 'debit',
-    'vendor': '0790421A0080769.BQR@KOTAK DERMATOPIA SKIN AND HAIR CLINIC',
-
+    'vendor': 'DERMATOPIA SKIN AND HAIR CLINIC 0790421A0080769.BQR@KOTAK',
     'type': 'upi',
     'date': 1751284399000,
     'user': 'arya',
@@ -2837,7 +2782,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751228802000,
@@ -2861,7 +2806,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 35,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751222371000,
@@ -2873,7 +2818,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751205017000,
@@ -2885,8 +2830,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'credit',
-    'vendor': 'LEONLOUIS1991@OKHDFCBANK LEON L',
-
+    'vendor': 'LEON L LEONLOUIS1991@OKHDFCBANK',
     'type': 'upi',
     'date': 1751191262000,
     'user': 'arya',
@@ -2898,7 +2842,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 305,
     'costType': 'debit',
     'vendor': 'MTR MAIYAS',
-
     'type': 'credit',
     'date': 1751191202000,
     'user': 'arya',
@@ -2909,7 +2852,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751117560000,
@@ -2921,7 +2864,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751116843000,
@@ -2933,8 +2876,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'credit',
-    'vendor': 'LEONLOUIS1991@OKHDFCBANK LEON L',
-
+    'vendor': 'LEON L LEONLOUIS1991@OKHDFCBANK',
     'type': 'upi',
     'date': 1751104699000,
     'user': 'arya',
@@ -2945,7 +2887,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 270,
     'costType': 'debit',
-    'vendor': 'MTRMAIYAS.61749141@HDFCBANK MTR MAIYAS',
+    'vendor': 'MTR MAIYAS MTRMAIYAS.61749141@HDFCBANK',
     'tag': 'food',
     'type': 'upi',
     'date': 1751104616000,
@@ -2957,7 +2899,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1751098814000,
@@ -2981,7 +2923,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751043123000,
@@ -2993,7 +2935,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751041707000,
@@ -3017,7 +2959,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1751030216000,
@@ -3029,7 +2971,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 300,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1751019113000,
@@ -3041,7 +2983,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 4000,
     'costType': 'debit',
-    'vendor': 'Q052541988@YBL SRINIVASAREDDY PANTA',
+    'vendor': 'SRINIVASAREDDY PANTA Q052541988@YBL',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1751016369000,
@@ -3053,7 +2995,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 12,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5VJKOR@PTYS VINOD KUMAR C',
+    'vendor': 'VINOD KUMAR C PAYTMQR5VJKOR@PTYS',
     'tag': 'snacks',
     'type': 'upi',
     'date': 1751012645000,
@@ -3077,8 +3019,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 310,
     'costType': 'debit',
-    'vendor': 'KA57F2387@CNRB BMTC BUS KA57F2387',
-
+    'vendor': 'BMTC BUS KA57F2387 KA57F2387@CNRB',
     'type': 'upi',
     'date': 1750964209000,
     'user': 'arya',
@@ -3090,7 +3031,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 390,
     'costType': 'debit',
     'vendor': 'CRUNCH FOODS',
-
     'type': 'credit',
     'date': 1750953752000,
     'user': 'arya',
@@ -3101,8 +3041,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 80,
     'costType': 'debit',
-    'vendor': 'BHARATPE2Q0W0A0P8L91638@UNITYPE ADANI DIGITAL',
-
+    'vendor': 'ADANI DIGITAL BHARATPE2Q0W0A0P8L91638@UNITYPE',
     'type': 'upi',
     'date': 1750952455000,
     'user': 'arya',
@@ -3113,8 +3052,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 80,
     'costType': 'debit',
-    'vendor': 'BHARATPE2Q0W0A0P8L91638@UNITYPE ADANI DIGITAL',
-
+    'vendor': 'ADANI DIGITAL BHARATPE2Q0W0A0P8L91638@UNITYPE',
     'type': 'upi',
     'date': 1750945706000,
     'user': 'arya',
@@ -3125,8 +3063,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 30,
     'costType': 'debit',
-    'vendor': 'Q453912371@YBL VISHWANATHA NAYAK',
-
+    'vendor': 'VISHWANATHA NAYAK Q453912371@YBL',
     'type': 'upi',
     'date': 1750938454000,
     'user': 'arya',
@@ -3137,8 +3074,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 15,
     'costType': 'debit',
-    'vendor': 'Q489116122@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q489116122@YBL',
     'type': 'upi',
     'date': 1750935669000,
     'user': 'arya',
@@ -3149,8 +3085,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 15,
     'costType': 'debit',
-    'vendor': 'Q489116122@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q489116122@YBL',
     'type': 'upi',
     'date': 1750933395000,
     'user': 'arya',
@@ -3161,8 +3096,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'Q489116122@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q489116122@YBL',
     'type': 'upi',
     'date': 1750931912000,
     'user': 'arya',
@@ -3173,8 +3107,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'Q041435918@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q041435918@YBL',
     'type': 'upi',
     'date': 1750884206000,
     'user': 'arya',
@@ -3209,8 +3142,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'Q041435918@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q041435918@YBL',
     'type': 'upi',
     'date': 1750845500000,
     'user': 'arya',
@@ -3221,8 +3153,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'Q041435918@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q041435918@YBL',
     'type': 'upi',
     'date': 1750843808000,
     'user': 'arya',
@@ -3233,8 +3164,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 105,
     'costType': 'debit',
-    'vendor': 'Q041435918@YBL VINAYAK KAMATH',
-
+    'vendor': 'VINAYAK KAMATH Q041435918@YBL',
     'type': 'upi',
     'date': 1750842694000,
     'user': 'arya',
@@ -3245,8 +3175,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1984,
     'costType': 'debit',
-    'vendor': 'PPAUTOPAYELECTRICITY@YBL AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT',
-
+    'vendor': 'AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT PPAUTOPAYELECTRICITY@YBL',
     'type': 'upi',
     'date': 1750809275000,
     'user': 'arya',
@@ -3257,8 +3186,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 168,
     'costType': 'debit',
-    'vendor': '0511400A0300674.MAB@PNB SHRE GANESH MEDICALS',
-
+    'vendor': 'SHRE GANESH MEDICALS 0511400A0300674.MAB@PNB',
     'type': 'upi',
     'date': 1750796998000,
     'user': 'arya',
@@ -3270,7 +3198,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 3830,
     'costType': 'debit',
     'vendor': 'KBA GROUP',
-
     'type': 'credit',
     'date': 1750781471000,
     'user': 'arya',
@@ -3281,8 +3208,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 580,
     'costType': 'debit',
-    'vendor': 'PAYTMQRZCJ4REEMAW@PAYTM MUEEN AHMED',
-
+    'vendor': 'MUEEN AHMED PAYTMQRZCJ4REEMAW@PAYTM',
     'type': 'upi',
     'date': 1750780813000,
     'user': 'arya',
@@ -3293,8 +3219,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 700,
     'costType': 'debit',
-    'vendor': 'BHARATPE2X0U0A0Z8Y91553@UNITYPE ADANI DIGITAL',
-
+    'vendor': 'ADANI DIGITAL BHARATPE2X0U0A0Z8Y91553@UNITYPE',
     'type': 'upi',
     'date': 1750772029000,
     'user': 'arya',
@@ -3306,7 +3231,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 200,
     'costType': 'debit',
     'vendor': 'PHICOM*HATTI KAPPI',
-
     'type': 'credit',
     'date': 1750761350000,
     'user': 'arya',
@@ -3318,7 +3242,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 660,
     'costType': 'debit',
     'vendor': 'PHICOM*SUBWAY',
-
     'type': 'credit',
     'date': 1750759456000,
     'user': 'arya',
@@ -3329,8 +3252,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 310,
     'costType': 'debit',
-    'vendor': 'KA57F2468@CNRB BMTC BUS KA57F2468',
-
+    'vendor': 'BMTC BUS KA57F2468 KA57F2468@CNRB',
     'type': 'upi',
     'date': 1750752905000,
     'user': 'arya',
@@ -3377,7 +3299,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20,
     'costType': 'debit',
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1750689848000,
@@ -3389,7 +3311,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750681273000,
@@ -3401,7 +3323,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750665886000,
@@ -3425,8 +3347,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'companyblrFOODSERV.42571200@HDFCBANK COMPANY BLR FOOD SERVICES PRIVATE LIMITED',
-
+    'vendor': 'COMPANY BLR FOOD SERVICES PRIVATE LIMITED companyblrFOODSERV.42571200@HDFCBANK',
     'type': 'upi',
     'date': 1750595309000,
     'user': 'arya',
@@ -3437,7 +3358,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750595182000,
@@ -3449,7 +3370,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'PAYTMQR1ISG72NHXZ@PAYTM RAJEESH P',
+    'vendor': 'RAJEESH P PAYTMQR1ISG72NHXZ@PAYTM',
     'tag': 'snacks',
     'type': 'upi',
     'date': 1750584860000,
@@ -3461,7 +3382,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750579451000,
@@ -3473,7 +3394,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 110,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750538614000,
@@ -3485,7 +3406,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 22,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750522818000,
@@ -3497,7 +3418,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750508843000,
@@ -3509,8 +3430,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 24,
     'costType': 'debit',
-    'vendor': 'BAJAJPAY.6879729.03277891@INDUS VENKATARAVAN',
-
+    'vendor': 'VENKATARAVAN BAJAJPAY.6879729.03277891@INDUS',
     'type': 'upi',
     'date': 1750502883000,
     'user': 'arya',
@@ -3533,8 +3453,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'credit',
-    'vendor': 'PALLAVI.VREDDY@OKHDFCBANK PALLAVI V',
-
+    'vendor': 'PALLAVI V PALLAVI.VREDDY@OKHDFCBANK',
     'type': 'upi',
     'date': 1750499669000,
     'user': 'arya',
@@ -3545,8 +3464,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'credit',
-    'vendor': 'SHILPLEO@OKAXIS SHILPA SHIVARUDRA',
-
+    'vendor': 'SHILPA SHIVARUDRA SHILPLEO@OKAXIS',
     'type': 'upi',
     'date': 1750499657000,
     'user': 'arya',
@@ -3557,7 +3475,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750493178000,
@@ -3569,7 +3487,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750452717000,
@@ -3581,7 +3499,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 33,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750423506000,
@@ -3593,7 +3511,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750422731000,
@@ -3605,7 +3523,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750406514000,
@@ -3629,7 +3547,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 18,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750354579000,
@@ -3641,7 +3559,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'costType': 'debit',
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750340379000,
@@ -3653,7 +3571,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 150,
     'costType': 'debit',
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1750334172000,
@@ -3665,7 +3583,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1750332003000,
@@ -3689,8 +3607,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'SHRI.FREN4U@OKHDFCBANK SHRIKANT BIRLA',
-
+    'vendor': 'SHRIKANT BIRLA SHRI.FREN4U@OKHDFCBANK',
     'type': 'upi',
     'date': 1750276108000,
     'user': 'arya',
@@ -3701,8 +3618,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 15,
     'costType': 'debit',
-    'vendor': 'Q522350696@YBL ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q522350696@YBL',
     'type': 'upi',
     'date': 1750269806000,
     'user': 'arya',
@@ -3713,8 +3629,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 67,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6E2CQD@PTYS LOKESH S',
-
+    'vendor': 'LOKESH S PAYTMQR6E2CQD@PTYS',
     'type': 'upi',
     'date': 1750264542000,
     'user': 'arya',
@@ -3725,8 +3640,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'ANANTHRAHUL97@OKICICI A RAHUL',
-
+    'vendor': 'A RAHUL ANANTHRAHUL97@OKICICI',
     'type': 'upi',
     'date': 1750262330000,
     'user': 'arya',
@@ -3761,8 +3675,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1134.62,
     'costType': 'debit',
-    'vendor': 'PAYTMQR60BUXY@PTYS SHANKAR AND SONS',
-
+    'vendor': 'SHANKAR AND SONS PAYTMQR60BUXY@PTYS',
     'type': 'upi',
     'date': 1750241510000,
     'user': 'arya',
@@ -3773,8 +3686,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'SRIDHAR.DORAIRAJ@OKICICI SRIDHAR DORAIRAJ',
-
+    'vendor': 'SRIDHAR DORAIRAJ SRIDHAR.DORAIRAJ@OKICICI',
     'type': 'upi',
     'date': 1750238398000,
     'user': 'arya',
@@ -3785,7 +3697,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'costType': 'debit',
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750232230000,
@@ -3809,8 +3721,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 220,
     'costType': 'credit',
-    'vendor': 'NIHALKANCHAN2210@OKAXIS NIHAL V KANCHAN',
-
+    'vendor': 'NIHAL V KANCHAN NIHALKANCHAN2210@OKAXIS',
     'type': 'upi',
     'date': 1750191585000,
     'user': 'arya',
@@ -3822,7 +3733,6 @@ export const ExpenseListNew: Expense[] = [
     'cost': 2952,
     'costType': 'debit',
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1750184924000,
     'user': 'arya',
@@ -3833,8 +3743,7 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 55,
     'costType': 'debit',
-    'vendor': 'PAYTMQR6E2CQD@PTYS LOKESH S',
-
+    'vendor': 'LOKESH S PAYTMQR6E2CQD@PTYS',
     'type': 'upi',
     'date': 1750176356000,
     'user': 'arya',
@@ -3856,7 +3765,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 134,
-    'vendor': 'PRATHAPG168-1@OKAXIS PRATHAP BC',
+    'vendor': 'PRATHAP BC PRATHAPG168-1@OKAXIS',
     'tag': 'transport',
     'type': 'upi',
     'date': 1750162969000,
@@ -3868,8 +3777,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 670,
-    'vendor': 'XYZZZ.V.GOWDA6777-1@OKHDFCBANK XYZZZ GOWDA V',
-
+    'vendor': 'XYZZZ GOWDA V XYZZZ.V.GOWDA6777-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1750154920000,
     'user': 'arya',
@@ -3880,8 +3788,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q517726403@YBL MR ANIL KUMAR SAH',
-
+    'vendor': 'MR ANIL KUMAR SAH Q517726403@YBL',
     'type': 'upi',
     'date': 1750143284000,
     'user': 'arya',
@@ -3892,7 +3799,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750103584000,
@@ -3904,7 +3811,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750096578000,
@@ -3916,7 +3823,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 22,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750096001000,
@@ -3940,7 +3847,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750078967000,
@@ -3952,7 +3859,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1750077482000,
@@ -3964,7 +3871,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750063842000,
@@ -3988,8 +3895,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 116,
-    'vendor': 'CHAIDAYS.RZP@AXISBANK MOUNTAIN TRAIL FOODS PRIVATE LIMITED',
-
+    'vendor': 'MOUNTAIN TRAIL FOODS PRIVATE LIMITED CHAIDAYS.RZP@AXISBANK',
     'type': 'upi',
     'date': 1750012145000,
     'user': 'arya',
@@ -4001,7 +3907,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 599,
     'vendor': 'LIFE STYLE INTERNATION',
-
     'type': 'credit',
     'date': 1750008815000,
     'user': 'arya',
@@ -4012,7 +3917,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 67,
-    'vendor': 'PAYTMQR6CM9PG@PTYS LOKESH S',
+    'vendor': 'LOKESH S PAYTMQR6CM9PG@PTYS',
     'tag': 'food',
     'type': 'upi',
     'date': 1750007381000,
@@ -4037,7 +3942,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 7814,
     'vendor': 'IXIGO',
-
     'type': 'credit',
     'date': 1749986005000,
     'user': 'arya',
@@ -4048,8 +3952,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'Q980637884@YBL NEW UDUPI GARDEN',
-
+    'vendor': 'NEW UDUPI GARDEN Q980637884@YBL',
     'type': 'upi',
     'date': 1749982812000,
     'user': 'arya',
@@ -4060,8 +3963,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 12,
-    'vendor': 'PAYTMQR5W59XD@PTYS VINOD KUMAR C',
-
+    'vendor': 'VINOD KUMAR C PAYTMQR5W59XD@PTYS',
     'type': 'upi',
     'date': 1749974425000,
     'user': 'arya',
@@ -4072,7 +3974,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 660,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749930768000,
@@ -4084,7 +3986,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749923309000,
@@ -4096,7 +3998,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749916251000,
@@ -4108,7 +4010,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749907559000,
@@ -4120,7 +4022,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749907467000,
@@ -4132,7 +4034,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1749888419000,
@@ -4144,7 +4046,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 22,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749836438000,
@@ -4156,7 +4058,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749819405000,
@@ -4168,7 +4070,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749816964000,
@@ -4180,7 +4082,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1749801903000,
@@ -4192,7 +4094,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749757790000,
@@ -4216,7 +4118,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 135,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749742352000,
@@ -4228,7 +4130,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749733690000,
@@ -4253,7 +4155,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1229,
     'vendor': 'BUZA FOODS PRIVATE LIM',
-
     'type': 'credit',
     'date': 1749679383000,
     'user': 'arya',
@@ -4264,8 +4165,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 440,
-    'vendor': 'GPAY-11240@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-11240@OKBIZAXIS',
     'type': 'upi',
     'date': 1749665367000,
     'user': 'arya',
@@ -4276,7 +4176,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1749664696000,
@@ -4300,8 +4200,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 90,
-    'vendor': 'PAYTMQR58UPCQ@PAYTM AYODHYA VIHAR',
-
+    'vendor': 'AYODHYA VIHAR PAYTMQR58UPCQ@PAYTM',
     'type': 'upi',
     'date': 1749632044000,
     'user': 'arya',
@@ -4312,8 +4211,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 215,
-    'vendor': 'K16.SIDDHANT-1@OKICICI SIDDHANT KUSHWAHA JT1',
-
+    'vendor': 'SIDDHANT KUSHWAHA JT1 K16.SIDDHANT-1@OKICICI',
     'type': 'upi',
     'date': 1749592650000,
     'user': 'arya',
@@ -4325,7 +4223,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 179,
     'vendor': 'NKP EMPIRE VENTURES PV',
-
     'type': 'credit',
     'date': 1749589470000,
     'user': 'arya',
@@ -4336,8 +4233,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 104,
-    'vendor': 'PAYTM.S1FB46E@PTY ALADDIN SHAWARMA',
-
+    'vendor': 'ALADDIN SHAWARMA PAYTM.S1FB46E@PTY',
     'type': 'upi',
     'date': 1749587730000,
     'user': 'arya',
@@ -4348,8 +4244,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'GPAY-1124@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-1124@OKBIZAXIS',
     'type': 'upi',
     'date': 1749578850000,
     'user': 'arya',
@@ -4360,7 +4255,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 13,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1749578010000,
@@ -4373,7 +4268,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 172,
     'vendor': 'WISHVISH FOODS PRIVATE',
-
     'type': 'credit',
     'date': 1749573990000,
     'user': 'arya',
@@ -4396,8 +4290,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 3200,
-    'vendor': 'PAYTM-69311856@PTYS TRENDJUVENATE',
-
+    'vendor': 'TRENDJUVENATE PAYTM-69311856@PTYS',
     'type': 'upi',
     'date': 1749559710000,
     'user': 'arya',
@@ -4468,7 +4361,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749501210000,
@@ -4480,7 +4373,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 54,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749481470000,
@@ -4492,7 +4385,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749470130000,
@@ -4504,7 +4397,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'RAMESHWARAMENT@YBL RAMESHWARAM ENTERPRISES',
+    'vendor': 'RAMESHWARAM ENTERPRISES RAMESHWARAMENT@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749461370000,
@@ -4516,7 +4409,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1749456210000,
@@ -4528,7 +4421,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749415290000,
@@ -4540,7 +4433,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749387510000,
@@ -4552,8 +4445,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 21000,
-    'vendor': 'MYGFSURNAME22-1@OKHDFCBANK MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1749371430000,
     'user': 'arya',
@@ -4564,8 +4456,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q517726403@YBL MR ANIL KUMAR SAH',
-
+    'vendor': 'MR ANIL KUMAR SAH Q517726403@YBL',
     'type': 'upi',
     'date': 1749371370000,
     'user': 'arya',
@@ -4613,7 +4504,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3339,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1749307530000,
     'user': 'arya',
@@ -4637,7 +4527,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2521.89,
     'vendor': 'MYNTRA DESIGNS PVT LTD',
-
     'type': 'credit',
     'date': 1749298350000,
     'user': 'arya',
@@ -4648,7 +4537,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1749283590000,
@@ -4660,7 +4549,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749232890000,
@@ -4672,7 +4561,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 180,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749232530000,
@@ -4684,8 +4573,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 500,
-    'vendor': 'ADSHAH97@OKSBI AVNISH DEVANG SHAH',
-
+    'vendor': 'AVNISH DEVANG SHAH ADSHAH97@OKSBI',
     'type': 'upi',
     'date': 1749229530000,
     'user': 'arya',
@@ -4697,7 +4585,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 499,
     'vendor': 'GOOGLEPLAY',
-
     'type': 'credit',
     'date': 1749229230000,
     'user': 'arya',
@@ -4708,7 +4595,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749213330000,
@@ -4720,8 +4607,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 58,
-    'vendor': 'PAYTMQR6E2CQD@PTYS LOKESH S',
-
+    'vendor': 'LOKESH S PAYTMQR6E2CQD@PTYS',
     'type': 'upi',
     'date': 1749197250000,
     'user': 'arya',
@@ -4732,7 +4618,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'PADMANJALIMREDDY@OKHDFCBANK SANDHYA M',
+    'vendor': 'SANDHYA M PADMANJALIMREDDY@OKHDFCBANK',
     'tag': 'rent',
     'type': 'upi',
     'date': 1749169710000,
@@ -4757,7 +4643,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 154,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1749154950000,
     'user': 'arya',
@@ -4768,7 +4653,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749149670000,
@@ -4780,7 +4665,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749140970000,
@@ -4792,7 +4677,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1749126510000,
@@ -4804,7 +4689,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1749118170000,
@@ -4840,7 +4725,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q184432533@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q184432533@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1749052410000,
@@ -4853,7 +4738,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 172,
     'vendor': 'WISHVISH FOODS PRIVATE',
-
     'type': 'credit',
     'date': 1749049050000,
     'user': 'arya',
@@ -4876,8 +4760,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1,
-    'vendor': 'GROWWRPD@KAYPAY GROWW',
-
+    'vendor': 'GROWW GROWWRPD@KAYPAY',
     'type': 'upi',
     'date': 1749038190000,
     'user': 'arya',
@@ -4888,7 +4771,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'SHANTARAMRAO15@YBL RAO SHANTARAM KH',
+    'vendor': 'RAO SHANTARAM KH SHANTARAMRAO15@YBL',
     'tag': 'parents',
     'type': 'upi',
     'date': 1749036990000,
@@ -4924,7 +4807,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1749022590000,
@@ -4936,8 +4819,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 240,
-    'vendor': 'Q514075894@YBL AMMAIYAR CAFE',
-
+    'vendor': 'AMMAIYAR CAFE Q514075894@YBL',
     'type': 'upi',
     'date': 1748985960000,
     'user': 'arya',
@@ -4948,8 +4830,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 204,
-    'vendor': 'Q514075894@YBL AMMAIYAR CAFE',
-
+    'vendor': 'AMMAIYAR CAFE Q514075894@YBL',
     'type': 'upi',
     'date': 1748984423000,
     'user': 'arya',
@@ -4960,8 +4841,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'K16.SIDDHANT-1@OKICICI SIDDHANT KUSHWAHA JT1',
-
+    'vendor': 'SIDDHANT KUSHWAHA JT1 K16.SIDDHANT-1@OKICICI',
     'type': 'upi',
     'date': 1748981806000,
     'user': 'arya',
@@ -4972,8 +4852,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'XYZZZ.JAIN810@OKAXIS XYZZZ JAIN',
-
+    'vendor': 'XYZZZ JAIN XYZZZ.JAIN810@OKAXIS',
     'type': 'upi',
     'date': 1748981736000,
     'user': 'arya',
@@ -4984,8 +4863,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 347.6,
-    'vendor': 'UBERINDIASYSTEM187204.RZP@RXAIRTEL UBER INDIA SYSTEMS PRIVATE LIMITED',
-
+    'vendor': 'UBER INDIA SYSTEMS PRIVATE LIMITED UBERINDIASYSTEM187204.RZP@RXAIRTEL',
     'type': 'upi',
     'date': 1748947908000,
     'user': 'arya',
@@ -4996,8 +4874,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTMQR60WNW4@PTYS RGK',
-
+    'vendor': 'RGK PAYTMQR60WNW4@PTYS',
     'type': 'upi',
     'date': 1748938207000,
     'user': 'arya',
@@ -5009,7 +4886,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 404,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1748902314000,
     'user': 'arya',
@@ -5021,7 +4897,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1248,
     'vendor': 'CAPESINDIA',
-
     'type': 'credit',
     'date': 1748902129000,
     'user': 'arya',
@@ -5032,8 +4907,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 364.62,
-    'vendor': 'ZOMATO.PAYU@AXISBANK ZOMATO PRIVATE LIMITED',
-
+    'vendor': 'ZOMATO PRIVATE LIMITED ZOMATO.PAYU@AXISBANK',
     'type': 'upi',
     'date': 1748897880000,
     'user': 'arya',
@@ -5068,8 +4942,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1,
-    'vendor': 'MYGFSURNAME22-1@OKHDFCBANK MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1748872624000,
     'user': 'arya',
@@ -5080,8 +4953,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 52,
-    'vendor': 'LEONLOUIS1991@OKHDFCBANK LEON L',
-
+    'vendor': 'LEON L LEONLOUIS1991@OKHDFCBANK',
     'type': 'upi',
     'date': 1748860946000,
     'user': 'arya',
@@ -5092,8 +4964,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'SOORYAJAYAPRXYZZZ11@OKAXIS SOORYA JAYAPRXYZZZ RAMAKRISHNAN',
-
+    'vendor': 'SOORYA JAYAPRXYZZZ RAMAKRISHNAN SOORYAJAYAPRXYZZZ11@OKAXIS',
     'type': 'upi',
     'date': 1748860919000,
     'user': 'arya',
@@ -5104,7 +4975,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1748851497000,
@@ -5116,7 +4987,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748807340000,
@@ -5128,7 +4999,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748799423000,
@@ -5140,7 +5011,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTMQR10GAQ1@PAYTM SSLV HOSPITALITY SOLUTIONS',
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAQ1@PAYTM',
     'tag': 'food',
     'type': 'upi',
     'date': 1748795458000,
@@ -5152,7 +5023,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748778744000,
@@ -5164,7 +5035,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'NARENDRASINGH119781@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA NARENDRASINGH119781@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1748765121000,
@@ -5176,8 +5047,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 25000,
-    'vendor': 'PUNITH9761@YBL PUNITHARAJ V FAKE',
-
+    'vendor': 'PUNITHARAJ V FAKE PUNITH9761@YBL',
     'type': 'upi',
     'date': 1748753999000,
     'user': 'arya',
@@ -5188,7 +5058,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748725357000,
@@ -5200,7 +5070,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748720737000,
@@ -5224,8 +5094,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'PAYTMQR10GAOM@PAYTM SSLV HOSPITALITY SOLUTIONS',
-
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAOM@PAYTM',
     'type': 'upi',
     'date': 1748706103000,
     'user': 'arya',
@@ -5236,7 +5105,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748696847000,
@@ -5248,7 +5117,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1250,
-    'vendor': 'PAYTM-1554@PTYBL MedicalX',
+    'vendor': 'MedicalX PAYTM-1554@PTYBL',
     'type': 'upi',
     'date': 1748696847000,
     'tag': 'medical',
@@ -5261,7 +5130,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 140,
     'vendor': 'NATRAJ CHOLE BHATURE I',
-
     'type': 'credit',
     'date': 1748684107000,
     'user': 'arya',
@@ -5272,8 +5140,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 12,
-    'vendor': 'PAYTM.S1AUP7F@PTY SHEKAR GOWDA B',
-
+    'vendor': 'SHEKAR GOWDA B PAYTM.S1AUP7F@PTY',
     'type': 'upi',
     'date': 1748678634000,
     'user': 'arya',
@@ -5284,7 +5151,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748628221000,
@@ -5296,8 +5163,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'companyblrFOODSERV.42566261@HDFCBANK COMPANY BLR FOOD SERVICES PRIVATE LIMITED',
-
+    'vendor': 'COMPANY BLR FOOD SERVICES PRIVATE LIMITED companyblrFOODSERV.42566261@HDFCBANK',
     'type': 'upi',
     'date': 1748628125000,
     'user': 'arya',
@@ -5308,7 +5174,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 45,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748621872000,
@@ -5320,7 +5186,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748609775000,
@@ -5332,7 +5198,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748607218000,
@@ -5344,7 +5210,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1748592210000,
@@ -5356,7 +5222,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748550743000,
@@ -5380,7 +5246,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748520356000,
@@ -5416,8 +5282,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'SURENDER1896@OKHDFCBANK E SURENDER',
-
+    'vendor': 'E SURENDER SURENDER1896@OKHDFCBANK',
     'type': 'upi',
     'date': 1748456171000,
     'user': 'arya',
@@ -5428,8 +5293,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'XYZZZ.JAIN810@OKAXIS XYZZZ JAIN',
-
+    'vendor': 'XYZZZ JAIN XYZZZ.JAIN810@OKAXIS',
     'type': 'upi',
     'date': 1748456127000,
     'user': 'arya',
@@ -5440,8 +5304,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'GPAY-11240@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-11240@OKBIZAXIS',
     'type': 'upi',
     'date': 1748449761000,
     'user': 'arya',
@@ -5452,8 +5315,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTMQR58UPCQ@PAYTM AYODHYA VIHAR',
-
+    'vendor': 'AYODHYA VIHAR PAYTMQR58UPCQ@PAYTM',
     'type': 'upi',
     'date': 1748445988000,
     'user': 'arya',
@@ -5536,8 +5398,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q113055315@YBL MR ABDUL KADAR',
-
+    'vendor': 'MR ABDUL KADAR Q113055315@YBL',
     'type': 'upi',
     'date': 1748367981000,
     'user': 'arya',
@@ -5548,8 +5409,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 54,
-    'vendor': 'Q230415148@YBL WISHVISH FOODS PRIVA',
-
+    'vendor': 'WISHVISH FOODS PRIVA Q230415148@YBL',
     'type': 'upi',
     'date': 1748358474000,
     'user': 'arya',
@@ -5561,7 +5421,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 335,
     'vendor': 'WISHVISH FOODS PRIVATE',
-
     'type': 'credit',
     'date': 1748357422000,
     'user': 'arya',
@@ -5572,8 +5431,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 80,
-    'vendor': 'PAYTM.S15NBV9@PTY IDC KITCHEN',
-
+    'vendor': 'IDC KITCHEN PAYTM.S15NBV9@PTY',
     'type': 'upi',
     'date': 1748338728000,
     'user': 'arya',
@@ -5584,8 +5442,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 335,
-    'vendor': 'PAYTM.S15NBV9@PTY IDC KITCHEN',
-
+    'vendor': 'IDC KITCHEN PAYTM.S15NBV9@PTY',
     'type': 'upi',
     'date': 1748337793000,
     'user': 'arya',
@@ -5620,8 +5477,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'RAHULHP0-1@OKSBI RAHUL HP',
-
+    'vendor': 'RAHUL HP RAHULHP0-1@OKSBI',
     'type': 'upi',
     'date': 1748283608000,
     'user': 'arya',
@@ -5632,8 +5488,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 380,
-    'vendor': 'ADSHAH97@OKSBI AVNISH DEVANG SHAH',
-
+    'vendor': 'AVNISH DEVANG SHAH ADSHAH97@OKSBI',
     'type': 'upi',
     'date': 1748283433000,
     'user': 'arya',
@@ -5644,8 +5499,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'ADSHAH97@OKSBI AVNISH DEVANG SHAH',
-
+    'vendor': 'AVNISH DEVANG SHAH ADSHAH97@OKSBI',
     'type': 'upi',
     'date': 1748280391000,
     'user': 'arya',
@@ -5656,7 +5510,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 145,
-    'vendor': 'MEGHACHANDRASHEKAR@OKHDFCBANK MEGHA C',
+    'vendor': 'MEGHA C MEGHACHANDRASHEKAR@OKHDFCBANK',
     'tag': 'food',
     'type': 'upi',
     'date': 1748253003000,
@@ -5668,7 +5522,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1748246508000,
@@ -5680,7 +5534,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748175571000,
@@ -5692,7 +5546,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 80,
-    'vendor': 'RAMESHWARAMENT@YBL RAMESHWARAM ENTERPRISES',
+    'vendor': 'RAMESHWARAM ENTERPRISES RAMESHWARAMENT@YBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748166751000,
@@ -5704,7 +5558,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1748160395000,
@@ -5764,8 +5618,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'BHARATPE907O7V2Z0G2C05002@YESBANKLTD BLUSPRING ENTERPRISES LIMITED',
-
+    'vendor': 'BLUSPRING ENTERPRISES LIMITED BHARATPE907O7V2Z0G2C05002@YESBANKLTD',
     'type': 'upi',
     'date': 1748081092000,
     'user': 'arya',
@@ -5788,8 +5641,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 75,
-    'vendor': 'NAYAKMAHESH1230-1@OKHDFCBANK MAHESHA .',
-
+    'vendor': 'MAHESHA . NAYAKMAHESH1230-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1748079485000,
     'user': 'arya',
@@ -5800,8 +5652,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'KUMARKARNA1944-1AO@YBL R KUMAR',
-
+    'vendor': 'R KUMAR KUMARKARNA1944-1AO@YBL',
     'type': 'upi',
     'date': 1748042459000,
     'user': 'arya',
@@ -5848,7 +5699,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748017743000,
@@ -5860,7 +5711,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 54,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748013013000,
@@ -5872,7 +5723,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 135,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748004649000,
@@ -5884,7 +5735,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1748003224000,
@@ -5896,8 +5747,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1400,
-    'vendor': 'ABHISHEKPATIL082891@YBL ABHISHEK IRANAGOUDA PATIL',
-
+    'vendor': 'ABHISHEK IRANAGOUDA PATIL ABHISHEKPATIL082891@YBL',
     'type': 'upi',
     'date': 1747995718000,
     'user': 'arya',
@@ -5908,8 +5758,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2272,
-    'vendor': 'ABHISHEKPATIL082891@YBL ABHISHEK IRANAGOUDA PATIL',
-
+    'vendor': 'ABHISHEK IRANAGOUDA PATIL ABHISHEKPATIL082891@YBL',
     'type': 'upi',
     'date': 1747995611000,
     'user': 'arya',
@@ -5920,7 +5769,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1747987686000,
@@ -5932,7 +5781,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747941904000,
@@ -5944,7 +5793,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747919570000,
@@ -5957,7 +5806,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 689,
     'vendor': 'MICROSOFT CYBS SI',
-
     'type': 'credit',
     'date': 1747909350000,
     'user': 'arya',
@@ -5981,7 +5829,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 179,
     'vendor': 'NKP EMPIRE VENTURES PV',
-
     'type': 'credit',
     'date': 1747861034000,
     'user': 'arya',
@@ -5993,7 +5840,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2675,
     'vendor': 'KUDLADA KITCHEN',
-
     'type': 'credit',
     'date': 1747860582000,
     'user': 'arya',
@@ -6004,8 +5850,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'PRASHANTAB8505-2@OKHDFCBANK PRASHANT',
-
+    'vendor': 'PRASHANT PRASHANTAB8505-2@OKHDFCBANK',
     'type': 'upi',
     'date': 1747854874000,
     'user': 'arya',
@@ -6040,8 +5885,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'ROBINSINGH15021985@OKSBI H ROBIN CHANDRA SINGH',
-
+    'vendor': 'H ROBIN CHANDRA SINGH ROBINSINGH15021985@OKSBI',
     'type': 'upi',
     'date': 1747838751000,
     'user': 'arya',
@@ -6064,8 +5908,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTMQR6CFDOW@PTYS LOKESH S',
-
+    'vendor': 'LOKESH S PAYTMQR6CFDOW@PTYS',
     'type': 'upi',
     'date': 1747833323000,
     'user': 'arya',
@@ -6100,8 +5943,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'VINUCHERIAN3@OKHDFCBANK VINU CHERIAN',
-
+    'vendor': 'VINU CHERIAN VINUCHERIAN3@OKHDFCBANK',
     'type': 'upi',
     'date': 1747769010000,
     'user': 'arya',
@@ -6148,8 +5990,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 5440,
-    'vendor': '88112623@IDFCBANK REINCARNATION HEALTH',
-
+    'vendor': 'REINCARNATION HEALTH 88112623@IDFCBANK',
     'type': 'upi',
     'date': 1747741929000,
     'user': 'arya',
@@ -6161,7 +6002,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 188,
     'vendor': 'CHAI DAYS CAFE INDIA P',
-
     'type': 'credit',
     'date': 1747740047000,
     'user': 'arya',
@@ -6185,7 +6025,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 21900,
     'vendor': 'I PLANET',
-
     'type': 'credit',
     'date': 1747737928000,
     'user': 'arya',
@@ -6196,8 +6035,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 125,
-    'vendor': 'PAYTMQR60UW6D@PTYS RGK',
-
+    'vendor': 'RGK PAYTMQR60UW6D@PTYS',
     'type': 'upi',
     'date': 1747734579000,
     'user': 'arya',
@@ -6208,8 +6046,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2007,
-    'vendor': 'PPAUTOPAYELECTRICITY@YBL AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT',
-
+    'vendor': 'AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT PPAUTOPAYELECTRICITY@YBL',
     'type': 'upi',
     'date': 1747706660000,
     'user': 'arya',
@@ -6220,7 +6057,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747686029000,
@@ -6232,7 +6069,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747674115000,
@@ -6244,7 +6081,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747666019000,
@@ -6256,7 +6093,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747655163000,
@@ -6268,8 +6105,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'Q349674175@YBL TRUFFLES INDRANAGAR',
-
+    'vendor': 'TRUFFLES INDRANAGAR Q349674175@YBL',
     'type': 'upi',
     'date': 1747642510000,
     'user': 'arya',
@@ -6280,7 +6116,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1747641890000,
@@ -6305,7 +6141,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 271,
     'vendor': 'RAZ*DELIGHTFUL GOURMET',
-
     'type': 'credit',
     'date': 1747591205000,
     'user': 'arya',
@@ -6316,7 +6151,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 45,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747500574000,
@@ -6328,7 +6163,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747485811000,
@@ -6352,7 +6187,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747423438000,
@@ -6365,7 +6200,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3243,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1747414506000,
     'user': 'arya',
@@ -6376,7 +6210,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747413049000,
@@ -6388,7 +6222,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747408392000,
@@ -6400,7 +6234,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747397207000,
@@ -6412,7 +6246,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747334893000,
@@ -6424,7 +6258,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747320373000,
@@ -6436,7 +6270,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1747311367000,
@@ -6449,7 +6283,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1007.28,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1747264004000,
     'user': 'arya',
@@ -6461,7 +6294,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1617,
     'vendor': 'HUVU CAFE',
-
     'type': 'credit',
     'date': 1747257692000,
     'user': 'arya',
@@ -6472,8 +6304,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 75,
-    'vendor': 'PAYTMQR63PUD6@PTYS CALCUTTA VICTORIA CHAT HOUSE JB NAGAR',
-
+    'vendor': 'CALCUTTA VICTORIA CHAT HOUSE JB NAGAR PAYTMQR63PUD6@PTYS',
     'type': 'upi',
     'date': 1747244438000,
     'user': 'arya',
@@ -6533,7 +6364,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 210,
     'vendor': 'NATRAJ CHOLE BHATURE I',
-
     'type': 'credit',
     'date': 1747226605000,
     'user': 'arya',
@@ -6544,8 +6374,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'Q394256387@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q394256387@YBL',
     'type': 'upi',
     'date': 1747172564000,
     'user': 'arya',
@@ -6556,8 +6385,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'Q228096167@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q228096167@YBL',
     'type': 'upi',
     'date': 1747172050000,
     'user': 'arya',
@@ -6569,7 +6397,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1575,
     'vendor': 'MANZAR EXPERIENCE CURA',
-
     'type': 'credit',
     'date': 1747171686000,
     'user': 'arya',
@@ -6580,8 +6407,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 5000,
-    'vendor': 'MYGFSURNAME22-1@OKICICI MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKICICI',
     'type': 'upi',
     'date': 1747170138000,
     'user': 'arya',
@@ -6592,8 +6418,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 75,
-    'vendor': 'Q656334464@YBL AYODHYA VIHAR',
-
+    'vendor': 'AYODHYA VIHAR Q656334464@YBL',
     'type': 'upi',
     'date': 1747157536000,
     'user': 'arya',
@@ -6616,8 +6441,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': 'ANANTHRAHUL97@OKICICI A RAHUL',
-
+    'vendor': 'A RAHUL ANANTHRAHUL97@OKICICI',
     'type': 'upi',
     'date': 1747151196000,
     'user': 'arya',
@@ -6652,8 +6476,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 21900,
-    'vendor': 'PLANETCARE.63294235@HDFCBANK PLANET CARE',
-
+    'vendor': 'PLANET CARE PLANETCARE.63294235@HDFCBANK',
     'type': 'upi',
     'date': 1747138296000,
     'user': 'arya',
@@ -6664,8 +6487,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'Q066006725@YBL PRATI BHA',
-
+    'vendor': 'PRATI BHA Q066006725@YBL',
     'type': 'upi',
     'date': 1747129242000,
     'user': 'arya',
@@ -6676,7 +6498,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1747123379000,
@@ -6701,7 +6523,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 466.45,
     'vendor': 'ZOMATO LTD',
-
     'type': 'credit',
     'date': 1747079081000,
     'user': 'arya',
@@ -6712,8 +6533,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1247.88,
-    'vendor': 'PAYTMQR60BUYR@PTYS SHANKAR AND SONS',
-
+    'vendor': 'SHANKAR AND SONS PAYTMQR60BUYR@PTYS',
     'type': 'upi',
     'date': 1747078880000,
     'user': 'arya',
@@ -6725,7 +6545,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 4299,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1747067040000,
     'user': 'arya',
@@ -6737,7 +6556,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1003,
     'vendor': 'NUAGE PATISSERIE AND C',
-
     'type': 'credit',
     'date': 1747048978000,
     'user': 'arya',
@@ -6748,7 +6566,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1747038856000,
@@ -6773,7 +6591,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 325,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1746979943000,
     'user': 'arya',
@@ -6785,7 +6602,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 513,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1746979838000,
     'user': 'arya',
@@ -6797,7 +6613,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1999,
     'vendor': 'CAPESINDIA',
-
     'type': 'credit',
     'date': 1746976862000,
     'user': 'arya',
@@ -6808,7 +6623,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 80,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746976730000,
@@ -6821,7 +6636,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 808,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1746973791000,
     'user': 'arya',
@@ -6832,7 +6646,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746966296000,
@@ -6844,7 +6658,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1746950508000,
@@ -6856,8 +6670,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 240,
-    'vendor': 'Q368692886@YBL KANTI SWEETSSNS ARCADE OLD AIRPORT ROAD',
-
+    'vendor': 'KANTI SWEETSSNS ARCADE OLD AIRPORT ROAD Q368692886@YBL',
     'type': 'upi',
     'date': 1746909210000,
     'user': 'arya',
@@ -6868,7 +6681,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746905070000,
@@ -6880,8 +6693,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 75,
-    'vendor': 'PAYTMQR10GAOM@PAYTM SSLV HOSPITALITY SOLUTIONS',
-
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PAYTMQR10GAOM@PAYTM',
     'type': 'upi',
     'date': 1746891750000,
     'user': 'arya',
@@ -6904,7 +6716,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746879450000,
@@ -6916,8 +6728,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2114,
-    'vendor': '0790421A0080769.BQR@KOTAK DERMATOPIA SKIN AND HAIR CLINIC',
-
+    'vendor': 'DERMATOPIA SKIN AND HAIR CLINIC 0790421A0080769.BQR@KOTAK',
     'type': 'upi',
     'date': 1746872370000,
     'user': 'arya',
@@ -6941,7 +6752,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2013.2,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1746817770000,
     'user': 'arya',
@@ -6952,8 +6762,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 25000,
-    'vendor': 'PUNITH9761@YBL PUNITHARAJ V FAKE',
-
+    'vendor': 'PUNITHARAJ V FAKE PUNITH9761@YBL',
     'type': 'upi',
     'date': 1746812010000,
     'user': 'arya',
@@ -6964,7 +6773,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746809670000,
@@ -6976,7 +6785,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746793470000,
@@ -6988,8 +6797,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1427.7,
-    'vendor': 'UBERINDIASYSTEMSPRIVATELIMITED.RAZORP@ICICI UBER INDIA SYSTEMS PRIVATE LIMITED',
-
+    'vendor': 'UBER INDIA SYSTEMS PRIVATE LIMITED UBERINDIASYSTEMSPRIVATELIMITED.RAZORP@ICICI',
     'type': 'upi',
     'date': 1746789570000,
     'user': 'arya',
@@ -7001,7 +6809,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 230,
     'vendor': 'AMEYAA INC',
-
     'type': 'credit',
     'date': 1746783150000,
     'user': 'arya',
@@ -7012,7 +6819,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1746778410000,
@@ -7036,7 +6843,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1746707130000,
@@ -7048,7 +6855,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 300,
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1746697170000,
@@ -7072,8 +6879,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 622.72,
-    'vendor': 'UBERINDIASYSTEM187204.RZP@RXAIRTEL UBER INDIA SYSTEMS PRIVATE LIMITED',
-
+    'vendor': 'UBER INDIA SYSTEMS PRIVATE LIMITED UBERINDIASYSTEM187204.RZP@RXAIRTEL',
     'type': 'upi',
     'date': 1746639630000,
     'user': 'arya',
@@ -7084,8 +6890,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'NITINNAYAN2@YBL NILU DEVI',
-
+    'vendor': 'NILU DEVI NITINNAYAN2@YBL',
     'type': 'upi',
     'date': 1746629430000,
     'user': 'arya',
@@ -7108,8 +6913,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 7186,
-    'vendor': 'IXIGOFLIGHTONLINE@YBL IXIGO',
-
+    'vendor': 'IXIGO IXIGOFLIGHTONLINE@YBL',
     'type': 'upi',
     'date': 1746286528000,
     'user': 'arya',
@@ -7120,8 +6924,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1363,
-    'vendor': 'PAYTM-82913706@PTYBL POLICYBAZAAR INSURANCE BROKERS PRIVATE LIMITED',
-
+    'vendor': 'POLICYBAZAAR INSURANCE BROKERS PRIVATE LIMITED PAYTM-82913706@PTYBL',
     'type': 'upi',
     'date': 1745775222000,
     'user': 'arya',
@@ -7132,8 +6935,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1700,
-    'vendor': 'BBPSBP@YBL PHONEPE',
-
+    'vendor': 'PHONEPE BBPSBP@YBL',
     'type': 'upi',
     'date': 1745419611000,
     'user': 'arya',
@@ -7145,7 +6947,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1752,
     'vendor': 'URBANCLAP TECHNOLOGIES',
-
     'type': 'credit',
     'date': 1745252522000,
     'user': 'arya',
@@ -7156,8 +6957,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 70,
-    'vendor': 'Q927956415@YBL NILU DEVI',
-
+    'vendor': 'NILU DEVI Q927956415@YBL',
     'type': 'upi',
     'date': 1745240092000,
     'user': 'arya',
@@ -7169,7 +6969,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 624,
     'vendor': 'PHICOM*HMS HOST SERVIC',
-
     'type': 'credit',
     'date': 1745224511000,
     'user': 'arya',
@@ -7180,8 +6979,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1363,
-    'vendor': 'PAYTM-82913706@PTYBL POLICYBAZAAR INSURANCE BROKERS PRIVATE LIMITED',
-
+    'vendor': 'POLICYBAZAAR INSURANCE BROKERS PRIVATE LIMITED PAYTM-82913706@PTYBL',
     'type': 'upi',
     'date': 1745180930000,
     'user': 'arya',
@@ -7192,8 +6990,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 768,
-    'vendor': 'HDFCERGOGENERAL860050.RZP@RXAIRTEL HDFC ERGO GENERAL INSURANCE COMPANY LIMITED',
-
+    'vendor': 'HDFC ERGO GENERAL INSURANCE COMPANY LIMITED HDFCERGOGENERAL860050.RZP@RXAIRTEL',
     'type': 'upi',
     'date': 1745179704000,
     'user': 'arya',
@@ -7205,7 +7002,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 614,
     'vendor': 'LAYRUD PRIVATE LIMITED',
-
     'type': 'credit',
     'date': 1745174689000,
     'user': 'arya',
@@ -7216,7 +7012,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1236,
-    'vendor': 'Q052541988@YBL SRINIVASAREDDY PANTA',
+    'vendor': 'SRINIVASAREDDY PANTA Q052541988@YBL',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1745173689000,
@@ -7241,7 +7037,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1299,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1745165927000,
     'user': 'arya',
@@ -7253,7 +7048,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2999,
     'vendor': 'WILDCRAFT',
-
     'type': 'credit',
     'date': 1745147626000,
     'user': 'arya',
@@ -7265,7 +7059,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1999,
     'vendor': 'WILDCRAFT',
-
     'type': 'credit',
     'date': 1745146812000,
     'user': 'arya',
@@ -7276,8 +7069,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 25,
-    'vendor': 'PAYTMQR60WNW4@PTYS RGK',
-
+    'vendor': 'RGK PAYTMQR60WNW4@PTYS',
     'type': 'upi',
     'date': 1745144877000,
     'user': 'arya',
@@ -7289,7 +7081,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 180,
     'vendor': 'IDC KITCHEN',
-
     'type': 'credit',
     'date': 1745143846000,
     'user': 'arya',
@@ -7300,8 +7091,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 203,
-    'vendor': 'JAMIRHUSSAN1970-3@OKHDFCBANK JAMIR HUSSEN',
-
+    'vendor': 'JAMIR HUSSEN JAMIRHUSSAN1970-3@OKHDFCBANK',
     'type': 'upi',
     'date': 1745102703000,
     'user': 'arya',
@@ -7313,7 +7103,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 6388,
     'vendor': 'SWIGGY DINEOUT',
-
     'type': 'credit',
     'date': 1745096076000,
     'user': 'arya',
@@ -7324,7 +7113,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1745077454000,
@@ -7348,7 +7137,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1745066959000,
@@ -7372,7 +7161,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1745051982000,
@@ -7384,7 +7173,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1745003367000,
@@ -7408,7 +7197,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744993686000,
@@ -7420,7 +7209,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744993622000,
@@ -7432,7 +7221,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744979493000,
@@ -7444,7 +7233,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744915167000,
@@ -7456,7 +7245,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744906732000,
@@ -7468,7 +7257,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744905294000,
@@ -7480,7 +7269,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744891194000,
@@ -7492,8 +7281,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'OMBK.AAFM25846Z6W5YRJ3T9@MBK MOBIKWIKMERCHANT',
-
+    'vendor': 'MOBIKWIKMERCHANT OMBK.AAFM25846Z6W5YRJ3T9@MBK',
     'type': 'upi',
     'date': 1744887406000,
     'user': 'arya',
@@ -7517,7 +7305,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2927,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1744839940000,
     'user': 'arya',
@@ -7528,8 +7315,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'PAYTM.S1AACZG@PTY UMESH KUMAR',
-
+    'vendor': 'UMESH KUMAR PAYTM.S1AACZG@PTY',
     'type': 'upi',
     'date': 1744838690000,
     'user': 'arya',
@@ -7541,7 +7327,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 179,
     'vendor': 'HUVU CAFE',
-
     'type': 'credit',
     'date': 1744837334000,
     'user': 'arya',
@@ -7553,7 +7338,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1180,
     'vendor': 'HUVU CAFE',
-
     'type': 'credit',
     'date': 1744837081000,
     'user': 'arya',
@@ -7564,8 +7348,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q003147529@YBL ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q003147529@YBL',
     'type': 'upi',
     'date': 1744822720000,
     'user': 'arya',
@@ -7600,8 +7383,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM.S1E708F@PTY VIDYA SUBRAMANI',
-
+    'vendor': 'VIDYA SUBRAMANI PAYTM.S1E708F@PTY',
     'type': 'upi',
     'date': 1744818426000,
     'user': 'arya',
@@ -7624,8 +7406,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'SPORTZNEXT10249@FBL SPORTZ NEXT MANAGEMENT SYSTEMS PRIVATE LIMITED',
-
+    'vendor': 'SPORTZ NEXT MANAGEMENT SYSTEMS PRIVATE LIMITED SPORTZNEXT10249@FBL',
     'type': 'upi',
     'date': 1744792875000,
     'user': 'arya',
@@ -7648,8 +7429,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q003147529@YBL ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q003147529@YBL',
     'type': 'upi',
     'date': 1744743416000,
     'user': 'arya',
@@ -7673,7 +7453,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 864,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1744715387000,
     'user': 'arya',
@@ -7685,7 +7464,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 4549,
     'vendor': 'WWW CONVERSE IN',
-
     'type': 'credit',
     'date': 1744663131000,
     'user': 'arya',
@@ -7721,7 +7499,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2699,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1744636975000,
     'user': 'arya',
@@ -7733,7 +7510,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 26581,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1744635726000,
     'user': 'arya',
@@ -7745,7 +7521,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 160,
     'vendor': 'IDC KITCHEN',
-
     'type': 'credit',
     'date': 1744627596000,
     'user': 'arya',
@@ -7757,7 +7532,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 180,
     'vendor': 'IDC KITCHEN',
-
     'type': 'credit',
     'date': 1744626348000,
     'user': 'arya',
@@ -7768,7 +7542,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744571517000,
@@ -7780,7 +7554,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744547336000,
@@ -7793,7 +7567,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'AMEYAA INC',
-
     'type': 'credit',
     'date': 1744537628000,
     'user': 'arya',
@@ -7804,7 +7577,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1744531676000,
@@ -7816,7 +7589,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 220,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744487410000,
@@ -7840,7 +7613,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744459005000,
@@ -7852,7 +7625,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744458902000,
@@ -7864,7 +7637,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'PADMANJALIMREDDY@OKHDFCBANK SANDHYA M',
+    'vendor': 'SANDHYA M PADMANJALIMREDDY@OKHDFCBANK',
     'tag': 'rent',
     'type': 'upi',
     'date': 1744455117000,
@@ -7876,7 +7649,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 83,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744386030000,
@@ -7888,7 +7661,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744383090000,
@@ -7900,7 +7673,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744373910000,
@@ -7912,8 +7685,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 12,
-    'vendor': 'PAYTMQR5CJ4GG@PTYS VINOD KUMAR C',
-
+    'vendor': 'VINOD KUMAR C PAYTMQR5CJ4GG@PTYS',
     'type': 'upi',
     'date': 1744358730000,
     'user': 'arya',
@@ -7924,7 +7696,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744311990000,
@@ -7936,7 +7708,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744296030000,
@@ -7949,7 +7721,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 271,
     'vendor': 'RAZ*DELIGHTFUL GOURMET',
-
     'type': 'credit',
     'date': 1744279710000,
     'user': 'arya',
@@ -7961,7 +7732,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 180,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1744278450000,
     'user': 'arya',
@@ -7985,7 +7755,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 449,
     'vendor': 'PHO*GEDDIT CONVENIENCE',
-
     'type': 'credit',
     'date': 1744223970000,
     'user': 'arya',
@@ -7996,8 +7765,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 60,
-    'vendor': 'Q718230968@YBL LAXMAN K SHETTY',
-
+    'vendor': 'LAXMAN K SHETTY Q718230968@YBL',
     'type': 'upi',
     'date': 1744218090000,
     'user': 'arya',
@@ -8008,8 +7776,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'MUKTIYAR19931@AXL SHAIK MUKTIYAR AHMED',
-
+    'vendor': 'SHAIK MUKTIYAR AHMED MUKTIYAR19931@AXL',
     'type': 'upi',
     'date': 1744215630000,
     'user': 'arya',
@@ -8044,8 +7811,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 122,
-    'vendor': 'Q228096167@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q228096167@YBL',
     'type': 'upi',
     'date': 1744146570000,
     'user': 'arya',
@@ -8056,8 +7822,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'Q228096167@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q228096167@YBL',
     'type': 'upi',
     'date': 1744146030000,
     'user': 'arya',
@@ -8069,7 +7834,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 419,
     'vendor': 'LAYRUD PRIVATE LIMITED',
-
     'type': 'credit',
     'date': 1744142070000,
     'user': 'arya',
@@ -8080,8 +7844,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 109,
-    'vendor': 'PAYTM.S19PNY4@PTY ALADDIN SHAWARMA',
-
+    'vendor': 'ALADDIN SHAWARMA PAYTM.S19PNY4@PTY',
     'type': 'upi',
     'date': 1744141110000,
     'user': 'arya',
@@ -8093,7 +7856,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1897,
     'vendor': '1469 INDIRANAGAR',
-
     'type': 'credit',
     'date': 1744140630000,
     'user': 'arya',
@@ -8104,7 +7866,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1744130970000,
@@ -8152,7 +7914,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'SHANTARAMRAO15@YBL RAO SHANTARAM KH',
+    'vendor': 'RAO SHANTARAM KH SHANTARAMRAO15@YBL',
     'tag': 'parents',
     'type': 'upi',
     'date': 1744045950000,
@@ -8164,7 +7926,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 45,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744042170000,
@@ -8176,7 +7938,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1744030890000,
@@ -8189,7 +7951,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1330.68,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1744014990000,
     'user': 'arya',
@@ -8200,7 +7961,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 12,
-    'vendor': 'PAYTMQR5VJKOR@PTYS VINOD KUMAR C',
+    'vendor': 'VINOD KUMAR C PAYTMQR5VJKOR@PTYS',
     'tag': 'snacks',
     'type': 'upi',
     'date': 1744014030000,
@@ -8212,7 +7973,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743964770000,
@@ -8224,7 +7985,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743958290000,
@@ -8236,7 +7997,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743952230000,
@@ -8248,7 +8009,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743949710000,
@@ -8284,7 +8045,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'GFSSACHIN246@OKAXIS NARENDRA MODI TEA',
+    'vendor': 'NARENDRA MODI TEA GFSSACHIN246@OKAXIS',
     'tag': 'food',
     'type': 'upi',
     'date': 1743926790000,
@@ -8296,8 +8057,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 281,
-    'vendor': 'SHASTRYAJAY1@OKHDFCBANK MASTER AJAY SHASTRY KN',
-
+    'vendor': 'MASTER AJAY SHASTRY KN SHASTRYAJAY1@OKHDFCBANK',
     'type': 'upi',
     'date': 1743905550000,
     'user': 'arya',
@@ -8308,7 +8068,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743882810000,
@@ -8320,7 +8080,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 60,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743870510000,
@@ -8332,7 +8092,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 33,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743859830000,
@@ -8344,7 +8104,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743857850000,
@@ -8356,8 +8116,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 252,
-    'vendor': 'MUNIREDDY2011-2@OKHDFCBANK MORUMPALLI MUNI REDDY',
-
+    'vendor': 'MORUMPALLI MUNI REDDY MUNIREDDY2011-2@OKHDFCBANK',
     'type': 'upi',
     'date': 1743855030000,
     'user': 'arya',
@@ -8369,7 +8128,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 271,
     'vendor': 'RAZ*DELIGHTFUL GOURMET',
-
     'type': 'credit',
     'date': 1743851790000,
     'user': 'arya',
@@ -8380,8 +8138,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 902,
-    'vendor': 'JIOINAPPDIRECT1@YBL JIO RECHARGE',
-
+    'vendor': 'JIO RECHARGE JIOINAPPDIRECT1@YBL',
     'type': 'upi',
     'date': 1743842910000,
     'user': 'arya',
@@ -8392,8 +8149,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1743842910000,
     'user': 'arya',
@@ -8404,8 +8160,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 103,
-    'vendor': 'JAICHANDER.D2016@OKHDFCBANK D JAICHANDER',
-
+    'vendor': 'D JAICHANDER JAICHANDER.D2016@OKHDFCBANK',
     'type': 'upi',
     'date': 1743801270000,
     'user': 'arya',
@@ -8428,8 +8183,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 4,
-    'vendor': 'MYGFSURNAME22-1@OKICICI MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKICICI',
     'type': 'upi',
     'date': 1743786030000,
     'user': 'arya',
@@ -8452,8 +8206,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'Q038659720@YBL SUNEETHA',
-
+    'vendor': 'SUNEETHA Q038659720@YBL',
     'type': 'upi',
     'date': 1743716191000,
     'user': 'arya',
@@ -8465,7 +8218,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3779,
     'vendor': 'SHETTY LUNCH HOME',
-
     'type': 'credit',
     'date': 1743707718000,
     'user': 'arya',
@@ -8476,8 +8228,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 104,
-    'vendor': 'PAYTM.S1039SA@PTY KISHAN SHETTY',
-
+    'vendor': 'KISHAN SHETTY PAYTM.S1039SA@PTY',
     'type': 'upi',
     'date': 1743704509000,
     'user': 'arya',
@@ -8488,8 +8239,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 430,
-    'vendor': 'Q897818245@YBL JASON PETER D LIMA',
-
+    'vendor': 'JASON PETER D LIMA Q897818245@YBL',
     'type': 'upi',
     'date': 1743672989000,
     'user': 'arya',
@@ -8500,8 +8250,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 300,
-    'vendor': 'PPR.10189.25102023.00248936@CNRB JALEEL S',
-
+    'vendor': 'JALEEL S PPR.10189.25102023.00248936@CNRB',
     'type': 'upi',
     'date': 1743671969000,
     'user': 'arya',
@@ -8512,8 +8261,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 561,
-    'vendor': 'SWIGGY@YESPAY SWIGGY',
-
+    'vendor': 'SWIGGY SWIGGY@YESPAY',
     'type': 'upi',
     'date': 1743617953000,
     'user': 'arya',
@@ -8524,8 +8272,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 70,
-    'vendor': 'PAYTM.S13LVXA@PTY SANDESH KUMAR',
-
+    'vendor': 'SANDESH KUMAR PAYTM.S13LVXA@PTY',
     'type': 'upi',
     'date': 1743614511000,
     'user': 'arya',
@@ -8536,8 +8283,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 300,
-    'vendor': 'UMESHSHETTYALEVOOR@OKICICI UMESH SHETTY',
-
+    'vendor': 'UMESH SHETTY UMESHSHETTYALEVOOR@OKICICI',
     'type': 'upi',
     'date': 1743603600000,
     'user': 'arya',
@@ -8549,7 +8295,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 740,
     'vendor': 'KADRI CAFE',
-
     'type': 'credit',
     'date': 1743587959000,
     'user': 'arya',
@@ -8560,8 +8305,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 381,
-    'vendor': 'AMINPRASHANTH65@OKSBI PRASHANTH .',
-
+    'vendor': 'PRASHANTH . AMINPRASHANTH65@OKSBI',
     'type': 'upi',
     'date': 1743533985000,
     'user': 'arya',
@@ -8572,8 +8316,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 360,
-    'vendor': 'DINESHKODAKAL9@OKAXIS BABITHA',
-
+    'vendor': 'BABITHA DINESHKODAKAL9@OKAXIS',
     'type': 'upi',
     'date': 1743524304000,
     'user': 'arya',
@@ -8585,7 +8328,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1417,
     'vendor': 'MACHALI',
-
     'type': 'credit',
     'date': 1743508230000,
     'user': 'arya',
@@ -8596,8 +8338,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 125,
-    'vendor': 'RAZAKRAAZ7899@OKHDFCBANK ABDUL RAZAK',
-
+    'vendor': 'ABDUL RAZAK RAZAKRAAZ7899@OKHDFCBANK',
     'type': 'upi',
     'date': 1743504089000,
     'user': 'arya',
@@ -8608,8 +8349,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1455,
-    'vendor': 'BBPSBP@YBL PHONEPE',
-
+    'vendor': 'PHONEPE BBPSBP@YBL',
     'type': 'upi',
     'date': 1743498061000,
     'user': 'arya',
@@ -8621,7 +8361,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3768,
     'vendor': 'HOTEL PLAZA HEIGHTS',
-
     'type': 'credit',
     'date': 1743489576000,
     'user': 'arya',
@@ -8632,8 +8371,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 30,
-    'vendor': 'PAYTM.S15TT03@PTY MANJUNATH R SHETTY',
-
+    'vendor': 'MANJUNATH R SHETTY PAYTM.S15TT03@PTY',
     'type': 'upi',
     'date': 1743462719000,
     'user': 'arya',
@@ -8644,8 +8382,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'ANNAMALAI.G25@AXL ANNAMALAI G',
-
+    'vendor': 'ANNAMALAI G ANNAMALAI.G25@AXL',
     'type': 'upi',
     'date': 1743448159000,
     'user': 'arya',
@@ -8669,7 +8406,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3600,
     'vendor': 'RAZ*THE SHAKA SURF CLU',
-
     'type': 'credit',
     'date': 1743434393000,
     'user': 'arya',
@@ -8705,7 +8441,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3150,
     'vendor': 'REDBUS INDIA PRIVATE',
-
     'type': 'credit',
     'date': 1743367442000,
     'user': 'arya',
@@ -8717,7 +8452,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 424,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1743357795000,
     'user': 'arya',
@@ -8740,8 +8474,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 25,
-    'vendor': 'PAYTM.S1AUW1T@PTY VIDYA SUBRAMANI',
-
+    'vendor': 'VIDYA SUBRAMANI PAYTM.S1AUW1T@PTY',
     'type': 'upi',
     'date': 1743355726000,
     'user': 'arya',
@@ -8753,7 +8486,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 425,
     'vendor': 'MK ASSOCIATES',
-
     'type': 'credit',
     'date': 1743354715000,
     'user': 'arya',
@@ -8765,7 +8497,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 198,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1743339327000,
     'user': 'arya',
@@ -8776,8 +8507,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTMQRWKUHAKTXCR@PAYTM CHAITHANYA XPRESS',
-
+    'vendor': 'CHAITHANYA XPRESS PAYTMQRWKUHAKTXCR@PAYTM',
     'type': 'upi',
     'date': 1743331299000,
     'user': 'arya',
@@ -8788,8 +8518,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1743324009000,
     'user': 'arya',
@@ -8812,7 +8541,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1743262888000,
@@ -8836,7 +8565,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 133,
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1743244210000,
@@ -8848,8 +8577,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'PAYTMQR5CJ4GG@PTYS VINOD KUMAR C',
-
+    'vendor': 'VINOD KUMAR C PAYTMQR5CJ4GG@PTYS',
     'type': 'upi',
     'date': 1743237612000,
     'user': 'arya',
@@ -8860,7 +8588,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743193159000,
@@ -8872,7 +8600,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743186684000,
@@ -8884,7 +8612,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743179702000,
@@ -8896,7 +8624,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743167218000,
@@ -8908,7 +8636,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 14,
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1743158012000,
@@ -8920,7 +8648,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743106471000,
@@ -8932,7 +8660,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743093158000,
@@ -8944,7 +8672,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743091545000,
@@ -8956,7 +8684,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1743081816000,
@@ -8968,8 +8696,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q003147529@YBL ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q003147529@YBL',
     'type': 'upi',
     'date': 1743001140000,
     'user': 'arya',
@@ -9028,8 +8755,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTM.S1AUW1T@PTY VIDYA SUBRAMANI',
-
+    'vendor': 'VIDYA SUBRAMANI PAYTM.S1AUW1T@PTY',
     'type': 'upi',
     'date': 1742924219000,
     'user': 'arya',
@@ -9041,7 +8767,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 406,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1742920818000,
     'user': 'arya',
@@ -9053,7 +8778,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 603,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1742896715000,
     'user': 'arya',
@@ -9077,7 +8801,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 387,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1742852034000,
     'user': 'arya',
@@ -9100,7 +8823,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742843858000,
@@ -9112,7 +8835,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742842318000,
@@ -9124,7 +8847,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742838713000,
@@ -9136,7 +8859,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742834793000,
@@ -9148,7 +8871,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742817225000,
@@ -9160,7 +8883,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742760001000,
@@ -9172,7 +8895,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742746952000,
@@ -9184,7 +8907,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742732751000,
@@ -9208,7 +8931,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2394,
-    'vendor': 'Q052541988@YBL SRINIVASAREDDY PANTA',
+    'vendor': 'SRINIVASAREDDY PANTA Q052541988@YBL',
     'tag': 'skin & hair',
     'type': 'upi',
     'date': 1742723770000,
@@ -9220,8 +8943,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1742717320000,
     'user': 'arya',
@@ -9232,8 +8954,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 171,
-    'vendor': 'NKPEMPIREVENTURESPVT.63223044@HDFCBANK NKP EMPIRE VENTURES PVT LTD',
-
+    'vendor': 'NKP EMPIRE VENTURES PVT LTD NKPEMPIREVENTURESPVT.63223044@HDFCBANK',
     'type': 'upi',
     'date': 1742681368000,
     'user': 'arya',
@@ -9245,7 +8966,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 320,
     'vendor': 'PIJJA',
-
     'type': 'credit',
     'date': 1742679380000,
     'user': 'arya',
@@ -9269,7 +8989,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1287.76,
     'vendor': 'SHANKAR SONS',
-
     'type': 'credit',
     'date': 1742675594000,
     'user': 'arya',
@@ -9280,7 +8999,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1742669816000,
@@ -9292,8 +9011,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTM.S171X8A@PTY VIDYA SUBRAMANI',
-
+    'vendor': 'VIDYA SUBRAMANI PAYTM.S171X8A@PTY',
     'type': 'upi',
     'date': 1742665143000,
     'user': 'arya',
@@ -9304,8 +9022,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PRAVEENPRAV3009@OKSBI PRAVEEN P',
-
+    'vendor': 'PRAVEEN P PRAVEENPRAV3009@OKSBI',
     'type': 'upi',
     'date': 1742657446000,
     'user': 'arya',
@@ -9341,7 +9058,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 300,
     'vendor': 'NATRAJ CHOLE BHATURE I',
-
     'type': 'credit',
     'date': 1742638050000,
     'user': 'arya',
@@ -9352,8 +9068,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1742630741000,
     'user': 'arya',
@@ -9364,7 +9079,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742586917000,
@@ -9376,7 +9091,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742578271000,
@@ -9388,7 +9103,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742571279000,
@@ -9400,7 +9115,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742559617000,
@@ -9412,8 +9127,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1742545118000,
     'user': 'arya',
@@ -9424,7 +9138,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742492552000,
@@ -9436,7 +9150,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 54,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742481098000,
@@ -9448,7 +9162,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742476738000,
@@ -9473,7 +9187,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 409.44,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1742409088000,
     'user': 'arya',
@@ -9485,7 +9198,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1612.76,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1742408942000,
     'user': 'arya',
@@ -9496,8 +9208,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 210,
-    'vendor': 'XYZZZ.JAIN810@OKAXIS XYZZZ JAIN',
-
+    'vendor': 'XYZZZ JAIN XYZZZ.JAIN810@OKAXIS',
     'type': 'upi',
     'date': 1742408084000,
     'user': 'arya',
@@ -9508,7 +9219,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1742400276000,
@@ -9520,8 +9231,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 170,
-    'vendor': 'XYZZZ.JAIN810@OKAXIS XYZZZ JAIN',
-
+    'vendor': 'XYZZZ JAIN XYZZZ.JAIN810@OKAXIS',
     'type': 'upi',
     'date': 1742330412000,
     'user': 'arya',
@@ -9532,8 +9242,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 60,
-    'vendor': 'PAYTMQR646B7P@PTYS MR SHIV SHANKAR DUBAY',
-
+    'vendor': 'MR SHIV SHANKAR DUBAY PAYTMQR646B7P@PTYS',
     'type': 'upi',
     'date': 1742326261000,
     'user': 'arya',
@@ -9544,8 +9253,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 137,
-    'vendor': 'Q228096167@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q228096167@YBL',
     'type': 'upi',
     'date': 1742325994000,
     'user': 'arya',
@@ -9557,7 +9265,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 419,
     'vendor': 'LAYRUD PRIVATE LIMITED',
-
     'type': 'credit',
     'date': 1742323261000,
     'user': 'arya',
@@ -9568,8 +9275,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q003147529@YBL ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q003147529@YBL',
     'type': 'upi',
     'date': 1742313021000,
     'user': 'arya',
@@ -9580,8 +9286,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 313,
-    'vendor': 'PAYTM.S15MWOP@PTY ABDUL LATHIF',
-
+    'vendor': 'ABDUL LATHIF PAYTM.S15MWOP@PTY',
     'type': 'upi',
     'date': 1742300905000,
     'user': 'arya',
@@ -9605,7 +9310,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 99,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1742298215000,
     'user': 'arya',
@@ -9617,7 +9321,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 99,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1742298148000,
     'user': 'arya',
@@ -9628,8 +9331,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1477,
-    'vendor': 'PPAUTOPAYELECTRICITY@YBL AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT',
-
+    'vendor': 'AUTOPAY BHARAT CONNECT ELECTRICITY BILL PAYMENT PPAUTOPAYELECTRICITY@YBL',
     'type': 'upi',
     'date': 1742272323000,
     'user': 'arya',
@@ -9641,7 +9343,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2300,
     'vendor': 'BUZA FOODS PRIVATE LIM',
-
     'type': 'credit',
     'date': 1742245502000,
     'user': 'arya',
@@ -9652,7 +9353,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1742220569000,
@@ -9676,8 +9377,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 165,
-    'vendor': 'PAYTM.S16TQHW@PTY SRI KRISHNA VEG',
-
+    'vendor': 'SRI KRISHNA VEG PAYTM.S16TQHW@PTY',
     'type': 'upi',
     'date': 1742206873000,
     'user': 'arya',
@@ -9688,7 +9388,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742148827000,
@@ -9700,7 +9400,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742148130000,
@@ -9712,7 +9412,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 42,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742139750000,
@@ -9724,7 +9424,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742130434000,
@@ -9736,7 +9436,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1742128077000,
@@ -9749,7 +9449,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1428,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1742119874000,
     'user': 'arya',
@@ -9773,7 +9472,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2859,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1742061478000,
     'user': 'arya',
@@ -9785,7 +9483,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 189,
     'vendor': 'BLINK COMMERCE PVT LTD',
-
     'type': 'credit',
     'date': 1742057094000,
     'user': 'arya',
@@ -9796,8 +9493,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 25,
-    'vendor': 'PAYTM.S1AUW1T@PTY VIDYA SUBRAMANI',
-
+    'vendor': 'VIDYA SUBRAMANI PAYTM.S1AUW1T@PTY',
     'type': 'upi',
     'date': 1742055584000,
     'user': 'arya',
@@ -9808,7 +9504,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'PAYTMQR5XMQTJ@PTYS MODERN LOOKS MENS SA',
+    'vendor': 'MODERN LOOKS MENS SA PAYTMQR5XMQTJ@PTYS',
     'tag': 'Skin & Hair',
     'type': 'upi',
     'date': 1742038959000,
@@ -9820,7 +9516,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741978268000,
@@ -9832,7 +9528,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741971168000,
@@ -9844,7 +9540,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741966836000,
@@ -9856,7 +9552,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741894354000,
@@ -9868,7 +9564,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741885177000,
@@ -9880,7 +9576,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741879083000,
@@ -9892,7 +9588,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741866985000,
@@ -9904,7 +9600,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 42,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741857005000,
@@ -9917,7 +9613,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2598,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1741822070000,
     'user': 'arya',
@@ -9941,7 +9636,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 522.95,
     'vendor': 'ZEPTO',
-
     'type': 'credit',
     'date': 1741804211000,
     'user': 'arya',
@@ -9952,8 +9646,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 445,
-    'vendor': 'PRINCESSMIAMANU15@OKICICI ARCHITA DUTTA',
-
+    'vendor': 'ARCHITA DUTTA PRINCESSMIAMANU15@OKICICI',
     'type': 'upi',
     'date': 1741784121000,
     'user': 'arya',
@@ -9965,7 +9658,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1804,
     'vendor': 'THE HOLE IN THE WALL C',
-
     'type': 'credit',
     'date': 1741784000000,
     'user': 'arya',
@@ -9976,8 +9668,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 407,
-    'vendor': 'PAYTM.S15MWOP@PTY ABDUL LATHIF',
-
+    'vendor': 'ABDUL LATHIF PAYTM.S15MWOP@PTY',
     'type': 'upi',
     'date': 1741718485000,
     'user': 'arya',
@@ -10001,7 +9692,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 638.26,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1741714706000,
     'user': 'arya',
@@ -10013,7 +9703,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 254.2,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1741714308000,
     'user': 'arya',
@@ -10036,8 +9725,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 875,
-    'vendor': 'PATIL2AJAY-2@OKHDFCBANK AJAY RAVIKUMAR PATIL',
-
+    'vendor': 'AJAY RAVIKUMAR PATIL PATIL2AJAY-2@OKHDFCBANK',
     'type': 'upi',
     'date': 1741692879000,
     'user': 'arya',
@@ -10073,7 +9761,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 186,
     'vendor': 'CHAI DAYS CAFE INDIA P',
-
     'type': 'credit',
     'date': 1741621590000,
     'user': 'arya',
@@ -10084,8 +9771,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTMQR5XYWB1@PTYS UMESH DOSA DAYS',
-
+    'vendor': 'UMESH DOSA DAYS PAYTMQR5XYWB1@PTYS',
     'type': 'upi',
     'date': 1741612770000,
     'user': 'arya',
@@ -10096,8 +9782,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTMQR5XYWB1@PTYS UMESH DOSA DAYS',
-
+    'vendor': 'UMESH DOSA DAYS PAYTMQR5XYWB1@PTYS',
     'type': 'upi',
     'date': 1741612230000,
     'user': 'arya',
@@ -10108,8 +9793,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 23128,
-    'vendor': 'PAYTM-78622189@PTYS SKINDEEP TATTOO STUDIO',
-
+    'vendor': 'SKINDEEP TATTOO STUDIO PAYTM-78622189@PTYS',
     'type': 'upi',
     'date': 1741610550000,
     'user': 'arya',
@@ -10120,8 +9804,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 2500,
-    'vendor': '0123211@IBL A CHOKHONI',
-
+    'vendor': 'A CHOKHONI 0123211@IBL',
     'type': 'upi',
     'date': 1741606110000,
     'user': 'arya',
@@ -10133,7 +9816,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 5440,
     'vendor': 'REINCARNATION HEALTH A',
-
     'type': 'credit',
     'date': 1741602450000,
     'user': 'arya',
@@ -10144,8 +9826,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'Q571637124@YBL VITHISH M',
-
+    'vendor': 'VITHISH M Q571637124@YBL',
     'type': 'upi',
     'date': 1741600170000,
     'user': 'arya',
@@ -10157,7 +9838,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 320,
     'vendor': 'NATRAJ CHOLE BHATURE I',
-
     'type': 'credit',
     'date': 1741598430000,
     'user': 'arya',
@@ -10168,8 +9848,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q517726403@YBL ANIL KUMAR SAH',
-
+    'vendor': 'ANIL KUMAR SAH Q517726403@YBL',
     'type': 'upi',
     'date': 1741591890000,
     'user': 'arya',
@@ -10180,7 +9859,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741558290000,
@@ -10192,7 +9871,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741550850000,
@@ -10204,7 +9883,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741523550000,
@@ -10216,8 +9895,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q531778641@YBL REKHA K',
-
+    'vendor': 'REKHA K Q531778641@YBL',
     'type': 'upi',
     'date': 1741507230000,
     'user': 'arya',
@@ -10240,7 +9918,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741449270000,
@@ -10252,7 +9930,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741443510000,
@@ -10265,7 +9943,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 180,
     'vendor': 'AMEYAA INC',
-
     'type': 'credit',
     'date': 1741426590000,
     'user': 'arya',
@@ -10276,8 +9953,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1741421370000,
     'user': 'arya',
@@ -10289,7 +9965,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1818,
     'vendor': 'MYNTRA DESIGNS PVT LTD',
-
     'type': 'credit',
     'date': 1741387650000,
     'user': 'arya',
@@ -10300,7 +9975,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741382850000,
@@ -10312,7 +9987,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741376910000,
@@ -10324,7 +9999,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 53,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741369410000,
@@ -10336,8 +10011,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 3480,
-    'vendor': 'SRVNAKARTEE-1@OKHDFCBANK KETAAN SELVARAJ',
-
+    'vendor': 'KETAAN SELVARAJ SRVNAKARTEE-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1741359090000,
     'user': 'arya',
@@ -10348,7 +10022,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741350390000,
@@ -10360,8 +10034,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15000,
-    'vendor': 'MYGFSURNAME22-1@OKICICI MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@OKICICI',
     'type': 'upi',
     'date': 1741343070000,
     'user': 'arya',
@@ -10372,8 +10045,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1741334790000,
     'user': 'arya',
@@ -10385,7 +10057,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 349,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1741301490000,
     'user': 'arya',
@@ -10396,7 +10067,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741286970000,
@@ -10408,8 +10079,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'SRVNAKARTEE-1@OKHDFCBANK KETAAN SELVARAJ',
-
+    'vendor': 'KETAAN SELVARAJ SRVNAKARTEE-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1741278090000,
     'user': 'arya',
@@ -10421,7 +10091,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 78.32,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1741273590000,
     'user': 'arya',
@@ -10432,8 +10101,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 70,
-    'vendor': 'PINELABS.2438508@HDFCBANK SSLV HOSPITALITY SOLUTIONS',
-
+    'vendor': 'SSLV HOSPITALITY SOLUTIONS PINELABS.2438508@HDFCBANK',
     'type': 'upi',
     'date': 1741266390000,
     'user': 'arya',
@@ -10444,7 +10112,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1741263870000,
@@ -10456,7 +10124,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'SHANTARAMRAO15@YBL RAO SHANTARAM KH',
+    'vendor': 'RAO SHANTARAM KH SHANTARAMRAO15@YBL',
     'tag': 'parents',
     'type': 'upi',
     'date': 1741255590000,
@@ -10468,8 +10136,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 104,
-    'vendor': 'PAYTM.S19PNY4@PTY ALADDIN SHAWARMA',
-
+    'vendor': 'ALADDIN SHAWARMA PAYTM.S19PNY4@PTY',
     'type': 'upi',
     'date': 1741209330000,
     'user': 'arya',
@@ -10480,8 +10147,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 134,
-    'vendor': 'Q228096167@YBL EMPIRE RESTAURANT INDIRANAGAR',
-
+    'vendor': 'EMPIRE RESTAURANT INDIRANAGAR Q228096167@YBL',
     'type': 'upi',
     'date': 1741208550000,
     'user': 'arya',
@@ -10493,7 +10159,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 233,
     'vendor': 'LAYRUD PRIVATE LIMITED',
-
     'type': 'credit',
     'date': 1741207470000,
     'user': 'arya',
@@ -10505,7 +10170,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 186,
     'vendor': 'LAYRUD PRIVATE LIMITED',
-
     'type': 'credit',
     'date': 1741206330000,
     'user': 'arya',
@@ -10516,8 +10180,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 104,
-    'vendor': 'PAYTM.S19PNY4@PTY ALADDIN SHAWARMA',
-
+    'vendor': 'ALADDIN SHAWARMA PAYTM.S19PNY4@PTY',
     'type': 'upi',
     'date': 1741205490000,
     'user': 'arya',
@@ -10528,7 +10191,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20000,
-    'vendor': 'PADMANJALIMREDDY@OKHDFCBANK SANDHYA M',
+    'vendor': 'SANDHYA M PADMANJALIMREDDY@OKHDFCBANK',
     'tag': 'rent',
     'type': 'upi',
     'date': 1741198830000,
@@ -10540,8 +10203,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 380,
-    'vendor': 'XYZZZ.JAIN810@OKAXIS XYZZZ JAIN',
-
+    'vendor': 'XYZZZ JAIN XYZZZ.JAIN810@OKAXIS',
     'type': 'upi',
     'date': 1741197570000,
     'user': 'arya',
@@ -10552,7 +10214,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1741189650000,
@@ -10588,8 +10250,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 190,
-    'vendor': '9064947@PTHDFC MR XYZZZ KUMAR',
-
+    'vendor': 'MR XYZZZ KUMAR 9064947@PTHDFC',
     'type': 'upi',
     'date': 1741126830000,
     'user': 'arya',
@@ -10600,8 +10261,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 446,
-    'vendor': 'DEVK1992-1@OKHDFCBANK DEVENDRA KUMAR',
-
+    'vendor': 'DEVENDRA KUMAR DEVK1992-1@OKHDFCBANK',
     'type': 'upi',
     'date': 1741113090000,
     'user': 'arya',
@@ -10612,7 +10272,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1741104090000,
@@ -10625,7 +10285,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 840,
     'vendor': 'MYNTRA DESIGNS PVT LTD',
-
     'type': 'credit',
     'date': 1741100370000,
     'user': 'arya',
@@ -10648,7 +10307,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 123,
-    'vendor': 'Q815163329@YBL REAL MART',
+    'vendor': 'REAL MART Q815163329@YBL',
     'tag': 'groceries',
     'type': 'upi',
     'date': 1741088130000,
@@ -10661,7 +10320,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1752,
     'vendor': 'URBANCLAP',
-
     'type': 'credit',
     'date': 1741084530000,
     'user': 'arya',
@@ -10672,8 +10330,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 81,
-    'vendor': 'Q694909135@YBL WISHVISH FOODS PRIVA',
-
+    'vendor': 'WISHVISH FOODS PRIVA Q694909135@YBL',
     'type': 'upi',
     'date': 1741081050000,
     'user': 'arya',
@@ -10684,8 +10341,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 200,
-    'vendor': 'VARSHA5RAIN@OKSBI VARSHA',
-
+    'vendor': 'VARSHA VARSHA5RAIN@OKSBI',
     'type': 'upi',
     'date': 1741079850000,
     'user': 'arya',
@@ -10696,8 +10352,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1741069950000,
     'user': 'arya',
@@ -10708,7 +10363,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q083777031@YBL ABDUL KADAR N',
+    'vendor': 'ABDUL KADAR N Q083777031@YBL',
     'tag': 'drinks',
     'type': 'upi',
     'date': 1741025191000,
@@ -10720,8 +10375,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 770,
-    'vendor': 'RAHUL.STEPHEN22@OKHDFCBANK RAHUL S',
-
+    'vendor': 'RAHUL S RAHUL.STEPHEN22@OKHDFCBANK',
     'type': 'upi',
     'date': 1741022870000,
     'user': 'arya',
@@ -10733,7 +10387,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1180,
     'vendor': 'GERMAN BREZELHAUS',
-
     'type': 'credit',
     'date': 1741021895000,
     'user': 'arya',
@@ -10745,7 +10398,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1694,
     'vendor': 'YOGISTHAAN SOULFUL LIV',
-
     'type': 'credit',
     'date': 1741019048000,
     'user': 'arya',
@@ -10757,7 +10409,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 6622.85,
     'vendor': 'MYNTRA DESIGNS PVT LTD',
-
     'type': 'credit',
     'date': 1740997054000,
     'user': 'arya',
@@ -10780,7 +10431,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740948121000,
@@ -10792,7 +10443,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740943956000,
@@ -10804,7 +10455,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 36,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740933379000,
@@ -10816,7 +10467,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 45,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740932191000,
@@ -10828,7 +10479,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740921778000,
@@ -10840,7 +10491,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'PAYTMQR1ISG72NHXZ@PAYTM RAJEESH P',
+    'vendor': 'RAJEESH P PAYTMQR1ISG72NHXZ@PAYTM',
     'tag': 'snacks',
     'type': 'upi',
     'date': 1740908068000,
@@ -10852,8 +10503,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740902794000,
     'user': 'arya',
@@ -10864,8 +10514,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'PAYTMQR5Y9WCL@PTYS VINAY KUMAR SHUKLA',
-
+    'vendor': 'VINAY KUMAR SHUKLA PAYTMQR5Y9WCL@PTYS',
     'type': 'upi',
     'date': 1740833953000,
     'user': 'arya',
@@ -10877,7 +10526,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 276,
     'vendor': 'RAZ*DELIGHTFUL GOURMET',
-
     'type': 'credit',
     'date': 1740828113000,
     'user': 'arya',
@@ -10888,8 +10536,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 110,
-    'vendor': 'PAYTM.S16TQHW@PTY SRI KRISHNA VEG',
-
+    'vendor': 'SRI KRISHNA VEG PAYTM.S16TQHW@PTY',
     'type': 'upi',
     'date': 1740816801000,
     'user': 'arya',
@@ -10900,7 +10547,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740772929000,
@@ -10912,7 +10559,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740757012000,
@@ -10924,7 +10571,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 250,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740745608000,
@@ -10937,7 +10584,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2799,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1740741227000,
     'user': 'arya',
@@ -10949,7 +10595,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1276.7,
     'vendor': 'SHANKAR SONS',
-
     'type': 'credit',
     'date': 1740738441000,
     'user': 'arya',
@@ -10960,8 +10605,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740729925000,
     'user': 'arya',
@@ -10973,7 +10617,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 549,
     'vendor': 'AMAZONIN',
-
     'type': 'credit',
     'date': 1740704203000,
     'user': 'arya',
@@ -10984,7 +10627,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740686539000,
@@ -10996,7 +10639,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740678652000,
@@ -11008,7 +10651,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740678076000,
@@ -11021,7 +10664,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 140,
     'vendor': 'NATRAJ CHOLE BHATURE I',
-
     'type': 'credit',
     'date': 1740647051000,
     'user': 'arya',
@@ -11032,8 +10674,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740641986000,
     'user': 'arya',
@@ -11056,8 +10697,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'GPAY-11240@OKBIZAXIS BADMINTON ARENA',
-
+    'vendor': 'BADMINTON ARENA GPAY-11240@OKBIZAXIS',
     'type': 'upi',
     'date': 1740586177000,
     'user': 'arya',
@@ -11068,8 +10708,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'PAYTMQR5WDJ2Y@PTYS RAJEEV S',
-
+    'vendor': 'RAJEEV S PAYTMQR5WDJ2Y@PTYS',
     'type': 'upi',
     'date': 1740585188000,
     'user': 'arya',
@@ -11081,7 +10720,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 169.64,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1740577287000,
     'user': 'arya',
@@ -11092,8 +10730,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 230,
-    'vendor': 'PAYTM.S18IKSO@PTY AMEYAA INC',
-
+    'vendor': 'AMEYAA INC PAYTM.S18IKSO@PTY',
     'type': 'upi',
     'date': 1740563079000,
     'user': 'arya',
@@ -11104,8 +10741,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740555208000,
     'user': 'arya',
@@ -11116,8 +10752,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'Q998344924@YBL TIarya FOODS',
-
+    'vendor': 'TIarya FOODS Q998344924@YBL',
     'type': 'upi',
     'date': 1740519275000,
     'user': 'arya',
@@ -11128,8 +10763,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 330,
-    'vendor': 'Q256423033@YBL BIKRAM SARKI',
-
+    'vendor': 'BIKRAM SARKI Q256423033@YBL',
     'type': 'upi',
     'date': 1740518386000,
     'user': 'arya',
@@ -11140,8 +10774,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 80,
-    'vendor': 'Q980637884@YBL NEW UDUPI GARDEN',
-
+    'vendor': 'NEW UDUPI GARDEN Q980637884@YBL',
     'type': 'upi',
     'date': 1740506779000,
     'user': 'arya',
@@ -11153,7 +10786,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1800,
     'vendor': 'MK ASSOCIATES',
-
     'type': 'credit',
     'date': 1740506379000,
     'user': 'arya',
@@ -11165,7 +10797,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 333,
     'vendor': 'RAZ*DELIGHTFUL GOURMET',
-
     'type': 'credit',
     'date': 1740478408000,
     'user': 'arya',
@@ -11188,7 +10819,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 160,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740425001000,
@@ -11200,7 +10831,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740413361000,
@@ -11212,7 +10843,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740400318000,
@@ -11224,8 +10855,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740384230000,
     'user': 'arya',
@@ -11236,7 +10866,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740344685000,
@@ -11248,7 +10878,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 70,
-    'vendor': 'PAYTM-79015682@PTYBL officefood',
+    'vendor': 'officefood PAYTM-79015682@PTYBL',
     'tag': 'food',
     'type': 'upi',
     'date': 1740328338000,
@@ -11260,8 +10890,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 112,
-    'vendor': 'Q368990936@YBL RAVI BE',
-
+    'vendor': 'RAVI BE Q368990936@YBL',
     'type': 'upi',
     'date': 1740319890000,
     'user': 'arya',
@@ -11272,8 +10901,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 575,
-    'vendor': 'SHASTRYAJAY1@OKHDFCBANK MASTER AJAY SHASTRY KN',
-
+    'vendor': 'MASTER AJAY SHASTRY KN SHASTRYAJAY1@OKHDFCBANK',
     'type': 'upi',
     'date': 1740318196000,
     'user': 'arya',
@@ -11284,8 +10912,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 146,
-    'vendor': 'REDDYKARTHIK40931-3@OKAXIS RAMIREDDY KARTHIK',
-
+    'vendor': 'RAMIREDDY KARTHIK REDDYKARTHIK40931-3@OKAXIS',
     'type': 'upi',
     'date': 1740318133000,
     'user': 'arya',
@@ -11297,7 +10924,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1040,
     'vendor': 'BUZA FOODS PRIVATE LIM',
-
     'type': 'credit',
     'date': 1740315113000,
     'user': 'arya',
@@ -11308,8 +10934,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 60,
-    'vendor': 'JA7275401@OKSBI JAVED ALI',
-
+    'vendor': 'JAVED ALI JA7275401@OKSBI',
     'type': 'upi',
     'date': 1740312867000,
     'user': 'arya',
@@ -11321,7 +10946,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 491.92,
     'vendor': 'TECHMASH SOLUTIONS PVT',
-
     'type': 'credit',
     'date': 1740302862000,
     'user': 'arya',
@@ -11332,8 +10956,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@YBL NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@YBL',
     'type': 'upi',
     'date': 1740297776000,
     'user': 'arya',
@@ -11344,8 +10967,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 20,
-    'vendor': 'Q531778641@YBL REKHA K',
-
+    'vendor': 'REKHA K Q531778641@YBL',
     'type': 'upi',
     'date': 1740249648000,
     'user': 'arya',
@@ -11356,8 +10978,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 64,
-    'vendor': 'Q368692886@YBL KANTI SWEETSSNS ARCADE OLD AIRPORT ROAD',
-
+    'vendor': 'KANTI SWEETSSNS ARCADE OLD AIRPORT ROAD Q368692886@YBL',
     'type': 'upi',
     'date': 1740248958000,
     'user': 'arya',
@@ -11416,7 +11037,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 140,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi-debit',
     'date': 1740165963000,
@@ -11428,7 +11049,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1740150065000,
@@ -11452,7 +11073,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 150,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1740142027000,
@@ -11464,8 +11085,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'paytmqr60ekg6@ptys VIJAY ANAND SHETTY',
-
+    'vendor': 'VIJAY ANAND SHETTY paytmqr60ekg6@ptys',
     'type': 'upi',
     'date': 1740137509000,
     'user': 'arya',
@@ -11488,7 +11108,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 18,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1740087605000,
@@ -11500,7 +11120,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 130,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1740082571000,
@@ -11512,7 +11132,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 38,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1740072271000,
@@ -11525,7 +11145,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 4618,
     'vendor': 'SWIGGY DINEOUT',
-
     'type': 'credit',
     'date': 1740063628000,
     'user': 'arya',
@@ -11536,8 +11155,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 170,
-    'vendor': 'dilan123nayak@ybl DILAN NAYAK',
-
+    'vendor': 'DILAN NAYAK dilan123nayak@ybl',
     'type': 'upi',
     'date': 1740050479000,
     'user': 'arya',
@@ -11573,7 +11191,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 99,
     'vendor': 'TechMash Solutions Pvt',
-
     'type': 'credit',
     'date': 1739984423000,
     'user': 'arya',
@@ -11584,8 +11201,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 220,
-    'vendor': 'gpay-11240@okbizaxis Badminton Arena',
-
+    'vendor': 'Badminton Arena gpay-11240@okbizaxis',
     'type': 'upi',
     'date': 1739983495000,
     'user': 'arya',
@@ -11596,8 +11212,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'q003147529@ybl ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N q003147529@ybl',
     'type': 'upi',
     'date': 1739980687000,
     'user': 'arya',
@@ -11609,7 +11224,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2925,
     'vendor': 'URBANCLAP TECHNOLOGIES',
-
     'type': 'credit',
     'date': 1739973370000,
     'user': 'arya',
@@ -11656,8 +11270,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 9,
-    'vendor': 'MYGFSURNAME22-1@okicici MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@okicici',
     'type': 'upi',
     'date': 1739966540000,
     'user': 'arya',
@@ -11668,8 +11281,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 80,
-    'vendor': 'BHARATPE90719@yesbankltd SPORTING SOLUTIONS',
-
+    'vendor': 'SPORTING SOLUTIONS BHARATPE90719@yesbankltd',
     'type': 'upi',
     'date': 1739956070000,
     'user': 'arya',
@@ -11680,8 +11292,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739950307000,
     'user': 'arya',
@@ -11693,7 +11304,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 6811,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1739916474000,
     'user': 'arya',
@@ -11705,7 +11315,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 368,
     'vendor': 'URBANCLAP TECHNOLOGIES',
-
     'type': 'credit',
     'date': 1739904362000,
     'user': 'arya',
@@ -11717,7 +11326,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1222.32,
     'vendor': 'TechMash Solutions Pvt',
-
     'type': 'credit',
     'date': 1739901926000,
     'user': 'arya',
@@ -11728,8 +11336,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'Q003147529@ybl ABDUL KADAR N',
-
+    'vendor': 'ABDUL KADAR N Q003147529@ybl',
     'type': 'upi',
     'date': 1739894401000,
     'user': 'arya',
@@ -11753,7 +11360,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 535.4,
     'vendor': 'ZEPTO MARKETPLACE PRIV',
-
     'type': 'credit',
     'date': 1739875909000,
     'user': 'arya',
@@ -11764,8 +11370,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'Q018138107@ybl THESRIRANGAMCAFE',
-
+    'vendor': 'THESRIRANGAMCAFE Q018138107@ybl',
     'type': 'upi',
     'date': 1739872158000,
     'user': 'arya',
@@ -11776,8 +11381,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 125,
-    'vendor': 'Q018138107@ybl THESRIRANGAMCAFE',
-
+    'vendor': 'THESRIRANGAMCAFE Q018138107@ybl',
     'type': 'upi',
     'date': 1739871957000,
     'user': 'arya',
@@ -11788,8 +11392,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'psnimbus99@okhdfcbank PRXYZZZ SHENOY K',
-
+    'vendor': 'PRXYZZZ SHENOY K psnimbus99@okhdfcbank',
     'type': 'upi',
     'date': 1739870900000,
     'user': 'arya',
@@ -11800,8 +11403,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'priyanka.rajpali-1@okhdfcbank PRIYANKA RAJPALI',
-
+    'vendor': 'PRIYANKA RAJPALI priyanka.rajpali-1@okhdfcbank',
     'type': 'upi',
     'date': 1739870895000,
     'user': 'arya',
@@ -11812,8 +11414,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'XYZZZ@pthdfc XYZZZ GOWDA V',
-
+    'vendor': 'XYZZZ GOWDA V XYZZZ@pthdfc',
     'type': 'upi',
     'date': 1739870881000,
     'user': 'arya',
@@ -11824,8 +11425,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'RAHUL.stephen22@okhdfcbank RAHUL S',
-
+    'vendor': 'RAHUL S RAHUL.stephen22@okhdfcbank',
     'type': 'upi',
     'date': 1739870880000,
     'user': 'arya',
@@ -11836,8 +11436,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739860348000,
     'user': 'arya',
@@ -11848,8 +11447,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 1270,
-    'vendor': 'PPAUTOPAYELECTRICITY@ybl AutoPay Bharat Connect Electricity Bill Payment',
-
+    'vendor': 'AutoPay Bharat Connect Electricity Bill Payment PPAUTOPAYELECTRICITY@ybl',
     'type': 'upi',
     'date': 1739848034000,
     'user': 'arya',
@@ -11860,7 +11458,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739823075000,
@@ -11872,7 +11470,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 30,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739815329000,
@@ -11884,7 +11482,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739807779000,
@@ -11896,7 +11494,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739806587000,
@@ -11909,7 +11507,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 99,
     'vendor': 'TechMash Solutions Pvt',
-
     'type': 'credit',
     'date': 1739806521000,
     'user': 'arya',
@@ -11920,7 +11517,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739796765000,
@@ -11944,8 +11541,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739779819000,
     'user': 'arya',
@@ -11956,8 +11552,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 819,
-    'vendor': 'akshitgabhane-1@okhdfcbank AKSHIT MANOJ GABHANE',
-
+    'vendor': 'AKSHIT MANOJ GABHANE akshitgabhane-1@okhdfcbank',
     'type': 'upi',
     'date': 1739732365000,
     'user': 'arya',
@@ -11968,8 +11563,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 218.4,
-    'vendor': 'uberindiasystemsprivatelimited.razorp@icici UBER INDIA SYSTEMS PRIVATE LIMITED',
-
+    'vendor': 'UBER INDIA SYSTEMS PRIVATE LIMITED uberindiasystemsprivatelimited.razorp@icici',
     'type': 'upi',
     'date': 1739701892000,
     'user': 'arya',
@@ -11980,8 +11574,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739694812000,
     'user': 'arya',
@@ -11993,7 +11586,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3272,
     'vendor': 'AMAZON PAY INDIA PRIVA',
-
     'type': 'credit',
     'date': 1739672751000,
     'user': 'arya',
@@ -12004,7 +11596,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739653357000,
@@ -12016,7 +11608,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739640824000,
@@ -12028,7 +11620,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 75,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739639268000,
@@ -12041,7 +11633,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 391.44,
     'vendor': 'TechMash Solutions Pvt',
-
     'type': 'credit',
     'date': 1739610488000,
     'user': 'arya',
@@ -12052,8 +11643,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739606803000,
     'user': 'arya',
@@ -12064,7 +11654,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 35,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739564622000,
@@ -12077,7 +11667,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 5438,
     'vendor': 'YATRA',
-
     'type': 'credit',
     'date': 1739556800000,
     'user': 'arya',
@@ -12088,7 +11677,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 15,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739555707000,
@@ -12100,7 +11689,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 30,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739555130000,
@@ -12112,7 +11701,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 30,
-    'vendor': 'paytmqr10gaq1@paytm Sslv Hospitality Solutions',
+    'vendor': 'Sslv Hospitality Solutions paytmqr10gaq1@paytm',
     'tag': 'food',
     'type': 'upi',
     'date': 1739551991000,
@@ -12124,7 +11713,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 40,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739539488000,
@@ -12136,8 +11725,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': '998032@ybl NARENDRA MODI TEA',
-
+    'vendor': 'NARENDRA MODI TEA 998032@ybl',
     'type': 'upi',
     'date': 1739520296000,
     'user': 'arya',
@@ -12148,7 +11736,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 50,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739466633000,
@@ -12160,7 +11748,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 55,
-    'vendor': 'paytm-79015682@ptybl officefood',
+    'vendor': 'officefood paytm-79015682@ptybl',
     'tag': 'food',
     'type': 'upi',
     'date': 1739458883000,
@@ -12172,8 +11760,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 11,
-    'vendor': 'MYGFSURNAME22-1@okicici MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@okicici',
     'type': 'upi',
     'date': 1739401585000,
     'user': 'arya',
@@ -12185,7 +11772,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 2040,
     'vendor': 'FLIPKART PAYMENTS',
-
     'type': 'credit',
     'date': 1739400212000,
     'user': 'arya',
@@ -12197,7 +11783,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 11363,
     'vendor': 'WWW AMAZON IN',
-
     'type': 'credit',
     'date': 1739399122000,
     'user': 'arya',
@@ -12220,8 +11805,7 @@ export const ExpenseListNew: Expense[] = [
   },
   {
     'cost': 10,
-    'vendor': 'MYGFSURNAME22-1@okicici MYGF R SURNAME',
-
+    'vendor': 'MYGF R SURNAME MYGFSURNAME22-1@okicici',
     'type': 'upi',
     'date': 1739391457000,
     'user': 'arya',
@@ -12245,7 +11829,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': 'q003147529@ybl',
-
     'type': 'upi',
     'date': 1739375783000,
     'user': 'arya',
@@ -12257,7 +11840,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 397.56,
     'vendor': 'TechMash',
-
     'type': 'credit',
     'date': 1739368856000,
     'user': 'arya',
@@ -12269,7 +11851,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 180,
     'vendor': 'Natraj',
-
     'type': 'credit',
     'date': 1739354193000,
     'user': 'arya',
@@ -12281,7 +11862,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 459.1,
     'vendor': 'ZOMATOCOM',
-
     'type': 'credit',
     'date': 1739311410000,
     'user': 'arya',
@@ -12293,7 +11873,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 499,
     'vendor': 'OPTIVAL',
-
     'type': 'credit',
     'date': 1739300550000,
     'user': 'arya',
@@ -12305,7 +11884,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 289,
     'vendor': 'ZAMA',
-
     'type': 'credit',
     'date': 1739295330000,
     'user': 'arya',
@@ -12317,7 +11895,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1739289450000,
     'user': 'arya',
@@ -12329,7 +11906,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 597.3,
     'vendor': 'ZEPTO',
-
     'type': 'credit',
     'date': 1739270430000,
     'user': 'arya',
@@ -12341,7 +11917,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'paytm.s15mwop@pty',
-
     'type': 'upi',
     'date': 1739269830000,
     'user': 'arya',
@@ -12353,7 +11928,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': 'Q083777031@ybl',
-
     'type': 'upi',
     'date': 1739260170000,
     'user': 'arya',
@@ -12365,7 +11939,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 20000,
     'vendor': 'padmanjalimreddy@okhdfcbank',
-
     'type': 'upi',
     'date': 1739219490000,
     'user': 'arya',
@@ -12377,7 +11950,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'vendor': 'paytm-79015682@ptybl',
-
     'type': 'upi',
     'date': 1739202150000,
     'user': 'arya',
@@ -12389,7 +11961,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 4071.99,
     'vendor': 'Myntra',
-
     'type': 'credit',
     'date': 1739187690000,
     'user': 'arya',
@@ -12401,7 +11972,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1739174790000,
     'user': 'arya',
@@ -12413,7 +11983,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 15,
     'vendor': 'paytm-79015682@ptybl',
-
     'type': 'upi',
     'date': 1739131890000,
     'user': 'arya',
@@ -12425,7 +11994,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 6815,
     'vendor': 'Yatra',
-
     'type': 'credit',
     'date': 1739121990000,
     'user': 'arya',
@@ -12437,7 +12005,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1739089170000,
     'user': 'arya',
@@ -12461,7 +12028,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 923,
     'vendor': 'WWW',
-
     'type': 'credit',
     'date': 1739033970000,
     'user': 'arya',
@@ -12485,7 +12051,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 40,
     'vendor': 'paytmqrwkuhaktxcr@paytm',
-
     'type': 'upi',
     'date': 1739010450000,
     'user': 'arya',
@@ -12497,7 +12062,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 230,
     'vendor': 'Ameyaa',
-
     'type': 'credit',
     'date': 1739009130000,
     'user': 'arya',
@@ -12509,7 +12073,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1739001870000,
     'user': 'arya',
@@ -12521,7 +12084,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 130,
     'vendor': 'officefood127054.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738958370000,
     'user': 'arya',
@@ -12533,7 +12095,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'vendor': 'officefood127054.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738945890000,
     'user': 'arya',
@@ -12545,7 +12106,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 40,
     'vendor': 'companyblrfoo167131.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738935090000,
     'user': 'arya',
@@ -12557,7 +12117,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 90,
     'vendor': 'companyblrfoo167131.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738934550000,
     'user': 'arya',
@@ -12569,7 +12128,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 15,
     'vendor': 'officefood127054.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738859070000,
     'user': 'arya',
@@ -12581,7 +12139,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 50,
     'vendor': 'officefood127054.rzp@axisbank',
-
     'type': 'upi',
     'date': 1738857870000,
     'user': 'arya',
@@ -12593,7 +12150,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 65,
     'vendor': 'q743668666@ybl',
-
     'type': 'upi',
     'date': 1738834170000,
     'user': 'arya',
@@ -12605,7 +12161,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1738829310000,
     'user': 'arya',
@@ -12617,7 +12172,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1237.58,
     'vendor': 'Shankar',
-
     'type': 'credit',
     'date': 1738788330000,
     'user': 'arya',
@@ -12641,7 +12195,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738778910000,
     'user': 'arya',
@@ -12653,7 +12206,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1620.76,
     'vendor': 'TechMash',
-
     'type': 'credit',
     'date': 1738774530000,
     'user': 'arya',
@@ -12665,7 +12217,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': 'q083777031@ybl',
-
     'type': 'upi',
     'date': 1738771110000,
     'user': 'arya',
@@ -12689,7 +12240,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738754850000,
     'user': 'arya',
@@ -12701,7 +12251,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': '998032@ybl',
-
     'type': 'upi',
     'date': 1738742310000,
     'user': 'arya',
@@ -12725,7 +12274,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 3219,
     'vendor': 'MYNTRA',
-
     'type': 'credit',
     'date': 1738709190000,
     'user': 'arya',
@@ -12737,7 +12285,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 352,
     'vendor': 'GLENS',
-
     'type': 'credit',
     'date': 1738697610000,
     'user': 'arya',
@@ -12749,7 +12296,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 1037,
     'vendor': 'Myntra',
-
     'type': 'credit',
     'date': 1738696890000,
     'user': 'arya',
@@ -12761,7 +12307,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 443,
     'vendor': 'q709253665@ybl',
-
     'type': 'upi',
     'date': 1738695510000,
     'user': 'arya',
@@ -12773,7 +12318,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738694610000,
     'user': 'arya',
@@ -12785,7 +12329,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738693890000,
     'user': 'arya',
@@ -12797,7 +12340,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738693530000,
     'user': 'arya',
@@ -12809,7 +12351,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 170,
     'vendor': 'VPA',
-
     'type': 'upi',
     'date': 1738693170000,
     'user': 'arya',
@@ -12821,7 +12362,6 @@ export const ExpenseListNew: Expense[] = [
   {
     'cost': 10,
     'vendor': 'q003147529@ybl',
-
     'type': 'upi',
     'date': 1738684950000,
     'user': 'arya',
