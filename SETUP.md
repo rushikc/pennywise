@@ -369,22 +369,32 @@ To interact with Firebase services from your terminal, you need to install the F
   - In the left sidebar, navigate to **Firestore Database** under `build` optiuon, then click on the **Rules** tab.
   - Replace `firestore.rules` with the following rules to restrict access to your email,
   - replace `your-email@gmail.com` with your actual email address.
+  - You can add multiple user emails for a single app access via Google sign in
     ```txt
     rules_version = '2';
 
     service cloud.firestore {
     match /databases/{database}/documents {
 
-        function isMyEmail() {
-          // It's good practice to also check email_verified for stronger security
-          return request.auth.token.email == "your-email@gmail.com" && request.auth.token.email_verified == true;
+        function isAuthorizedUser() {
+          // Define the list of authorized email addresses
+          let authorizedEmails = [
+            "your-email@gmail.com",
+            "spouse-email@gmail.com",
+            "family-member@gmail.com"
+          ];
+
+          // Check if the authenticated user's email is in the authorized list
+          // and that their email is verified
+          return request.auth.token.email in authorizedEmails &&
+                 request.auth.token.email_verified == true;
         }
 
-        // This single rule applies to ALL documents in the database
+        // This rule applies to ALL documents in the database
         // and grants read/write access ONLY if the user is authenticated
-        // and their email matches to your mail AND it's verified.
+        // and their email is in the authorized list AND it's verified.
         match /{document=**} {
-          allow read, write: if request.auth != null && isMyEmail();
+          allow read, write: if request.auth != null && isAuthorizedUser();
         }
       }
     }
