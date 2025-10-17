@@ -21,6 +21,7 @@ interface FormattedExpense {
   Type: string;
   PaymentMode: string;
   Tag: string;
+  User: string;
 }
 
 /**
@@ -50,6 +51,7 @@ const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
     Type: expense.costType,
     PaymentMode: expense.type,
     Tag: expense.tag || 'Untagged',
+    User: expense.user,
   }));
 };
 
@@ -94,6 +96,7 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
       {header: 'Type', key: 'Type', width: 10},
       {header: 'PaymentMode', key: 'PaymentMode', width: 15},
       {header: 'Tag', key: 'Tag', width: 15},
+      {header: 'User', key: 'User', width: 15},
     ];
 
     // Add data rows
