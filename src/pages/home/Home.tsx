@@ -50,6 +50,7 @@ import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {CreditCard, Sort} from '@mui/icons-material';
 import Container from '@mui/material/Container';
 import {useLongPress} from '../../hooks/useLongPress';
+import {useCloseOnOutsideClick} from '../../hooks/useCloseOnOutsideClick';
 
 // Add interface to extend Window type
 declare global {
@@ -58,7 +59,6 @@ declare global {
     scrollTimeout: ReturnType<typeof setTimeout> | undefined;
   }
 }
-
 
 const Home: FC<Record<string, never>> = (): ReactElement => {
   const {expenseList, isAppLoading} = useSelector(selectExpense);
@@ -344,57 +344,11 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle clicks outside filter panel and scroll events
-  useEffect(() => {
-    if (!showFilters) return; // Skip if filters not shown
+  // Use custom hook to handle outside clicks for filter panel
+  useCloseOnOutsideClick(showFilters, () => setShowFilters(false), filterPanelRef, filterButtonRef);
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        filterPanelRef.current &&
-        filterButtonRef.current &&
-        !filterPanelRef.current.contains(event.target as Node) &&
-        !filterButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowFilters(false);
-      }
-    };
-
-    const handleScroll = () => setShowFilters(false);
-
-    // Add and clean up event listeners
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('scroll', handleScroll, true);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [showFilters]);
-
-  // Handle clicks outside group by panel and scroll events
-  useEffect(() => {
-    if (!showGroupByOptions) return; // Skip if options not shown
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        groupByPanelRef.current &&
-        groupByButtonRef.current &&
-        !groupByPanelRef.current.contains(event.target as Node) &&
-        !groupByButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowGroupByOptions(false);
-      }
-    };
-
-    const handleScroll = () => setShowGroupByOptions(false);
-
-    // Add and clean up event listeners
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('scroll', handleScroll, true);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [showGroupByOptions]);
+  // Use custom hook to handle outside clicks for group by panel
+  useCloseOnOutsideClick(showGroupByOptions, () => setShowGroupByOptions(false), groupByPanelRef, groupByButtonRef);
 
   // Handle range selection
   const handleRangeChange = (range: DateRange) => {
