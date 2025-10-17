@@ -30,7 +30,7 @@ import {
   setExpenseList,
   setTagExpense
 } from '../../store/expenseActions';
-import {formatVendorName, getDateMonth, sortByKeyDate} from '../../utility/utility';
+import {formatVendorName, getDateMonth, sortByKey} from '../../utility/utility';
 import {
   DateRange,
   filterExpensesByDate,
@@ -99,7 +99,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setLoading(true);
     ExpenseAPI.getExpenseList()
       .then(expenses => {
-        const sortedExpenses = sortByKeyDate(expenses, 'date');
+        const sortedExpenses = sortByKey(expenses, 'date');
         setExpenseList(sortedExpenses);
         setTimeout(() => setLoading(false), 300);
       })
@@ -254,7 +254,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     }
 
     const filtered = filterExpensesByDate(expenseList, selectedRange);
-    const sortedExpenses = sortByKeyDate(filtered, 'date');
+    const sortedExpenses = sortByKey(filtered, 'date');
     setDateFilteredExpenses(sortedExpenses);
 
     // console.log('Filtered Expenses:', sortedExpenses);

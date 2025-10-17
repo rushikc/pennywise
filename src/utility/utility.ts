@@ -91,13 +91,6 @@ export const sortByKey = <T extends Record<string, any>>(array: T[], key: string
 };
 
 // eslint-disable-next-line
-export const sortByKeyDate = <T extends Record<string, any>>(array: T[], key: string) => {
-  return array.sort((a, b) => {
-    return (b[key] - a[key]);
-  });
-};
-
-// eslint-disable-next-line
 export const JSONCopy = (Obj: any) => {
   return JSON.parse(JSON.stringify(Obj));
 };

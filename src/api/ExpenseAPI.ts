@@ -26,7 +26,7 @@ const fireStoreDoc = {
   set: async (collectionName: string, key: string, val: any) => {
     try {
       await setDoc(doc(db, collectionName, key), val);
-      console.debug('Document written:', collectionName, key, val);
+      // console.debug('Document written:', collectionName, key, val);
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error adding document:', e);
@@ -45,7 +45,7 @@ const fireStoreDoc = {
   delete: async (collectionName: string, key: string) => {
     try {
       await deleteDoc(doc(db, collectionName, key));
-      console.debug('Document deleted:', collectionName, key);
+      // console.debug('Document deleted:', collectionName, key);
       return true;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -88,7 +88,7 @@ export class ExpenseAPI {
    * This function is typically used for one-off data manipulation tasks.
    */
   static processData = async () => {
-    console.log('ExpenseAPI processData');
+    // console.log('ExpenseAPI processData');
     // ProcessData.processBudget();
   };
 
@@ -124,7 +124,7 @@ export class ExpenseAPI {
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error adding document: ', e, _expense);
+      // console.error('Error adding document: ', e, _expense);
       return _expense;
     }
   };
@@ -140,20 +140,20 @@ export class ExpenseAPI {
       // First, delete from Firebase
       const docRef = doc(db, 'expense', expense.id);
       await deleteDoc(docRef);
-      console.debug('Expense deleted from Firebase with key: ', expense.id);
+      // console.debug('Expense deleted from Firebase with key: ', expense.id);
 
       // Then, delete from IndexedDB
       if (expense.mailId) {
         await FinanceIndexDB.deleteExpense(expense.mailId);
-        console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
+        // console.debug('Expense deleted from IndexedDB with mailId: ', expense.mailId);
       } else {
-        console.warn('No mailId found for expense, skipping IndexedDB deletion');
+        // console.warn('No mailId found for expense, skipping IndexedDB deletion');
       }
 
       return true;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error deleting expense:', e);
+      // console.error('Error deleting expense:', e);
       return false;
     }
   };
@@ -193,7 +193,7 @@ export class ExpenseAPI {
       return indexDocList;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error fetching expense list: ', e);
+      // console.error('Error fetching expense list: ', e);
       return [];
     }
   };
@@ -212,7 +212,7 @@ export class ExpenseAPI {
       return tagList;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error getting tag list: ', e);
+      // console.error('Error getting tag list: ', e);
       return [];
     }
   };
@@ -227,7 +227,7 @@ export class ExpenseAPI {
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error updating tag list: ', e);
+      // console.error('Error updating tag list: ', e);
     }
   };
 
@@ -253,11 +253,11 @@ export class ExpenseAPI {
         creditCards: bankConfig.creditCards ?? []
       };
 
-      console.debug('Retrieved bank config:', typedConfig);
+      // console.debug('Retrieved bank config:', typedConfig);
       return typedConfig;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error getting bank config:', e);
+      // console.error('Error getting bank config:', e);
       return {
         enableUpi: false,
         creditCards: [],
@@ -272,11 +272,11 @@ export class ExpenseAPI {
   static updateBankConfig = async (config: BankConfig) => {
     try {
       await ExpenseAPI.setOneDoc('bankConfig', config, 'config');
-      console.debug('Updated bank config:', config);
+      // console.debug('Updated bank config:', config);
       return true;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error updating bank config:', e);
+      // console.error('Error updating bank config:', e);
       return false;
     }
   };
@@ -293,11 +293,11 @@ export class ExpenseAPI {
       if (!darkModeConfig) {
         return false; // Default to light mode
       }
-      console.debug('Retrieved dark mode config:', darkModeConfig);
+      // console.debug('Retrieved dark mode config:', darkModeConfig);
       return darkModeConfig.value;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error getting dark mode config:', e);
+      // console.error('Error getting dark mode config:', e);
       return false; // Default to light mode on error
     }
   };
@@ -312,11 +312,11 @@ export class ExpenseAPI {
         value: val,
       };
       await ExpenseAPI.setOneDoc('darkMode', config, 'config');
-      console.debug('Updated darkMode config:', config);
+      // console.debug('Updated darkMode config:', config);
       return true;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error updating bank config:', e);
+      // console.error('Error updating bank config:', e);
       return false;
     }
   };
@@ -352,7 +352,7 @@ export class ExpenseAPI {
       return await FinanceIndexDB.getAllData('vendorTag');
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error getting vendor tag list: ', e);
+      // console.error('Error getting vendor tag list: ', e);
       return [];
     }
   };
@@ -372,12 +372,12 @@ export class ExpenseAPI {
       // Update in Firestore
       const docRef = doc(db, 'vendorTag', id);
       await setDoc(docRef, vendorTagWithoutId);
-      console.debug('VendorTag updated in Firestore with ID:', id);
+      // console.debug('VendorTag updated in Firestore with ID:', id);
       return true;
 
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      console.error('Error updating vendorTag:', e);
+      // console.error('Error updating vendorTag:', e);
       return false;
     }
   };
@@ -391,7 +391,7 @@ export class ExpenseAPI {
       // Delete from Firestore
       const docRef = doc(db, 'vendorTag', vendorTagId);
       await deleteDoc(docRef);
-      console.debug('VendorTag deleted from Firestore with ID:', vendorTagId);
+      // console.debug('VendorTag deleted from Firestore with ID:', vendorTagId);
 
       return true;
     } catch (e) {
@@ -410,14 +410,14 @@ export class ExpenseAPI {
    */
   static autoTagPastExpenses = async (startDate: number): Promise<number> => {
     try {
-      console.log(`Auto-tagging expenses from ${new Date(startDate).toISOString()}`);
+      // console.log(`Auto-tagging expenses from ${new Date(startDate).toISOString()}`);
 
       // 1. Fetch all vendor tags from IndexDB
       const vendorTags: VendorTag[] = await FinanceIndexDB.getAllData('vendorTag');
       const vendorTagMap = new Map(vendorTags.map(vt => [vt.vendor.toLowerCase(), vt.tag]));
 
       if (vendorTagMap.size === 0) {
-        console.log('No vendor tags found. Aborting auto-tagging.');
+        // console.log('No vendor tags found. Aborting auto-tagging.');
         return 0;
       }
 
@@ -453,14 +453,14 @@ export class ExpenseAPI {
 
       if (expensesToUpdate.length > 0) {
         processedCount = expensesToUpdate.length;
-        console.log('Auto tag past expenses for expense: ', expensesToUpdate);
-        console.log(`Found ${processedCount} expenses to auto-tag.`);
+        // console.log('Auto tag past expenses for expense: ', expensesToUpdate);
+        // console.log(`Found ${processedCount} expenses to auto-tag.`);
 
         const batchSize = 700;
 
         for (let i = 0; i < expensesToUpdate.length; i += batchSize) {
           const batch = expensesToUpdate.slice(i, i + batchSize);
-          console.log(`Processing batch ${i / batchSize + 1}...`);
+          // console.log(`Processing batch ${i / batchSize + 1}...`);
 
           // Batch update expenses in Firestore
           const updatePromises = batch.map(async (expense) => {
@@ -483,10 +483,8 @@ export class ExpenseAPI {
           }
         }
 
-        console.log('Successfully updated all expenses in Firestore and IndexedDB.');
+        // console.log('Successfully updated all expenses in Firestore and IndexedDB.');
 
-      } else {
-        console.log('No expenses needed auto-tagging.');
       }
 
       return processedCount;
@@ -566,11 +564,11 @@ export class ExpenseAPI {
       // First, delete from Firebase
       const docRef = doc(db, 'budget', budget.id);
       await deleteDoc(docRef);
-      console.debug('Budget deleted from Firebase with key: ', budget.id);
+      // console.debug('Budget deleted from Firebase with key: ', budget.id);
 
       // Then, delete from IndexedDB
       await FinanceIndexDB.deleteBudget(budget.id);
-      console.debug('Budget deleted from IndexedDB with id: ', budget.id);
+      // console.debug('Budget deleted from IndexedDB with id: ', budget.id);
 
       return true;
     } catch (e) {
