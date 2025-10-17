@@ -91,29 +91,11 @@ export const sortByKey = <T extends Record<string, any>>(array: T[], key: string
 };
 
 // eslint-disable-next-line
-export const sortByKeyDate = <T extends Record<string, any>>(array: T[], key: string) => {
-  return array.sort((a, b) => {
-    return (b[key] - a[key]);
-  });
-};
-
-// eslint-disable-next-line
-export const JSONCopy = (Obj: any) => {
+export const JSONCopy = (Obj: unknown) => {
   return JSON.parse(JSON.stringify(Obj));
 };
 
 
-export const insertAtIndex = <T>(arr: T[], index: number, element: T): T[] => {
-  if (index < 0 || index > arr.length) {
-    throw new Error('Index out of bounds');
-  }
-
-  const newArr = [...arr]; // Create a copy to avoid modifying the original array
-
-  newArr.splice(index, 0, element); // Use splice to insert the element
-
-  return newArr;
-};
 
 export const formatVendorName = (vendor: string) => {
   if (!vendor) return '';
@@ -143,11 +125,6 @@ export const formatVendorName = (vendor: string) => {
   return [vendor.toLowerCase()];
 };
 
-export const formatString = (str: string) => {
-  return str.replace(/_/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase())
-    .toLowerCase();
-};
 
 export const isEmpty = (str: string | undefined | null) => {
   return str === null || str === undefined || str.trim().length === 0;
@@ -158,13 +135,3 @@ export const sleep = async (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-
-/**
- * Custom development warning function (clone of console.warn)
- * @param message Primary message to display
- * @param optionalParams Additional parameters to log
- */
-// eslint-disable-next-line
-export const devWarn = (message?: any, ...optionalParams: any[]): void => {
-  console.warn(message, ...optionalParams);
-};

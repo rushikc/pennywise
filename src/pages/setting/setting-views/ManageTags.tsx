@@ -102,6 +102,9 @@ const ManageTags: React.FC = () => {
         </Typography>
       </Box>
       <Paper elevation={3} className="manage-tags-paper">
+        <span className="d-flex justify-content-center">
+          Add, Remove, and Reorder Your Tags
+        </span>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="tags">
             {(provided) => (

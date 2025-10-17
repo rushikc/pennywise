@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import React, {FC, ReactElement, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Container} from 'reactstrap';
+import Container from '@mui/material/Container';
 import {Box, Card, CardContent, Chip, Fab, IconButton, LinearProgress, Typography} from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,6 +18,7 @@ import Loading from '../../components/Loading';
 import EditBudget from './EditBudget';
 import './Budget.scss';
 import {isEmpty} from '../../utility/utility';
+import {useCloseOnOutsideClick} from '../../hooks/useCloseOnOutsideClick';
 
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
@@ -93,7 +94,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
           .filter(expense => !isEmpty(expense.tag))
           .filter(expense => expense.costType === 'debit')
           .filter(expense =>
-            budget.tagList.some(tag => expense.tag.toLowerCase() === tag.toLowerCase())
+            budget.tagList.some(tag => expense.tag?.toLowerCase() === tag.toLowerCase())
           )
           .reduce((sum, expense) => sum + expense.cost, 0);
       }
@@ -110,31 +111,8 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     });
   };
 
-  // Handle outside clicks to close filter panel and scroll events
-  useEffect(() => {
-    if (!showFilters) return; // Skip if filters not shown
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        filterPanelRef.current &&
-        filterButtonRef.current &&
-        !filterPanelRef.current.contains(event.target as Node) &&
-        !filterButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowFilters(false);
-      }
-    };
-
-    const handleScroll = () => setShowFilters(false);
-
-    // Add and clean up event listeners
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('scroll', handleScroll, true);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [showFilters]);
+  // Use custom hook to handle outside clicks for filter panel
+  useCloseOnOutsideClick(showFilters, () => setShowFilters(false), filterPanelRef, filterButtonRef);
 
   // Initialize component
   useEffect(() => {
@@ -233,7 +211,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   }
 
   return (
-    <Container fluid className="budget-container">
+    <Container maxWidth="sm" className="budget-container">
       <div className="page-header">
         <Typography variant="h5" fontWeight="bold">
           Budget Overview
@@ -490,7 +468,7 @@ const FilterPanel: FC<{
   return (
     <div className="group-by-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Filter by date</span>
+        <span className="panel-title">Filter by date & year</span>
         <IconButton
           size="small"
           className="close-button"

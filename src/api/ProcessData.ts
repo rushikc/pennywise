@@ -41,8 +41,14 @@ export class ProcessData {
 
           const document: DocumentData = doc.data();
 
+          // Check if vendor exists and is a string
+          if (!document.vendor || typeof document.vendor !== 'string') {
+            expenseList.push(document);
+            count++;
+            return; // Skip processing this document
+          }
 
-          const vendor = document.vendor;
+          const vendor: string = document.vendor;
           const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
           // const upiPattern = /^(.+)\s+([^\s@]+@[^\s@]+)$/;
           const match = vendor.match(upiPattern);

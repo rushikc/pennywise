@@ -1,6 +1,6 @@
 import {Expense} from '../Types';
 import dayjs from 'dayjs';
-import {getDateMonth, sortByKeyDate} from '../utility/utility';
+import {getDateMonth, sortByKey} from '../utility/utility';
 import {ExpenseAPI} from '../api/ExpenseAPI';
 import {setBudgetList, setExpenseState, setTagList} from '../store/expenseActions';
 
@@ -37,7 +37,7 @@ export const loadInitialAppData = () => {
     const budgetResult = res[2];
     const tagList = res[3];
     const darkMode = res[4];
-    const expenseList = sortByKeyDate(expenseResult, 'date');
+    const expenseList = sortByKey(expenseResult, 'date');
 
     console.log('Vendor Tag Result:', vendorTagResult);
     console.log('Expense List:', expenseList);

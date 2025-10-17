@@ -212,9 +212,13 @@ const EditBudget: FC<EditBudgetModalProps> = ({
             />
 
             <div style={{marginTop: 16}}>
-              <Typography variant="body2" style={{marginBottom: 8}}>
-                Select Tags:
-              </Typography>
+              <Chip
+                label="Select One or More Tags"
+                variant="filled"
+                color="primary"
+                size="medium"
+                style={{marginBottom: 20, fontSize: 13}}
+              />
               <div style={{display: 'flex', flexWrap: 'wrap', gap: 8}}>
                 {tagList.map((tag) => (
                   <Chip

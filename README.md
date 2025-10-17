@@ -197,7 +197,7 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ### Architecture Diagram
 
-![Architecture Diagram](public/docs/dataflow.svg)
+![Architecture Diagram](public/docs/Pennywise.drawio.svg)
 
 
 ## Future Roadmap

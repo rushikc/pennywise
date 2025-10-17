@@ -9,7 +9,7 @@ import {motion} from 'framer-motion';
 import {FileDownload, TrendingDown as TrendingDownIcon, TrendingUp as TrendingUpIcon} from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
-import {sortByKeyDate} from '../../utility/utility';
+import {sortByKey} from '../../utility/utility';
 import {exportAsCSV, exportAsXLSX} from './exportReport';
 import {LineGraph, PieGraph} from './Graph';
 
@@ -46,7 +46,7 @@ const Insights: React.FC = () => {
       try {
         setLoading(true);
         const expenseResult = await ExpenseAPI.getExpenseList();
-        const sortedExpenses = sortByKeyDate(expenseResult, 'date');
+        const sortedExpenses = sortByKey(expenseResult, 'date');
         setExpenses(sortedExpenses);
       } catch (error) {
         console.error('Error fetching expenses:', error);
@@ -672,7 +672,7 @@ const GroupByPanel: React.FC<{
   return (
     <div className="group-by-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Group by</span>
+        <span className="panel-title">Insights Options</span>
         <IconButton size="small" className="close-button" onClick={onClose}>
           <CloseIcon/>
         </IconButton>

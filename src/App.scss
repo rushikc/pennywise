@@ -59,9 +59,29 @@ $purple-light: var(--accent-purple);
   margin: 0 !important;
 }
 
+/* Additional utility classes for commonly used styles */
+.border-radius-10 {
+  border-radius: 10px;
+}
+
+.border-radius-12 {
+  border-radius: 12px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
+.font-18 {
+  font-size: 18px;
+}
+
+.font-weight-700 {
+  font-weight: 700;
+}
+
 .page-header {
   padding-bottom: 10px;
   display: flex;
   justify-content: center;
 }
-
