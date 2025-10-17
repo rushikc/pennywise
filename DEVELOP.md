@@ -7,7 +7,7 @@
 **Firebase Setup**
 
 This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project.
-First complete the setup instructions in the [Setup Documentation](./public/docs/setup.md) .
+First complete the setup instructions in the [Setup Documentation](SETUP.md).
 
 - You would have already created `.env` file in the root folder of your project in below format as per the setup instructions.
 - For React project, you can use the following format:
@@ -22,7 +22,7 @@ First complete the setup instructions in the [Setup Documentation](./public/docs
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/your-username/pennywise.git
+    git clone https://github.com/rushikc/pennywise.git
     cd pennywise
     ```
 2.  **Install Dependencies**:
@@ -96,6 +96,6 @@ We follow a simplified version of Gitflow, which is well-suited for open-source 
 
 We follow Semantic Versioning (SemVer) for managing releases. The version number has the format `vX.Y.Z`, where:
 
-*   `X` is the major version (incremented for new features).
-*   `Y` is the minor version (incremented for breaking changes).
+*   `X` is the major version (incremented for breaking changes).
+*   `Y` is the minor version (incremented for new features).
 *   `Z` is the patch version (incremented for bug fixes).
