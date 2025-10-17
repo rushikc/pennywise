@@ -1,13 +1,13 @@
 ### Setting Up a Local Development Environment
 
 **Prerequisites**
-- Node.js (version >= 20.0.0)
+- Node.js (version >= 22.0.0)
 - npm (version >= 10.0.0)
 
 **Firebase Setup**
 
 This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project.
-First complete the setup instructions in the [Setup Documentation](./public/docs/setup.md) .
+First complete the setup instructions in the [Setup Documentation](SETUP.md).
 
 - You would have already created `.env` file in the root folder of your project in below format as per the setup instructions.
 - For React project, you can use the following format:
@@ -22,7 +22,7 @@ First complete the setup instructions in the [Setup Documentation](./public/docs
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/your-username/pennywise.git
+    git clone https://github.com/rushikc/pennywise.git
     cd pennywise
     ```
 2.  **Install Dependencies**:

@@ -156,23 +156,27 @@ Pennywise leverages a modern and robust set of technologies to deliver a user fr
 
 ```
 pennywise/
-├── public/               # Static assets
-├── src/
-│   ├── api/              # API clients and data fetching
-│   │   ├── ExpenseAPI.ts
-│   │   └── FinanceIndexDB.ts
-│   ├── components/       # Reusable UI components
-│   ├── firebase/         # Firebase configuration & utilities
-│   ├── hooks/            # Custom React hooks
-│   ├── pages/            # Application pages & views
-│   │   ├── home/         # Expense dashboard
-│   │   ├── login/        # Authentication flow
-│   │   ├── setting/      # Application settings
-│   │   └── insights/     # Insights views
-│   ├── store/            # Redux store configuration
-│   └── utility/          # Helper functions & constants
-├── functions/            # Firebase Cloud Functions
-└── appScript/            # Google Apps Script for email integration
+├── appScript/              # Google Apps Script for email integration
+├── build/                  # Production build output
+├── commands/               # Build and deployment scripts
+├── functions/              # Firebase Cloud Functions
+├── node_modules/           # Node.js dependencies
+├── public/                 # Static assets served directly
+├── scripts/                # Build and utility scripts
+└── src/                    # React application source code
+    ├── api/                # API clients and data fetching
+    ├── components/         # Reusable UI components
+    ├── firebase/           # Firebase configuration & utilities
+    ├── hooks/              # Custom React hooks
+    ├── pages/              # Application pages & views
+    │   ├── budget/         # Budget management pages
+    │   ├── home/           # Main dashboard and expense views
+    │   ├── insights/       # Analytics and insights pages
+    │   ├── login/          # Authentication flow
+    │   └── setting/        # Application settings
+    ├── store/              # Redux store configuration
+    ├── styles/             # Global styles and themes
+    └── utility/            # Helper functions & constants
 ```
 
 ## Architecture
