@@ -32,7 +32,7 @@ This guide will walk you through setting up the Pennywise project on a Linux/Mic
 
 Before you begin, please ensure you have the following minimum versions installed on your system:
 
-- **Node.js:** `v20.0.0` or higher
+- **Node.js:** `v22.0.0` or higher
 - **npm:** `v10.0.0` or higher
 
 ## Recommended Code Editor

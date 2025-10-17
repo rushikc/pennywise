@@ -1,7 +1,7 @@
 ### Setting Up a Local Development Environment
 
 **Prerequisites**
-- Node.js (version >= 20.0.0)
+- Node.js (version >= 22.0.0)
 - npm (version >= 10.0.0)
 
 **Firebase Setup**
@@ -96,6 +96,6 @@ We follow a simplified version of Gitflow, which is well-suited for open-source 
 
 We follow Semantic Versioning (SemVer) for managing releases. The version number has the format `vX.Y.Z`, where:
 
-*   `X` is the major version (incremented for breaking changes).
-*   `Y` is the minor version (incremented for new features).
+*   `X` is the major version (incremented for new features).
+*   `Y` is the minor version (incremented for breaking changes).
 *   `Z` is the patch version (incremented for bug fixes).
