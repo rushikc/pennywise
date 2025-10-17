@@ -14,7 +14,7 @@ import {BankConfig, Budget, Expense, VendorTag} from '../Types';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
-export type DocumentData = { [field: string]: any };
+export type DocumentData = { [field: string]: unknown };
 
 
 const app = initializeApp(firebaseConfig);
@@ -23,7 +23,7 @@ const db = getFirestore(app);
 // Utility for CRUD operations on single docs
 const fireStoreDoc = {
   // eslint-disable-next-line
-  set: async (collectionName: string, key: string, val: any) => {
+  set: async (collectionName: string, key: string, val: unknown) => {
     try {
       await setDoc(doc(db, collectionName, key), val);
       // console.debug('Document written:', collectionName, key, val);
@@ -64,7 +64,7 @@ export class ExpenseAPI {
   static setOneDoc = async (
     key: string,
     // eslint-disable-next-line
-    val: any,
+    val: unknown,
     collectionName = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
@@ -247,14 +247,11 @@ export class ExpenseAPI {
         };
       }
 
-      // Cast the document data to BankConfig type
-      const typedConfig: BankConfig = {
+      return {
         enableUpi: bankConfig.enableUpi ?? false,
         creditCards: bankConfig.creditCards ?? []
       };
 
-      // console.debug('Retrieved bank config:', typedConfig);
-      return typedConfig;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       // console.error('Error getting bank config:', e);
@@ -557,7 +554,7 @@ export class ExpenseAPI {
 
   /**
    * Deletes a budget from both Firestore and IndexedDB.
-   * Returns true on successful deletion, false otherwise.
+   * Returns true on successful deletion, false on failure.
    */
   static deleteBudget = async (budget: Budget): Promise<boolean> => {
     try {
