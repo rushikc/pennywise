@@ -264,18 +264,32 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
   ![Create web app](public/docs/pics/ff9.png)
 
-7. **Enable Google Authentication:**
+7. **Update Project ID Firebase config:**
+
+  - Create a file `.firebaserc` under root directory.
+  - Add the following content to the `.firebaserc` file:
+  - Replace the `actual-project-id` with your actual Firebase project ID.
+  ```txt
+      {
+          "projects": {
+            "default": "actual-project-id"  // Replace with your actual project ID
+          }
+      }
+  ```
+
+
+8. **Enable Google Authentication:**
    - In the Firebase project console, navigate to **Authentication** under `Build` in the left sidebar.
    - Click on the **"Get Started"** button if prompted.
    - Under the **Sign-in method** tab, enable **Google** authentication.
    - Click on enable & give your mail as support email.
-   - Click on **Save**. It should look like below screenshot.
+   - Click on **Save**. It should look like below screenshot post setup.
 
 ![Google auth](public/docs/pics/ff8.png)
 
 
-8. **Enable Firestore API:**
-    - Go to the URL `https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=your-project-id`
+9. **Enable Firestore API:**
+    - Go to the URL [Developer Console URL](https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=your-project-id)
     - Make sure you are logged in with the same Google account you used to create your Firebase project.
     - Replace in URL `your-project-id` with your actual Firebase project ID.
     - Click on top left side `Select Project` with your actual Firebase project ID.
@@ -294,20 +308,6 @@ To interact with Firebase services from your terminal, you need to install the F
 
 ### Project Setup
 
-
-  - **Update Project ID Firebase config:**
-
-      - Create a file `.firebaserc` under root directory.
-      - Add the following content to the `.firebaserc` file:
-      - Replace the `actual-project-id` with your actual Firebase project ID.
-    ```txt
-        {
-            "projects": {
-              "default": "actual-project-id"  // Replace with your actual project ID
-            }
-        }
-    ```
--
 - **Install npm dependency**
   Run the following command to install all necessary dependencies:
   ```bash
@@ -456,14 +456,38 @@ To interact with Firebase services from your terminal, you need to install the F
          ],
          "exceptionLogging": "STACKDRIVER",
          "runtimeVersion": "V8",
-         "webapp": {
-         "access": "MYSELF",
-         "executeAs": "USER_DEPLOYING"
+           "webapp": {
+           "access": "MYSELF",
+           "executeAs": "USER_DEPLOYING"
          }
        }
+      ```
 
-    ```
-    - This configuration sets the timezone, enables the Gmail API, and specifies the necessary OAuth scopes.
+       **Configuration Breakdown:**
+
+       - **`"timeZone": "Asia/Kolkata"`** - Sets the timezone for the Apps Script project to Indian Standard Time. This affects how time-based functions and triggers work in your script.
+
+       - **`"dependencies" → "enabledAdvancedServices"`** - Enables the Gmail API (v1) for your Apps Script project:
+         - `"userSymbol": "Gmail"` - Allows you to use `Gmail` as the service name in your code
+         - `"serviceId": "gmail"` - Specifies which Google service to enable
+         - This is required to read emails programmatically
+
+       - **`"oauthScopes"`** - These define what permissions your script needs:
+         - `"gmail.readonly"` - Read-only access to Gmail messages
+         - `"script.external_request"` - Ability to make HTTP requests to external services (like Firebase)
+         - `"script.scriptapp"` - Access to Apps Script functionality
+         - `"userinfo.email"` - Access to the user's email address
+
+       - **`"exceptionLogging": "STACKDRIVER"`** - Enables Google Cloud logging for error tracking and debugging. Helps you see detailed error messages when things go wrong.
+
+       - **`"runtimeVersion": "V8"`** - Uses the modern V8 JavaScript runtime (supports ES6+ features). More efficient and supports newer JavaScript syntax.
+
+       - **`"webapp"` configuration:**
+         - `"access": "MYSELF"` - Only you can access the web app
+         - `"executeAs": "USER_DEPLOYING"` - The script runs with your permissions
+
+       This configuration essentially sets up your Apps Script to securely read your Gmail messages, process expense information, and send it to your Firebase database while running in your timezone with proper error logging.
+
 
 6. **Push Local Code to Apps Script:**
    To upload your local code to the newly created Apps Script project, run:
@@ -473,7 +497,9 @@ To interact with Firebase services from your terminal, you need to install the F
     ```
    - Put yes or y for `✔ Manifest file has been updated. Do you want to push and overwrite? Yes`
 
+
 7. **Run the Apps Script Files:**
+
     - Go to the [Google Apps Script](https://script.google.com) website.
     - Click on the `Pennywise App Script` project you just created.
     - In the left sidebar, you will see the files `expense.gs` and `trigger.gs`.
