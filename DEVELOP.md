@@ -114,3 +114,49 @@ We follow Semantic Versioning (SemVer) for managing releases. The version number
 *   `X` is the major version (incremented for breaking changes).
 *   `Y` is the minor version (incremented for new features).
 *   `Z` is the patch version (incremented for bug fixes).
+
+### Project Overview for New Developers
+
+This section provides a high-level overview of the project's architecture to help new developers get started.
+
+#### 1. Data Flow: From Firestore to Your Browser
+
+The React web app is designed to be fast and efficient by minimizing direct queries to Firestore. Here’s how it works:
+
+1.  **Initial Data Fetch**: When you first load the app, it fetches all your expense and tag data from Firestore.
+2.  **Local Caching**: This data is immediately cached in your browser’s **IndexedDB**. This creates a local copy of your database, allowing the app to load quickly on subsequent visits without waiting for the network.
+3.  **Delta Sync**: The app listens for real-time updates from Firestore. When a change occurs in the database (e.g., a new expense is added), only the new or modified data (**the delta**) is sent to the app. This update is then synced with the local IndexedDB cache and the UI.
+
+This "delta sync" approach ensures the app stays up-to-date without re-downloading the entire database, saving bandwidth and reducing costs.
+
+#### 2. Automated Expense Tracking: AppScript and Cloud Functions
+
+Pennywise automates expense tracking by scanning your Gmail for transaction emails. This process involves Google Apps Script and Firebase Cloud Functions.
+
+1.  **Google Apps Script**: A script running on Google's servers (in the `appScript/` folder) periodically scans your Gmail account for emails from supported banks.
+2.  **Email Parsing**: When it finds a relevant email, it parses the content to extract key details like the vendor, amount, and date.
+3.  **Cloud Functions**: The script then sends this structured data to a secure **Cloud Function** (in the `functions/` folder). This function is responsible for processing the data and writing it to your Firestore database.
+
+This setup allows for secure and automated data entry without requiring the web app to have broad access to your Gmail account.
+
+#### 3. Security: A Multi-Layered Approach
+
+Security is a top priority. Pennywise protects your data at every layer:
+
+1.  **React Web App**: The front end is secured with **Google Sign-In (OAuth)**. Only authenticated users can access the application. You control who has access by adding authorized email addresses in the Firestore rules.
+2.  **Cloud Functions**: The backend Cloud Functions are protected and can only be accessed by authenticated users. Every request to a function must include a valid **OAuth token (JWT)**, which the function verifies before executing. This prevents unauthorized access to your backend logic.
+3.  **Firestore Database**: The database is protected by **Firestore Security Rules**. These server-side rules ensure that users can only read and write their own data. For example, a rule can specify that a user’s email must match the email associated with the data they are trying to access.
+
+This layered security model ensures that your financial data is kept private and accessible only to you.
+
+#### 4. Understanding the React Application
+
+The React application is divided into several key sections, each serving a specific purpose:
+
+*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, and apply filters to view expenses from different time periods.
+
+*   **Insights**: This page offers a visual breakdown of your spending. It features charts and graphs that categorize your expenses by tags, helping you quickly identify your top spending areas.
+
+*   **Budget**: This section is for managing your financial goals. You can set monthly budgets for different expense categories and track your progress to see how your spending aligns with your budget.
+
+*   **Settings**: Here, you can customize the application to your preferences. This includes managing the tags used for categorizing expenses, viewing your user profile, and configuring other app-related settings.

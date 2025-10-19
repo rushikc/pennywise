@@ -203,6 +203,20 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ![Architecture Diagram](public/docs/Pennywise.drawio.svg)
 
+## Application Sections
+
+The React application is divided into several key sections, each serving a specific purpose:
+
+*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, attach a tag to the expense, and apply filters to view expenses from different time periods or by different grouping.
+
+
+*   **Insights**: This page offers a visual breakdown of your spending. It features charts and graphs that categorize your expenses by tags, helping you quickly identify your top spending areas. You can download the reports in xlsx & csv format.
+
+
+*   **Budget**: This section is for managing your financial goals. You can set monthly budgets for different expense categories and track your progress to see how your spending aligns with your budget.
+
+
+*   **Settings**: Here, you can customize the application to your preferences. This includes managing the tags used for categorizing expenses, Already mapped vendor-tag configurations, viewing your user profile, and configuring other app-related settings.
 
 ## Future Roadmap
 
