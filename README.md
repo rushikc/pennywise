@@ -20,12 +20,12 @@
 </p>
 
 ---
-> **Disclaimer:** Currently, Pennywise only supports transaction tracking for below
+> **Disclaimer:** Currently, Pennywise only supports transaction tracking for the following:
 > * HDFC UPI - credit & debit transactions.
 > * HDFC Credit card - only debit transactions.
 > * HDFC E-mandate transactions.
 >
-> We are actively working on expanding support to other banks email and transaction types.
+> We are actively working on expanding support to other banks' email and transaction types.
 
 ## License
 
@@ -49,7 +49,7 @@ a user-friendly experience with robust features, including offline support and s
 * 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, & more) for focused
   analysis.
 * 📊 **Visualization**: Understand spending patterns at a glance through interactive statistical charts and graphs.
-* 🔄 **Offline Caching**: Data is cached locally using IndexedDB, to reduce firestore queries, but the app requires
+* 🔄 **Offline Caching**: Data is cached locally using IndexedDB to reduce Firestore queries, but the app requires
   internet connectivity to function fully.
 * 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
 
@@ -73,7 +73,7 @@ a user-friendly experience with robust features, including offline support and s
 
 ## Getting Started
 
-For detailed setup instructions, please refer below guide (30-60 min setup time)
+For detailed setup instructions, please refer to the guide below (30-60 min setup time)
 <p align="center">
   <a href="SETUP.md" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 20px; background-color: #008CBA; color: white; text-decoration: none; border-radius: 5px;">
     View Setup Instructions
@@ -111,8 +111,8 @@ gives you complete control over your data and infrastructure. Here’s what make
 * **⚙️ You Control Updates**: Since you host the application, you are in full control of when and how you update it. You
   will never be forced into an update that changes the functionality or privacy in a way you don't agree with.
 
-* **🔒 Secured Infrastructure**: All backend services on Google Cloud are protected by Google's authentication mechanisms
-  and including the infra exposed public internet. This ensures that only authenticated & your mail id requests from
+* **🔒 Secured Infrastructure**: All backend services on Google Cloud are protected by Google's authentication mechanisms,
+  including the infrastructure exposed to the public internet. This ensures that only authenticated requests from
   your application can access your data and services.
 
 By putting you in control of your data and the application's infrastructure, Pennywise offers a transparent and secure
@@ -122,7 +122,7 @@ For a detailed explanation of the security architecture, please see the [Securit
 
 ## Technology Stack
 
-Pennywise leverages a modern and robust set of technologies to deliver a user friendly and maintainable application.
+Pennywise leverages a modern and robust set of technologies to deliver a user-friendly and maintainable application.
 
 ### Frontend
 
@@ -206,11 +206,11 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ## Future Roadmap
 
-- [ ] Multiple bank support (We need people with different bank account to help us with this)
-- [ ] Enhancing Insights with more detailed analytics & better graph support grouped category
+- [ ] Multiple bank support (We need people with different bank accounts to help us with this)
+- [ ] Enhancing Insights with more detailed analytics & better graph support grouped by category
 - [ ] Multi-selected expense tagging feature
 - [ ] Expense analysis using historical data (Firebase AI Logic)
-- [ ] Expense sharing/tracking between users (Multi user persona)
+- [ ] Expense sharing/tracking between users (Multi-user persona)
 
 ## Contributing & Local Development
 

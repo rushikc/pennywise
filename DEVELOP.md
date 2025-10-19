@@ -7,10 +7,10 @@
 **Firebase Setup**
 
 This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project.
-First complete the setup instructions in the [Setup Documentation](SETUP.md).
+First, complete the setup instructions in the [Setup Documentation](SETUP.md).
 
-- You would have already created `.env` file in the root folder of your project in below format as per the setup instructions.
-- For React project, you can use the following format:
+- You should have already created a `.env` file in the root folder of your project in the format below, as per the setup instructions.
+- For a React project, you can use the following format:
     ```env
     REACT_APP_FIREBASE_API_KEY=your-api-key
     REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
@@ -33,19 +33,19 @@ First complete the setup instructions in the [Setup Documentation](SETUP.md).
     ```bash
     npm start
     ```
-This will start the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This will start the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### Firebase Deployment
 To deploy the Firebase functions and hosting, follow these steps:
-1.  **Login to Firebase from root folder**:
+1.  **Login to Firebase from the root folder**:
     ```bash
     firebase login
     ```
-2.  **Firebase deploy functions and hosting**:
+2.  **Deploy Firebase functions and hosting**:
     ```bash
     firebase deploy
     ```
-3.  **Firebase deploy only hosting (web app hosting)**:
+3.  **Deploy only hosting (web app hosting)**:
     ```bash
     firebase deploy --only hosting
     ```
@@ -56,9 +56,9 @@ For developing Google Apps Script code, you have two main options:
 
 1.  **Using `clasp`**:
     *   `clasp` is a command-line tool that lets you develop your Apps Script projects locally.
-    *   You can write code in your favorite editor, and then use `clasp push` to upload the code to your script project.
+    *   You can write code in your favorite editor and then use `clasp push` to upload the code to your script project.
     *   For `clasp push` to work, you need a `.clasp.json` file in the `appScript/` directory. This file links your local code to the correct Google Apps Script project.
-    *   The `.clasp.json` file should contain the `scriptId` of your project, which you can find in the Apps Script editor under "Project Settings".
+    *   The `.clasp.json` file should contain the `scriptId` of your project, which you can find in the Apps Script editor under "Project Settings."
         ```json
         {
         "scriptId": "your-apps-script-id",
@@ -83,7 +83,7 @@ For developing Google Apps Script code, you have two main options:
 2.  **Using the AppScript Web Editor**:
     *   You can also work directly in the Google Apps Script web editor.
     *   This allows you to write, save, run, and test your code in the same environment.
-    *   It's a good option for quick changes or for those who prefer an all-in-one web-based IDE.
+    *   It's a good option for quick changes or for those who prefer an all-in-one, web-based IDE.
 
 
 
@@ -94,7 +94,7 @@ We follow a simplified version of Gitflow, which is well-suited for open-source 
 *   **`main`**: This branch contains the stable, production-ready code. All releases are made from this branch.
 *   **`develop`**: This is the main branch for active development. All new features and bug fixes should be merged into this branch.
 *   **`feature/*`**: Feature branches are used for developing new features. They should be branched off from `develop` and merged back into `develop` when complete.
-*   **`bugfix/*`**: Bugfix branches are used for fixing bugs. They should be branched off from `develop` and merged back into `develop` when the fix is verified.
+*   **`bugfix/*`**: Bugfix branches are used for fixing bugs. They should be branched off from `develop` and merged back into `develop` once the fix is verified.
 
 ### Contribution Guidelines
 
