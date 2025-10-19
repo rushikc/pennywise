@@ -322,7 +322,8 @@ To interact with Firebase services from your terminal, you need to install the F
      ```
      USER_EMAIL=your-actual-mail@gmail.com
      ```
-     - Replace `your-actual-mail@gmail.com` with your actual email address.
+     - Replace `your-actual-mail@gmail.com` with your actual email address in which the
+     firebase project is running.
 
   2. **Create  the `env.js` file in the appScript folder:**
      - Create a new file named `env.js` in the `appScript` folder
@@ -337,13 +338,13 @@ To interact with Firebase services from your terminal, you need to install the F
 
 
 - **Build web app:**
-  Run the following command to build the web app:
+  Run the following command to build the web app from root folder:
   ```bash
   npm run build
   ```
 
 -  **Firebase Login:**
-   Run the following command to log in to Firebase:
+   Run the following command to log in to Firebase from root folder:
       ```bash
       firebase login
       ```
@@ -351,7 +352,7 @@ To interact with Firebase services from your terminal, you need to install the F
 
 
 -  **Initialize Firestore:**
-    - you will se few warning saying API is not enabled, but ignore them
+    - you will see few warning saying API is not enabled, but ignore them
     - firebase will enable them on behalf of you during the first deploy
    ```bash
    firebase deploy
@@ -367,7 +368,7 @@ To interact with Firebase services from your terminal, you need to install the F
   - Open your web browser and go to [https://console.firebase.google.com/](https://console.firebase.google.com/).
   - Select your project from the Firebase console.
   - In the left sidebar, navigate to **Firestore Database** under `build` optiuon, then click on the **Rules** tab.
-  - Replace `firestore.rules` with the following rules to restrict access to your email,
+  - Click on rules tab & replace with the following rules to restrict access to your email,
   - replace `your-email@gmail.com` with your actual email address.
   - You can add multiple user emails for a single app access via Google sign in
     ```txt
@@ -433,63 +434,63 @@ To interact with Firebase services from your terminal, you need to install the F
     clasp create --title "Pennywise App Script" --type standalone
     ```
 
-   6. **Update appsscript.json:**
-       - Open the `appsscript.json` file in the `appScript` directory.
-       - Replace its content with the following:
-       ```json
-       {
-         "timeZone": "Asia/Kolkata",
-         "dependencies": {
-           "enabledAdvancedServices": [
-             {
-             "userSymbol": "Gmail",
-             "version": "v1",
-             "serviceId": "gmail"
-             }
-           ]
-         },
-         "oauthScopes": [
-           "https://www.googleapis.com/auth/gmail.readonly",
-           "https://www.googleapis.com/auth/script.external_request",
-           "https://www.googleapis.com/auth/script.scriptapp",
-           "https://www.googleapis.com/auth/userinfo.email"
-         ],
-         "exceptionLogging": "STACKDRIVER",
-         "runtimeVersion": "V8",
-           "webapp": {
-           "access": "MYSELF",
-           "executeAs": "USER_DEPLOYING"
-         }
-       }
-      ```
+6. **Update appsscript.json:**
+    - Open the `appsscript.json` file in the `appScript` directory.
+    - Replace its content with the following:
+    ```json
+    {
+      "timeZone": "Asia/Kolkata",
+      "dependencies": {
+        "enabledAdvancedServices": [
+          {
+          "userSymbol": "Gmail",
+          "version": "v1",
+          "serviceId": "gmail"
+          }
+        ]
+      },
+      "oauthScopes": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/script.external_request",
+        "https://www.googleapis.com/auth/script.scriptapp",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ],
+      "exceptionLogging": "STACKDRIVER",
+      "runtimeVersion": "V8",
+        "webapp": {
+        "access": "MYSELF",
+        "executeAs": "USER_DEPLOYING"
+      }
+    }
+   ```
 
-       **Configuration Breakdown:**
+    **Configuration Breakdown:**
 
-       - **`"timeZone": "Asia/Kolkata"`** - Sets the timezone for the Apps Script project to Indian Standard Time. This affects how time-based functions and triggers work in your script.
+    - **`"timeZone": "Asia/Kolkata"`** - Sets the timezone for the Apps Script project to Indian Standard Time. This affects how time-based functions and triggers work in your script.
 
-       - **`"dependencies" → "enabledAdvancedServices"`** - Enables the Gmail API (v1) for your Apps Script project:
-         - `"userSymbol": "Gmail"` - Allows you to use `Gmail` as the service name in your code
-         - `"serviceId": "gmail"` - Specifies which Google service to enable
-         - This is required to read emails programmatically
+    - **`"dependencies" → "enabledAdvancedServices"`** - Enables the Gmail API (v1) for your Apps Script project:
+      - `"userSymbol": "Gmail"` - Allows you to use `Gmail` as the service name in your code
+      - `"serviceId": "gmail"` - Specifies which Google service to enable
+      - This is required to read emails programmatically
 
-       - **`"oauthScopes"`** - These define what permissions your script needs:
-         - `"gmail.readonly"` - Read-only access to Gmail messages
-         - `"script.external_request"` - Ability to make HTTP requests to external services (like Firebase)
-         - `"script.scriptapp"` - Access to Apps Script functionality
-         - `"userinfo.email"` - Access to the user's email address
+    - **`"oauthScopes"`** - These define what permissions your script needs:
+      - `"gmail.readonly"` - Read-only access to Gmail messages
+      - `"script.external_request"` - Ability to make HTTP requests to external services (like Firebase)
+      - `"script.scriptapp"` - Access to Apps Script functionality
+      - `"userinfo.email"` - Access to the user's email address
 
-       - **`"exceptionLogging": "STACKDRIVER"`** - Enables Google Cloud logging for error tracking and debugging. Helps you see detailed error messages when things go wrong.
+    - **`"exceptionLogging": "STACKDRIVER"`** - Enables Google Cloud logging for error tracking and debugging. Helps you see detailed error messages when things go wrong.
 
-       - **`"runtimeVersion": "V8"`** - Uses the modern V8 JavaScript runtime (supports ES6+ features). More efficient and supports newer JavaScript syntax.
+    - **`"runtimeVersion": "V8"`** - Uses the modern V8 JavaScript runtime (supports ES6+ features). More efficient and supports newer JavaScript syntax.
 
-       - **`"webapp"` configuration:**
-         - `"access": "MYSELF"` - Only you can access the web app
-         - `"executeAs": "USER_DEPLOYING"` - The script runs with your permissions
+    - **`"webapp"` configuration:**
+      - `"access": "MYSELF"` - Only you can access the web app
+      - `"executeAs": "USER_DEPLOYING"` - The script runs with your permissions
 
-       This configuration essentially sets up your Apps Script to securely read your Gmail messages, process expense information, and send it to your Firebase database while running in your timezone with proper error logging.
+    This configuration essentially sets up your Apps Script to securely read your Gmail messages, process expense information, and send it to your Firebase database while running in your timezone with proper error logging.
 
 
-6. **Push Local Code to Apps Script:**
+7. **Push Local Code to Apps Script:**
    To upload your local code to the newly created Apps Script project, run:
 
     ```bash
@@ -498,7 +499,7 @@ To interact with Firebase services from your terminal, you need to install the F
    - Put yes or y for `✔ Manifest file has been updated. Do you want to push and overwrite? Yes`
 
 
-7. **Run the Apps Script Files:**
+8. **Run the Apps Script Files:**
 
     - Go to the [Google Apps Script](https://script.google.com) website.
     - Click on the `Pennywise App Script` project you just created.

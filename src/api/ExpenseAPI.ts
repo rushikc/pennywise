@@ -88,8 +88,8 @@ export class ExpenseAPI {
    * This function is typically used for one-off data manipulation tasks.
    */
   static processData = async () => {
-    // console.log('ExpenseAPI processData');
-    // ProcessData.processBudget();
+    // console.log('ExpenseAPI processData ::::::::::::::::::::');
+    // ProcessData.processExpenseData();
   };
 
 

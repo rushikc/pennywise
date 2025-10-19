@@ -17,8 +17,27 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-
 export class ProcessData {
+
+  static processExpenseData = async () => {
+
+    let count = 0;
+    for (const expense of []) {
+      console.log('count ', count);
+      if (count < 500) {
+        await ExpenseAPI.addExpense(JSONCopy(expense));
+        count++;
+      }
+
+      if (count > 495) {
+        console.log('Sleeping for 3 sec to avoid firestore write limit');
+        await sleep(3000);
+        count = 0;
+      }
+    }
+
+    return null;
+  };
 
   static processVendorNames = async () => {
     try {

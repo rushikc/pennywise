@@ -35,6 +35,21 @@ First complete the setup instructions in the [Setup Documentation](SETUP.md).
     ```
 This will start the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+### Firebase Deployment
+To deploy the Firebase functions and hosting, follow these steps:
+1.  **Login to Firebase from root folder**:
+    ```bash
+    firebase login
+    ```
+2.  **Firebase deploy functions and hosting**:
+    ```bash
+    firebase deploy
+    ```
+3.  **Firebase deploy only hosting (web app hosting)**:
+    ```bash
+    firebase deploy --only hosting
+    ```
+
 ### AppScript Development
 
 For developing Google Apps Script code, you have two main options:
