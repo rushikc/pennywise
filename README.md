@@ -221,6 +221,7 @@ The React application is divided into several key sections, each serving a speci
 ## Future Roadmap
 
 - [ ] Multiple bank support (We need people with different bank accounts to help us with this)
+- [ ] Google pub sub integration for real-time event driven updates instead of using AppScript as hourly jobs
 - [ ] Enhancing Insights with more detailed analytics & better graph support grouped by category
 - [ ] Multi-selected expense tagging feature
 - [ ] Expense analysis using historical data (Firebase AI Logic)
