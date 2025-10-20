@@ -89,8 +89,6 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
-  // console.log('Expense List STore:', expenseList);
-
   useEffect(() => {
     setLoading(isAppLoading);
   }, [isAppLoading]);

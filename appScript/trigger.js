@@ -3,6 +3,9 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
+/* eslint-disable */
+// noinspection JSUnusedGlobalSymbols
+// noinspection JSUnresolvedReference
 
 /**
  * Creates a time-driven trigger to run 'mainFunction' every hour.

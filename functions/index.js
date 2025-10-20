@@ -3,13 +3,12 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-/* eslint-disable no-undef */
-// noinspection JSUnresolvedReference
-// noinspection SpellCheckingInspection
+/* eslint-disable */
 // noinspection JSUnusedGlobalSymbols
-// noinspection JDuplicatedCode
+// noinspection JSUnresolvedReference
 
 const {onRequest} = require('firebase-functions/v2/https');
+
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);

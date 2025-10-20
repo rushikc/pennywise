@@ -1,6 +1,6 @@
 # Pennywise Setup
 
-This guide will walk you through setting up the Pennywise project on a Linux/Microsoft/MacOs environment.
+This guide will walk you through setting up the Pennywise project on a Linux/Microsoft/macOS environment.
 
 ## Prerequisites
 
@@ -10,11 +10,11 @@ This guide will walk you through setting up the Pennywise project on a Linux/Mic
 
 - **Govt ID Verification**: Please note that a Google Cloud billing account requires valid ID verification.
   While this is not an immediate blocker, and you can proceed with the initial setup,
-  Google will eventually require verification to continue using the services (it will stop services after few weeks).
-  You will get email from Google cloud team with detailed steps.
+  Google will eventually require verification to continue using the services (it will stop services after a few weeks).
+  You will get an email from the Google Cloud team with detailed steps.
 
 
-- **Free Tier Usage**: The Firebase Blaze plan offers genrous free tier limits, which should be sufficient for most personal use cases. https://firebase.google.com/pricing
+- **Free Tier Usage**: The Firebase Blaze plan offers a generous free tier, which should be sufficient for most personal use cases. https://firebase.google.com/pricing
     - 1 GB of storage in Firestore.
     - 50,000 reads, 20,000 writes, and 20,000 deletes per day
     - 1 GB of data transfer per month
@@ -57,9 +57,9 @@ You can get the project files either by cloning the repository using Git or by d
 
 - ** With VS Code:**
   1. Open Visual Studio Code.
-  2. Follow this guide to clone a repository -
+  2. Follow this guide to clone a repository:
   3. https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_clone-a-repository-locally
-  4. Repository URL mentioned below
+  4. The repository URL is mentioned below:
    ```bash
       https://github.com/rushikc/pennywise.git
    ```
@@ -71,7 +71,7 @@ You can get the project files either by cloning the repository using Git or by d
   ```
 - **Direct Download:**
   Alternatively, you can download the project as a ZIP file from the repository's main page and extract it.
-  go to https://github.com/rushikc/pennywise, click on Code button, then click on Download ZIP.
+  Go to https://github.com/rushikc/pennywise, click on the "Code" button, and then click on "Download ZIP".
 
 After cloning or extracting the project, you need to open a terminal and navigate to the project's root directory.
 
@@ -122,7 +122,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
    ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
    ```
-   After the installation, restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`) to apply the changes.
+   After the installation, restart your terminal or run `source ~/.bashrc` (or `~/.zshrc` if you are using zsh) to apply the changes.
 
 2. **Install Node.js:**
    Now, you can install the latest LTS version of Node.js with:
@@ -199,7 +199,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
 2. **Create a New Firebase Project:**
     - Click on **"Add project"** to start the setup process.
-    - Enter a unique name for your project, this will be your project-id (e.g., `hello-2a`, `finance-app-3455`).
+    - Enter a unique name for your project; this will be your project ID (e.g., `hello-2a`, `finance-app-3455`).
     - It's best to choose a unique name, as it will be part of your app's URL: `https://<your-project-id>.web.app`.
     - Firebase will show the final, unique Project ID below the input box. If your first choice is unavailable, it will append random characters to it.
     - Uncheck **"Enable Google Analytics for this project"** and click **"Create project"**.
@@ -226,32 +226,32 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
 6. **Enable Web App Configuration:**
 
-  - In the Firebase console, you will get 2 types of landing page
-  - if you get below, click on the **"+ Add app"** then web app icon to add a web app to your project.
+  - In the Firebase console, you will get two types of landing pages.
+  - If you get the one below, click on the **"+ Add app"** button, then the web app icon to add a web app to your project.
 
   ![Create web app](public/docs/pics/ff1.png)
 
-  - click on web icon to add a web app to your project.
+  - Click on the web icon to add a web app to your project.
 
   ![Create web app](public/docs/pics/ff3.png)
 
-  - if you get below, click on the web app icon pointed in screenshot.
+  - If you get the one below, click on the web app icon pointed to in the screenshot.
 
   ![Create web app](public/docs/pics/ff2.png)
 
-  - Enter a nickname for your app (e.g., `hello-2a`) and don't check the box to set up Firebase Hosting
-  - Firebase hosting required only if you want to use external bought domain, which is not required for this project.
+  - Enter a nickname for your app (e.g., `hello-2a`) and do not check the box to set up Firebase Hosting.
+  - Firebase Hosting is only required if you want to use an externally bought domain, which is not required for this project.
   - Click **"Register app"**.
 
   ![Create web app](public/docs/pics/ff4.png)
 
   - After registering your app, you will see a configuration snippet.
-  - Copy this snippet highlighted in blue in below screenshot.
+  - Copy this snippet, highlighted in blue in the screenshot below.
 
   ![Create web app](public/docs/pics/ff5.png)
 
-  - Create a `.env` file in the root folder of your project and paste each key value configuration in below format.
-  - For React project, you can use the following format:
+  - Create a `.env` file in the root folder of your project and paste each key-value configuration in the format below.
+  - For a React project, you can use the following format:
   ```env
   REACT_APP_FIREBASE_API_KEY=your-api-key
   REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
@@ -260,25 +260,39 @@ Here’s how you can install Node.js and npm on different operating systems. We 
   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
   REACT_APP_FIREBASE_APP_ID=your-app-id
   ```
-  - Final '.env' content should look like below
+  - The final `.env` content should look like the image below:
 
   ![Create web app](public/docs/pics/ff9.png)
 
-7. **Enable Google Authentication:**
+7. **Update Project ID in Firebase config:**
+
+  - Create a file named `.firebaserc` in the root directory.
+  - Add the following content to the `.firebaserc` file:
+  - Replace `actual-project-id` with your actual Firebase project ID.
+  ```txt
+      {
+          "projects": {
+            "default": "actual-project-id"  // Replace with your actual project ID
+          }
+      }
+  ```
+
+
+8. **Enable Google Authentication:**
    - In the Firebase project console, navigate to **Authentication** under `Build` in the left sidebar.
    - Click on the **"Get Started"** button if prompted.
    - Under the **Sign-in method** tab, enable **Google** authentication.
-   - Click on enable & give your mail as support email.
-   - Click on **Save**. It should look like below screenshot.
+   - Click on **Enable** and provide your email as the support email.
+   - Click on **Save**. It should look like the screenshot below after setup.
 
 ![Google auth](public/docs/pics/ff8.png)
 
 
-8. **Enable Firestore API:**
-    - Go to the URL `https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=your-project-id`
+9. **Enable Firestore API:**
+    - Go to the URL [Developer Console URL](https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=your-project-id)
     - Make sure you are logged in with the same Google account you used to create your Firebase project.
-    - Replace in URL `your-project-id` with your actual Firebase project ID.
-    - Click on top left side `Select Project` with your actual Firebase project ID.
+    - Replace `your-project-id` in the URL with your actual Firebase project ID.
+    - Click on the top-left side `Select Project` and choose your actual Firebase project ID.
     - Click on the **"Enable"** button to enable the Firestore API for your project.
 
 
@@ -294,20 +308,6 @@ To interact with Firebase services from your terminal, you need to install the F
 
 ### Project Setup
 
-
-  - **Update Project ID Firebase config:**
-
-      - Create a file `.firebaserc` under root directory.
-      - Add the following content to the `.firebaserc` file:
-      - Replace the `actual-project-id` with your actual Firebase project ID.
-    ```txt
-        {
-            "projects": {
-              "default": "actual-project-id"  // Replace with your actual project ID
-            }
-        }
-    ```
--
 - **Install npm dependency**
   Run the following command to install all necessary dependencies:
   ```bash
@@ -317,15 +317,16 @@ To interact with Firebase services from your terminal, you need to install the F
 - **Set up Environment Files:**
 
   1. **Create a `.env` file in the functions folder:**
-     - Create a new file named `.env` in the `functions` folder
+     - Create a new file named `.env` in the `functions` folder.
      - Add the following content to the file:
      ```
      USER_EMAIL=your-actual-mail@gmail.com
      ```
-     - Replace `your-actual-mail@gmail.com` with your actual email address.
+     - Replace `your-actual-mail@gmail.com` with the actual email address with which the
+     Firebase project is running.
 
-  2. **Create  the `env.js` file in the appScript folder:**
-     - Create a new file named `env.js` in the `appScript` folder
+  2. **Create the `env.js` file in the appScript folder:**
+     - Create a new file named `env.js` in the `appScript` folder.
      - Add the following content to the file:
      ```javascript
      const PROJECT_ID = 'your-project-id'; // Replace with your actual project ID
@@ -333,17 +334,17 @@ To interact with Firebase services from your terminal, you need to install the F
 
      ```
      - Replace `your-project-id` with your actual Firebase project ID.
-     - Replace `pennywise` with your user if , it will be used in expense JSON in firestore,  you can add your name, nickname or anything which you want to use as user id.
+     - Replace `pennywise` with your user ID. It will be used in the expense JSON in Firestore. You can add your name, nickname, or anything you want to use as a user ID.
 
 
 - **Build web app:**
-  Run the following command to build the web app:
+  Run the following command to build the web app from the root folder:
   ```bash
   npm run build
   ```
 
 -  **Firebase Login:**
-   Run the following command to log in to Firebase:
+   Run the following command to log in to Firebase from the root folder:
       ```bash
       firebase login
       ```
@@ -351,14 +352,14 @@ To interact with Firebase services from your terminal, you need to install the F
 
 
 -  **Initialize Firestore:**
-    - you will se few warning saying API is not enabled, but ignore them
-    - firebase will enable them on behalf of you during the first deploy
+    - You will see a few warnings saying the API is not enabled, but you can ignore them.
+    - Firebase will enable them on your behalf during the first deployment.
    ```bash
    firebase deploy
    ```
 
 - **Artifact Storage:**
-  - If you get below question, just enter 1 as backup days & Enter
+  - If you get the question below, just enter 1 for backup days and press Enter.
   ```txt
   ✔ How many days do you want to keep container images before they're deleted?
   ```
@@ -366,10 +367,10 @@ To interact with Firebase services from your terminal, you need to install the F
 - **Enable Firestore Rules:**
   - Open your web browser and go to [https://console.firebase.google.com/](https://console.firebase.google.com/).
   - Select your project from the Firebase console.
-  - In the left sidebar, navigate to **Firestore Database** under `build` optiuon, then click on the **Rules** tab.
-  - Replace `firestore.rules` with the following rules to restrict access to your email,
-  - replace `your-email@gmail.com` with your actual email address.
-  - You can add multiple user emails for a single app access via Google sign in
+  - In the left sidebar, navigate to **Firestore Database** under the `Build` option, then click on the **Rules** tab.
+  - Click on the **Rules** tab and replace the content with the following rules to restrict access to your email.
+  - Replace `your-email@gmail.com` with your actual email address.
+  - You can add multiple user emails for single app access via Google sign-in.
     ```txt
     rules_version = '2';
 
@@ -398,7 +399,8 @@ To interact with Firebase services from your terminal, you need to install the F
         }
       }
     }
-      ```
+    ```
+
 
 ### AppScript Setup
 
@@ -408,7 +410,7 @@ To interact with Firebase services from your terminal, you need to install the F
 
     ![Google App Script](public/docs/pics/ss3.png)
 
-2. ** Goto AppScript Directory:**
+2. **Go to the AppScript Directory:**
     - Open your terminal and navigate to the `appScript` directory within your project:
     ```bash
     cd appScript
@@ -433,54 +435,80 @@ To interact with Firebase services from your terminal, you need to install the F
     clasp create --title "Pennywise App Script" --type standalone
     ```
 
-   6. **Update appsscript.json:**
-       - Open the `appsscript.json` file in the `appScript` directory.
-       - Replace its content with the following:
-       ```json
-       {
-         "timeZone": "Asia/Kolkata",
-         "dependencies": {
-           "enabledAdvancedServices": [
-             {
-             "userSymbol": "Gmail",
-             "version": "v1",
-             "serviceId": "gmail"
-             }
-           ]
-         },
-         "oauthScopes": [
-           "https://www.googleapis.com/auth/gmail.readonly",
-           "https://www.googleapis.com/auth/script.external_request",
-           "https://www.googleapis.com/auth/script.scriptapp",
-           "https://www.googleapis.com/auth/userinfo.email"
-         ],
-         "exceptionLogging": "STACKDRIVER",
-         "runtimeVersion": "V8",
-         "webapp": {
-         "access": "MYSELF",
-         "executeAs": "USER_DEPLOYING"
-         }
-       }
+6. **Update appsscript.json:**
+    - Open the `appsscript.json` file in the `appScript` directory.
+    - Replace its content with the following:
+    ```json
+    {
+      "timeZone": "Asia/Kolkata",
+      "dependencies": {
+        "enabledAdvancedServices": [
+          {
+          "userSymbol": "Gmail",
+          "version": "v1",
+          "serviceId": "gmail"
+          }
+        ]
+      },
+      "oauthScopes": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/script.external_request",
+        "https://www.googleapis.com/auth/script.scriptapp",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ],
+      "exceptionLogging": "STACKDRIVER",
+      "runtimeVersion": "V8",
+        "webapp": {
+        "access": "MYSELF",
+        "executeAs": "USER_DEPLOYING"
+      }
+    }
+   ```
 
-    ```
-    - This configuration sets the timezone, enables the Gmail API, and specifies the necessary OAuth scopes.
+    **Configuration Breakdown:**
 
-6. **Push Local Code to Apps Script:**
+    - **`"timeZone": "Asia/Kolkata"`** - Sets the timezone for the Apps Script project to Indian Standard Time. This affects how time-based functions and triggers work in your script.
+
+    - **`"dependencies" → "enabledAdvancedServices"`** - Enables the Gmail API (v1) for your Apps Script project:
+      - `"userSymbol": "Gmail"` - Allows you to use `Gmail` as the service name in your code
+      - `"serviceId": "gmail"` - Specifies which Google service to enable
+      - This is required to read emails programmatically
+
+    - **`"oauthScopes"`** - These define what permissions your script needs:
+      - `"gmail.readonly"` - Read-only access to Gmail messages
+      - `"script.external_request"` - Ability to make HTTP requests to external services (like Firebase)
+      - `"script.scriptapp"` - Access to Apps Script functionality
+      - `"userinfo.email"` - Access to the user's email address
+
+    - **`"exceptionLogging": "STACKDRIVER"`** - Enables Google Cloud logging for error tracking and debugging. Helps you see detailed error messages when things go wrong.
+
+    - **`"runtimeVersion": "V8"`** - Uses the modern V8 JavaScript runtime (supports ES6+ features). More efficient and supports newer JavaScript syntax.
+
+    - **`"webapp"` configuration:**
+      - `"access": "MYSELF"` - Only you can access the web app
+      - `"executeAs": "USER_DEPLOYING"` - The script runs with your permissions
+
+    This configuration essentially sets up your Apps Script to securely read your Gmail messages, process expense information, and send it to your Firebase database while running in your timezone with proper error logging.
+
+
+7. **Push Local Code to Apps Script:**
    To upload your local code to the newly created Apps Script project, run:
 
     ```bash
     clasp push
     ```
-   - Put yes or y for `✔ Manifest file has been updated. Do you want to push and overwrite? Yes`
+   - Enter `yes` or `y` for `✔ Manifest file has been updated. Do you want to push and overwrite? Yes`
 
-7. **Run the Apps Script Files:**
+
+8. **Run the Apps Script Files:**
+
     - Go to the [Google Apps Script](https://script.google.com) website.
     - Click on the `Pennywise App Script` project you just created.
     - In the left sidebar, you will see the files `expense.gs` and `trigger.gs`.
     - Click on `trigger.gs` to open it, then click the **Run** button (▶️) at the top of the editor.
     - This will prompt you to authorize the script to access your Gmail account.
     - Authorize the script by selecting your Google account and granting the necessary permissions.
-    - Once you select the mail, you will get a warning page,click on advanced & then click on `Go to Pennywise App Script (unsafe)`.
+    - Once you select the email, you will get a warning page. Click on **Advanced** and then click on `Go to Pennywise App Script (unsafe)`.
     - Select all permissions and click on **Allow**.
     - This will set up the necessary triggers to fetch emails and add them to Firestore.
     - After running the script, you should see a message indicating that the triggers have been set up successfully.
