@@ -17,8 +17,27 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-
 export class ProcessData {
+
+  static processExpenseData = async () => {
+
+    let count = 0;
+    for (const expense of []) {
+      console.log('count ', count);
+      if (count < 500) {
+        await ExpenseAPI.addExpense(JSONCopy(expense));
+        count++;
+      }
+
+      if (count > 495) {
+        console.log('Sleeping for 3 sec to avoid firestore write limit');
+        await sleep(3000);
+        count = 0;
+      }
+    }
+
+    return null;
+  };
 
   static processVendorNames = async () => {
     try {
@@ -41,8 +60,14 @@ export class ProcessData {
 
           const document: DocumentData = doc.data();
 
+          // Check if vendor exists and is a string
+          if (!document.vendor || typeof document.vendor !== 'string') {
+            expenseList.push(document);
+            count++;
+            return; // Skip processing this document
+          }
 
-          const vendor = document.vendor;
+          const vendor: string = document.vendor;
           const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
           // const upiPattern = /^(.+)\s+([^\s@]+@[^\s@]+)$/;
           const match = vendor.match(upiPattern);

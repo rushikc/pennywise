@@ -3,6 +3,10 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
+/* eslint-disable */
+// noinspection JSUnusedGlobalSymbols
+// noinspection JSUnresolvedReference
+
 
 /**
  * Adds a new expense by calling the 'addExpenseData' cloud function.

@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useState} from 'react';
-import {Backdrop, Box, Button, Container, Fade, Modal, Paper, Typography} from '@mui/material';
+import {Box, Button, Container, Fade, Modal, Paper, Typography} from '@mui/material';
 import {
   AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
@@ -22,8 +22,34 @@ import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
-import {buildInfo} from '../../buildInfo';
 import {createTimedAlert} from '../../store/alertActions';
+
+// Define the BuildInfo interface
+interface BuildInfo {
+  version: string;
+  buildTime: string;
+  buildTimestamp: number;
+}
+
+// Fallback build info for development when buildInfo.ts doesn't exist
+const fallbackBuildInfo: BuildInfo = {
+  version: '1.1.0', // Should match package.json version
+  buildTime: new Date().toISOString(),
+  buildTimestamp: Date.now()
+};
+
+// Function to get build info with fallback
+const getBuildInfo = (): BuildInfo => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const buildInfoModule = require('../../buildInfo');
+    return buildInfoModule.buildInfo as BuildInfo;
+  } catch {
+    return fallbackBuildInfo;
+  }
+};
+
+const buildInfo: BuildInfo = getBuildInfo();
 
 /**
  * Settings page component with user profile and settings options
@@ -62,10 +88,6 @@ const Settings: React.FC = () => {
   // Handle sign out
   const handleSignOut = async () => {
     try {
-      createTimedAlert({
-        type: 'info',
-        message: 'Signing out...'
-      });
 
       const result = await signOut();
 
@@ -267,9 +289,11 @@ const Settings: React.FC = () => {
       <Modal
         open={isAppInfoModalOpen}
         onClose={handleCloseModal}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{timeout: 500}}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
       >
         <Fade in={isAppInfoModalOpen}>
           <Paper className="app-info-modal p-2">

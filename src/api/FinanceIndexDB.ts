@@ -25,11 +25,9 @@ export class FinanceIndexDB {
   static initDB = (): void => {
     if (!indexedDB) {
       alert('IndexedDB is not available on this browser, this might increase firebase billing');
-      console.debug('IndexedDB could not be found in this browser.');
       return;
     }
 
-    console.debug('Initiating IndexedDB');
     const financeDB = indexedDB.open(dbName, dbVersion);
 
     financeDB.onupgradeneeded = () => {
@@ -42,8 +40,6 @@ export class FinanceIndexDB {
       db.createObjectStore('vendorTag', {keyPath: 'vendor'});
       db.createObjectStore('config', {keyPath: 'key'});
       db.createObjectStore('budget', {keyPath: 'id'}); // Create budget store
-
-      console.debug('Created finance IndexedDB');
     };
   };
 
@@ -137,7 +133,6 @@ export class FinanceIndexDB {
     storeName: T,
     keyPath: string
   ): Promise<StoreData[T] | undefined> => {
-    console.debug('getData IndexedDB - ', storeName, keyPath);
     return this.executeStoreOperation(storeName, (store) => store.get(keyPath), 'readonly');
   };
 
@@ -184,7 +179,7 @@ export class FinanceIndexDB {
   static deleteExpense = async (mailId: string): Promise<void> => {
     // console.debug('deleteExpense IndexedDB - mailId:', mailId);
     await this.executeStoreOperation('expense', (store) => store.delete(mailId));
-    console.debug('Successfully deleted expense with mailId:', mailId);
+    // console.debug('Successfully deleted expense with mailId:', mailId);
   };
 
   /**

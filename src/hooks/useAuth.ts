@@ -74,7 +74,6 @@ export const useAuth = (redirectToLogin = true) => {
       await auth.signOut();
       return {success: true};
     } catch (error) {
-      console.error('Error signing out:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error during sign out'
