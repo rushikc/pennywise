@@ -563,7 +563,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
             <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
               <Chip
                 icon={<Sort/>}
-                label={'Group: ' + groupByOptions.find(option => option.id === selectedGroupBy)?.label}
+                label={groupByOptions.find(option => option.id === selectedGroupBy)?.label}
                 color="primary"
                 clickable
               />
