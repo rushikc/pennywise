@@ -20,12 +20,13 @@
 </p>
 
 ---
-> **Disclaimer:** Currently, Pennywise only supports transaction tracking for the following:
-> * HDFC UPI - credit & debit transactions.
-> * HDFC Credit card - only debit transactions.
-> * HDFC E-mandate transactions.
+> **Disclaimer:** Currently, Pennywise supports transaction tracking for the following:
+> * HDFC UPI — credit & debit transactions
+> * HDFC Credit Card — debit transactions only
+> * HDFC E-mandate transactions
+> * SBI Credit Card — debit transactions only
 >
-> We are actively working on expanding support to other banks' email and transaction types.
+> We are actively working on expanding support to additional banks, email formats, and transaction types.
 
 ## License
 
@@ -54,8 +55,8 @@ a user-friendly experience with robust features, including offline support and s
 * 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
 
 ## Demo
-- Google Auth & Firestore is disabled in demo app, All the data is stored in a static file to save costs.
-- This is a static variation of the website, which means you can explore the app without needing to log in.
+- Google Auth and Firestore are disabled in the demo app. All demo data is stored in a static file to reduce costs.
+- This is a static variation of the website, which means you can explore the app without needing to sign in.
 
 <p align="center">
   <a
@@ -73,7 +74,8 @@ a user-friendly experience with robust features, including offline support and s
 
 ## Getting Started
 
-For detailed setup instructions, please refer to the guide below (30-60 min setup time)
+For detailed setup instructions, please refer to the guide below (30–60 minute setup time).
+
 <p align="center">
   <a href="SETUP.md" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 20px; background-color: #008CBA; color: white; text-decoration: none; border-radius: 5px;">
     View Setup Instructions
@@ -205,18 +207,36 @@ Pennywise is built using a modern front-end architecture with the following key 
 
 ## Application Sections
 
-The React application is divided into several key sections, each serving a specific purpose:
+The React application is divided into several key sections, each serving a specific purpose. Below is a short developer-friendly summary of what each area does.
 
-*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, attach a tag to the expense, and apply filters to view expenses from different time periods or by different grouping.
+### Home
+The Home screen is the main dashboard and the primary place to view and manage transactions. Key capabilities:
+- View a chronological list of recent transactions with amounts, dates, vendors, and tags.
+- Add new expenses manually using a compact form.
+- Edit or delete existing expenses.
+- Apply quick filters (date ranges, tags, vendors) and grouping (daily, weekly, monthly) to analyze recent activity.
+- Mark transactions with tags for categorization and let cloud functions learn vendor→tag associations for future auto-tagging.
 
+### Insights
+Insights offers visual analytics to help you understand spending patterns:
+- Interactive charts and graphs that break down spending by tag, vendor, and time period.
+- Trend views to spot increases or decreases in category spending over time.
+- Exportable reports (XLSX & CSV) for offline analysis or sharing.
+- Drill-down support to view the underlying transactions that contribute to any chart segment.
 
-*   **Insights**: This page offers a visual breakdown of your spending. It features charts and graphs that categorize your expenses by tags, helping you quickly identify your top spending areas. You can download the reports in xlsx & csv format.
+### Budget
+The Budget section helps you set and track financial goals:
+- Create monthly budgets per tag/category.
+- See progress vs budget in percentage and absolute terms.
+- Receive visual alerts when you approach or exceed a budget.
+- Compare actual spending to budgeted amounts across months to identify recurring overspend.
 
-
-*   **Budget**: This section is for managing your financial goals. You can set monthly budgets for different expense categories and track your progress to see how your spending aligns with your budget.
-
-
-*   **Settings**: Here, you can customize the application to your preferences. This includes managing the tags used for categorizing expenses, Already mapped vendor-tag configurations, viewing your user profile, and configuring other app-related settings.
+### Settings
+Settings lets you customize the application and manage account-level configuration:
+- Manage tags (create, rename, delete) used for categorizing expenses.
+- Review and edit pre-mapped vendor→tag configurations used by the auto-tagging engine.
+- View and edit user profile information.
+- Configure app-specific preferences such as default currency, date range shortcuts, and sync behavior.
 
 ## Future Roadmap
 
