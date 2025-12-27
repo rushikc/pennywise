@@ -29,6 +29,13 @@
         "vendorRegex": ["Your\\s(.*?)\\sbill"],
         "type": "e-mandate",
         "costType": "debit"
+      },
+      {
+        "snippetStrings": ["spent on your SBI Credit Card ending"],
+        "costRegex": ["Rs\\.(.*?)\\sspent on"],
+        "vendorRegex": ["at\\s(.*?)\\son"],
+        "type": "credit-card",
+        "costType": "debit"
       }
     ]
   }

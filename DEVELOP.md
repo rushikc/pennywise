@@ -6,11 +6,10 @@
 
 **Firebase Setup**
 
-This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project.
-First, complete the setup instructions in the [Setup Documentation](SETUP.md).
+This project uses Firebase for authentication and database services. To run the app locally, you'll need to create your own Firebase project. First, complete the setup instructions in the [Setup Documentation](SETUP.md).
 
-- You should have already created a `.env` file in the root folder of your project in the format below, as per the setup instructions.
-- For a React project, you can use the following format:
+- You should have created a `.env` file in the project's root folder in the format below, as per the setup instructions.
+- For a React project, use the following format:
     ```env
     REACT_APP_FIREBASE_API_KEY=your-api-key
     REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
