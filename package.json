@@ -13,14 +13,14 @@
     "@mui/x-date-pickers": "^7.29.4",
     "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "1.12.0",
+    "axios": "^1.16.0",
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "firebase": "^11.10.0",
     "firebase-functions": "^6.3.1",
-    "firebase-tools": "^14.10.1",
+    "firebase-tools": "^15.17.0",
     "framer-motion": "^12.12.1",
     "googleapis": "^152.0.0",
     "idb": "^7.1.1",
@@ -30,13 +30,13 @@
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.30.3",
     "react-swipeable": "^7.0.1",
     "reactstrap": "^9.1.5",
     "recharts": "^3.1.0",
     "sass": "^1.84.0",
     "typescript": "^4.7.4",
-    "uuid": "^11.1.0",
+    "uuid": "^11.1.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -87,5 +87,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "@tootallnate/once": "^3.0.1",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.5.10",
+    "serialize-javascript": "^7.0.5",
+    "tar": "^7.5.11",
+    "underscore": "^1.13.8",
+    "webpack-dev-server": "^5.2.1"
   }
 }
