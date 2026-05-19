@@ -244,8 +244,27 @@ function isValidExpenseGeminiShape(o) {
 }
 
 /**
+ * @param {string} tagStr
+ * @param {string[]} allowedTags
+ * @returns {string|null} Canonical tag from the list, or null if no match.
+ */
+function findCanonicalTag(tagStr, allowedTags) {
+  const normalized = String(tagStr).trim().toLowerCase();
+  if (!normalized) {
+    return null;
+  }
+  for (let i = 0; i < allowedTags.length; i++) {
+    const candidate = allowedTags[i];
+    if (candidate != null && String(candidate).trim().toLowerCase() === normalized) {
+      return String(candidate).trim();
+    }
+  }
+  return null;
+}
+
+/**
  * @param {object} o
- * @returns {{cost: number, costType: string, vendor: string, type: string|null}}
+ * @returns {{cost: number, costType: string, vendor: string, type: string|null, tag: string|null, extra: object|null}}
  */
 function normalizeGeminiExpense(o) {
   const rawType = o.type;
@@ -254,12 +273,116 @@ function normalizeGeminiExpense(o) {
       ? String(rawType).toLowerCase().trim()
       : null;
 
+  const knownKeys = ['cost', 'costType', 'vendor', 'type'];
+  let extra = null;
+
+  Object.keys(o).forEach(function (key) {
+    if (knownKeys.indexOf(key) !== -1 || o[key] == null) {
+      return;
+    }
+    extra = extra || {};
+    extra[key] = o[key];
+  });
+
   return {
     cost: Number(Number(o.cost).toFixed(2)),
     costType: String(o.costType).toLowerCase().trim(),
     vendor: String(o.vendor).trim(),
     type,
+    tag: null,
+    extra,
   };
+}
+
+
+/**
+ * @param {string} vendorName
+ * @param {Record<string, string>} hints
+ * @returns {string|null}
+ */
+function findTagFromVendorHints(vendorName, hints) {
+  if (!vendorName || !hints || typeof hints !== 'object') {
+    return null;
+  }
+
+  const vendorLower = String(vendorName).toLowerCase();
+  const keys = Object.keys(hints).sort(function (a, b) {
+    return b.length - a.length;
+  });
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (!key) {
+      continue;
+    }
+    if (vendorLower.indexOf(String(key).toLowerCase()) !== -1) {
+      return hints[key];
+    }
+  }
+
+  return null;
+}
+
+/**
+ * @param {object} target - Object with optional tag field (mutated in place).
+ * @param {string} vendorName
+ * @param {string[]} [allowedTags]
+ * @returns {object} target
+ */
+function applyVendorTagHint(target, vendorName, allowedTags) {
+  if (!target || target.tag) {
+    return target;
+  }
+
+  const hintTag = findTagFromVendorHints(vendorName, VENDOR_TAG_HINTS);
+  if (!hintTag) {
+    return target;
+  }
+
+  const allowed = Array.isArray(allowedTags) ? allowedTags : [];
+  if (allowed.length > 0) {
+    const canonical = findCanonicalTag(hintTag, allowed);
+    if (canonical) {
+      target.tag = canonical;
+    }
+  } else {
+    target.tag = hintTag;
+  }
+
+  return target;
+}
+
+/**
+ * Merges tag-only Gemini response into a validated expense, then vendor keyword hints.
+ *
+ * @param {object} validatedExpense - Mutated in place.
+ * @param {{tag?: *}|null} tagBody
+ * @param {string[]} allowedTags
+ * @returns {object} validatedExpense
+ */
+function mergeGeminiTag(validatedExpense, tagBody, allowedTags) {
+  if (!validatedExpense) {
+    return validatedExpense;
+  }
+
+  if (tagBody && typeof tagBody === 'object') {
+    const rawTag = tagBody.tag;
+    if (rawTag != null && String(rawTag).trim() !== '') {
+      const tagStr = String(rawTag).trim();
+      const allowed = Array.isArray(allowedTags) ? allowedTags : [];
+      const canonical = findCanonicalTag(tagStr, allowed);
+
+      if (canonical) {
+        validatedExpense.tag = canonical;
+      } else {
+        validatedExpense.extra = validatedExpense.extra || {};
+        validatedExpense.extra.tag = tagStr;
+      }
+    }
+  }
+
+  applyVendorTagHint(validatedExpense, validatedExpense.vendor, allowedTags);
+  return validatedExpense;
 }
 
 /**

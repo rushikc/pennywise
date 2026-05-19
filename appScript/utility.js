@@ -133,3 +133,44 @@ function extractPlainTextFromHtml(html) {
 
   return text;
 }
+
+
+const VENDOR_TAG_HINTS = {
+  "blink": "groceries",
+  "mart": "groceries",
+  "mall": "groceries",
+  "swiggy": "food",
+  "zomato": "food",
+  "zepto": "groceries",
+  "dmart": "groceries",
+  "bigbasket": "groceries",
+  "third wave": "drinks",
+  "chai point": "drinks",
+  "bmtc": "travel",
+  "namma yatri": "travel",
+  "uber": "travel",
+  "ola": "travel",
+  "shell": "petrol",
+  "indian oil": "petrol",
+  "hpcl": "petrol",
+  "bpcl": "petrol",
+  "cult": "fitness",
+  "decathlon": "sports",
+  "play arena": "badminton",
+  "playo": "badminton",
+  "gameplay": "badminton",
+  "myntra": "fashion",
+  "croma": "gadgets",
+  "sangeetha": "gadgets",
+  "bescom": "utility",
+  "bwssb": "utility",
+  "urban company": "amenities",
+  "netflix": "subscribe",
+  "spotify": "subscribe",
+  "bookmyshow": "entertainment",
+  "lenskart": "eyes",
+  "apollo": "medical",
+  "medplus": "medical",
+  "licious": "meat",
+  "makemytrip": "trips & stay"
+}
