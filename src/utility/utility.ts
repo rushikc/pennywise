@@ -75,14 +75,6 @@ export const getDateTimeSecFromISO = (isoTime: string) => {
 };
 
 
-//sort
-// eslint-disable-next-line
-export const sortBy2Key = <T extends Record<string, any>>(array: T[], key: string, subKey: string) => {
-  return array.sort((a, b) => {
-    return (b[key][subKey] - a[key][subKey]);
-  });
-};
-
 // eslint-disable-next-line
 export const sortByKey = <T extends Record<string, any>>(array: T[], key: string) => {
   return array.sort((a, b) => {

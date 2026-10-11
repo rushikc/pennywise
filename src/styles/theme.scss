@@ -29,6 +29,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   --accent-red: #ca1919;
   --accent-red-rgb: 233, 120, 120;
   --accent-blue: #1c75bd;
+  --accent-blue-hover: #155a94;
   --accent-blue-rgb: 28, 117, 189;
   --accent-purple: rgb(48, 73, 214);
   --accent-purple-rgb: 103, 125, 247;
@@ -88,6 +89,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   --accent-red: #e97878;
   --accent-red-rgb: 233, 120, 120;
   --accent-blue: #90caf9;
+  --accent-blue-hover: #64b5f6;
   --accent-blue-rgb: 144, 202, 249;
   --accent-purple: rgb(103, 125, 247);
   --accent-purple-rgb: 103, 125, 247;
@@ -96,6 +98,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   --accent-yellow: #ffca28;
   --accent-yellow-rgb: 255, 202, 40;
 
+  --accent-red-subtle: rgba(233, 120, 120, 0.2);
+  --accent-blue-subtle: rgba(144, 202, 249, 0.2);
+  --accent-purple-subtle: rgba(103, 125, 247, 0.2);
+  --accent-green-subtle: rgba(102, 187, 106, 0.2);
+  --accent-yellow-subtle: rgba(255, 202, 40, 0.2);
 
   // Component-specific colors
   --search-bg: #23272a;

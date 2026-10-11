@@ -166,7 +166,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
       // Delete each selected expense using the ExpenseAPI
       const deletePromises = selectedExpenses.map(expense => {
-        ExpenseAPI.addExpense(expense, 'delete');
+        return ExpenseAPI.addExpense(expense, 'delete');
       });
 
       // Wait for all delete operations to complete
@@ -414,8 +414,8 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
           </div>
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
-            <IconButton className={`collapse-button ${isCollapsed ? 'collapsed' : ''}`}>
-              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowDownIcon/>}
+            <IconButton className="collapse-button">
+              {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
             </IconButton>
           </div>
         </div>

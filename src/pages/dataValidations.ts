@@ -19,9 +19,6 @@ export type CalculationOption = 'average' | 'median';
 
 
 export const loadInitialAppData = () => {
-
-  console.log('Load Initial AppData');
-
   void ExpenseAPI.processData();
 
   const vendorTagApi = ExpenseAPI.getVendorTagList();
@@ -39,9 +36,6 @@ export const loadInitialAppData = () => {
     const darkMode = res[4];
     const expenseList = sortByKey(expenseResult, 'date');
 
-    console.log('Vendor Tag Result:', vendorTagResult);
-    console.log('Expense List:', expenseList);
-    console.log('Budget List:', budgetResult);
     setExpenseState(expenseList, vendorTagResult, darkMode);
     setBudgetList(budgetResult);
     setTagList(tagList);

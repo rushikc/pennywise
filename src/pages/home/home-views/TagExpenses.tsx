@@ -33,8 +33,6 @@ const TagExpenses: FC = (): ReactElement => {
 
   const {vendorTagList, expense, isTagModal, tagList} = useSelector(selectExpense);
 
-  console.log('current expense to tag:', expense);
-
   if (expense == null || !isTagModal) {
     return <></>;
   }
@@ -43,9 +41,8 @@ const TagExpenses: FC = (): ReactElement => {
     try {
       await navigator.clipboard.writeText(str);
       createTimedAlert({message: 'Copied to clipboard', type: 'success'});
-      // You could add a toast notification here if desired
     } catch (err) {
-      createTimedAlert({message: 'Failed to copy text', type: 'success'});
+      createTimedAlert({message: 'Failed to copy text', type: 'error'});
       console.error('Failed to copy text: ', err);
     }
   };
@@ -70,7 +67,6 @@ const TagExpenses: FC = (): ReactElement => {
     }
 
     const expenseNew = JSONCopy(expense);
-    console.log('Saving expense with tag:', expenseNew);
     expenseNew.tag = selectedTag[0];
     void ExpenseAPI.addExpense(expenseNew);
     updateExpense(expenseNew);

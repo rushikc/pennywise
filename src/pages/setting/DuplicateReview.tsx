@@ -37,10 +37,10 @@ const ExpenseCard: React.FC<{label: string; expense: DuplicateCandidatePair['kee
   <Paper elevation={0} className="reload-section-paper" sx={{flex: 1, p: 2}}>
     <Typography variant="overline" color="text.secondary">{label}</Typography>
     <Typography variant="h6" sx={{wordBreak: 'break-word'}}>
-      {formatVendorName(expense.vendor)}
+      {formatVendorName(expense.vendor)[0] || expense.vendor}
     </Typography>
     <Typography variant="body2" color="text.secondary">
-      Rs {expense.cost.toLocaleString('en-IN')} · {expense.type}
+      ₹{expense.cost.toLocaleString('en-IN')} · {expense.type}
     </Typography>
     <Typography variant="caption" display="block" sx={{mt: 1}}>
       {formatExpenseDate(expense.date)}
@@ -138,7 +138,7 @@ const DuplicateReview: React.FC = () => {
           <Stack direction="row" spacing={1} alignItems="center" sx={{mb: 2}}>
             <Chip label={pair.rule} size="small" variant="outlined"/>
             <Typography variant="body2" color="text.secondary">
-              Rs {pair.drop.cost.toLocaleString('en-IN')}
+              ₹{pair.drop.cost.toLocaleString('en-IN')}
             </Typography>
           </Stack>
 

@@ -122,11 +122,6 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .collapse-button {
   padding: 6px !important;
   color: var(--accent-blue) !important;
-  transition: transform 0.6s ease; /* Slower rotation */
-
-  &.collapsed {
-    transform: rotate(-180deg);
-  }
 }
 
 .group-expenses {
@@ -529,25 +524,18 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   }
 }
 
-// Selected count display
+// Selected count display (lives inside .buttons-container)
 .selected-count-display {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
   border-radius: 20px;
   padding: 6px 16px;
   font-weight: 500;
   box-shadow: var(--box-shadow);
-  z-index: 1000;
   text-align: center;
   font-size: 14px;
-  margin-bottom: 10px;
   backdrop-filter: blur(4px);
   border: 1px solid var(--border-color);
-  animation: fadeIn 0.3s ease;
   min-width: 150px;
   white-space: nowrap;
   display: flex;
@@ -567,14 +555,3 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   }
 }
 
-// Cancel selection button
-.cancel-selection-button {
-  position: fixed !important;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  box-shadow: var(--box-shadow);
-  border-radius: 20px;
-  padding: 5px 15px;
-}

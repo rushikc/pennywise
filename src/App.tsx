@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {AppBar, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
-import React, {Suspense} from 'react';
+import React, {Suspense, useEffect, useRef} from 'react';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import {FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
@@ -23,7 +23,9 @@ import Loading from './components/Loading';
 
 function App() {
 
-  FinanceIndexDB.initDB();
+  useEffect(() => {
+    FinanceIndexDB.initDB();
+  }, []);
 
   const {appConfig} = useSelector(selectExpense);
 
@@ -92,18 +94,23 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => 
   const {currentUser, loading} = useAuth();
   const {isAppLoading} = useSelector(selectExpense);
   const location = useLocation();
+  const hasLoadedRef = useRef(false);
 
-  if (loading) return null;
+  useEffect(() => {
+    if (!loading && currentUser && isAppLoading && !hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      loadInitialAppData();
+    }
+  }, [loading, currentUser, isAppLoading]);
+
+  if (loading) return <Loading/>;
 
   if (!currentUser) {
     return <Navigate to="/login" state={{from: location}} replace/>;
   }
 
-  // console.log("isAppLoading in ProtectedRoute:", isAppLoading);
-
   if (isAppLoading) {
-    loadInitialAppData();
-    return null; // or a loading spinner
+    return <Loading/>;
   }
 
   return <>{children}</>;

@@ -11,49 +11,53 @@ import React, {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {AccountBalanceWallet, AnalyticsOutlined} from '@mui/icons-material';
 
+const getNavValue = (pathname: string): string => {
+  if (pathname.startsWith('/stats')) {
+    return 'stats';
+  }
+  if (pathname.startsWith('/budget')) {
+    return 'budget';
+  }
+  if (pathname.startsWith('/home')) {
+    return 'home';
+  }
+  return 'profile';
+};
+
 export default function BottomNav() {
   const [value, setValue] = React.useState('home');
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Update the state based on URL path when component mounts or URL changes
   useEffect(() => {
-    const path = location.pathname;
+    setValue(getNavValue(location.pathname));
+  }, [location.pathname]);
 
-    // Map URL paths to navigation values
-    if (path.includes('stats')) {
-      setValue('stats');
-    } else if (path.includes('profile')) {
-      setValue('profile');
-    } else if (path.includes('budget')) {
-      setValue('budget');
-    } else {
-      // Default to home for any other paths
-      setValue('home');
-    }
-  }, [location]);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    navigate(newValue);
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    navigate(`/${newValue}`);
     setValue(newValue);
   };
 
   return (
-    <BottomNavigation value={value} onChange={handleChange}>
+    <BottomNavigation value={value} onChange={handleChange} showLabels>
       <BottomNavigationAction
         value="home"
+        label="Home"
         icon={<HomeIcon/>}
       />
       <BottomNavigationAction
         value="stats"
+        label="Stats"
         icon={<AnalyticsOutlined/>}
       />
       <BottomNavigationAction
         value="budget"
+        label="Budget"
         icon={<AccountBalanceWallet/>}
       />
       <BottomNavigationAction
         value="profile"
+        label="Profile"
         icon={<AccountCircleIcon/>}
       />
     </BottomNavigation>

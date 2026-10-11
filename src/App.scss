@@ -25,59 +25,13 @@ $purple-light: var(--accent-purple);
   color: var(--text-secondary);
 }
 
-.button-class {
-  width: 200px
-}
-
 .d-flex-center {
   display: flex;
   justify-content: center;
 }
 
-.font-600 {
-  font-weight: 600;
-}
-
-.font-12 {
-  font-size: 12px;
-}
-
-.font-15 {
-  font-size: 15px;
-}
-
 .pt-10 {
   padding-top: 10rem;
-}
-
-.no-padding {
-  padding: 0 !important;
-}
-
-.no-padding-margin {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Additional utility classes for commonly used styles */
-.border-radius-10 {
-  border-radius: 10px;
-}
-
-.border-radius-12 {
-  border-radius: 12px;
-}
-
-.font-16 {
-  font-size: 16px;
-}
-
-.font-18 {
-  font-size: 18px;
-}
-
-.font-weight-700 {
-  font-weight: 700;
 }
 
 .page-header {

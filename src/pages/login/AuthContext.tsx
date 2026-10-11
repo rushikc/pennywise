@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {User} from 'firebase/auth';
 import {AuthService} from './AuthService';
+import Loading from '../../components/Loading';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -44,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {loading ? <Loading/> : children}
     </AuthContext.Provider>
   );
 };

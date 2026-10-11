@@ -18,7 +18,7 @@ import {
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import './settings.scss';
-import {useAuth} from '../../hooks/useAuth';
+import {useAuth} from '../login/AuthContext';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import DashboardTile from '../../components/DashboardTile';
 import {useSelector} from 'react-redux';
@@ -63,7 +63,12 @@ const Settings: React.FC = () => {
   const [pendingDuplicateCount, setPendingDuplicateCount] = useState(0);
 
   // Use the custom hook for authentication
-  const {userProfile, signOut, isLoading} = useAuth();
+  const {currentUser, signOut} = useAuth();
+  const userProfile = {
+    name: currentUser?.displayName || 'User',
+    email: currentUser?.email || 'No email',
+    photoUrl: currentUser?.photoURL ?? null,
+  };
 
   useEffect(() => {
     void ExpenseAPI.getDuplicateCandidates().then((pairs) => {
@@ -97,17 +102,8 @@ const Settings: React.FC = () => {
   // Handle sign out
   const handleSignOut = async () => {
     try {
-
-      const result = await signOut();
-
-      if (!result.success && result.error) {
-        createTimedAlert({
-          type: 'error',
-          message: result.error
-        });
-      } else {
-        navigate('/login');
-      }
+      await signOut();
+      navigate('/login');
     } catch (error) {
       createTimedAlert({
         type: 'error',
@@ -211,16 +207,6 @@ const Settings: React.FC = () => {
   };
 
   const handleTileClick = (route: string) => {
-    if (route === '/reload-expense') {
-      navigate('/reload-expense');
-      return;
-    }
-
-    if (route === '/auto-tag-expenses') {
-      navigate('/auto-tag-expenses');
-      return;
-    }
-
     if (route === '/signout') {
       void handleSignOut();
       return;
@@ -245,9 +231,6 @@ const Settings: React.FC = () => {
       }
     }
   };
-
-  // Show nothing during initial loading to prevent flash of content
-  if (isLoading) return null;
 
   return (
     <Container maxWidth="sm" className="dashboard-main-container">

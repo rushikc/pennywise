@@ -153,7 +153,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
               {uniqueVendors.map((vendor, index) => (
                 <Chip
                   key={index}
-                  label={formatVendorName(vendor)}
+                  label={formatVendorName(vendor)[0] || vendor}
                   clickable
                   color={selectedVendor === vendor ? 'primary' : 'default'}
                   variant={selectedVendor === vendor ? 'filled' : 'outlined'}

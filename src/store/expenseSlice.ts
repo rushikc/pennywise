@@ -85,9 +85,8 @@ export const expenseSlice = createSlice({
       const expense = action.payload;
       const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
-      console.log('Deleting expense', expense, 'at index', expenseIndex);
       if (expenseIndex > -1) {
-        state.expenseList.slice(expenseIndex, 1);
+        state.expenseList.splice(expenseIndex, 1);
       }
     },
 

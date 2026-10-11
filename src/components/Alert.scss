@@ -38,42 +38,42 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
   // Alert type specific styles
   &.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
+    background-color: var(--accent-green-subtle);
+    border-color: var(--accent-green);
+    color: var(--text-primary);
 
     .MuiAlert-icon {
-      color: #28a745;
+      color: var(--accent-green);
     }
   }
 
   &.alert-error {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
+    background-color: var(--accent-red-subtle);
+    border-color: var(--accent-red);
+    color: var(--text-primary);
 
     .MuiAlert-icon {
-      color: #dc3545;
+      color: var(--accent-red);
     }
   }
 
   &.alert-warning {
-    background-color: #fff3cd;
-    border-color: #ffeaa7;
-    color: #856404;
+    background-color: var(--accent-yellow-subtle);
+    border-color: var(--accent-yellow);
+    color: var(--text-primary);
 
     .MuiAlert-icon {
-      color: #ffc107;
+      color: var(--accent-yellow);
     }
   }
 
   &.alert-info {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    color: #0c5460;
+    background-color: var(--accent-blue-subtle);
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
 
     .MuiAlert-icon {
-      color: #17a2b8;
+      color: var(--accent-blue);
     }
   }
 

@@ -27,6 +27,15 @@ describe('expenseSlice', () => {
     expect(store.getState().expense.expenseList.map((e) => e.id)).toEqual(['m']);
   });
 
+  it('deleteExpense removes the matching mailId', () => {
+    const keep = makeExpense({id: 'keep', mailId: 'mail-keep'});
+    const drop = makeExpense({id: 'drop', mailId: 'mail-drop'});
+    const store = makeStore();
+    store.dispatch(expenseSlice.actions.setExpenseList([keep, drop]));
+    store.dispatch(expenseSlice.actions.deleteExpense(drop));
+    expect(store.getState().expense.expenseList.map((e) => e.mailId)).toEqual(['mail-keep']);
+  });
+
   it('updateExpense matches by mailId', () => {
     const existing = makeExpense({id: 'a', mailId: 'mail-1', tag: undefined});
     const store = makeStore();
