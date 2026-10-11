@@ -1,0 +1,82 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.desktop-dashboard {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+}
+
+.dash-month {
+  color: var(--text-secondary) !important;
+  letter-spacing: 0.02em;
+}
+
+.dash-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--box-shadow);
+  padding: 16px;
+  color: var(--text-primary);
+}
+
+.dash-card-spent {
+  background: var(--accent-purple);
+  color: var(--text-white);
+  border-color: transparent;
+}
+
+.dash-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.dash-card-spent .dash-label {
+  color: var(--text-white);
+  opacity: 0.9;
+}
+
+.dash-amount {
+  margin-top: 4px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dash-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.dash-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.dash-row-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

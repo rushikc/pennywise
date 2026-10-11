@@ -1,0 +1,53 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.side-nav {
+  width: 88px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  box-sizing: border-box;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+}
+
+.side-nav-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 12px;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+
+  svg {
+    font-size: 22px;
+  }
+
+  &.active {
+    background: var(--accent-blue-subtle);
+    color: var(--accent-blue);
+  }
+
+  &:hover {
+    background: var(--bg-tertiary);
+  }
+
+  &.active:hover {
+    background: var(--accent-blue-subtle);
+  }
+}

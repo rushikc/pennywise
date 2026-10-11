@@ -62,6 +62,7 @@
   },
   "scripts": {
     "start": "craco start",
+    "dev": "craco start",
     "build": "node scripts/generate-build-info.js && craco build",
     "test": "craco test",
     "test:appscript": "node --test appScript/*.test.js",

@@ -8,6 +8,7 @@ import React, {Suspense, useEffect, useRef} from 'react';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import {FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
+import AppShell from './components/AppShell';
 import BottomNav from './components/BottomNav';
 import ThemeManager from './components/ThemeManager';
 import AlertComponent from './components/Alert';
@@ -19,6 +20,7 @@ import {AuthProvider, useAuth} from './pages/login/AuthContext';
 import {loadInitialAppData} from './pages/dataValidations';
 import {routes} from './routes';
 import Loading from './components/Loading';
+import {useIsDesktop} from './hooks/useIsDesktop';
 
 
 function App() {
@@ -113,15 +115,16 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => 
     return <Loading/>;
   }
 
-  return <>{children}</>;
+  return <AppShell>{children}</AppShell>;
 };
 
 
 // Bottom navigation wrapper that uses auth context
 const BottomNavAuth = () => {
   const {currentUser} = useAuth();
+  const isDesktop = useIsDesktop();
 
-  if (!currentUser) return null;
+  if (!currentUser || isDesktop) return null;
 
   return (
     <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>

@@ -39,3 +39,62 @@ $purple-light: var(--accent-purple);
   display: flex;
   justify-content: center;
 }
+
+.app-shell {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  --side-nav-width: 88px;
+  --home-dash-width: 0px;
+}
+
+.app-shell--with-dashboard {
+  --home-dash-width: 320px;
+}
+
+.app-shell-main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (min-width: 800px) {
+  .app-shell .buttons-container,
+  .app-shell .budget-container .buttons-container {
+    left: calc(var(--side-nav-width) + (100vw - var(--side-nav-width) - var(--home-dash-width)) / 2);
+    bottom: 16px;
+  }
+
+  .app-shell .home-root {
+    margin-bottom: 80px;
+    padding-bottom: 24px;
+  }
+
+  .app-shell .statistics-container {
+    margin-bottom: 64px;
+  }
+
+  .app-shell .version-display {
+    bottom: 16px;
+    left: calc(var(--side-nav-width) + (100vw - var(--side-nav-width)) / 2);
+  }
+
+  .app-shell .budget-container .add-budget-button {
+    bottom: 24px;
+    right: 24px;
+  }
+
+  .app-shell .scroll-top-button {
+    bottom: 156px;
+    right: calc(24px + var(--home-dash-width));
+  }
+
+  .app-shell .collapse-all-button {
+    bottom: 96px;
+    right: calc(24px + var(--home-dash-width));
+  }
+
+  .app-shell .config-container {
+    padding-bottom: 2rem;
+  }
+}
