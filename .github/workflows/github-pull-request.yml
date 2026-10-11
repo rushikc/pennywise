@@ -30,6 +30,20 @@ jobs:
         if: steps.lint_check.outputs.lint_exists == 'true'
         run: npm run lint
 
+      - name: Test React app
+        run: npm test -- --watchAll=false
+
+      - name: Install functions dependencies
+        run: npm ci
+        working-directory: functions
+
+      - name: Test cloud functions
+        run: npm test
+        working-directory: functions
+
+      - name: Test Apps Script
+        run: node --test appScript/*.test.js
+
       - name: Build project
         run: npm run build
 

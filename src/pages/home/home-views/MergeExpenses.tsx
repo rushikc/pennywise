@@ -20,6 +20,7 @@ import Zoom from '@mui/material/Zoom';
 import {TransitionProps} from '@mui/material/transitions';
 import {formatVendorName} from '../../../utility/utility';
 import {createTimedAlert} from '../../../store/alertActions';
+import {mergedCostAndType, signedExpenseTotal} from './mergeMath';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -54,13 +55,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   useEffect(() => {
     if (open && expenses.length > 0) {
       // Calculate the total cost when handling multiple expenses
-      const total = expenses.reduce((sum, exp) => {
-        // Determine if cost should be added or subtracted based on costType
-        const costValue = exp.cost;
-        return sum + (exp.costType === 'debit' ? -costValue : costValue);
-      }, 0);
-
-      setTotalCost(total);
+      setTotalCost(signedExpenseTotal(expenses));
 
       // Reset selected values when modal opens
       setSelectedVendor('');
@@ -82,14 +77,15 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
 
     // Create a new merged expense with properties from the selected vendor's expense
+    const {cost, costType} = mergedCostAndType(totalCost);
     const mergedExpense: Expense = {
       id: vendorExpense.id,
       vendor: selectedVendor,
-      tag: selectedTag || vendorExpense.tag, // Use selected tag or keep original
-      cost: Math.abs(totalCost),
+      tag: selectedTag || vendorExpense.tag,
+      cost,
       date: vendorExpense.date,
       modifiedDate: Date.now(),
-      costType: totalCost < 0 ? 'debit' : 'credit',
+      costType,
       mailId: vendorExpense.mailId,
       user: vendorExpense.user,
       type: vendorExpense.type,

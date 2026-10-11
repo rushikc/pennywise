@@ -20,6 +20,8 @@ const admin = require('firebase-admin'); // Import the admin SDK
 const {getFirestore} = require('firebase-admin/firestore'); // Import Firestore from admin SDK
 
 const {detect, mergedTag, defaultRules} = require('./dedupe/rules');
+const {shouldScanExpense, shouldWriteKeepTag, pickReviewSurvivor, mergeRuleset} =
+  require('./dedupe/apply');
 
 // Initialize the Admin SDK
 // When deployed to Cloud Functions, it automatically picks up credentials
@@ -182,7 +184,7 @@ exports.dedupeExpenses = onRequest(async (req, res) => {
     try {
       const rulesDoc = await db.collection('config').doc('dedupeRules').get();
       if (rulesDoc.exists && rulesDoc.data()) {
-        ruleset = {...defaultRules, ...rulesDoc.data()};
+        ruleset = mergeRuleset(defaultRules, rulesDoc.data());
       }
     } catch (rulesErr) {
       console.warn('dedupeExpenses: using default rules', rulesErr.message);
@@ -195,10 +197,7 @@ exports.dedupeExpenses = onRequest(async (req, res) => {
     const expenses = [];
     snapshot.forEach((doc) => {
       const data = doc.data() || {};
-      if (data.operation === 'delete') {
-        return;
-      }
-      if (data.duplicateOf || data.dupeStatus) {
+      if (!shouldScanExpense(data)) {
         return;
       }
       expenses.push({id: doc.id, ...data});
@@ -238,7 +237,7 @@ exports.dedupeExpenses = onRequest(async (req, res) => {
 
     for (const pair of pairs) {
       const inheritedTag = mergedTag(pair.keep, pair.drop);
-      if (inheritedTag && !pair.keep.tag) {
+      if (shouldWriteKeepTag(pair.keep, inheritedTag)) {
         writes.push({
           ref: db.collection('expense').doc(pair.keep.id),
           data: {tag: inheritedTag, modifiedDate: now},
@@ -293,19 +292,6 @@ exports.dedupeExpenses = onRequest(async (req, res) => {
     res.status(500).send('Error - ' + err.message);
   }
 });
-
-
-/**
- * @param {object} a
- * @param {object} b
- * @returns {{keep: object, drop: object}}
- */
-function pickReviewSurvivor(a, b) {
-  if (a.date <= b.date) {
-    return {keep: a, drop: b};
-  }
-  return {keep: b, drop: a};
-}
 
 
 const isValidRequest = async (req, userEmail) => {

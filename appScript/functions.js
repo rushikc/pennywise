@@ -193,7 +193,9 @@ function getMailSenderReceiver(res) {
  */
 function extractUsername(emailAddress) {
   if (!emailAddress || typeof emailAddress !== 'string') {
-    Logger.log('Error: Invalid input provided to extractUsername.');
+    if (typeof Logger !== 'undefined') {
+      Logger.log('Error: Invalid input provided to extractUsername.');
+    }
     return '';
   }
   const atIndex = emailAddress.indexOf('@');
@@ -285,4 +287,16 @@ function findEmailParseBankMatch(text, banks) {
     }
   }
   return null;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    extractEmailAddress: extractEmailAddress,
+    getMailSubject: getMailSubject,
+    getMailSenderReceiver: getMailSenderReceiver,
+    extractUsername: extractUsername,
+    isValidExpenseGeminiShape: isValidExpenseGeminiShape,
+    normalizeGeminiExpense: normalizeGeminiExpense,
+    findEmailParseBankMatch: findEmailParseBankMatch,
+  };
 }

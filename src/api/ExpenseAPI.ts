@@ -11,6 +11,7 @@ import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/u
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
+import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
@@ -285,12 +286,7 @@ export class ExpenseAPI {
   /**
    * Expenses merged automatically or confirmed by the user should not appear in lists.
    */
-  static isHiddenDuplicate = (expense: Expense): boolean => {
-    if (!expense.duplicateOf) {
-      return false;
-    }
-    return expense.dupeStatus === 'auto' || expense.dupeStatus === 'confirmed';
-  };
+  static isHiddenDuplicate = isHiddenDuplicate;
 
   /**
    * Pending duplicate pairs flagged by the nightly dedupe job.
@@ -329,21 +325,7 @@ export class ExpenseAPI {
     drop: Expense,
     action: 'confirmed' | 'rejected',
   ): Promise<Expense> => {
-    const updated = JSONCopy(drop) as Expense;
-    updated.modifiedDate = Date.now();
-    updated.operation = updated.operation || 'update';
-
-    if (action === 'confirmed') {
-      updated.duplicateOf = keep.id;
-      updated.dupeStatus = 'confirmed';
-      delete updated.dupeCandidateOf;
-    } else {
-      updated.dupeStatus = 'rejected';
-      delete updated.duplicateOf;
-      delete updated.dupeCandidateOf;
-      delete updated.dupeRule;
-    }
-
+    const updated = applyDuplicateResolution(drop, keep, action);
     return ExpenseAPI.addExpense(updated);
   };
 

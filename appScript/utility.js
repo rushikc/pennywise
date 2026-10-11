@@ -133,3 +133,9 @@ function extractPlainTextFromHtml(html) {
 
   return text;
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    extractPlainTextFromHtml: extractPlainTextFromHtml,
+  };
+}

@@ -13,12 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 import dayjs from 'dayjs';
 import {AnimatePresence, motion} from 'framer-motion';
 import {selectExpense} from '../../store/expenseActions';
-import {Budget, BudgetProgress, Expense, MonthYear} from '../../Types';
+import {Budget, BudgetProgress, MonthYear} from '../../Types';
 import Loading from '../../components/Loading';
 import EditBudget from './EditBudget';
 import './Budget.scss';
-import {isEmpty} from '../../utility/utility';
 import {useCloseOnOutsideClick} from '../../hooks/useCloseOnOutsideClick';
+import {calculateBudgetProgress, filterExpensesByMonth} from './budgetMath';
 
 
 const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
@@ -64,51 +64,6 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
     }
 
     return options;
-  };
-
-  // Filter expenses by selected month
-  const filterExpensesByMonth = (expenses: Expense[], monthYear: MonthYear): Expense[] => {
-    return expenses.filter(expense => {
-      const expenseDate = dayjs(new Date(expense.date));
-      return expenseDate.year() === monthYear.year && expenseDate.month() === monthYear.month;
-    });
-  };
-
-  // Calculate budget progress
-  const calculateBudgetProgress = (expenses: Expense[], budgets: Budget[]): BudgetProgress[] => {
-    return budgets.map(budget => {
-      let spent: number;
-
-      if (budget.tagList.includes('All')) {
-        // For 'All' budget, sum all expenses
-        spent = expenses
-          .filter(expense => expense.costType === 'debit')
-          .reduce((sum, expense) => sum + expense.cost, 0);
-      } else {
-        // For specific tag budgets, sum expenses with matching tags
-        console.log('Budget lis ', expenses
-          .filter(expense => !isEmpty(expense.tag))
-          .filter(expense => expense.costType === 'debit'));
-
-        spent = expenses
-          .filter(expense => !isEmpty(expense.tag))
-          .filter(expense => expense.costType === 'debit')
-          .filter(expense =>
-            budget.tagList.some(tag => expense.tag?.toLowerCase() === tag.toLowerCase())
-          )
-          .reduce((sum, expense) => sum + expense.cost, 0);
-      }
-
-      const remaining = Math.max(0, budget.amount - spent);
-      const percentage = (spent / budget.amount) * 100;
-
-      return {
-        budget,
-        spent,
-        remaining,
-        percentage
-      };
-    });
   };
 
   // Use custom hook to handle outside clicks for filter panel

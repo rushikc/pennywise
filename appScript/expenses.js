@@ -17,7 +17,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 async function myExpenseFunction() {
   const now = new Date();
   const istHour = parseInt(Utilities.formatDate(now, 'Asia/Kolkata', 'H'), 10);
-  if (istHour < 9 || istHour > 22) {
+  if (isOutsideExpenseWindow(istHour)) {
     console.log('myExpenseFunction: skipped — outside IST window 09:00–22:00. IST');
     return;
   }
@@ -112,7 +112,45 @@ async function myExpenseFunction() {
  * @param {string} apiKey - Gemini API key.
  * @returns {{cost: number, costType: string, vendor: string}|null}
  */
-function validateExpense(geminiBody, emailText, emailSubject, apiKey) {
+function isOutsideExpenseWindow(istHour) {
+  return istHour < 9 || istHour > 22;
+}
+
+function canonicalizeVendor(vendor) {
+  let value = String(vendor).trim();
+  const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
+  const upiMatch = value.match(upiPattern);
+
+  if (upiMatch && upiMatch[1].trim().length !== 0 && upiMatch[2].trim().length !== 0) {
+    value = `${upiMatch[2].trim()} ${upiMatch[1].trim()}`;
+  }
+
+  return value.toUpperCase().substring(0, 100);
+}
+
+function resolveVendorTag(canonicalVendor, vendorTagList) {
+  const tagList = Array.isArray(vendorTagList) ? vendorTagList : [];
+  const tagObj = tagList.find(function (entry) {
+    if (!entry || entry.vendor == null) {
+      return false;
+    }
+    return canonicalVendor === String(entry.vendor).trim().toUpperCase().substring(0, 100);
+  });
+  return tagObj ? tagObj.tag : undefined;
+}
+
+function mailDateFromMessage(gmailMessage, nowMs) {
+  const now = nowMs == null ? Date.now() : nowMs;
+  if (gmailMessage && gmailMessage.internalDate !== undefined && gmailMessage.internalDate !== null) {
+    const mailDate = Number(gmailMessage.internalDate);
+    if (!isNaN(mailDate)) {
+      return mailDate;
+    }
+  }
+  return now;
+}
+
+function validateExpense(geminiBody, emailText, emailSubject, apiKey, geminiCaller) {
   if (geminiBody === null) {
     return null;
   }
@@ -122,7 +160,8 @@ function validateExpense(geminiBody, emailText, emailSubject, apiKey) {
   }
 
   console.warn('-> validateExpense: invalid shape; retrying callGemini once');
-  const second = callGemini(emailText, emailSubject, apiKey);
+  const retry = geminiCaller || callGemini;
+  const second = retry(emailText, emailSubject, apiKey);
 
   if (second === null) {
     return null;
@@ -154,39 +193,16 @@ function addExpense(gmailMessage, mailId, validatedGemini, accessToken, vendorTa
     return;
   }
 
-  let mailDate = Date.now();
-  if (gmailMessage && gmailMessage.internalDate !== undefined && gmailMessage.internalDate !== null) {
-    mailDate = Number(gmailMessage.internalDate);
-    if (isNaN(mailDate)) {
-      mailDate = Date.now();
-    }
-  }
-
+  const mailDate = mailDateFromMessage(gmailMessage);
   const expense = getExpense(mailDate, mailId);
   expense.costType = validatedGemini.costType;
   expense.cost = Number(cost);
-
-  const upiPattern = /^([^\s@]+@[^\s@]+)\s+(.+)$/;
-  const upiMatch = vendor.match(upiPattern);
-
-  if (upiMatch && upiMatch[1].trim().length !== 0 && upiMatch[2].trim().length !== 0) {
-    const upiId = upiMatch[1].trim();
-    const name = upiMatch[2].trim();
-    vendor = `${name} ${upiId}`;
-  }
-
-  expense.vendor = vendor.toUpperCase().substring(0, 100);
+  expense.vendor = canonicalizeVendor(vendor);
   expense.user = extractUsername(getMailSenderReceiver(gmailMessage).receiverEmail);
 
-  const tagList = Array.isArray(vendorTagList) ? vendorTagList : [];
-  const tagObj = tagList.find(function (entry) {
-    if (!entry || entry.vendor == null) {
-      return false;
-    }
-    return expense.vendor === String(entry.vendor).trim().toUpperCase().substring(0, 100);
-  });
-  if (tagObj) {
-    expense.tag = tagObj.tag;
+  const resolvedTag = resolveVendorTag(expense.vendor, vendorTagList);
+  if (resolvedTag) {
+    expense.tag = resolvedTag;
   }
 
   expense.type = validatedGemini.type;
@@ -287,3 +303,13 @@ const getExpense = (date, mailId) => {
 //   return ContentService.createTextOutput('Started function')
 //     .setMimeType(ContentService.MimeType.TEXT);
 // }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    isOutsideExpenseWindow: isOutsideExpenseWindow,
+    canonicalizeVendor: canonicalizeVendor,
+    resolveVendorTag: resolveVendorTag,
+    mailDateFromMessage: mailDateFromMessage,
+    validateExpense: validateExpense,
+  };
+}
