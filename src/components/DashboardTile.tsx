@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React from 'react';
-import {Avatar, Box, Typography} from '@mui/material';
+import {Avatar, Badge, Box, Typography} from '@mui/material';
 
 
 import {motion} from 'framer-motion';
@@ -17,6 +17,7 @@ export interface DashboardTileProps {
   color: string;
   onClick: () => void;
   isLast?: boolean;
+  badgeCount?: number;
 }
 
 /**
@@ -28,7 +29,8 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
   icon,
   color,
   onClick,
-  isLast = false
+  isLast = false,
+  badgeCount = 0,
 }) => {
   const itemVariants = {
     hidden: {y: 10, opacity: 0},
@@ -50,12 +52,19 @@ const DashboardTile: React.FC<DashboardTileProps> = ({
         className="dashboard-option-row"
         onClick={onClick}
       >
-        <Avatar
-          className="dashboard-option-icon"
-          style={{color}}
+        <Badge
+          badgeContent={badgeCount}
+          color="error"
+          invisible={!badgeCount}
+          overlap="circular"
         >
-          {icon}
-        </Avatar>
+          <Avatar
+            className="dashboard-option-icon"
+            style={{color}}
+          >
+            {icon}
+          </Avatar>
+        </Badge>
         <Box className="dashboard-option-text">
           <Typography variant="body1" className="dashboard-option-title">
             {title}

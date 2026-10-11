@@ -3,12 +3,13 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Button, Container, Fade, Modal, Paper, Typography} from '@mui/material';
 import {
   AccountBalance as BanksIcon,
   AutoAwesome as AutoTagIcon,
   Brightness4 as ThemeIcon,
+  ContentCopy as DuplicateIcon,
   LocalOffer as TagsIcon,
   Logout as LogoutIcon,
   Map as MapIcon,
@@ -59,9 +60,16 @@ const Settings: React.FC = () => {
   const navigate = useNavigate();
   const {appConfig} = useSelector(selectExpense);
   const [isAppInfoModalOpen, setIsAppInfoModalOpen] = useState(false);
+  const [pendingDuplicateCount, setPendingDuplicateCount] = useState(0);
 
   // Use the custom hook for authentication
   const {userProfile, signOut, isLoading} = useAuth();
+
+  useEffect(() => {
+    void ExpenseAPI.getDuplicateCandidates().then((pairs) => {
+      setPendingDuplicateCount(pairs.length);
+    });
+  }, []);
 
   // Get build time in IST timezone
   const getBuildTimeIST = () => {
@@ -158,6 +166,17 @@ const Settings: React.FC = () => {
       icon: <AutoTagIcon/>,
       route: '/auto-tag-expenses',
       color: '#4db6ac'
+    },
+    {
+      id: 'duplicate-review',
+      title: 'Duplicate Review',
+      subtitle: pendingDuplicateCount > 0
+        ? `${pendingDuplicateCount} pair(s) need review`
+        : 'Review flagged duplicate expenses',
+      icon: <DuplicateIcon/>,
+      route: '/duplicate-review',
+      color: '#ef5350',
+      badgeCount: pendingDuplicateCount,
     },
     {
       id: 'banks',
@@ -275,6 +294,7 @@ const Settings: React.FC = () => {
             color={tile.color}
             onClick={() => handleTileClick(tile.route)}
             isLast={index === dashboardTiles.length - 1}
+            badgeCount={'badgeCount' in tile ? tile.badgeCount : 0}
           />
         ))}
       </motion.div>

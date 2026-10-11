@@ -19,6 +19,8 @@ require('dotenv').config();
 const admin = require('firebase-admin'); // Import the admin SDK
 const {getFirestore} = require('firebase-admin/firestore'); // Import Firestore from admin SDK
 
+const {detect, mergedTag, defaultRules} = require('./dedupe/rules');
+
 // Initialize the Admin SDK
 // When deployed to Cloud Functions, it automatically picks up credentials
 // from the service account associated with the function.
@@ -161,6 +163,149 @@ exports.getAllDoc = onRequest(async (req, res) => {
   }
 
 });
+
+
+exports.dedupeExpenses = onRequest(async (req, res) => {
+  const userEmail = process.env.USER_EMAIL;
+  const validationStatus = await isValidRequest(req, userEmail);
+  if (validationStatus !== 200) {
+    res.status(validationStatus).send(invalidResponse[validationStatus]);
+    return;
+  }
+
+  try {
+    const days = typeof req.body.days === 'number' ? req.body.days : 7;
+    const dryRun = req.body.dryRun !== false;
+    const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+
+    let ruleset = defaultRules;
+    try {
+      const rulesDoc = await db.collection('config').doc('dedupeRules').get();
+      if (rulesDoc.exists && rulesDoc.data()) {
+        ruleset = {...defaultRules, ...rulesDoc.data()};
+      }
+    } catch (rulesErr) {
+      console.warn('dedupeExpenses: using default rules', rulesErr.message);
+    }
+
+    const snapshot = await db.collection('expense')
+        .where('date', '>=', cutoff)
+        .get();
+
+    const expenses = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data() || {};
+      if (data.operation === 'delete') {
+        return;
+      }
+      if (data.duplicateOf || data.dupeStatus) {
+        return;
+      }
+      expenses.push({id: doc.id, ...data});
+    });
+
+    const {pairs, needsReview} = detect(expenses, ruleset);
+
+    const report = {
+      dryRun,
+      days,
+      scanned: expenses.length,
+      pairCount: pairs.length,
+      reviewCount: needsReview.length,
+      inflationRemoved: pairs.reduce((sum, p) => sum + Number(p.drop.cost || 0), 0),
+      pairs: pairs.map((p) => ({
+        rule: p.rule,
+        confidence: p.confidence,
+        deltaMinutes: p.deltaMinutes,
+        keep: {id: p.keep.id, vendor: p.keep.vendor, cost: p.keep.cost, date: p.keep.date},
+        drop: {id: p.drop.id, vendor: p.drop.vendor, cost: p.drop.cost, date: p.drop.date},
+      })),
+      needsReview: needsReview.map((r) => ({
+        reason: r.reason,
+        deltaMinutes: r.deltaMinutes,
+        a: {id: r.a.id, vendor: r.a.vendor, cost: r.a.cost},
+        b: {id: r.b.id, vendor: r.b.vendor, cost: r.b.cost},
+      })),
+    };
+
+    if (dryRun) {
+      res.send(report);
+      return;
+    }
+
+    const now = Date.now();
+    const writes = [];
+
+    for (const pair of pairs) {
+      const inheritedTag = mergedTag(pair.keep, pair.drop);
+      if (inheritedTag && !pair.keep.tag) {
+        writes.push({
+          ref: db.collection('expense').doc(pair.keep.id),
+          data: {tag: inheritedTag, modifiedDate: now},
+        });
+      }
+      writes.push({
+        ref: db.collection('expense').doc(pair.drop.id),
+        data: {
+          duplicateOf: pair.keep.id,
+          dupeStatus: 'auto',
+          dupeRule: pair.rule,
+          modifiedDate: now,
+        },
+      });
+    }
+
+    for (const review of needsReview) {
+      const {keep, drop} = pickReviewSurvivor(review.a, review.b);
+      writes.push({
+        ref: db.collection('expense').doc(drop.id),
+        data: {
+          dupeCandidateOf: keep.id,
+          dupeStatus: 'pending',
+          dupeRule: `review:${review.reason}`,
+          modifiedDate: now,
+        },
+      });
+    }
+
+    let applied = 0;
+    const batchSize = 450;
+    for (let i = 0; i < writes.length; i += batchSize) {
+      const batch = db.batch();
+      const chunk = writes.slice(i, i + batchSize);
+      chunk.forEach((w) => {
+        batch.set(w.ref, w.data, {merge: true});
+      });
+      await batch.commit();
+      applied += chunk.length;
+    }
+
+    const summary = {
+      ...report,
+      appliedWrites: applied,
+      ranAt: now,
+    };
+
+    await db.collection('config').doc('dedupeLastRun').set(summary, {merge: true});
+    res.send(summary);
+  } catch (err) {
+    console.error('Error in dedupeExpenses:', err);
+    res.status(500).send('Error - ' + err.message);
+  }
+});
+
+
+/**
+ * @param {object} a
+ * @param {object} b
+ * @returns {{keep: object, drop: object}}
+ */
+function pickReviewSurvivor(a, b) {
+  if (a.date <= b.date) {
+    return {keep: a, drop: b};
+  }
+  return {keep: b, drop: a};
+}
 
 
 const isValidRequest = async (req, userEmail) => {

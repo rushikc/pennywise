@@ -10,7 +10,7 @@ import {firebaseConfig} from '../firebase/firebase-public';
 import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig, BankEmailParsingEntry, Budget, Expense, VendorTag} from '../Types';
+import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
@@ -273,12 +273,78 @@ export class ExpenseAPI {
       await FinanceIndexDB.addConfig([{key: EXPENSE_LAST_UPDATE, value: Date.now() - 3600000}]);
       indexDocList = await FinanceIndexDB.getAllData('expense');
       indexDocList = indexDocList.filter(item => item.operation !== 'delete');
+      indexDocList = indexDocList.filter(item => !ExpenseAPI.isHiddenDuplicate(item));
       return indexDocList;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       // console.error('Error fetching expense list: ', e);
       return [];
     }
+  };
+
+  /**
+   * Expenses merged automatically or confirmed by the user should not appear in lists.
+   */
+  static isHiddenDuplicate = (expense: Expense): boolean => {
+    if (!expense.duplicateOf) {
+      return false;
+    }
+    return expense.dupeStatus === 'auto' || expense.dupeStatus === 'confirmed';
+  };
+
+  /**
+   * Pending duplicate pairs flagged by the nightly dedupe job.
+   */
+  static getDuplicateCandidates = async (): Promise<DuplicateCandidatePair[]> => {
+    try {
+      const all = await FinanceIndexDB.getAllData('expense');
+      const pending = all.filter(
+        (item) => item.dupeStatus === 'pending' && Boolean(item.dupeCandidateOf),
+      );
+
+      const pairs: DuplicateCandidatePair[] = [];
+      for (const drop of pending) {
+        const keep = all.find((item) => item.id === drop.dupeCandidateOf);
+        if (!keep) {
+          continue;
+        }
+        pairs.push({
+          keep,
+          drop,
+          rule: drop.dupeRule || 'review',
+        });
+      }
+      return pairs;
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      return [];
+    }
+  };
+
+  /**
+   * Confirm or reject a pending duplicate pair.
+   */
+  static resolveDuplicate = async (
+    keep: Expense,
+    drop: Expense,
+    action: 'confirmed' | 'rejected',
+  ): Promise<Expense> => {
+    const updated = JSONCopy(drop) as Expense;
+    updated.modifiedDate = Date.now();
+    updated.operation = updated.operation || 'update';
+
+    if (action === 'confirmed') {
+      updated.duplicateOf = keep.id;
+      updated.dupeStatus = 'confirmed';
+      delete updated.dupeCandidateOf;
+    } else {
+      updated.dupeStatus = 'rejected';
+      delete updated.duplicateOf;
+      delete updated.dupeCandidateOf;
+      delete updated.dupeRule;
+    }
+
+    return ExpenseAPI.addExpense(updated);
   };
 
   /**

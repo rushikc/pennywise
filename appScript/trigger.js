@@ -28,3 +28,23 @@ function createTrigger() {
   Logger.log('Hourly trigger for \'myExpenseFunction\' created.');
 
 }
+
+/**
+ * Creates a daily time-driven trigger to run duplicate detection at 03:00 IST.
+ * Run once manually or via clasp run createDedupeTrigger.
+ */
+function createDedupeTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (trigger) {
+    if (trigger.getHandlerFunction() === 'myDedupeFunction') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  ScriptApp.newTrigger('myDedupeFunction')
+    .timeBased()
+    .everyDays(1)
+    .atHour(3)
+    .create();
+
+  Logger.log('Daily trigger for \'myDedupeFunction\' created at 03:00.');
+}

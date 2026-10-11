@@ -19,6 +19,16 @@ export interface Expense {
   type: string, // payment medium - upi, credit, e-mandate, cash, etc.
   vendor: string, // vendor name for the expense
   operation: string, // add, update, delete
+  duplicateOf?: string, // id of surviving expense when marked duplicate
+  dupeCandidateOf?: string, // id of partner expense pending review
+  dupeStatus?: 'auto' | 'pending' | 'confirmed' | 'rejected',
+  dupeRule?: string,
+}
+
+export interface DuplicateCandidatePair {
+  keep: Expense,
+  drop: Expense,
+  rule: string,
 }
 
 export interface VendorTag {

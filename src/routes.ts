@@ -16,6 +16,7 @@ const ManageVendorTags = lazy(() => import('./pages/setting/setting-views/Manage
 const ReloadExpense = lazy(() => import('./pages/setting/setting-views/./ReloadData'));
 const AutoTagExpenses = lazy(() => import('./pages/setting/setting-views/AutoTagExpenses'));
 const ManageBanks = lazy(() => import('./pages/setting/setting-views/ManageBanks'));
+const DuplicateReview = lazy(() => import('./pages/setting/DuplicateReview'));
 
 // interface
 interface Route {
@@ -106,6 +107,14 @@ export const routes: Array<Route> = [
     path: '/setting-banks',
     enabled: true,
     component: ManageBanks,
+    isProtected: true,
+  },
+  {
+    key: 'duplicate-review-route',
+    title: 'Duplicate Review',
+    path: '/duplicate-review',
+    enabled: true,
+    component: DuplicateReview,
     isProtected: true,
   }
 ];
