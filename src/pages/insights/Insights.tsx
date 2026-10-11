@@ -27,6 +27,7 @@ import '../home/Home.scss';
 import './Insights.scss';
 import {Expense} from '../../Types';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
+import {desktop, phone} from '../../styles/designTokens';
 import {
   dailyFigure,
   dailyTrend,
@@ -38,6 +39,8 @@ import {
   sumCost,
   topVendors,
 } from './insightsMath';
+import type {VendorRow} from './insightsMath';
+import {vendorTableBodyHeight, vendorTableColumns} from './vendorTable';
 
 const Insights: React.FC = () => {
   const isDesktop = useIsDesktop();
@@ -84,6 +87,8 @@ const Insights: React.FC = () => {
     ? slices.filter((slice) => selectedItems.includes(slice.name))
     : slices;
   const vendors = topVendors(filtered);
+  const vendorBodyHeight = vendorTableBodyHeight(isDesktop);
+  const vendorColumns = vendorTableColumns(isDesktop);
   const figureWord = selectedCalculation === 'average' ? 'average' : 'median';
 
   const getCostRange = useCallback((cost: number): string => {
@@ -186,7 +191,7 @@ const Insights: React.FC = () => {
         </div>
       )}
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={isDesktop ? desktop.space.lg : [phone.space.lg, phone.space.lg]}>
         <Col span={isDesktop ? 6 : 24}>
           <Card className="insights-stat-card">
             <Statistic title={isDesktop ? 'Spending' : 'Total spending'} value={formatInr(spending)}/>
@@ -207,13 +212,13 @@ const Insights: React.FC = () => {
             <Statistic
               title={change.label}
               value={percentValue}
-              valueStyle={{color: change.percent !== null && change.percent < 0 ? '#cf1322' : undefined}}
+              valueStyle={{color: change.percent !== null && change.percent < 0 ? 'var(--stat-negative)' : undefined}}
             />
           </Card>
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]} className="insights-section">
+      <Row gutter={isDesktop ? desktop.space.lg : [phone.space.lg, phone.space.lg]} className="insights-section">
         <Col span={isDesktop ? 14 : 24}>
           <LineGraph data={trend}/>
         </Col>
@@ -225,22 +230,18 @@ const Insights: React.FC = () => {
         </Col>
       </Row>
 
-      <Card title="Top vendors" className="insights-section">
-        <Table
+      <Card
+        title="Top vendors"
+        className="insights-section insights-vendors"
+        style={{'--vendor-body-height': `${vendorBodyHeight}px`} as React.CSSProperties}
+      >
+        <Table<VendorRow>
           rowKey="vendor"
           dataSource={vendors}
-          pagination={vendors.length > 8 ? {pageSize: 8} : false}
-          columns={[
-            {title: 'Vendor', dataIndex: 'vendor', ellipsis: true},
-            {title: 'Count', dataIndex: 'count', width: 100},
-            {
-              title: 'Spent',
-              dataIndex: 'spent',
-              width: 140,
-              align: 'right',
-              render: (spent: number) => formatInr(spent),
-            },
-          ]}
+          pagination={false}
+          tableLayout={isDesktop ? 'auto' : 'fixed'}
+          scroll={{y: vendorBodyHeight}}
+          columns={vendorColumns}
         />
       </Card>
 

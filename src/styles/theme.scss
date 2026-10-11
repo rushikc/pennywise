@@ -3,16 +3,21 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-// Theme variables for light/dark mode
+// Design tokens. New UI uses these variables.
+// Families: color, space, layout, type, radius, shadow, motion.
+// Size tokens are phone values here and larger values from 800px up.
+// Use a literal only for a structural size (nav width, 1px border, icon box).
 
-// Define CSS variables to be used throughout the application
 :root {
   // Text colors
   --text-primary: #212529;
   --text-secondary: #495057;
   --text-muted: #6c757d;
+  --text-tertiary: #6c757d;
   --text-light: #adb5bd;
   --text-white: #ffffff;
+  --on-accent: #ffffff;
+  --on-accent-muted: rgba(255, 255, 255, 0.85);
 
   // Background colors
   --bg-primary: #ffffff;
@@ -61,8 +66,113 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   // Overlay backgrounds
   --overlay-bg: rgba(0, 0, 0, 0.5);
 
-  // Box-shadow
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  // Named purpose colors
+  --gradient-total: linear-gradient(135deg, #3a7bd5, #00d2ff);
+  --gradient-daily: linear-gradient(135deg, #11998e, #38ef7d);
+  --gradient-monthly: linear-gradient(135deg, #834d9b, #d04ed6);
+  --shadow-total: 0 4px 20px rgba(58, 123, 213, 0.3);
+  --shadow-daily: 0 4px 20px rgba(17, 153, 142, 0.3);
+  --shadow-monthly: 0 4px 20px rgba(131, 77, 155, 0.3);
+  --stat-negative: #cf1322;
+  --brand-google: #4285f4;
+  --brand-google-hover: #357ae8;
+  --chart-1: #1677ff;
+  --chart-2: #13c2c2;
+  --chart-3: #722ed1;
+  --chart-4: #fa8c16;
+  --chart-5: #52c41a;
+  --chart-6: #eb2f96;
+  --chart-7: #8c8c8c;
+  --chart-8: #fadb14;
+  --chart-grid: #f0f0f0;
+  --chart-stroke: #ffffff;
+  --tile-icon-tags: #ce93d8;
+  --tile-icon-theme: #9c27b0;
+  --tile-icon-reload: #ffa726;
+  --tile-icon-vendor: #64b5f6;
+  --tile-icon-autotag: #4db6ac;
+  --tile-icon-duplicate: #ef5350;
+  --tile-icon-banks: #26a69a;
+  --tile-icon-signout: #f44336;
+  --error-modal-bg: #121212;
+  --error-modal-text: #e0e0e0;
+  --error-accent: #ff5252;
+  --error-accent-hover: #ff1744;
+  --stats-header-bg: #0e3158;
+  --stats-header-muted: rgba(255, 255, 255, 0.72);
+  --stats-header-line: rgba(255, 255, 255, 0.16);
+  --stats-positive: #3dd68c;
+
+  // Spacing. Phone scale; md and up grow on desktop.
+  --space-0: 0;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  // Layout
+  --page-padding-x: 16px;
+  --page-padding-y: 16px;
+  --card-padding: 16px;
+  --section-gap: 16px;
+  --control-height: 36px;
+
+  // Type
+  --font-size-display: 24px;
+  --font-size-h1: 20px;
+  --font-size-h2: 17px;
+  --font-size-title: 15px;
+  --font-size-body: 14px;
+  --font-size-subtext: 12px;
+  --font-size-caption: 11px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  // Shape
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  // Elevation
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --shadow-up: 0 -2px 16px rgba(0, 0, 0, 0.3);
+  --box-shadow: var(--shadow-md);
+
+  // Motion
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+}
+
+@media (min-width: 800px) {
+  :root {
+    --space-md: 16px;
+    --space-lg: 20px;
+    --space-xl: 28px;
+    --space-2xl: 40px;
+
+    --page-padding-x: 24px;
+    --page-padding-y: 24px;
+    --card-padding: 20px;
+    --section-gap: 24px;
+    --control-height: 40px;
+
+    --font-size-display: 28px;
+    --font-size-h1: 28px;
+    --font-size-h2: 20px;
+    --font-size-title: 16px;
+    --font-size-body: 15px;
+    --font-size-subtext: 13px;
+    --font-size-caption: 12px;
+  }
 }
 
 // Dark mode variables
@@ -71,8 +181,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   --text-primary: #e0e0e0;
   --text-secondary: #b0bec5;
   --text-muted: #9e9e9e;
+  --text-tertiary: #9e9e9e;
   --text-light: #78909c;
   --text-white: #ffffff;
+  --on-accent: #ffffff;
+  --on-accent-muted: rgba(255, 255, 255, 0.85);
 
   // Background colors
   --bg-primary: #181a1b;
@@ -120,6 +233,52 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   // Overlay backgrounds
   --overlay-bg: rgba(0, 0, 0, 0.7);
 
-  // Box-shadow
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --stat-negative: #ff7875;
+  --chart-grid: #3a4045;
+  --stats-header-bg: #152033;
+  --stats-header-muted: rgba(255, 255, 255, 0.72);
+  --stats-header-line: rgba(255, 255, 255, 0.16);
+  --stats-positive: #3dd68c;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-up: 0 -2px 16px rgba(0, 0, 0, 0.45);
+  --box-shadow: var(--shadow-md);
+}
+
+body {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+h3 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+small {
+  font-size: var(--font-size-subtext);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }

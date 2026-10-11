@@ -5,16 +5,16 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .alert-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: var(--space-xl);
+  right: var(--space-xl);
   z-index: 1000;
   max-width: 400px;
   pointer-events: none;
 
   @media (max-width: 600px) {
-    top: 10px;
-    right: 20px;
-    left: 20px;
+    top: var(--space-md);
+    right: var(--space-xl);
+    left: var(--space-xl);
     max-width: none;
   }
 }
@@ -25,15 +25,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .alert-item {
   pointer-events: auto;
-  transition: all 0.3s ease-in-out;
-  animation: slideIn 0.3s ease-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  margin-bottom: 8px;
+  transition: all var(--transition-base);
+  animation: slideIn var(--transition-base);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
 
   &:hover {
     transform: translateY(0) !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
   }
 
   // Alert type specific styles
@@ -80,7 +80,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   // Close button styles
   .MuiIconButton-root {
     opacity: 0.7;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition-fast);
 
     &:hover {
       opacity: 1;

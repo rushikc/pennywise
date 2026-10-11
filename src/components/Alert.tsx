@@ -54,7 +54,7 @@ const AlertComponent: React.FC = () => {
 
   return (
     <Box className="alert-container">
-      <Stack spacing={1} className="alert-stack">
+      <Stack spacing="var(--space-sm)" className="alert-stack">
         {alerts.map((alert, index) => (
           <MuiAlert
             key={alert.id}
@@ -63,7 +63,7 @@ const AlertComponent: React.FC = () => {
             className={`alert-item alert-${alert.type}`}
             style={{
               zIndex: 1000 + index,
-              transform: `translateY(${index * 8}px)`,
+              transform: `translateY(calc(${index} * var(--space-sm)))`,
             }}
             action={
               <IconButton

@@ -34,7 +34,7 @@ const ExpenseCard: React.FC<{label: string; expense: DuplicateCandidatePair['kee
   label,
   expense,
 }) => (
-  <Paper elevation={0} className="reload-section-paper" sx={{flex: 1, p: 2}}>
+  <Paper elevation={0} className="reload-section-paper" sx={{flex: 1, p: 'var(--card-padding)'}}>
     <Typography variant="overline" color="text.secondary">{label}</Typography>
     <Typography variant="h6" sx={{wordBreak: 'break-word'}}>
       {formatVendorName(expense.vendor)[0] || expense.vendor}
@@ -42,11 +42,11 @@ const ExpenseCard: React.FC<{label: string; expense: DuplicateCandidatePair['kee
     <Typography variant="body2" color="text.secondary">
       ₹{expense.cost.toLocaleString('en-IN')} · {expense.type}
     </Typography>
-    <Typography variant="caption" display="block" sx={{mt: 1}}>
+    <Typography variant="caption" display="block" sx={{mt: 'var(--space-sm)'}}>
       {formatExpenseDate(expense.date)}
     </Typography>
     {expense.tag && (
-      <Chip label={expense.tag} size="small" sx={{mt: 1}}/>
+      <Chip label={expense.tag} size="small" sx={{mt: 'var(--space-sm)'}}/>
     )}
   </Paper>
 );
@@ -119,12 +119,12 @@ const DuplicateReview: React.FC = () => {
         </Typography>
       </Box>
 
-      <Typography variant="body2" color="text.secondary" sx={{mb: 2}}>
+      <Typography variant="body2" color="text.secondary" sx={{mb: 'var(--space-lg)'}}>
         These pairs need your decision. Confirm to hide the duplicate, or reject to keep both.
       </Typography>
 
       {loading && (
-        <Box display="flex" justifyContent="center" py={4}>
+        <Box display="flex" justifyContent="center" py="var(--space-2xl)">
           <CircularProgress size={32}/>
         </Box>
       )}
@@ -134,20 +134,20 @@ const DuplicateReview: React.FC = () => {
       )}
 
       {!loading && pairs.map((pair) => (
-        <Paper key={pair.drop.id} elevation={1} sx={{p: 2, mb: 2}}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{mb: 2}}>
+        <Paper key={pair.drop.id} elevation={1} sx={{p: 'var(--card-padding)', mb: 'var(--space-lg)'}}>
+          <Stack direction="row" spacing="var(--space-sm)" alignItems="center" sx={{mb: 'var(--space-lg)'}}>
             <Chip label={pair.rule} size="small" variant="outlined"/>
             <Typography variant="body2" color="text.secondary">
               ₹{pair.drop.cost.toLocaleString('en-IN')}
             </Typography>
           </Stack>
 
-          <Stack direction={{xs: 'column', sm: 'row'}} spacing={2} sx={{mb: 2}}>
+          <Stack direction={{xs: 'column', sm: 'row'}} spacing="var(--space-lg)" sx={{mb: 'var(--space-lg)'}}>
             <ExpenseCard label="Keep" expense={pair.keep}/>
             <ExpenseCard label="Possible duplicate" expense={pair.drop}/>
           </Stack>
 
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing="var(--space-sm)">
             <Button
               variant="contained"
               color="primary"

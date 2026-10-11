@@ -255,7 +255,7 @@ const Configuration: React.FC = () => {
           </Button>
         </Box>
 
-        <Divider sx={{mb: 2}}/>
+        <Divider sx={{mb: 'var(--space-lg)'}}/>
 
         {isLoading ? (
           <Box className="loading-container">

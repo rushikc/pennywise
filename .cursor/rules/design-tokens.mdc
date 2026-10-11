@@ -1,0 +1,14 @@
+---
+description: Use design tokens for spacing, type, color, radius, and shadow
+globs: src/**/*.{scss,tsx}
+alwaysApply: false
+---
+
+# Design tokens
+
+Colors, type, spacing, radius, and shadow come from `src/styles/theme.scss`. The same names resolve to phone sizes by default and larger sizes from 800px up. Light and dark only change color tokens.
+
+- Use `var(--space-*)`, `var(--font-size-*)`, `var(--font-weight-*)`, `var(--radius-*)`, `var(--shadow-*)`, and the named color tokens.
+- In React, use those CSS variables or the numeric mirror in `src/styles/designTokens.ts` (MUI theme and Ant Design). Do not hard-code a px font size, padding, margin, gap, radius, or hex color.
+- A literal is only for a structural size: nav width, a 1px border, or an icon box.
+- Do not add a phone/desktop override in a component for a token that already changes at 800px.

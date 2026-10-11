@@ -103,7 +103,7 @@ const TagExpenses: FC = (): ReactElement => {
                   className="tag-expense-copy-vendor"
                   onClick={() => copyToClipboard(vendorNames[1])}
                   size="small"
-                  sx={{padding: '4px'}}
+                  sx={{padding: 'var(--space-xs)'}}
                 >
                   <ContentCopyIcon fontSize="small"/>
                 </IconButton>
@@ -161,7 +161,7 @@ const TagExpenses: FC = (): ReactElement => {
                   size="medium"
                   sx={{
                     minWidth: '80px',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all var(--transition-fast)'
                   }}
                 />
               ))}

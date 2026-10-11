@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {AppBar, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
+import {CssBaseline, ThemeProvider} from '@mui/material';
 import React, {Suspense, useEffect, useRef} from 'react';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import {FinanceIndexDB} from './api/FinanceIndexDB';
@@ -21,6 +21,7 @@ import {loadInitialAppData} from './pages/dataValidations';
 import {routes} from './routes';
 import Loading from './components/Loading';
 import {useIsDesktop} from './hooks/useIsDesktop';
+import {createAppTheme} from './styles/appTheme';
 
 
 function App() {
@@ -31,20 +32,7 @@ function App() {
 
   const {appConfig} = useSelector(selectExpense);
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-
-  const lightTheme = createTheme({
-    palette: {
-      mode: 'light',
-    },
-  });
-
-  // Use the appropriate theme based on bankConfig.darkMode
-  const theme = appConfig.darkMode ? darkTheme : lightTheme;
+  const theme = createAppTheme(appConfig.darkMode ? 'dark' : 'light');
 
 
   const {isTagModal} = useSelector(selectExpense);
@@ -126,11 +114,7 @@ const BottomNavAuth = () => {
 
   if (!currentUser || isDesktop) return null;
 
-  return (
-    <AppBar position="fixed" sx={{top: 'auto', bottom: 0}}>
-      <BottomNav/>
-    </AppBar>
-  );
+  return <BottomNav/>;
 };
 
 

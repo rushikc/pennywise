@@ -1,0 +1,58 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.phone-stats {
+  margin: 0 0 var(--space-lg);
+  padding: calc(var(--space-xl) + var(--space-sm)) var(--page-padding-x) var(--space-lg);
+  background: var(--stats-header-bg);
+  color: var(--on-accent);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.phone-stats-caption {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stats-header-muted);
+}
+
+.phone-stats-amount {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+.phone-stats-count {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-subtext);
+  color: var(--stats-header-muted);
+}
+
+.phone-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--stats-header-line);
+}
+
+.phone-stats-metric-label {
+  font-size: var(--font-size-caption);
+  color: var(--stats-header-muted);
+}
+
+.phone-stats-metric-value {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+.phone-stats-metric-value.positive {
+  color: var(--stats-positive);
+}

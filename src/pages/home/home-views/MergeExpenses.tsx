@@ -162,8 +162,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
                   aria-label={`Select vendor ${vendor}`}
                   size="medium"
                   sx={{
-                    margin: '4px',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    margin: 'var(--space-xs)',
+                    transition: 'all var(--transition-fast)'
                   }}
                 />
               ))}
@@ -193,7 +193,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
                   size="medium"
                   sx={{
                     minWidth: '80px',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all var(--transition-fast)'
                   }}
                 />
               ))}

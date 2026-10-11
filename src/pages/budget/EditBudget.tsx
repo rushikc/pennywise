@@ -206,20 +206,20 @@ const EditBudget: FC<EditBudgetModalProps> = ({
               margin="normal"
               slotProps={{
                 input: {
-                  startAdornment: <span style={{marginRight: 8}}>₹</span>,
+                  startAdornment: <span style={{marginRight: 'var(--space-sm)'}}>₹</span>,
                 }
               }}
             />
 
-            <div style={{marginTop: 16}}>
+            <div style={{marginTop: 'var(--space-lg)'}}>
               <Chip
                 label="Select One or More Tags"
                 variant="filled"
                 color="primary"
                 size="medium"
-                style={{marginBottom: 20, fontSize: 13}}
+                style={{marginBottom: 'var(--space-xl)', fontSize: 'var(--font-size-subtext)'}}
               />
-              <div style={{display: 'flex', flexWrap: 'wrap', gap: 8}}>
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: 'var(--space-sm)'}}>
                 {tagList.map((tag) => (
                   <Chip
                     key={tag}

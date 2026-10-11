@@ -10,20 +10,4 @@ export const BUDGET_LAST_UPDATE = 'budgetLastUpdate';
 /** IndexedDB config key; mirrors Firestore `config/emailParseBanks` document. */
 export const EMAIL_PARSE_BANKS_CACHE_KEY = 'emailParseBanks';
 
-// Line colors for the chart - Extended to support 15+ different colors
-export const CHART_COLORS = [
-  '#FF6B6B',                       // Coral Red
-  '#96CEB4',                       // Mint Green
-  '#FFEAA7',                       // Light Yellow
-  '#DDA0DD',                       // Plum
-  '#98D8C8',                       // Mint
-  '#F7DC6F',                       // Gold
-  '#BB8FCE',                       // Light Purple
-  '#85C1E9',                       // Light Blue
-  '#F8C471',                       // Peach
-  '#82E0AA',                       // Light Green
-  '#F1948A',                       // Salmon
-  '#AED6F1',                       // Pale Blue
-  '#A9DFBF',                       // Pale Green
-  '#4ECDC4',                       // Teal
-];
+export {chartColors as CHART_COLORS} from '../styles/designTokens';

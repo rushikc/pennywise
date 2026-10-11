@@ -169,7 +169,7 @@ const ReloadData: React.FC = () => {
           Reload Expenses
         </Typography>
       </Box>
-      <Stack spacing={3}>
+      <Stack spacing="var(--space-xl)">
         <DateSpecificSection/>
         <ReloadAllSection/>
         <ClearCacheSection/>

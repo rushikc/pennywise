@@ -19,9 +19,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import {chartColors, chartGrid, chartLine, chartStroke, phone} from '../../styles/designTokens';
 
-const LINE_COLOR = '#1677ff';
-const DONUT_COLORS = ['#1677ff', '#13c2c2', '#722ed1', '#fa8c16', '#52c41a', '#eb2f96', '#8c8c8c', '#fadb14'];
+const gridColor = () => {
+  if (typeof document === 'undefined') {
+    return chartGrid;
+  }
+  return getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || chartGrid;
+};
 
 interface LineGraphProps {
   data: {date: string; total: number}[];
@@ -41,11 +46,11 @@ export const LineGraph: React.FC<LineGraphProps> = ({data}) => {
         <div className="insights-chart-empty">No data available for the selected filters</div>
       ) : (
         <ResponsiveContainer width="100%" height={280}>
-          <LineChart data={data} margin={{top: 8, right: 12, left: 0, bottom: 0}}>
-            <CartesianGrid stroke="#f0f0f0" vertical={false}/>
-            <XAxis dataKey="date" tick={{fontSize: 12}} tickLine={false} axisLine={false}/>
+          <LineChart data={data} margin={{top: phone.space.sm, right: phone.space.md, left: 0, bottom: 0}}>
+            <CartesianGrid stroke={gridColor()} vertical={false}/>
+            <XAxis dataKey="date" tick={{fontSize: phone.fontSize.subtext}} tickLine={false} axisLine={false}/>
             <YAxis
-              tick={{fontSize: 12}}
+              tick={{fontSize: phone.fontSize.subtext}}
               tickLine={false}
               axisLine={false}
               width={48}
@@ -55,7 +60,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({data}) => {
             <Line
               type="monotone"
               dataKey="total"
-              stroke={LINE_COLOR}
+              stroke={chartLine}
               strokeWidth={2}
               dot={false}
               activeDot={{r: 4}}
@@ -91,10 +96,10 @@ export const PieGraph: React.FC<PieGraphProps> = ({data, onSelectionToggle}) => 
               cy="50%"
               innerRadius={70}
               outerRadius={100}
-              stroke="#fff"
+              stroke={chartStroke}
             >
               {data.map((entry, index) => (
-                <Cell key={entry.name} fill={DONUT_COLORS[index % DONUT_COLORS.length]}/>
+                <Cell key={entry.name} fill={chartColors[index % chartColors.length]}/>
               ))}
             </Pie>
             <Tooltip formatter={(value, name) => [`₹${formatAxis(Number(value))}`, name]}/>

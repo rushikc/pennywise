@@ -253,7 +253,7 @@ const ManageVendorTags: React.FC = () => {
         <DialogTitle>Edit Vendor Tag</DialogTitle>
         <DialogContent>
           {selectedVendorTag && (
-            <Box sx={{pt: 1}}>
+            <Box sx={{pt: 'var(--space-sm)'}}>
               <Typography
                 variant="subtitle1"
                 className="vendor-name-display"

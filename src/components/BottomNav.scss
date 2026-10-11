@@ -1,0 +1,48 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.bottom-nav {
+  position: fixed !important;
+  left: var(--space-md) !important;
+  right: var(--space-md) !important;
+  bottom: var(--space-md) !important;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: var(--space-xs);
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  z-index: 110 !important;
+
+  .MuiBottomNavigationAction-root {
+    min-width: 0;
+    max-width: none;
+    padding: var(--space-xs) 0;
+    color: var(--text-muted);
+    border-radius: var(--radius-pill);
+
+    .MuiSvgIcon-root {
+      font-size: 20px;
+    }
+
+    .MuiBottomNavigationAction-label {
+      font-size: var(--font-size-caption);
+      font-weight: var(--font-weight-medium);
+      opacity: 1;
+      line-height: var(--line-height-tight);
+    }
+
+    &.Mui-selected {
+      color: var(--accent-blue);
+      background: var(--accent-blue-subtle);
+
+      .MuiBottomNavigationAction-label {
+        font-size: var(--font-size-caption);
+      }
+    }
+  }
+}

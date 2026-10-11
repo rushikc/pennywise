@@ -23,6 +23,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import React, {FC, ReactElement, useCallback, useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Col, Row} from 'reactstrap';
+import {brand, desktop, phone} from '../../styles/designTokens';
 import {Expense} from '../../Types';
 import Loading from '../../components/Loading';
 import {
@@ -48,8 +49,10 @@ import {
 import './Home.scss';
 import MergeExpenses from './home-views/MergeExpenses';
 import AddExpense from './home-views/AddExpense';
+import PhoneStatsHeader from './home-views/PhoneStatsHeader';
+import {daysForRange} from './homeDashboardMath';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
-import {CreditCard, Sort} from '@mui/icons-material';
+import {CreditCard} from '@mui/icons-material';
 import Container from '@mui/material/Container';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
 import {useLongPress} from '../../hooks/useLongPress';
@@ -70,7 +73,8 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [isRegrouping, setIsRegrouping] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilteredExpenses, setDateFilteredExpenses] = useState<Expense[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -78,7 +82,6 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
   const [collapsedGroups, setCollapsedGroups] = useState<{ [groupKey: string]: boolean }>({});
   const [selectedGroupBy, setSelectedGroupBy] = useState<GroupByOption>('days');
   const [selectedSortBy, setSelectedSortBy] = useState<SortByOption>(null);
-  const [showGroupByOptions, setShowGroupByOptions] = useState(false);
   const [allCollapsed, setAllCollapsed] = useState(false);
   const [selectedExpenses, setSelectedExpenses] = useState<Expense[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
@@ -86,10 +89,8 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
   const [showAddExpenseDialog, setShowAddExpenseDialog] = useState(false);
 
   // Refs for handling outside clicks
-  const filterPanelRef = useRef<HTMLDivElement>(null);
-  const filterButtonRef = useRef<HTMLDivElement>(null);
-  const groupByPanelRef = useRef<HTMLDivElement>(null);
-  const groupByButtonRef = useRef<HTMLDivElement>(null);
+  const optionsPanelRef = useRef<HTMLDivElement>(null);
+  const optionsButtonRef = useRef<HTMLDivElement>(null);
 
   const onSetExpense = (expense: Expense) => setTagExpense(expense);
 
@@ -111,16 +112,21 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       });
   };
 
-  const toggleFilters = () => {
-    if (selectionMode) return; // Don't show filters in selection mode
-    setShowFilters(!showFilters);
-    if (showGroupByOptions) setShowGroupByOptions(false);
+  const toggleOptions = () => {
+    if (selectionMode) return;
+    setShowOptions(!showOptions);
   };
 
-  const toggleGroupByOptions = () => {
-    if (selectionMode) return; // Don't show group options in selection mode
-    setShowGroupByOptions(!showGroupByOptions);
-    if (showFilters) setShowFilters(false);
+  const openSearch = () => {
+    setShowOptions(false);
+    setShowSearch(true);
+  };
+
+  const finalizeSearch = () => setShowSearch(false);
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setShowSearch(false);
   };
 
   // Toggle expense selection
@@ -132,8 +138,8 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       setSelectionMode(true);
       setSelectedExpenses([expense]);
       // Hide any open panels
-      setShowFilters(false);
-      setShowGroupByOptions(false);
+      setShowOptions(false);
+      setShowSearch(false);
     } else {
       // Already in selection mode
       const isSelected = selectedExpenses.some(e => e.id === expense.id);
@@ -346,16 +352,11 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setSearchTerm(event.target.value);
   };
 
-  // Use custom hook to handle outside clicks for filter panel
-  useCloseOnOutsideClick(showFilters, () => setShowFilters(false), filterPanelRef, filterButtonRef);
-
-  // Use custom hook to handle outside clicks for group by panel
-  useCloseOnOutsideClick(showGroupByOptions, () => setShowGroupByOptions(false), groupByPanelRef, groupByButtonRef);
+  useCloseOnOutsideClick(showOptions, () => setShowOptions(false), optionsPanelRef, optionsButtonRef);
 
   // Handle range selection
   const handleRangeChange = (range: DateRange) => {
     setSelectedRange(range);
-    setShowFilters(false);
   };
 
   // Handle group by option selection
@@ -368,16 +369,13 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       setSelectedGroupBy(option);
       setSelectedSortBy('count');
     }
-    setShowGroupByOptions(false);
   };
 
   // Handle sort by option selection
   const handleSortByChange = (option: SortByOption) => {
-    console.log('Option selected:', option);
     if (option !== selectedSortBy) {
       setIsRegrouping(true);
       setSelectedSortBy(option);
-      setShowGroupByOptions(false);
     } else {
       setSelectedSortBy(null);
     }
@@ -436,7 +434,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
   }
 
   return (
-    <Container maxWidth={isDesktop ? false : 'sm'} className="home-root">
+    <Container maxWidth={isDesktop ? false : 'sm'} disableGutters={!isDesktop} className="home-root">
       {/* Loading overlay for regrouping */}
       <Fade in={isRegrouping} timeout={100} unmountOnExit>
         <div className="regrouping-overlay">
@@ -448,7 +446,14 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
         <h1 className="home-title">Expenses</h1>
         <div className="home-toolbar-row">
           {isDesktop ? (
-            <ConfigProvider theme={{token: {colorPrimary: '#1c75bd', borderRadius: 8}}}>
+            <ConfigProvider theme={{
+              token: {
+                colorPrimary: brand.primary,
+                borderRadius: phone.radius.md,
+                fontSize: desktop.fontSize.body,
+                controlHeight: desktop.controlHeight,
+              },
+            }}>
               <div className="desktop-filters">
                 {!selectionMode ? (
                   <>
@@ -477,18 +482,20 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
                         ...sortByOptions.map((option) => ({value: option.id ?? 'default', label: option.label})),
                       ]}
                     />
-                    <Button onClick={toggleAllGroupsCollapse}>
-                      {allCollapsed ? 'Expand' : 'Collapse'}
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        setSelectionMode(false);
-                        setShowAddExpenseDialog(true);
-                      }}
-                    >
-                      Add expense
-                    </Button>
+                    <div className="desktop-toolbar-actions">
+                      <Button onClick={toggleAllGroupsCollapse}>
+                        {allCollapsed ? 'Expand' : 'Collapse'}
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          setSelectionMode(false);
+                          setShowAddExpenseDialog(true);
+                        }}
+                      >
+                        Add expense
+                      </Button>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -504,99 +511,116 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
                 )}
               </div>
             </ConfigProvider>
-          ) : (
-            <>
-              <div className="search-container">
-                <TextField
-                  fullWidth
-                  placeholder="Search expenses..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  variant="outlined"
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon/>
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </div>
-              <div className="buttons-container">
-                {!selectionMode ? (
+          ) : null}
+        </div>
+        {!isDesktop && (
+          <>
+            <PhoneStatsHeader
+              expenses={dateFilteredExpenses}
+              rangeLabel={filterOptions.find((option) => option.id === selectedRange)?.label ?? 'Range'}
+              days={daysForRange(selectedRange)}
+            />
+            {!selectionMode && (
+              <div className="phone-tool-row">
+                <div ref={optionsButtonRef}>
+                  <button
+                    type="button"
+                    className="phone-tool-action"
+                    aria-expanded={showOptions}
+                    onClick={toggleOptions}
+                  >
+                    <FilterListIcon/>
+                    Filter
+                  </button>
+                </div>
+                <span className="phone-tool-divider" aria-hidden="true"/>
+                <button
+                  type="button"
+                  className="phone-tool-action"
+                  aria-expanded={showSearch}
+                  onClick={openSearch}
+                >
+                  <SearchIcon/>
+                  Search
+                </button>
+                {searchTerm && (
                   <>
-                    <div className="filter-button" onClick={toggleFilters} ref={filterButtonRef}>
-                      <Chip
-                        icon={<FilterListIcon/>}
-                        label={filterOptions.find(option => option.id === selectedRange)?.label}
-                        color="primary"
-                        clickable
-                      />
-                    </div>
-                    <div>
-                      <Fab
-                        color="secondary"
-                        className="add-expense-button"
-                        size="large"
-                        aria-label="add expense"
-                        onClick={() => {
-                          setSelectionMode(false);
-                          setShowAddExpenseDialog(true);
-                        }}
-                      >
-                        <AddIcon/>
-                      </Fab>
-                    </div>
-                    <div className="group-by-button" onClick={toggleGroupByOptions} ref={groupByButtonRef}>
-                      <Chip
-                        icon={<Sort/>}
-                        label={groupByOptions.find(option => option.id === selectedGroupBy)?.label}
-                        color="primary"
-                        clickable
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="selected-count-display">
-                      <span>{selectedExpenses.length} {selectedExpenses.length === 1 ? 'expense' : 'expenses'} selected</span>
-                    </div>
-                    <div className="action-button">
-                      <Chip
-                        icon={<CloseIcon fontSize="small"/>}
-                        label="Clear"
-                        color="warning"
-                        clickable
-                        onClick={cancelSelection}
-                      />
-                    </div>
-                    <div className="action-button">
-                      <Chip
-                        icon={<DeleteIcon fontSize="small"/>}
-                        label="Delete"
-                        color="error"
-                        clickable
-                        onClick={handleDeleteSelected}
-                      />
-                    </div>
-                    <div className="action-button">
-                      <Chip
-                        icon={<MergeIcon fontSize="small"/>}
-                        label="Merge"
-                        color="primary"
-                        clickable
-                        onClick={handleMergeSelected}
-                        disabled={selectedExpenses.length < 2}
-                      />
-                    </div>
+                    <span className="phone-tool-divider" aria-hidden="true"/>
+                    <button type="button" className="phone-tool-action" onClick={clearSearch}>
+                      Clear search
+                    </button>
                   </>
                 )}
               </div>
-            </>
-          )}
-        </div>
+            )}
+            {showSearch && (
+              <>
+                <div className="phone-search-scrim" onClick={finalizeSearch}/>
+                <form
+                  className="phone-search"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    finalizeSearch();
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    autoFocus
+                    placeholder="Search expenses..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    variant="outlined"
+                    type="search"
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon/>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </form>
+              </>
+            )}
+            {selectionMode && (
+              <div className="buttons-container">
+                <div className="selected-count-display">
+                  <span>{selectedExpenses.length} {selectedExpenses.length === 1 ? 'expense' : 'expenses'} selected</span>
+                </div>
+                <div className="action-button">
+                  <Chip
+                    icon={<CloseIcon fontSize="small"/>}
+                    label="Clear"
+                    color="warning"
+                    clickable
+                    onClick={cancelSelection}
+                  />
+                </div>
+                <div className="action-button">
+                  <Chip
+                    icon={<DeleteIcon fontSize="small"/>}
+                    label="Delete"
+                    color="error"
+                    clickable
+                    onClick={handleDeleteSelected}
+                  />
+                </div>
+                <div className="action-button">
+                  <Chip
+                    icon={<MergeIcon fontSize="small"/>}
+                    label="Merge"
+                    color="primary"
+                    clickable
+                    onClick={handleMergeSelected}
+                    disabled={selectedExpenses.length < 2}
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       <div className="home-list">
@@ -621,50 +645,57 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       </div>
 
       {!isDesktop && (
-        <>
-          <FilterPanel
-            show={showFilters && !selectionMode}
-            onClose={() => setShowFilters(false)}
-            selectedRange={selectedRange}
-            onRangeChange={handleRangeChange}
-            panelRef={filterPanelRef}
-          />
-          <GroupByPanel
-            show={showGroupByOptions && !selectionMode}
-            onClose={() => setShowGroupByOptions(false)}
-            selectedGroupBy={selectedGroupBy}
-            selectedSortBy={selectedSortBy}
-            onGroupByChange={handleGroupByChange}
-            onSortByChange={handleSortByChange}
-            panelRef={groupByPanelRef}
-          />
-        </>
+        <HomeOptionsPanel
+          show={showOptions && !selectionMode}
+          onClose={() => setShowOptions(false)}
+          selectedRange={selectedRange}
+          selectedGroupBy={selectedGroupBy}
+          selectedSortBy={selectedSortBy}
+          onRangeChange={handleRangeChange}
+          onGroupByChange={handleGroupByChange}
+          onSortByChange={handleSortByChange}
+          panelRef={optionsPanelRef}
+        />
       )}
 
-      {/* Scroll to top button */}
-      <Zoom in={showScrollTop}>
-        <Fab
-          color="primary"
-          size="medium"
-          aria-label="scroll back to top"
-          onClick={scrollToTop}
-          className="scroll-top-button"
-        >
-          <KeyboardArrowUpIcon/>
-        </Fab>
-      </Zoom>
+      {isDesktop && (
+        <Zoom in={showScrollTop}>
+          <Fab
+            color="primary"
+            size="medium"
+            aria-label="scroll back to top"
+            onClick={scrollToTop}
+            className="scroll-top-button"
+          >
+            <KeyboardArrowUpIcon/>
+          </Fab>
+        </Zoom>
+      )}
 
-      {/* Collapse all button - only show when we have expenses and not in selection mode */}
-      {!isDesktop && filteredExpenses.length > 0 && !selectionMode && (
-        <Fab
-          color="primary"
-          size="medium"
-          aria-label={allCollapsed ? 'expand all groups' : 'collapse all groups'}
-          onClick={toggleAllGroupsCollapse}
-          className="collapse-all-button"
-        >
-          {allCollapsed ? <UnfoldMoreIcon/> : <UnfoldLessIcon/>}
-        </Fab>
+      {!isDesktop && !selectionMode && (
+        <div className="phone-fab-stack">
+          <Fab
+            color="primary"
+            className="phone-fab add-expense-button"
+            aria-label="add expense"
+            onClick={() => {
+              setSelectionMode(false);
+              setShowAddExpenseDialog(true);
+            }}
+          >
+            <AddIcon/>
+          </Fab>
+          {filteredExpenses.length > 0 && (
+            <Fab
+              color="primary"
+              className="phone-fab collapse-all-button"
+              aria-label={allCollapsed ? 'expand all groups' : 'collapse all groups'}
+              onClick={toggleAllGroupsCollapse}
+            >
+              {allCollapsed ? <UnfoldMoreIcon/> : <UnfoldLessIcon/>}
+            </Fab>
+          )}
+        </div>
       )}
 
       {/* Merge expenses dialog - only show in selection mode and when merge dialog is triggered */}
@@ -685,60 +716,33 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 };
 
 
-// Filter Panel Component
-const FilterPanel: FC<{
+const HomeOptionsPanel: FC<{
   show: boolean;
   onClose: () => void;
   selectedRange: DateRange;
-  onRangeChange: (range: DateRange) => void;
-  panelRef: React.RefObject<HTMLDivElement>;
-}> = ({show, onClose, selectedRange, onRangeChange, panelRef}) => {
-  if (!show) return null;
-
-  return (
-    <div className="filter-panel" ref={panelRef}>
-      <div className="panel-header">
-        <span className="panel-title">Filter by date range</span>
-        <IconButton
-          size="small"
-          className="close-button"
-          onClick={onClose}
-        >
-          <CloseIcon/>
-        </IconButton>
-      </div>
-      <div className="filter-options">
-        {filterOptions.map(option => (
-          <Chip
-            key={option.id}
-            label={option.label}
-            color="primary"
-            variant={selectedRange === option.id ? 'filled' : 'outlined'}
-            onClick={() => onRangeChange(option.id)}
-            className="filter-chip"
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Group By Panel Component
-const GroupByPanel: FC<{
-  show: boolean;
-  onClose: () => void;
   selectedGroupBy: GroupByOption;
   selectedSortBy: SortByOption;
+  onRangeChange: (range: DateRange) => void;
   onGroupByChange: (option: GroupByOption) => void;
   onSortByChange: (option: SortByOption) => void;
   panelRef: React.RefObject<HTMLDivElement>;
-}> = ({show, onClose, selectedGroupBy, selectedSortBy, onGroupByChange, onSortByChange, panelRef}) => {
+}> = ({
+  show,
+  onClose,
+  selectedRange,
+  selectedGroupBy,
+  selectedSortBy,
+  onRangeChange,
+  onGroupByChange,
+  onSortByChange,
+  panelRef,
+}) => {
   if (!show) return null;
 
   return (
-    <div className="group-by-panel" ref={panelRef}>
+    <div className="filter-panel home-options-panel" ref={panelRef}>
       <div className="panel-header">
-        <span className="panel-title">Expense Options</span>
+        <span className="panel-title">Filters</span>
         <IconButton
           size="small"
           className="close-button"
@@ -748,26 +752,40 @@ const GroupByPanel: FC<{
         </IconButton>
       </div>
 
-      {/* Group by section */}
       <div className="panel-section">
-        <div className="section-title">Group by</div>
+        <div className="section-title">Date range</div>
         <div className="group-by-options">
-          {
-            groupByOptions.map(option => (
-              <Chip
-                key={option.id}
-                label={option.label}
-                color="primary"
-                variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
-                onClick={() => onGroupByChange(option.id)}
-                className="filter-chip"
-              />
-            ))
-          }
+          {filterOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              size="small"
+              color="primary"
+              variant={selectedRange === option.id ? 'filled' : 'outlined'}
+              onClick={() => onRangeChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
         </div>
       </div>
 
-      {/* Sort by section */}
+      <div className="panel-section">
+        <div className="section-title">Group by</div>
+        <div className="group-by-options">
+          {groupByOptions.map(option => (
+            <Chip
+              key={option.id}
+              label={option.label}
+              size="small"
+              color="primary"
+              variant={selectedGroupBy === option.id ? 'filled' : 'outlined'}
+              onClick={() => onGroupByChange(option.id)}
+              className="filter-chip"
+            />
+          ))}
+        </div>
+      </div>
+
       <div className="panel-section">
         <div className="section-title">Sort by</div>
         <div className="sort-by-options">
@@ -775,6 +793,7 @@ const GroupByPanel: FC<{
             <Chip
               key={option.id}
               label={option.label}
+              size="small"
               color="primary"
               variant={selectedSortBy === option.id ? 'filled' : 'outlined'}
               onClick={() => onSortByChange(option.id)}

@@ -3,14 +3,12 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-@use '../../styles/theme.scss';
-
 .home-root {
   background: var(--bg-primary);
   min-height: 100vh;
   position: relative;
   /* Add space for the filter button at bottom */
-  padding: 20px 15px 80px;
+  padding: var(--page-padding-y) var(--page-padding-x) 80px;
   margin-bottom: 130px; /* Ensure enough space for the filter panel */
 }
 
@@ -20,11 +18,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   top: 0;
   z-index: 101; /* Higher than the filter panel z-index */
   /* Offset the padding */
-  margin: -10px -10px 10px;
-  padding: 10px;
+  margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-md);
+  padding: var(--space-md);
 
   .MuiOutlinedInput-root {
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background-color: var(--search-bg);
 
     &:hover .MuiOutlinedInput-notchedOutline {
@@ -58,7 +56,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .home-list {
   display: flex;
   flex-direction: column;
-  gap: 22px; /* Increased from 20px by 10% */
+  gap: var(--space-xl);
 }
 
 /* Group box styles */
@@ -66,9 +64,9 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   display: flex;
   flex-direction: column;
   background: var(--group-bg);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.5s ease-in-out; /* Slower transform */
 
   &.collapsed {
@@ -80,10 +78,10 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 13px 16px 25px;
+  padding: var(--space-lg) var(--space-md) var(--space-lg) var(--space-xl);
   background: var(--group-header-bg);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-fast);
 
   &:hover {
     background: var(--group-header-hover);
@@ -96,15 +94,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .group-label {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title);
   color: var(--group-label);
 }
 
 .expense-count {
-  font-size: 13px;
+  font-size: var(--font-size-subtext);
   color: var(--group-count);
-  margin-top: 2px;
+  margin-top: var(--space-xs);
 }
 
 .group-summary {
@@ -113,14 +111,14 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .total-amount {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
   color: var(--accent-green);
-  margin-right: 8px;
+  margin-right: var(--space-sm);
 }
 
 .collapse-button {
-  padding: 6px !important;
+  padding: var(--space-sm) !important;
   color: var(--accent-blue) !important;
 }
 
@@ -145,10 +143,10 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   background: var(--bg-secondary);
   border-radius: 0; /* Remove border radius for items inside group */
   box-shadow: none; /* Remove individual shadow */
-  padding: 18px 15px; /* Slightly reduced padding */
+  padding: var(--space-lg) var(--page-padding-x);
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-fast);
   margin: 0;
   min-height: 0;
   border-bottom: 1px solid var(--bg-tertiary);
@@ -176,7 +174,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .avatar-col {
   flex-shrink: 0; /* Prevent avatar column from shrinking */
-  padding-right: 12px; /* Add some spacing between avatar and content */
+  padding-right: var(--space-md); /* Add some spacing between avatar and content */
   padding-left: 0;
 }
 
@@ -193,12 +191,12 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .group-expenses .expense-row:last-child {
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
 }
 
 .expense-avatar {
-  margin: 0 5px;
+  margin: 0 var(--space-xs);
   background: var(--bg-tertiary) !important;
   color: var(--accent-blue) !important;
   width: 43px !important; /* Increased from 39px by ~10% */
@@ -208,12 +206,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .expense-row-header {
   align-items: center;
-  margin-bottom: 4px; /* Keep as is, 4px is small enough */
+  margin-bottom: var(--space-xs);
 }
 
 .vendor-name {
-  font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-title);
   color: var(--text-primary);
   letter-spacing: 0.1px;
   white-space: nowrap;
@@ -241,40 +238,40 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .expense-type {
-  font-weight: 700;
-  font-size: 18px;
-  margin-right: 5px;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
+  margin-right: var(--space-xs);
   color: var(--accent-green);
 }
 
 
 .expense-currency {
-  font-weight: 700;
-  font-size: 18px; /* Increased from 16px by ~10% */
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
   color: var(--accent-green);
-  margin-right: 2px;
+  margin-right: var(--space-xs);
 }
 
 .expense-cost {
-  font-weight: 700;
-  font-size: 18px; /* Increased from 16px by ~10% */
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
   color: var(--accent-green);
 }
 
 .expense-date-row {
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
   align-items: center;
 
   .col {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-sm);
   }
 }
 
 .expense-date {
-  font-weight: 500;
-  font-size: 11px; /* Increased from 10px by 10% */
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-caption);
   color: var(--text-secondary);
 }
 
@@ -282,7 +279,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .no-expenses {
   color: var(--text-muted);
   text-align: center;
-  padding: 20px;
+  padding: var(--space-xl);
 }
 
 /* Buttons container for Filter and Group By buttons */
@@ -293,21 +290,21 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   transform: translateX(-50%);
   z-index: 90;
   display: flex;
-  gap: 10px;
+  gap: var(--space-md);
   justify-content: center;
 }
 
 .filter-button, .group-by-button, {
-  padding-top: 10px;
+  padding-top: var(--space-md);
 
   .MuiChip-root {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
     box-shadow: var(--box-shadow);
-    height: 40px;
-    padding: 0 15px;
+    height: var(--control-height);
+    padding: 0 var(--space-lg);
     border: 1px solid var(--border-color);
-    font-weight: 400; /* Standard weight */
+    font-weight: var(--font-weight-regular);
     min-width: 140px; /* Ensure minimum width for all buttons */
     justify-content: center; /* Center content within chip */
 
@@ -338,12 +335,12 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   max-width: 600px;
   bottom: 56px;
   background-color: var(--group-header-bg);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+  box-shadow: var(--shadow-up);
   z-index: 100;
-  padding-bottom: 20px;
-  animation: slideUp 0.2s ease-out;
+  padding-bottom: var(--space-xl);
+  animation: slideUp var(--transition-fast);
   border: 1px solid var(--border-color);
 
   /* Panel header with title and close button */
@@ -351,22 +348,22 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: var(--space-sm) var(--space-xl);
     border-bottom: 1px solid var(--border-color);
 
     .panel-title {
-      font-size: 16px;
-      font-weight: 500;
+      font-size: var(--font-size-title);
+      font-weight: var(--font-weight-medium);
       color: var(--text-primary);
     }
 
     .close-button {
       color: var(--accent-blue);
       background-color: rgba(var(--accent-blue-rgb, 144, 202, 249), 0.12);
-      transition: all 0.2s ease;
+      transition: all var(--transition-fast);
       border: 1px solid rgba(var(--accent-blue-rgb, 144, 202, 249), 0.3);
-      padding: 4px;
-      margin-right: -4px;
+      padding: var(--space-xs);
+      margin-right: calc(var(--space-xs) * -1);
 
       &:hover {
         transform: scale(1.1);
@@ -383,19 +380,19 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
   /* Panel sections for Group by and Sort by */
   .panel-section {
-    padding: 0 20px;
-    margin-top: 15px;
+    padding: 0 var(--space-xl);
+    margin-top: var(--space-lg);
 
     .section-title {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-medium);
       color: var(--text-secondary);
-      margin-bottom: 10px;
-      padding-left: 5px;
+      margin-bottom: var(--space-md);
+      padding-left: var(--space-xs);
     }
 
     &:first-of-type {
-      margin-top: 5px;
+      margin-top: var(--space-xs);
     }
   }
 
@@ -403,8 +400,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    padding: 15px 20px 10px;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-xl) var(--space-md);
 
     .filter-chip {
       //margin: 5px;
@@ -420,8 +417,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 10px;
-    padding: 5px 0;
+    gap: var(--space-md);
+    padding: var(--space-xs) 0;
 
     .filter-chip {
       margin: 0;
@@ -438,22 +435,22 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .scroll-top-button {
   position: fixed !important;
   bottom: 210px; /* Position above the filter button */
-  right: 25px;
+  right: var(--space-xl);
   box-shadow: var(--box-shadow) !important;
   z-index: 90 !important;
   background-color: var(--accent-blue) !important;
-  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  transition: background-color var(--transition-base), transform var(--transition-base) !important;
 }
 
 /* Collapse all button */
 .collapse-all-button {
   position: fixed !important;
   bottom: 150px; /* Position below the scroll to top button */
-  right: 25px;
+  right: var(--space-xl);
   box-shadow: var(--box-shadow) !important;
   z-index: 90 !important;
   background-color: var(--accent-blue) !important;
-  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  transition: background-color var(--transition-base), transform var(--transition-base) !important;
 
   /* Add subtle pulse animation when state changes */
   &.state-changed {
@@ -535,12 +532,12 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .selected-count-display {
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
-  border-radius: 20px;
-  padding: 6px 16px;
-  font-weight: 500;
+  border-radius: var(--radius-pill);
+  padding: var(--space-sm) var(--space-lg);
+  font-weight: var(--font-weight-medium);
   box-shadow: var(--box-shadow);
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-size-body);
   backdrop-filter: blur(4px);
   border: 1px solid var(--border-color);
   min-width: 150px;
@@ -559,26 +556,26 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 20px 24px 32px;
+    padding: var(--page-padding-y) var(--page-padding-x) var(--space-2xl);
   }
 
   .home-title {
     display: block;
-    margin: 0 0 16px;
-    font-size: 28px;
-    font-weight: 700;
+    margin: 0 0 var(--space-lg);
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
   }
 
   .app-shell .home-toolbar-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-md);
     position: sticky;
     top: 0;
     z-index: 101;
     background: var(--bg-primary);
-    padding-bottom: 12px;
+    padding-bottom: var(--space-md);
   }
 
   .app-shell .home-toolbar-row .search-container {
@@ -592,7 +589,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   .desktop-filters {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-sm);
     flex: 1;
     flex-wrap: wrap;
     min-width: 0;
@@ -602,23 +599,228 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
     flex: 1;
     min-width: 160px;
     max-width: 280px;
+    transition: max-width 0.25s ease;
+  }
+
+  .desktop-filters .ant-input-affix-wrapper:focus-within {
+    max-width: 420px;
   }
 
   .desktop-filters .ant-select {
     min-width: 120px;
   }
 
+  .desktop-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-left: auto;
+  }
+
   .desktop-selected-count {
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: var(--font-size-body);
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 799px) {
+  .home-root {
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 160px;
+  }
+
+  .home-list {
+    gap: var(--space-md);
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+
+  .phone-tool-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: var(--space-sm) var(--page-padding-x);
+
+    > div {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  .phone-tool-action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    color: var(--text-primary);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-tight);
+    cursor: pointer;
+
+    .MuiSvgIcon-root {
+      display: block;
+      font-size: 16px;
+    }
+  }
+
+  .phone-tool-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border-color);
+  }
+
+  .phone-search-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--overlay-bg);
+  }
+
+  .phone-search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 201;
+    margin: 0;
+    padding: var(--space-sm) var(--page-padding-x);
+    background: transparent;
+
+    .MuiOutlinedInput-root {
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    input[type='search']::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  .phone-fab-stack {
+    position: fixed;
+    right: var(--space-lg);
+    bottom: calc(64px + var(--space-lg));
+    z-index: 90;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: var(--space-md);
+
+    .MuiFab-root {
+      position: static !important;
+      right: auto;
+      bottom: auto;
+      width: 48px;
+      height: 48px;
+      min-height: 48px;
+      border-radius: var(--radius-pill);
+    }
+  }
+
+  .home-options-panel {
+    padding-bottom: var(--space-md);
+
+    .panel-header {
+      padding: var(--space-xs) var(--space-lg);
+    }
+
+    .panel-title {
+      font-size: var(--font-size-body);
+    }
+
+    .close-button {
+      padding: var(--space-xs);
+
+      .MuiSvgIcon-root {
+        font-size: 18px;
+      }
+    }
+
+    .panel-section {
+      padding: 0 var(--space-lg);
+      margin-top: var(--space-md);
+
+      .section-title {
+        font-size: var(--font-size-subtext);
+        margin-bottom: var(--space-sm);
+      }
+    }
+
+    .group-by-options,
+    .sort-by-options {
+      gap: var(--space-sm);
+    }
+
+    .filter-chip {
+      font-size: var(--font-size-subtext);
+    }
+  }
+
+  .group-box {
+    border-radius: var(--radius-md);
+  }
+
+  .group-header {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .group-label {
+    font-size: var(--font-size-body);
+  }
+
+  .total-amount {
+    font-size: var(--font-size-title);
+  }
+
+  .expense-row {
+    padding: var(--space-md);
+  }
+
+  .expense-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
+  }
+
+  .vendor-name {
+    font-size: var(--font-size-body);
+  }
+
+  .expense-type,
+  .expense-currency,
+  .expense-cost {
+    font-size: var(--font-size-title);
+  }
+
+  .expense-row .expense-date,
+  .expense-row .tag-text-red,
+  .expense-row .tag-text-purple-light {
+    font-size: var(--font-size-caption);
+  }
+
+  .expense-row .tag-text-red,
+  .expense-row .tag-text-purple-light {
+    padding: 1px var(--space-xs);
+  }
+
+  .group-expenses .expense-row:last-child {
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
   }
 }
 
 // Action buttons in selection mode
 .action-button {
   .MuiChip-root {
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 
     &[disabled] {
       opacity: 0.6;

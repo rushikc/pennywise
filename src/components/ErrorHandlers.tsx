@@ -39,11 +39,11 @@ const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 320,
-        bgcolor: '#121212', // Dark background
-        color: '#ffffff', // White text
-        borderRadius: 2,
-        boxShadow: '0px 0px 20px rgba(0,0,0,0.5)',
-        p: 4,
+        bgcolor: 'var(--error-modal-bg)',
+        color: 'var(--on-accent)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'var(--shadow-lg)',
+        p: 'var(--space-2xl)',
         outline: 'none',
         textAlign: 'center',
       }}>
@@ -52,13 +52,13 @@ const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
           variant="h6"
           component="h2"
           gutterBottom
-          sx={{color: '#ff5252'}} // Red accent for title
+          sx={{color: 'var(--error-accent)'}}
         >
           Access Denied
         </Typography>
         <Typography
           id="error-modal-description"
-          sx={{mt: 2, mb: 3, color: '#e0e0e0'}}
+          sx={{mt: 'var(--space-lg)', mb: 'var(--space-xl)', color: 'var(--error-modal-text)'}}
         >
           {message}
         </Typography>
@@ -70,10 +70,10 @@ const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
           fullWidth
           onClick={handleSignOut}
           sx={{
-            mt: 2,
-            bgcolor: '#ff5252',
+            mt: 'var(--space-lg)',
+            bgcolor: 'var(--error-accent)',
             '&:hover': {
-              bgcolor: '#ff1744',
+              bgcolor: 'var(--error-accent-hover)',
             }
           }}
         >

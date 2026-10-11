@@ -107,7 +107,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
               margin="normal"
               slotProps={{
                 input: {
-                  startAdornment: <span style={{marginRight: 8}}>₹</span>,
+                  startAdornment: <span style={{marginRight: 'var(--space-sm)'}}>₹</span>,
                 }
               }}
               autoFocus
@@ -134,7 +134,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
                   size="medium"
                   sx={{
                     minWidth: '80px',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all var(--transition-fast)'
                   }}
                 />
               ))}

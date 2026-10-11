@@ -132,7 +132,7 @@ const AutoTagExpenses: React.FC = () => {
 
     return (
       <Paper elevation={0} className="success-message">
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing="var(--space-sm)">
           <CheckCircleIcon/>
           <Typography variant="body2">
             {`Auto-tagging successful! ${processedCount} expenses were updated.`}
@@ -155,13 +155,13 @@ const AutoTagExpenses: React.FC = () => {
           Auto-tag Expenses
         </Typography>
       </Box>
-      <Alert severity="info" sx={{mb: 2}}>
+      <Alert severity="info" sx={{mb: 'var(--space-lg)'}}>
         This feature automatically assigns tags to your past expenses based on the vendor
         names you have available in
         &apos;Manage Vendor Tags&apos;. It helps in organizing your old expenses without manual
         tagging.
       </Alert>
-      <Stack spacing={3}>
+      <Stack spacing="var(--space-xl)">
         <DateSpecificSection/>
         <AutoTagAllSection/>
         <SuccessMessage/>

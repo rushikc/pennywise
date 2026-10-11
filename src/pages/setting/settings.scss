@@ -6,21 +6,21 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .dashboard-main-container {
   background: var(--bg-primary);
   min-height: 100vh;
-  padding: 20px;
+  padding: var(--page-padding-y) var(--page-padding-x);
 }
 
 .user-profile-paper {
   background: var(--bg-card) !important;
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 16px;
+  padding: var(--card-padding);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
   box-shadow: var(--box-shadow);
 }
 
 .user-profile-box {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-lg);
 }
 
 .user-avatar {
@@ -33,7 +33,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .user-info-box {
   .MuiTypography-h5 {
     color: var(--text-primary);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
 }
 
@@ -43,26 +43,26 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .dashboard-title-text {
   color: var(--text-primary);
-  margin: 20px 0 15px;
+  margin: var(--space-xl) 0 var(--space-lg);
 }
 
 .dashboard-divider {
   background-color: var(--border-color);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-xl);
 }
 
 .dashboard-options-container {
   background-color: var(--bg-card);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
 .dashboard-option-row {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: var(--card-padding);
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  transition: background-color var(--transition-fast);
 
   &:hover {
     background-color: var(--bg-tertiary);
@@ -84,25 +84,25 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .dashboard-option-text {
-  margin-left: 16px;
+  margin-left: var(--space-lg);
   flex: 1;
 }
 
 .dashboard-option-title {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .dashboard-option-subtitle {
   display: block;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: var(--space-xs);
 }
 
 .dashboard-option-divider {
   height: 1px;
   background-color: var(--border-color);
-  margin: 0 16px;
+  margin: 0 var(--space-lg);
 }
 
 // Version display styles
@@ -111,8 +111,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   bottom: 70px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 6px 14px;
-  border-radius: 20px !important;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-pill) !important;
   background-color: var(--bg-tertiary) !important;
   border: 1px solid var(--border-color);
   opacity: 0.9;
@@ -123,16 +123,16 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 
 .version-text {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
   letter-spacing: 0.5px;
 }
 
 .build-time-text {
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   color: var(--text-secondary);
   letter-spacing: 0.3px;
-  font-size: 0.65rem;
+  font-size: var(--font-size-caption);
   opacity: 0.8;
 }
 
@@ -145,24 +145,24 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   width: 90%;
   max-width: 400px;
   background-color: var(--bg-card) !important;
-  border-radius: 16px !important;
+  border-radius: var(--radius-lg) !important;
   box-shadow: var(--box-shadow) !important;
   outline: none;
 
   .MuiTypography-h6 {
     color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 16px;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-lg);
   }
 
   .MuiTypography-body2 {
     color: var(--text-secondary);
-    margin-bottom: 12px;
-    line-height: 1.5;
+    margin-bottom: var(--space-md);
+    line-height: var(--line-height-normal);
 
     strong {
       color: var(--text-primary);
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
     }
 
     a {
@@ -180,15 +180,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 .modal-close-button {
   background-color: var(--accent-blue) !important;
   //color: var(--text-white) !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
+  border-radius: var(--radius-md) !important;
+  font-weight: var(--font-weight-medium) !important;
   text-transform: none !important;
-  transition: all 0.2s ease !important;
+  transition: all var(--transition-fast) !important;
 
   &:hover {
     background-color: var(--accent-blue-hover) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: var(--shadow-lg) !important;
   }
 
   &:active {

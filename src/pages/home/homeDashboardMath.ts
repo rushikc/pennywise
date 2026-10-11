@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BudgetProgress, Expense} from '../../Types';
+import {DateRange} from '../dataValidations';
 import {formatVendorName} from '../../utility/utility';
 
 export interface VendorTotal {
@@ -70,6 +71,41 @@ export const summarizeMonth = (expenses: Expense[]): DashboardSummary => {
     .sort((a, b) => b.percent - a.percent);
 
   return {spent, received, topVendors, tags};
+};
+
+const RANGE_DAYS: Record<DateRange, number> = {
+  '1d': 1,
+  '7d': 7,
+  '14d': 14,
+  '30d': 30,
+  '60d': 60,
+  '90d': 90,
+  '180d': 180,
+  '366d': 366,
+  '732d': 732,
+  '1800d': 1800,
+};
+
+export interface RangeStats {
+  spent: number;
+  received: number;
+  net: number;
+  count: number;
+  avgPerDay: number;
+}
+
+export const daysForRange = (range: DateRange): number => RANGE_DAYS[range] ?? 1;
+
+export const rangeStats = (expenses: Expense[], days: number): RangeStats => {
+  const summary = summarizeMonth(expenses);
+  const safeDays = days > 0 ? days : 1;
+  return {
+    spent: summary.spent,
+    received: summary.received,
+    net: summary.received - summary.spent,
+    count: expenses.length,
+    avgPerDay: summary.spent / safeDays,
+  };
 };
 
 export const budgetAlerts = (progress: BudgetProgress[]): BudgetProgress[] => {

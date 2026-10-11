@@ -6,7 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {Budget} from '../../Types';
 import {makeExpense} from '../../testUtils';
 import {calculateBudgetProgress} from '../budget/budgetMath';
-import {budgetAlerts, currentMonthExpenses, summarizeMonth} from './homeDashboardMath';
+import {budgetAlerts, currentMonthExpenses, daysForRange, rangeStats, summarizeMonth} from './homeDashboardMath';
 
 const now = new Date('2026-10-11T12:00:00+05:30');
 
@@ -60,6 +60,34 @@ describe('summarizeMonth', () => {
       received: 0,
       topVendors: [],
       tags: [],
+    });
+  });
+});
+
+describe('rangeStats', () => {
+  const expenses = [
+    makeExpense({id: 'd1', cost: 70, costType: 'debit'}),
+    makeExpense({id: 'c1', cost: 20, costType: 'credit'}),
+  ];
+
+  it('uses the selected range length for the daily average', () => {
+    expect(daysForRange('7d')).toBe(7);
+    expect(rangeStats(expenses, 7)).toEqual({
+      spent: 70,
+      received: 20,
+      net: -50,
+      count: 2,
+      avgPerDay: 10,
+    });
+  });
+
+  it('treats an empty range as zero and avoids dividing by zero', () => {
+    expect(rangeStats([], 0)).toEqual({
+      spent: 0,
+      received: 0,
+      net: 0,
+      count: 0,
+      avgPerDay: 0,
     });
   });
 });

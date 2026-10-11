@@ -31,8 +31,8 @@ const Login: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Paper elevation={3} sx={{p: 4, width: '100%', borderRadius: 2}}>
+      <Box sx={{mt: 'var(--space-2xl)', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Paper elevation={3} sx={{p: 'var(--space-2xl)', width: '100%', borderRadius: 'var(--radius-md)'}}>
           <Box
             component="img"
             src="/logo.png"
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
           </Typography>
 
           {error && (
-            <Typography color="error" align="center" sx={{mb: 2}}>
+            <Typography color="error" align="center" sx={{mb: 'var(--space-lg)'}}>
               {error}
             </Typography>
           )}
@@ -61,12 +61,12 @@ const Login: React.FC = () => {
             onClick={handleGoogleSignIn}
             disabled={loading}
             sx={{
-              mt: 3,
-              mb: 2,
-              py: 1.5,
-              backgroundColor: '#4285F4',
+              mt: 'var(--space-xl)',
+              mb: 'var(--space-lg)',
+              py: 'var(--space-md)',
+              backgroundColor: 'var(--brand-google)',
               '&:hover': {
-                backgroundColor: '#357ae8',
+                backgroundColor: 'var(--brand-google-hover)',
               }
             }}
           >

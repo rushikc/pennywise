@@ -5,18 +5,16 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import {useTheme} from '@mui/material/styles';
 import React, {useEffect} from 'react';
+import {createPortal} from 'react-dom';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {getNavValue, navItems} from './navItems';
+import './BottomNav.scss';
 
 export default function BottomNav() {
   const [value, setValue] = React.useState('home');
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     setValue(getNavValue(location.pathname));
@@ -29,22 +27,22 @@ export default function BottomNav() {
     setValue(newValue);
   };
 
-  return (
+  return createPortal(
     <BottomNavigation
+      className="bottom-nav"
       value={value}
       onChange={handleChange}
-      showLabels={!isPhone}
-      sx={isPhone ? {'& .MuiBottomNavigationAction-label': {display: 'none'}} : undefined}
+      showLabels
     >
       {navItems.map((item) => (
         <BottomNavigationAction
           key={item.value}
           value={item.value}
           label={item.label}
-          showLabel={!isPhone}
           icon={item.icon()}
         />
       ))}
-    </BottomNavigation>
+    </BottomNavigation>,
+    document.body,
   );
 }

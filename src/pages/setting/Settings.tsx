@@ -129,7 +129,7 @@ const Settings: React.FC = () => {
       subtitle: 'Manage your expense tags',
       icon: <TagsIcon/>,
       route: '/setting-tags',
-      color: '#ce93d8'
+      color: 'var(--tile-icon-tags)'
     },
     {
       id: 'theme',
@@ -137,7 +137,7 @@ const Settings: React.FC = () => {
       subtitle: `Switch to ${appConfig.darkMode ? 'light' : 'dark'} mode`,
       icon: <ThemeIcon/>,
       route: '/toggle-theme',
-      color: '#9c27b0'
+      color: 'var(--tile-icon-theme)'
     },
     {
       id: 'reload',
@@ -145,7 +145,7 @@ const Settings: React.FC = () => {
       subtitle: 'Reload your expense, local cache data',
       icon: <ReloadIcon/>,
       route: '/reload-expense',
-      color: '#ffa726'
+      color: 'var(--tile-icon-reload)'
     },
     {
       id: 'manage-tag-maps',
@@ -153,7 +153,7 @@ const Settings: React.FC = () => {
       subtitle: 'Configure your vendor tag mappings',
       icon: <MapIcon/>,
       route: '/setting-tag-maps',
-      color: '#64b5f6'
+      color: 'var(--tile-icon-vendor)'
     },
     {
       id: 'auto-tag',
@@ -161,7 +161,7 @@ const Settings: React.FC = () => {
       subtitle: 'Automatically tag past expenses',
       icon: <AutoTagIcon/>,
       route: '/auto-tag-expenses',
-      color: '#4db6ac'
+      color: 'var(--tile-icon-autotag)'
     },
     {
       id: 'duplicate-review',
@@ -171,7 +171,7 @@ const Settings: React.FC = () => {
         : 'Review flagged duplicate expenses',
       icon: <DuplicateIcon/>,
       route: '/duplicate-review',
-      color: '#ef5350',
+      color: 'var(--tile-icon-duplicate)',
       badgeCount: pendingDuplicateCount,
     },
     {
@@ -180,7 +180,7 @@ const Settings: React.FC = () => {
       subtitle: 'Email parsing: display name & match phrases',
       icon: <BanksIcon/>,
       route: '/setting-banks',
-      color: '#26a69a'
+      color: 'var(--tile-icon-banks)'
     },
     {
       id: 'sign out',
@@ -188,7 +188,7 @@ const Settings: React.FC = () => {
       subtitle: 'Log out of your account',
       icon: <LogoutIcon/>,
       route: '/signout',
-      color: '#f44336'
+      color: 'var(--tile-icon-signout)'
     }
   ];
 
@@ -309,7 +309,7 @@ const Settings: React.FC = () => {
       >
         <Fade in={isAppInfoModalOpen}>
           <Paper className="app-info-modal p-2">
-            <Box p={2}>
+            <Box p="var(--space-lg)">
               <Typography variant="h6" gutterBottom>
                 Pennywise App
               </Typography>
@@ -337,7 +337,7 @@ const Settings: React.FC = () => {
               </Typography>
 
               {/* Close Button at the end */}
-              <Box display="flex" justifyContent="center" mt={3}>
+              <Box display="flex" justifyContent="center" mt="var(--space-xl)">
                 <Button
                   onClick={handleCloseModal}
                   variant="contained"

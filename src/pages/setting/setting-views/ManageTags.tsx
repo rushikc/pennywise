@@ -90,7 +90,7 @@ const ManageTags: React.FC = () => {
           variant="body2"
           color="text.secondary"
           align="center"
-          sx={{display: 'block', mb: 2}}
+          sx={{display: 'block', mb: 'var(--space-lg)'}}
         >
           Add or remove tags. Tap the × on a pill to delete.
         </Typography>

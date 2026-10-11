@@ -10,18 +10,18 @@ $red: var(--accent-red);
 $purple-light: var(--accent-purple);
 
 .tag-text-red {
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   border: solid $red 1px;
-  border-radius: 10px;
-  padding: 3px 5px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs);
   color: $red;
 }
 
 .tag-text-purple-light {
-  font-size: 12px;
+  font-size: var(--font-size-subtext);
   border: solid $purple-light 1px;
-  border-radius: 10px;
-  padding: 3px 5px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs);
   color: var(--text-secondary);
 }
 
@@ -35,7 +35,7 @@ $purple-light: var(--accent-purple);
 }
 
 .page-header {
-  padding-bottom: 10px;
+  padding-bottom: var(--space-md);
   display: flex;
   justify-content: center;
 }
@@ -62,16 +62,29 @@ $purple-light: var(--accent-purple);
   flex: 3 1 0;
 }
 
+@media (max-width: 799px) {
+  .buttons-container,
+  .version-display {
+    bottom: calc(64px + var(--space-lg));
+  }
+
+  .filter-panel,
+  .group-by-panel,
+  .selection-panel {
+    bottom: calc(56px + var(--space-lg));
+  }
+}
+
 @media (min-width: 800px) {
   .app-shell .buttons-container,
   .app-shell .budget-container .buttons-container {
     left: calc(var(--side-nav-width) + (100vw - var(--side-nav-width) - var(--home-dash-width)) / 2);
-    bottom: 16px;
+    bottom: var(--space-lg);
   }
 
   .app-shell .home-root {
     margin-bottom: 80px;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-xl);
   }
 
   .app-shell .statistics-container {
@@ -79,26 +92,26 @@ $purple-light: var(--accent-purple);
   }
 
   .app-shell .version-display {
-    bottom: 16px;
+    bottom: var(--space-lg);
     left: calc(var(--side-nav-width) + (100vw - var(--side-nav-width)) / 2);
   }
 
   .app-shell .budget-container .add-budget-button {
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
   }
 
   .app-shell .scroll-top-button {
     bottom: 156px;
-    right: calc(24px + var(--home-dash-width));
+    right: calc(var(--space-xl) + var(--home-dash-width));
   }
 
   .app-shell .collapse-all-button {
     bottom: 96px;
-    right: calc(24px + var(--home-dash-width));
+    right: calc(var(--space-xl) + var(--home-dash-width));
   }
 
   .app-shell .config-container {
-    padding-bottom: 2rem;
+    padding-bottom: var(--space-2xl);
   }
 }
