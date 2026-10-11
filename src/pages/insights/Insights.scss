@@ -10,6 +10,74 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   margin-bottom: 120px;
 }
 
+.insights-page {
+  .insights-title {
+    margin: 4px 0 16px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .insights-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .ant-select {
+      min-width: 140px;
+    }
+  }
+
+  .insights-stat-card {
+    height: 100%;
+    border-radius: 8px;
+
+    .ant-statistic-title {
+      color: rgba(0, 0, 0, 0.45);
+    }
+
+    .ant-statistic-content {
+      font-weight: 600;
+    }
+  }
+
+  .insights-section {
+    margin-top: 16px;
+  }
+
+  .insights-chart-card {
+    border-radius: 8px;
+
+    .ant-card-head-title {
+      font-weight: 600;
+    }
+  }
+
+  .insights-chart-empty {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .insights-export {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+.insights-page--desktop {
+  padding: 24px 28px 40px;
+  margin-bottom: 24px;
+}
+
+.insights-page--phone {
+  padding-bottom: 24px;
+}
+
 
 .summary-row {
   display: flex;

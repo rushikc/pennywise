@@ -4,12 +4,12 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React from 'react';
-import {Box, Paper, Typography, useTheme, IconButton} from '@mui/material';
+import {Card} from 'antd';
 import TuneIcon from '@mui/icons-material/Tune';
+import IconButton from '@mui/material/IconButton';
 import {
   CartesianGrid,
   Cell,
-  Legend,
   Line,
   LineChart,
   Pie,
@@ -17,165 +17,71 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts';
 
-// Interface for line graph data
-interface LineDataPoint {
-  date: string;
-
-  [key: string]: string | number;
-}
-
-interface PieDataPoint {
-  name: string;
-  value: number;
-}
-
-const truncate = (str: string, n: number) => {
-  return str.length > n ? str.slice(0, n - 1) + '...' : str;
-};
+const LINE_COLOR = '#1677ff';
+const DONUT_COLORS = ['#1677ff', '#13c2c2', '#722ed1', '#fa8c16', '#52c41a', '#eb2f96', '#8c8c8c', '#fadb14'];
 
 interface LineGraphProps {
-  data: LineDataPoint[];
-  lineKeys: string[];
-  title?: string;
+  data: {date: string; total: number}[];
 }
 
 interface PieGraphProps {
-  data: PieDataPoint[];
-  title?: string;
+  data: {name: string; value: number}[];
   onSelectionToggle?: () => void;
 }
 
-export const LineGraph: React.FC<LineGraphProps> = ({
-  data,
-  lineKeys,
-  title = 'Spending Trends'
-}) => {
-  const theme = useTheme();
+const formatAxis = (value: number) => Math.round(value).toLocaleString('en-IN');
 
-  const lineColors = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.error.main,
-    theme.palette.success.main,
-    theme.palette.warning.main
-  ];
-
-  if (data.length === 0) {
-    return (
-      <Box className="line-chart-container">
-        <Paper className="chart-paper empty-chart" elevation={3}>
-          <Typography variant="body1" color="text.secondary">
-            No data available for the selected filters
-          </Typography>
-        </Paper>
-      </Box>
-    );
-  }
-
+export const LineGraph: React.FC<LineGraphProps> = ({data}) => {
   return (
-    <Box className="line-chart-container">
-      <Paper className="chart-paper" elevation={3}>
-        <Typography variant="subtitle2" className="chart-title">
-          {title}
-        </Typography>
-        <ResponsiveContainer width="100%" height="95%">
-          <LineChart
-            data={data}
-            margin={{top: 5, right: 20, left: 10, bottom: 5}}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider}/>
-            <XAxis
-              dataKey="date"
-              stroke={theme.palette.text.secondary}
-              tick={{fontSize: 12}}
-              tickLine={{stroke: theme.palette.divider}}
-            />
+    <Card title="Spending trend" className="insights-chart-card">
+      {data.length === 0 ? (
+        <div className="insights-chart-empty">No data available for the selected filters</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart data={data} margin={{top: 8, right: 12, left: 0, bottom: 0}}>
+            <CartesianGrid stroke="#f0f0f0" vertical={false}/>
+            <XAxis dataKey="date" tick={{fontSize: 12}} tickLine={false} axisLine={false}/>
             <YAxis
-              stroke={theme.palette.text.secondary}
               tick={{fontSize: 12}}
-              tickLine={{stroke: theme.palette.divider}}
-              width={50}
-              tickFormatter={(value) => `₹${value}`}
-              domain={['auto', 'auto']}
-              allowDataOverflow={false}
+              tickLine={false}
+              axisLine={false}
+              width={48}
+              tickFormatter={formatAxis}
             />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: theme.palette.background.paper,
-                border: `1px solid ${theme.palette.divider}`,
-                borderRadius: '8px'
-              }}
+            <Tooltip formatter={(value) => [`₹${formatAxis(Number(value))}`, 'Spent']}/>
+            <Line
+              type="monotone"
+              dataKey="total"
+              stroke={LINE_COLOR}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{r: 4}}
             />
-            <Legend
-              verticalAlign="bottom"
-              wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-              formatter={(value) => truncate(value, 20)}
-            />
-            {lineKeys.map((key, index) => (
-              <Line
-                key={key}
-                type="monotone"
-                dataKey={key}
-                stroke={lineColors[index % lineColors.length]}
-                activeDot={{r: 8}}
-                strokeWidth={2}
-                dot={{strokeWidth: 2}}
-              />
-            ))}
           </LineChart>
         </ResponsiveContainer>
-      </Paper>
-    </Box>
+      )}
+    </Card>
   );
 };
 
-export const PieGraph: React.FC<PieGraphProps> = ({
-  data,
-  title = 'Group Distribution',
-  onSelectionToggle
-}) => {
-  const theme = useTheme();
-
-  const lineColors = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.error.main,
-    theme.palette.success.main,
-    theme.palette.warning.main
-  ];
-
-  if (data.length === 0) {
-    return (
-      <Paper className="chart-paper empty-chart" elevation={3}>
-        <Typography variant="body1" color="text.secondary">
-          No data available for the selected filters
-        </Typography>
-      </Paper>
-    );
-  }
-
+export const PieGraph: React.FC<PieGraphProps> = ({data, onSelectionToggle}) => {
   return (
-    <Box className="pie-chart-container">
-      <Paper className="chart-paper" elevation={3}>
-        <div className="chart-header">
-          <Typography variant="subtitle2" className="chart-title">
-            {title}
-          </Typography>
-          {onSelectionToggle && (
-            <div className="selection-button-inline">
-              <IconButton
-                onClick={onSelectionToggle}
-                size="small"
-              >
-                <TuneIcon/>
-              </IconButton>
-            </div>
-          )}
-        </div>
-        <ResponsiveContainer width="100%" height={330}>
+    <Card
+      title="Distribution"
+      className="insights-chart-card"
+      extra={onSelectionToggle ? (
+        <IconButton aria-label="Choose groups" onClick={onSelectionToggle} size="small">
+          <TuneIcon fontSize="small"/>
+        </IconButton>
+      ) : undefined}
+    >
+      {data.length === 0 ? (
+        <div className="insights-chart-empty">No data available for the selected filters</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={280}>
           <PieChart>
             <Pie
               data={data}
@@ -183,27 +89,18 @@ export const PieGraph: React.FC<PieGraphProps> = ({
               nameKey="name"
               cx="50%"
               cy="50%"
-              style={{marginTop: 20}}
-              outerRadius={70}
-              innerRadius={55}
-              fill={theme.palette.primary.main}
-              label={(entry) => `₹${Math.round(Number(entry.value) || 0)}`}
+              innerRadius={70}
+              outerRadius={100}
+              stroke="#fff"
             >
-              {data.map((_entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={lineColors[index % lineColors.length]}
-                />
+              {data.map((entry, index) => (
+                <Cell key={entry.name} fill={DONUT_COLORS[index % DONUT_COLORS.length]}/>
               ))}
             </Pie>
-            <Legend
-              verticalAlign="bottom"
-              wrapperStyle={{fontSize: '12px', whiteSpace: 'normal'}}
-              formatter={(value) => truncate(value, 20)}
-            />
+            <Tooltip formatter={(value, name) => [`₹${formatAxis(Number(value))}`, name]}/>
           </PieChart>
         </ResponsiveContainer>
-      </Paper>
-    </Box>
+      )}
+    </Card>
   );
 };

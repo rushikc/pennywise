@@ -263,6 +263,13 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 .expense-date-row {
   margin-bottom: 4px;
+  align-items: center;
+
+  .col {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }
 
 .expense-date {
@@ -541,6 +548,71 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.home-title {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .app-shell .home-root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 20px 24px 32px;
+  }
+
+  .home-title {
+    display: block;
+    margin: 0 0 16px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .app-shell .home-toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    background: var(--bg-primary);
+    padding-bottom: 12px;
+  }
+
+  .app-shell .home-toolbar-row .search-container {
+    flex: 1;
+    position: static;
+    margin: 0;
+    padding: 0;
+    min-width: 180px;
+  }
+
+  .desktop-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .desktop-filters .ant-input-affix-wrapper {
+    flex: 1;
+    min-width: 160px;
+    max-width: 280px;
+  }
+
+  .desktop-filters .ant-select {
+    min-width: 120px;
+  }
+
+  .desktop-selected-count {
+    color: var(--text-secondary);
+    font-size: 14px;
+    white-space: nowrap;
+  }
 }
 
 // Action buttons in selection mode

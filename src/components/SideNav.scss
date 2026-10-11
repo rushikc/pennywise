@@ -4,19 +4,26 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 .side-nav {
-  width: 88px;
+  width: 200px;
   flex-shrink: 0;
   position: sticky;
   top: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 8px;
+  align-items: stretch;
+  gap: 4px;
+  padding: 20px 12px;
   box-sizing: border-box;
   background: var(--bg-card);
   border-right: 1px solid var(--border-color);
+}
+
+.side-nav-brand {
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 8px 12px 20px;
 }
 
 .side-nav-item {
@@ -25,14 +32,16 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   background: transparent;
   color: var(--text-secondary);
   border-radius: 12px;
-  padding: 10px 4px;
+  padding: 10px 12px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 12px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 15px;
   font-family: inherit;
+  text-align: left;
 
   svg {
     font-size: 22px;

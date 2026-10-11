@@ -45,17 +45,21 @@ $purple-light: var(--accent-purple);
   align-items: flex-start;
   min-height: 100vh;
   background: var(--bg-primary);
-  --side-nav-width: 88px;
+  --side-nav-width: 200px;
   --home-dash-width: 0px;
 }
 
 .app-shell--with-dashboard {
-  --home-dash-width: 320px;
+  --home-dash-width: calc((100vw - var(--side-nav-width)) * 0.25);
 }
 
 .app-shell-main {
   flex: 1;
   min-width: 0;
+}
+
+.app-shell--with-dashboard .app-shell-main {
+  flex: 3 1 0;
 }
 
 @media (min-width: 800px) {

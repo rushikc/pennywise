@@ -15,6 +15,7 @@ const SideNav: React.FC = () => {
 
   return (
     <nav className="side-nav" aria-label="Primary">
+      <div className="side-nav-brand">Pennywise</div>
       {navItems.map((item) => (
         <button
           key={item.value}

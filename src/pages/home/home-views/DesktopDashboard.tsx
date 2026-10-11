@@ -4,16 +4,35 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useMemo} from 'react';
-import {Chip, Typography} from '@mui/material';
+import {Typography} from '@mui/material';
 import dayjs from 'dayjs';
 import {useSelector} from 'react-redux';
 import {selectExpense} from '../../../store/expenseActions';
 import {calculateBudgetProgress} from '../../budget/budgetMath';
-import {budgetAlerts, currentMonthExpenses, summarizeMonth} from '../homeDashboardMath';
+import {budgetAlerts, currentMonthExpenses, summarizeMonth, TagShare} from '../homeDashboardMath';
 import './DesktopDashboard.scss';
 
 const formatRupees = (amount: number): string =>
   `₹${Math.round(amount).toLocaleString('en-IN')}`;
+
+const tagName = (label: string): string =>
+  label === 'Untagged' ? label : label.toLowerCase();
+
+const TagList: React.FC<{tags: TagShare[]}> = ({tags}) => (
+  <section className="dash-card">
+    <div className="dash-title">Tags</div>
+    {tags.length === 0 ? (
+      <Typography variant="body2" color="text.secondary">None this month</Typography>
+    ) : (
+      tags.map((tag) => (
+        <div className="tag-split" key={tag.label}>
+          <span className="dash-row-label">{tagName(tag.label)}</span>
+          <span className="tag-split-pct">{tag.percent}%</span>
+        </div>
+      ))
+    )}
+  </section>
+);
 
 const DesktopDashboard: React.FC = () => {
   const {expenseList, budgetList} = useSelector(selectExpense);
@@ -54,23 +73,7 @@ const DesktopDashboard: React.FC = () => {
         )}
       </section>
 
-      <section className="dash-card">
-        <div className="dash-title">Tags</div>
-        {summary.tags.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">None this month</Typography>
-        ) : (
-          <div className="dash-tags">
-            {summary.tags.map((tag) => (
-              <Chip
-                key={tag.label}
-                size="small"
-                variant="outlined"
-                label={`${tag.label === 'Untagged' ? tag.label : tag.label.toLowerCase()} ${tag.percent}%`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      <TagList tags={summary.tags}/>
 
       <section className="dash-card">
         <div className="dash-title">Alerts</div>

@@ -1,11 +1,13 @@
 ---
-description: Update and run tests for the React, functions, or Apps Script domain a change touches
+description: Run domain tests and ESLint before finishing an implementation or a plan
 alwaysApply: true
 ---
 
-# Domain tests
+# Domain tests and ESLint
 
 When adding, changing, or removing behavior, update tests in the same domain, then run that domain's suite before finishing. Cover the new path and nearby edges (tags, grouping, amounts, dates). Docs-only edits do not need a test run.
+
+Before finishing any implementation, including work done from a plan, run ESLint for every domain the change touches and fix the errors it reports. A plan-file-only edit does not need a lint run. If a touched package has no ESLint config, skip lint for that package and say so.
 
 | Touched paths | Command |
 |---|---|
@@ -13,7 +15,13 @@ When adding, changing, or removing behavior, update tests in the same domain, th
 | `functions/**` | `npm test --prefix functions` |
 | `appScript/**` | `node --test appScript/*.test.js` |
 
-A change that spans domains runs each matching command. Do not skip existing tests. Do not call live Firebase, Gmail, or Gemini in unit tests.
+A change that spans domains runs each matching test and ESLint command. Do not skip existing tests. Do not call live Firebase, Gmail, or Gemini in unit tests.
+
+| Touched paths | ESLint |
+|---|---|
+| `src/**` | `npm run lint` |
+| `functions/**` | `npm run lint --prefix functions` |
+| `appScript/**` | `npx eslint appScript` |
 
 - React: grouping, search, budgets, duplicate visibility, merge math, and UI for Duplicate Review / Merge / Tag / Edit Budget.
 - Functions: `detect`, survivor/tag merge, scan filters. Keep synthetic fixtures in-repo; skip the gitignored dump when missing.

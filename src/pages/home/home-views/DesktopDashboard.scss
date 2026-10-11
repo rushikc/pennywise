@@ -4,8 +4,9 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 .desktop-dashboard {
-  width: 320px;
-  flex-shrink: 0;
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -34,9 +35,13 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 .dash-card-spent {
-  background: var(--accent-purple);
+  background: var(--accent-blue);
   color: var(--text-white);
   border-color: transparent;
+
+  &:hover {
+    background: var(--accent-blue-hover);
+  }
 }
 
 .dash-label {
@@ -75,8 +80,23 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   white-space: nowrap;
 }
 
-.dash-tags {
+.tag-split {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.tag-split:nth-child(even) {
+  background: var(--bg-secondary);
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.tag-split-pct {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--accent-blue);
 }
