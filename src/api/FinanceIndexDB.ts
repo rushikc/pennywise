@@ -4,6 +4,9 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {Config, Expense, VendorTag, Budget} from '../Types';
+import {getDataMode} from '../pages/login/dataMode';
+
+const isLive = () => getDataMode() === 'live';
 
 const dbName = 'Finance';
 const dbVersion = 5;
@@ -23,6 +26,9 @@ export class FinanceIndexDB {
    * Creates object stores and indexes if they don't exist.
    */
   static initDB = (): void => {
+    if (!isLive()) {
+      return;
+    }
     if (!indexedDB) {
       alert('IndexedDB is not available on this browser, this might increase firebase billing');
       return;
@@ -105,7 +111,9 @@ export class FinanceIndexDB {
    * Adds a list of expenses to the 'expense' object store.
    */
   static addExpenseList = (expenseList: Expense[]): Promise<void> => {
-    // console.debug('addExpenseList IndexedDB');
+    if (!isLive()) {
+      return Promise.resolve();
+    }
     return this.batchInsert('expense', expenseList);
   };
 
@@ -113,7 +121,9 @@ export class FinanceIndexDB {
    * Adds a vendor tag to the 'vendorTag' object store.
    */
   static addVendorTag = (vendorTag: VendorTag): Promise<void> => {
-    // console.debug('addVendorTag IndexedDB');
+    if (!isLive()) {
+      return Promise.resolve();
+    }
     return this.executeStoreOperation('vendorTag', (store) => store.put(vendorTag))
       .then(() => undefined);
   };
@@ -122,7 +132,9 @@ export class FinanceIndexDB {
    * Adds a list of configurations to the 'config' object store.
    */
   static addConfig = (configList: Config[]): Promise<void> => {
-    // console.debug('addConfig IndexedDB');
+    if (!isLive()) {
+      return Promise.resolve();
+    }
     return this.batchInsert('config', configList);
   };
 
@@ -133,6 +145,9 @@ export class FinanceIndexDB {
     storeName: T,
     keyPath: string
   ): Promise<StoreData[T] | undefined> => {
+    if (!isLive()) {
+      return Promise.resolve(undefined);
+    }
     return this.executeStoreOperation(storeName, (store) => store.get(keyPath), 'readonly');
   };
 
@@ -140,7 +155,9 @@ export class FinanceIndexDB {
    * Retrieves all data from a specified object store.
    */
   static getAllData = <T extends TableNames>(storeName: T): Promise<StoreData[T][]> => {
-    // console.debug('getAllData IndexedDB - ', storeName);
+    if (!isLive()) {
+      return Promise.resolve([]);
+    }
     return this.executeStoreOperation(storeName, (store) => store.getAll(), 'readonly');
   };
 
@@ -148,6 +165,9 @@ export class FinanceIndexDB {
    * Clears all IndexedDB data by deleting the entire database
    */
   static clearIndexedDBData = (): Promise<void> => {
+    if (!isLive()) {
+      return Promise.resolve();
+    }
     return new Promise<void>((resolve, reject) => {
       try {
         const deleteRequest = indexedDB.deleteDatabase(dbName);
@@ -177,7 +197,9 @@ export class FinanceIndexDB {
    * Deletes an expense from the 'expense' object store by its mailId.
    */
   static deleteExpense = async (mailId: string): Promise<void> => {
-    // console.debug('deleteExpense IndexedDB - mailId:', mailId);
+    if (!isLive()) {
+      return;
+    }
     await this.executeStoreOperation('expense', (store) => store.delete(mailId));
     // console.debug('Successfully deleted expense with mailId:', mailId);
   };
@@ -186,7 +208,9 @@ export class FinanceIndexDB {
    * Adds a list of budgets to the 'budget' object store.
    */
   static addBudgetList = (budgetList: Budget[]): Promise<void> => {
-    // console.debug('addBudgetList IndexedDB');
+    if (!isLive()) {
+      return Promise.resolve();
+    }
     return this.batchInsert('budget', budgetList);
   };
 
@@ -194,7 +218,9 @@ export class FinanceIndexDB {
    * Deletes a budget from the 'budget' object store by its id.
    */
   static deleteBudget = async (budgetId: string): Promise<void> => {
-    // console.debug('deleteBudget IndexedDB - budgetId:', budgetId);
+    if (!isLive()) {
+      return;
+    }
     await this.executeStoreOperation('budget', (store) => store.delete(budgetId));
     // console.debug('Successfully deleted budget with id:', budgetId);
   };

@@ -6,7 +6,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {Box, Button, Modal, Typography} from '@mui/material';
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {auth} from '../firebase/firebaseConfig';
+import {AuthService} from '../pages/login/AuthService';
+import {getDataMode} from '../pages/login/dataMode';
 
 interface ErrorModalProps {
   open: boolean;
@@ -18,8 +19,8 @@ interface ErrorModalProps {
 const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
   const handleSignOut = async () => {
     try {
-      await auth.signOut();
-      window.location.href = '/login';
+      await AuthService.signOut();
+      window.location.href = '/';
       onClose();
     } catch (error) {
       console.error('Error signing out:', error);
@@ -77,7 +78,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({open, onClose, message}) => {
             }
           }}
         >
-          Sign In Again
+          Sign out
         </Button>
       </Box>
     </Modal>
@@ -91,6 +92,9 @@ let modalRoot: HTMLElement | null = null;
 export const ErrorHandlers = {
   // Handle API errors, especially 4XX series
   handleApiError: (error: unknown) => {
+    if (getDataMode() === 'demo') {
+      return error;
+    }
     console.error('API Error:', error);
 
     // Check if it's a Firebase/API error with status code

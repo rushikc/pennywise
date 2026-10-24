@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppConfig, BankConfig, Budget, Expense, VendorTag, Alert} from '../Types';
 import {FinanceIndexDB} from '../api/FinanceIndexDB';
+import {getDataMode} from '../pages/login/dataMode';
 
 
 interface InitialState {
@@ -66,7 +67,9 @@ export const expenseSlice = createSlice({
         state.vendorTagList.push(tagObj);
       }
 
-      void FinanceIndexDB.addVendorTag(tagObj);
+      if (getDataMode() === 'live') {
+        void FinanceIndexDB.addVendorTag(tagObj);
+      }
 
     },
 
@@ -185,6 +188,8 @@ export const expenseSlice = createSlice({
     deleteBudget: (state, action: PayloadAction<string>) => {
       state.budgetList = state.budgetList.filter(budget => budget.id !== action.payload);
     },
+
+    resetExpenseState: () => initialState,
   }
 });
 

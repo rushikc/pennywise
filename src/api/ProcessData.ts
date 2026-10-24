@@ -11,6 +11,7 @@ import {firebaseConfig} from '../firebase/firebase-public';
 import {isEmpty, JSONCopy, sleep} from '../utility/utility';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {Budget} from '../Types';
+import {getDataMode} from '../pages/login/dataMode';
 
 
 const app = initializeApp(firebaseConfig);
@@ -20,6 +21,9 @@ const db = getFirestore(app);
 export class ProcessData {
 
   static processExpenseData = async () => {
+    if (getDataMode() !== 'live') {
+      return null;
+    }
 
     let count = 0;
     for (const expense of []) {
@@ -40,6 +44,9 @@ export class ProcessData {
   };
 
   static processVendorNames = async () => {
+    if (getDataMode() !== 'live') {
+      return;
+    }
     try {
       console.log('Process Data Init');
 
@@ -129,6 +136,9 @@ export class ProcessData {
   };
 
   static processBudget = async () => {
+    if (getDataMode() !== 'live') {
+      return;
+    }
     try {
 
       const budgetList: Budget[] = [

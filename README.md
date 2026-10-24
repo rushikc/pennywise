@@ -57,19 +57,9 @@ a user-friendly experience with robust features, including offline support and s
 * 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
 
 ## Demo
-- Google Auth & Firestore is disabled in demo app, All the data is stored in a static file to save costs.
-- This is a static variation of the website, which means you can explore the app without needing to log in.
 
-<p align="center">
-  <a
-    href="https://pennywise-static.web.app"
-    target="_blank"
-    rel="noopener noreferrer"
-    style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;"
-   >
-    Explore Pennywise Demo App
-  </a>
-</p>
+### Demo mode
+Signed-out visitors, and signed-in users denied by Firestore security rules, use this same app on mock data. Only accounts the rules allow read live Firestore data. Access is controlled only by those rules—there is no email allowlist or extra environment variable.
 
 ![APP](public/docs/pics/app.png)
 ![APP2](public/docs/pics/app2.png)

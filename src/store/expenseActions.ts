@@ -34,3 +34,4 @@ export const setBudgetList = (budgets: Budget[]) => store.dispatch(expenseSlice.
 export const addBudget = (budget: Budget) => store.dispatch(expenseSlice.actions.addBudget(budget));
 export const updateBudget = (budget: Budget) => store.dispatch(expenseSlice.actions.updateBudget(budget));
 export const deleteBudget = (budgetId: string) => store.dispatch(expenseSlice.actions.deleteBudget(budgetId));
+export const resetExpenseState = () => store.dispatch(expenseSlice.actions.resetExpenseState());

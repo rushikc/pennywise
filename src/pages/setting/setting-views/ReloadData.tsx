@@ -14,6 +14,8 @@ import {FinanceIndexDB} from '../../../api/FinanceIndexDB';
 import {getUnixTimestamp} from '../../../utility/utility';
 import {useNavigate} from 'react-router-dom';
 import {createTimedAlert} from '../../../store/alertActions';
+import {getDataMode} from '../../login/dataMode';
+import {loadInitialAppData} from '../../dataValidations';
 import './settingViews.scss';
 
 /**
@@ -30,6 +32,9 @@ const ReloadData: React.FC = () => {
     try {
       console.log('Reloading all expenses');
       await ExpenseAPI.getExpenseList(getUnixTimestamp('2020-01-01'));
+      if (getDataMode() === 'demo') {
+        loadInitialAppData();
+      }
       createTimedAlert({type: 'success', message: 'All expenses reloaded successfully.'});
     } catch (error) {
       console.error('Failed to reload all expenses:', error);
@@ -46,6 +51,14 @@ const ReloadData: React.FC = () => {
     try {
       console.log('Reloading expenses for:', selectedDate);
       await ExpenseAPI.getExpenseList(getUnixTimestamp(selectedDate.toDate()));
+      if (getDataMode() === 'demo') {
+        loadInitialAppData();
+        createTimedAlert({
+          type: 'success',
+          message: `Expenses for ${dayjs(selectedDate).format('MMM DD, YYYY')} reloaded successfully.`
+        });
+        return;
+      }
       await FinanceIndexDB.clearIndexedDBData();
       createTimedAlert({
         type: 'success',

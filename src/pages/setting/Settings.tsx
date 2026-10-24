@@ -63,7 +63,8 @@ const Settings: React.FC = () => {
   const [pendingDuplicateCount, setPendingDuplicateCount] = useState(0);
 
   // Use the custom hook for authentication
-  const {currentUser, signOut} = useAuth();
+  const {currentUser, signOut, dataMode} = useAuth();
+  const deniedLiveUser = Boolean(currentUser) && dataMode === 'demo';
   const userProfile = {
     name: currentUser?.displayName || 'User',
     email: currentUser?.email || 'No email',
@@ -103,7 +104,7 @@ const Settings: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       createTimedAlert({
         type: 'error',
@@ -267,7 +268,10 @@ const Settings: React.FC = () => {
         animate="visible"
         className="dashboard-options-container"
       >
-        {dashboardTiles.map((tile, index) => (
+        {(deniedLiveUser
+          ? dashboardTiles.filter((tile) => tile.route === '/signout')
+          : dashboardTiles.filter((tile) => currentUser || tile.route !== '/signout')
+        ).map((tile, index, tiles) => (
           <DashboardTile
             key={tile.id}
             id={tile.id}
@@ -276,7 +280,7 @@ const Settings: React.FC = () => {
             icon={tile.icon}
             color={tile.color}
             onClick={() => handleTileClick(tile.route)}
-            isLast={index === dashboardTiles.length - 1}
+            isLast={index === tiles.length - 1}
             badgeCount={'badgeCount' in tile ? tile.badgeCount : 0}
           />
         ))}

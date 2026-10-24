@@ -7,10 +7,12 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {User} from 'firebase/auth';
 import {AuthService} from './AuthService';
 import Loading from '../../components/Loading';
+import {DataMode, getDataMode, resolveModeForAuth} from './dataMode';
 
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
+  dataMode: DataMode;
   signInWithGoogle: () => Promise<User>;
   signOut: () => Promise<void>;
 }
@@ -28,6 +30,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dataMode, setModeState] = useState<DataMode>(getDataMode);
 
   useEffect(() => {
     return AuthService.onAuthStateChanged((user) => {
@@ -36,9 +39,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     });
   }, []);
 
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    let cancelled = false;
+    if (currentUser) {
+      setModeState('checking');
+    }
+    void resolveModeForAuth(currentUser).then((mode) => {
+      if (!cancelled) {
+        setModeState(mode);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, currentUser]);
+
   const value = {
     currentUser,
     loading,
+    dataMode,
     signInWithGoogle: AuthService.signInWithGoogle,
     signOut: AuthService.signOut,
   };
