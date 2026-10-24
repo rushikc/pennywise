@@ -33,9 +33,9 @@ First, complete the setup instructions in the [Setup Documentation](SETUP.md).
     ```
 3.  **Start the Development Server**:
     ```bash
-    npm start
+    npm run dev
     ```
-This will start the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This starts Vite with React Fast Refresh. Open [http://127.0.0.1:3000](http://127.0.0.1:3000) to view it in your browser. `npm start` is the same command. After changing the Vite toolchain, restart the dev server instead of reusing an old process on port 3000.
 
 ### Firebase Deployment
 To deploy the Firebase functions and hosting, follow these steps:

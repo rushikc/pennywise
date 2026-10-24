@@ -25,33 +25,7 @@ import {useSelector} from 'react-redux';
 import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {createTimedAlert} from '../../store/alertActions';
-
-// Define the BuildInfo interface
-interface BuildInfo {
-  version: string;
-  buildTime: string;
-  buildTimestamp: number;
-}
-
-// Fallback build info for development when buildInfo.ts doesn't exist
-const fallbackBuildInfo: BuildInfo = {
-  version: '1.1.0', // Should match package.json version
-  buildTime: new Date().toISOString(),
-  buildTimestamp: Date.now()
-};
-
-// Function to get build info with fallback
-const getBuildInfo = (): BuildInfo => {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const buildInfoModule = require('../../buildInfo');
-    return buildInfoModule.buildInfo as BuildInfo;
-  } catch {
-    return fallbackBuildInfo;
-  }
-};
-
-const buildInfo: BuildInfo = getBuildInfo();
+import {buildInfo} from '../../utility/buildInfo';
 
 /**
  * Settings page component with user profile and settings options

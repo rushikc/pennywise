@@ -11,7 +11,7 @@ Before finishing any implementation, including work done from a plan, run ESLint
 
 | Touched paths | Command |
 |---|---|
-| `src/**` | `CI=true npm test -- --watchAll=false` |
+| `src/**` | `npm test` |
 | `functions/**` | `npm test --prefix functions` |
 | `appScript/**` | `node --test appScript/*.test.js` |
 

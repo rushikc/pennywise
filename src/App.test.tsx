@@ -32,8 +32,8 @@ const mockAuthState = {
 
 const mockClearIndexedDBData = jest.fn().mockResolvedValue(undefined);
 
-jest.mock('./pages/login/AuthContext', () => {
-  const React = require('react') as typeof import('react');
+jest.mock('./pages/login/AuthContext', async () => {
+  const React = await import('react');
   const Ctx = React.createContext(null as unknown);
   const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [, setVersion] = React.useState(0);
@@ -46,7 +46,7 @@ jest.mock('./pages/login/AuthContext', () => {
         await mockClearIndexedDBData();
         mockAuthState.currentUser = null;
         mockAuthState.dataMode = 'demo';
-        const {setDataMode: setMode} = require('./pages/login/dataMode') as typeof import('./pages/login/dataMode');
+        const {setDataMode: setMode} = await import('./pages/login/dataMode');
         setMode('demo');
         setVersion((version: number) => version + 1);
       },
@@ -71,17 +71,19 @@ jest.mock('./pages/login/dataMode', () => {
   };
 });
 
-jest.mock('./pages/dataValidations', () => ({
-  loadInitialAppData: () => {
-    const {store: appStore} = require('./store/store') as typeof import('./store/store');
-    const {expenseSlice: slice} = require('./store/expenseSlice') as typeof import('./store/expenseSlice');
-    appStore.dispatch(slice.actions.setExpenseState({
-      expenseList: [],
-      vendorTagList: [],
-      darkMode: false,
-    }));
-  },
-}));
+jest.mock('./pages/dataValidations', async () => {
+  const {store: appStore} = await import('./store/store');
+  const {expenseSlice: slice} = await import('./store/expenseSlice');
+  return {
+    loadInitialAppData: () => {
+      appStore.dispatch(slice.actions.setExpenseState({
+        expenseList: [],
+        vendorTagList: [],
+        darkMode: false,
+      }));
+    },
+  };
+});
 
 jest.mock('./api/FinanceIndexDB', () => ({
   FinanceIndexDB: {
@@ -104,7 +106,7 @@ jest.mock('./api/LiveExpenseAPI', () => ({
   LiveExpenseAPI: {},
 }));
 
-jest.mock('./components/Loading', () => () => null);
+jest.mock('./components/Loading', () => ({default: () => null}));
 
 jest.mock('./firebase/firebaseConfig', () => ({}));
 jest.mock('firebase/app', () => ({
@@ -132,10 +134,10 @@ jest.mock('@mui/material/useMediaQuery', () => ({
   default: () => false,
 }));
 
-jest.mock('./routes', () => {
-  const React = require('react') as typeof import('react');
-  const {useAuth} = require('./pages/login/AuthContext') as typeof import('./pages/login/AuthContext');
-  const {useNavigate} = require('react-router-dom') as typeof import('react-router-dom');
+jest.mock('./routes', async () => {
+  const React = await import('react');
+  const {useAuth} = await import('./pages/login/AuthContext');
+  const {useNavigate} = await import('react-router-dom');
   const TestSettings = () => {
     const {currentUser, dataMode, signOut} = useAuth();
     const navigate = useNavigate();

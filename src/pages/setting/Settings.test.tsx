@@ -18,6 +18,7 @@ const mockAuth = {
 };
 
 jest.mock('../login/AuthContext', () => ({
+  __esModule: true,
   useAuth: () => mockAuth,
 }));
 

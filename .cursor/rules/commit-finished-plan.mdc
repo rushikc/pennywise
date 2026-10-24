@@ -1,0 +1,47 @@
+---
+description: Every plan ends with lint, tsc, and a build gate, then a commit decision. Large finished plans are committed; small ones are left uncommitted.
+alwaysApply: true
+---
+
+# Commit a finished plan
+
+Last step of every plan. Write it into the plan (plan mode) and run it when the plan is done (agent execution). Decide yourself. Do not ask. Do not push.
+
+## When to commit
+
+Commit when the change is more than 5 files, or fewer files but still a new flow, new backend behavior, or a multi-part UI.
+
+Leave small work uncommitted: under 5 files, a minor UI tweak, copy edit, one-off fix, or a rule update.
+
+## What to commit
+
+- Stage only files this plan created or edited, including a cross-cutting edit.
+- Leave other dirty and untracked files unstaged.
+- Do not commit secrets (`.env`, credentials, keys); warn instead.
+- If the plan changed no files, do not create an empty commit.
+
+## Message
+
+One line: `type: description`. Types: `feat`, `fix`, `refactor`, `test`, `doc`, `chore`. Short lowercase description, same voice as `git log`.
+
+```text
+feat: xyz added
+```
+
+## How
+
+Follow the repo git safety protocol. In parallel: `git status`, `git diff` (staged and unstaged), recent `git log`. Stage the plan's files by path. Commit with a HEREDOC. Then `git status` to confirm the commit and that unrelated local changes are still unstaged.
+
+## Lint, typecheck, and build
+
+Write these commands into the plan as the last verify step. Run them once at the end of every implementation, including work from a plan. ESLint is not a typecheck. Vite HMR and `vite-plugin-checker` overlay are not a substitute for `npx tsc --noEmit`. Treat a type overlay as a failure. After toolchain or typecheck changes, restart `npm run dev`; do not reuse a leftover CRA/`react-scripts` process on port 3000.
+
+Plan-file-only or docs-only edits skip this pass. If a touched package has no matching command, skip that command and say so.
+
+| Touched paths | Lint | Typecheck | Build |
+|---|---|---|---|
+| `src/**` | `npm run lint` | `npx tsc --noEmit` | `npm run build` |
+| `functions/**` | `npm run lint --prefix functions` | skip (no tsconfig) | skip |
+| `appScript/**` | `npx eslint appScript` | skip (JS) | skip |
+
+Fix every error that pass reports. Do not treat unused-import, missing antd/MUI exports, or `Select`/`DatePicker` callback types as overlay noise. Do not re-run the full test suite. The user will run tests. Domain tests stay in `.cursor/rules/run-domain-tests.mdc`.

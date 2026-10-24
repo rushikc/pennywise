@@ -18,6 +18,7 @@ jest.mock('../../../api/ExpenseAPI', () => ({
 }));
 
 jest.mock('../../../store/alertActions', () => ({
+  __esModule: true,
   createTimedAlert: jest.fn(),
 }));
 

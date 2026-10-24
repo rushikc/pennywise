@@ -4,16 +4,25 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {render, screen} from '@testing-library/react';
+import type {CSSProperties, ReactNode} from 'react';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
 import {makeExpense} from '../../testUtils';
 import Insights from './Insights';
 import {vendorTableBodyHeight, vendorTableColumns} from './vendorTable';
 
+type MockColumn = {title?: ReactNode};
+type MockTableProps = {
+  columns: MockColumn[];
+  scroll?: {y?: number | string};
+  pagination?: unknown;
+  tableLayout?: string;
+};
+
 jest.mock('antd', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mockReact = require('react');
-  const Table = ({columns, scroll, pagination, tableLayout}) => mockReact.createElement(
+  const Table = ({columns, scroll, pagination, tableLayout}: MockTableProps) => mockReact.createElement(
     'div',
     {
       className: 'ant-table-body',
@@ -21,15 +30,19 @@ jest.mock('antd', () => {
       'data-table-layout': tableLayout,
       style: {maxHeight: scroll?.y, overflowY: 'scroll'},
     },
-    columns.map((column) => mockReact.createElement(
+    columns.map((column: MockColumn) => mockReact.createElement(
       'div',
       {key: column.title, role: 'columnheader'},
       column.title,
     )),
   );
 
-  const passthrough = ({children}) => mockReact.createElement('div', null, children);
-  const Card = ({children, className, style}) => mockReact.createElement(
+  const passthrough = ({children}: {children?: ReactNode}) => mockReact.createElement('div', null, children);
+  const Card = ({
+    children,
+    className,
+    style,
+  }: {children?: ReactNode; className?: string; style?: CSSProperties}) => mockReact.createElement(
     'section',
     {className, style},
     children,
@@ -45,7 +58,7 @@ jest.mock('antd', () => {
   };
 });
 
-jest.mock('../../components/Loading', () => () => null);
+jest.mock('../../components/Loading', () => ({default: () => null}));
 
 jest.mock('@ant-design/icons', () => ({
   DownloadOutlined: () => null,

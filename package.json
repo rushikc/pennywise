@@ -3,7 +3,6 @@
   "version": "1.1.0",
   "private": true,
   "license": "MIT",
-  "module": "es2016",
   "dependencies": {
     "@ant-design/icons": "^6.3.4",
     "@emotion/react": "^11.14.0",
@@ -27,7 +26,6 @@
     "googleapis": "^152.0.0",
     "idb": "^7.1.1",
     "json-2-csv": "^5.5.9",
-    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
@@ -42,39 +40,40 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/date-fns": "^2.5.3",
     "@types/exceljs": "^0.5.3",
     "@types/file-saver": "^2.0.7",
-    "@types/jest": "^27.5.2",
     "@types/luxon": "^3.2.0",
-    "@types/node": "^16.11.44",
+    "@types/node": "^22.15.3",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "css-minimizer-webpack-plugin": "^7.0.2",
+    "@vitejs/plugin-react": "^4.7.0",
     "dotenv": "^16.4.5",
-    "react-scripts": "^5.0.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "fake-indexeddb": "^6.0.0",
+    "firebase-admin": "^13.10.0",
+    "jsdom": "^25.0.1",
+    "rollup-plugin-visualizer": "^5.14.0",
     "source-map-explorer": "^2.5.3",
-    "terser-webpack-plugin": "^5.3.14",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "vite": "^6.3.5",
+    "vite-plugin-checker": "^0.9.3",
+    "vitest": "^3.2.4"
   },
   "scripts": {
-    "start": "craco start",
-    "dev": "craco start",
-    "build": "node scripts/generate-build-info.js && craco build",
-    "test": "craco test",
+    "start": "vite --port 3000 --host 127.0.0.1",
+    "dev": "vite --port 3000 --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --port 3000 --host 127.0.0.1",
+    "test": "vitest run",
     "test:appscript": "node --test appScript/*.test.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "engines": {
     "npm": ">=10.0.0",

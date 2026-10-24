@@ -31,7 +31,7 @@ jobs:
         run: npm run lint
 
       - name: Test React app
-        run: npm test -- --watchAll=false
+        run: npm test
 
       - name: Install functions dependencies
         run: npm ci
