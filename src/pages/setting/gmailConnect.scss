@@ -1,0 +1,45 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+.gmail-connect-card {
+  background: var(--bg-card) !important;
+  padding: var(--card-padding);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.gmail-connect-copy {
+  min-width: 0;
+}
+
+.gmail-connect-title {
+  color: var(--text-primary);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+.gmail-connect-body {
+  color: var(--text-secondary);
+  font-size: var(--font-size-subtext);
+}
+
+.gmail-connect-error {
+  color: var(--accent-red);
+  font-size: var(--font-size-caption);
+  margin-top: var(--space-xs);
+}
+
+.gmail-connect-button {
+  flex-shrink: 0;
+  background-color: var(--accent-blue) !important;
+  color: var(--text-white) !important;
+  box-shadow: none !important;
+  text-transform: none;
+}

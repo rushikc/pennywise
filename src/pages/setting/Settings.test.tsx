@@ -34,6 +34,11 @@ jest.mock('../../store/alertActions', () => ({
   createTimedAlert: jest.fn(),
 }));
 
+jest.mock('./setting-views/GmailConnectCard', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
 const renderSettings = () => render(
   <Provider store={store}>
     <MemoryRouter>

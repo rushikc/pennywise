@@ -26,6 +26,7 @@ import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {createTimedAlert} from '../../store/alertActions';
 import {buildInfo} from '../../utility/buildInfo';
+import GmailConnectCard from './setting-views/GmailConnectCard';
 
 /**
  * Settings page component with user profile and settings options
@@ -235,6 +236,8 @@ const Settings: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+
+      <GmailConnectCard/>
 
       <motion.div
         variants={containerVariants}

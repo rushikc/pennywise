@@ -3,7 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",
-    "test": "node --test dedupe/*.test.js gcpNames.test.js",
+    "test": "node --test dedupe/*.test.js gcpNames.test.js gmail/*.test.js",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -17,6 +17,7 @@
   "main": "index.js",
   "dependencies": {
     "@google-cloud/firestore": "7.11.0",
+    "@google-cloud/secret-manager": "^7.2.0",
     "dayjs": "^1.11.7",
     "dotenv": "^16.4.5",
     "firebase": "^11.10.0",

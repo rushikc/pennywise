@@ -8,7 +8,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 // noinspection JSUnresolvedReference
 
 const {setGlobalOptions} = require('firebase-functions/v2');
-const {onRequest} = require('firebase-functions/v2/https');
+const {onCall, onRequest} = require('firebase-functions/v2/https');
+const {defineSecret, defineString} = require('firebase-functions/params');
 const {functionsServiceAccountEmail, loadGcpNames} = require('./gcpNames');
 
 const gcpNames = loadGcpNames();
@@ -46,6 +47,30 @@ admin.initializeApp();
 
 // Get the Firestore instance from the Admin SDK
 const db = getFirestore(); // No need to pass 'app' here
+
+const oauthClientSecret = defineSecret('pennywise-oauth-client-secret');
+const oauthClientId = defineString('GOOGLE_OAUTH_CLIENT_ID');
+const {createTokenStore} = require('./gmail/tokenStore');
+const {createGmailCallables} = require('./gmail/callables');
+const gmailTokenStore = createTokenStore();
+
+function gmailCallables() {
+  return createGmailCallables({
+    db,
+    tokenStore: gmailTokenStore,
+    projectId: process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT,
+    clientId: oauthClientId.value(),
+    clientSecret: oauthClientSecret.value(),
+    fetchImpl: fetch,
+    now: () => Date.now(),
+  });
+}
+
+exports.connectGmail = onCall({secrets: [oauthClientSecret]}, (request) =>
+  gmailCallables().connectGmail(request));
+
+exports.disconnectGmail = onCall({secrets: [oauthClientSecret]}, (request) =>
+  gmailCallables().disconnectGmail(request));
 
 
 // --- Keep your existing onRequest functions ---

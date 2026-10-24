@@ -56,7 +56,7 @@ Do not commit `backend.hcl`, `terraform.tfvars`, `*.tfstate*`, or `.terraform/`.
    echo -n 'GEMINI_API_KEY' | gcloud secrets versions add pennywise-gemini-api-key --data-file=-
    ```
 
-4. Set `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` to the Web client id. Functions read the same client id from environment / params and the client secret from Secret Manager.
+4. Set `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` to the Web client id. In `functions/.env` set `GOOGLE_OAUTH_CLIENT_ID` to the same value. Functions read the client secret from Secret Manager (`pennywise-oauth-client-secret`) via `defineSecret`.
 5. `firebase deploy` (functions use the Terraform service account via `setGlobalOptions`).
 6. Deploy or paste `firestore.rules`. Create `allowedUsers/{email}` docs for each family member in the Firebase console.
 

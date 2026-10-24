@@ -13,6 +13,7 @@ describe('gcpNames', () => {
     assert.equal(names.pubsubTopic, 'gmail-push');
     assert.equal(names.functionsServiceAccountId, 'pennywise-functions');
     assert.equal(names.gmailRefreshTokenPrefix, 'gmail-rt-');
+    assert.equal(names.gmailReadonlyScope, 'https://www.googleapis.com/auth/gmail.readonly');
   });
 
   it('builds the functions service account email', () => {
