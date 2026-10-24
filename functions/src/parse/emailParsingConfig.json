@@ -1,0 +1,35 @@
+{
+  "v1": {
+    "description": "HDFC Bank E-mandate, Credit Card and UPI transactions",
+    "config": [
+      {
+        "snippetStrings": ["debited from your HDFC Bank Credit Card ending"],
+        "costRegex": ["Rs\\.(.*?)\\sis debited"],
+        "vendorRegex": ["towards\\s(.*?)\\son"],
+        "type": "credit-card",
+        "costType": "debit"
+      },
+      {
+        "snippetStrings": ["Your UPI transaction", "has been debited"],
+        "costRegex": ["Rs\\.(.*?)\\shas been debited"],
+        "vendorRegex": ["VPA\\s(.*?)\\son"],
+        "type": "upi",
+        "costType": "debit"
+      },
+      {
+        "snippetStrings": ["Your UPI transaction", "successfully credited"],
+        "costRegex": ["\\.(.*?)\\ is successfully credited"],
+        "vendorRegex": ["VPA\\s(.*?)\\son"],
+        "type": "upi",
+        "costType": "credit"
+      },
+      {
+        "snippetStrings": ["E-mandate", "has been successfully paid"],
+        "costRegex": ["Amount: INR\\s(.*?)\\sDate"],
+        "vendorRegex": ["Your\\s(.*?)\\sbill"],
+        "type": "e-mandate",
+        "costType": "debit"
+      }
+    ]
+  }
+}

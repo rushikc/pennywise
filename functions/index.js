@@ -9,6 +9,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const {setGlobalOptions} = require('firebase-functions/v2');
 const {onCall, onRequest} = require('firebase-functions/v2/https');
+const {onMessagePublished} = require('firebase-functions/v2/pubsub');
 const {defineSecret, defineString} = require('firebase-functions/params');
 const {functionsServiceAccountEmail, loadGcpNames} = require('./gcpNames');
 
@@ -49,6 +50,7 @@ admin.initializeApp();
 const db = getFirestore(); // No need to pass 'app' here
 
 const oauthClientSecret = defineSecret('pennywise-oauth-client-secret');
+const geminiApiKey = defineSecret('pennywise-gemini-api-key');
 const oauthClientId = defineString('GOOGLE_OAUTH_CLIENT_ID');
 const {createTokenStore} = require('./gmail/tokenStore');
 const {createGmailCallables} = require('./gmail/callables');
@@ -71,6 +73,22 @@ exports.connectGmail = onCall({secrets: [oauthClientSecret]}, (request) =>
 
 exports.disconnectGmail = onCall({secrets: [oauthClientSecret]}, (request) =>
   gmailCallables().disconnectGmail(request));
+
+const {handleGmailPush} = require('./gmail/push');
+
+exports.onGmailPush = onMessagePublished({
+  topic: gcpNames.pubsubTopic,
+  secrets: [oauthClientSecret, geminiApiKey],
+}, (event) => handleGmailPush({
+  db,
+  tokenStore: gmailTokenStore,
+  projectId: process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT,
+  clientId: oauthClientId.value(),
+  clientSecret: oauthClientSecret.value(),
+  geminiKey: geminiApiKey.value(),
+  message: event.data && event.data.message,
+  fetchImpl: fetch,
+}));
 
 
 // --- Keep your existing onRequest functions ---

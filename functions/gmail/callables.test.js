@@ -33,7 +33,11 @@ function allowlistedDb() {
   db.doc = (path) => ({
     path,
     async get() {
-      return {exists: path === 'allowedUsers/ada@example.com'};
+      return {exists: path === 'allowedUsers/ada@example.com' || db.docs.has(path), data: () => db.docs.get(path)};
+    },
+    async set(data, options) {
+      const current = db.docs.get(path) || {};
+      db.docs.set(path, options && options.merge ? {...current, ...data} : data);
     },
   });
   return db;
@@ -61,6 +65,9 @@ describe('gmail callables', () => {
     const fetchImpl = async (url) => {
       if (String(url).includes('userinfo')) {
         return {ok: true, json: async () => ({email: 'ada@example.com'})};
+      }
+      if (String(url).includes('/watch')) {
+        return {ok: true, json: async () => ({historyId: '42', expiration: '99'})};
       }
       return {
         ok: true,
@@ -126,7 +133,7 @@ describe('gmail callables', () => {
       projectId: 'proj',
       clientId: 'id',
       clientSecret: 'secret',
-      fetchImpl: async () => ({ok: true}),
+      fetchImpl: async () => ({ok: true, json: async () => ({access_token: 'at'})}),
       now: () => 2000,
     });
     const result = await disconnectGmail(authedRequest());

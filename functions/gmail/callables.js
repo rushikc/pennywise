@@ -5,8 +5,10 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const {HttpsError} = require('firebase-functions/v2/https');
 const {exchangeAuthorizationCode, fetchGmailEmail, revokeToken} = require('./oauth');
-const {assertAllowlisted, startGmailWatch, stopGmailWatch, writeConnectedState, writeDisconnectedState} =
+const {assertAllowlisted, writeConnectedState, writeDisconnectedState} =
   require('./connectionState');
+const {startGmailWatch, stopGmailWatch} = require('./watch');
+const {refreshAccessToken} = require('./gmailClient');
 
 function requireAllowlistedAuth(request) {
   if (!request.auth || !request.auth.uid) {
@@ -41,8 +43,15 @@ function createGmailCallables({db, tokenStore, projectId, clientId, clientSecret
     const gmailEmail = await fetchGmailEmail(tokens.accessToken, fetchImpl) || email;
     await tokenStore.saveRefreshToken(projectId, uid, tokens.refreshToken);
     await writeConnectedState(db, {uid, email: gmailEmail, nowMs: now()});
-    await startGmailWatch({uid, accessToken: tokens.accessToken});
-    return {status: 'connected', email};
+    if (tokens.accessToken) {
+      const watch = await startGmailWatch({
+        accessToken: tokens.accessToken,
+        projectId,
+        fetchImpl,
+      });
+      await db.doc(`users/${uid}/private/gmail`).set(watch, {merge: true});
+    }
+    return {status: 'connected', email: gmailEmail};
   }
 
   async function disconnectGmail(request) {
@@ -59,7 +68,21 @@ function createGmailCallables({db, tokenStore, projectId, clientId, clientSecret
         throw error;
       }
     }
-    await stopGmailWatch({uid, refreshToken});
+    if (refreshToken) {
+      try {
+        const accessToken = await refreshAccessToken({
+          refreshToken,
+          clientId,
+          clientSecret,
+          fetchImpl,
+        });
+        await stopGmailWatch({accessToken, fetchImpl});
+      } catch (error) {
+        if (error.code !== 'invalid_grant') {
+          throw error;
+        }
+      }
+    }
     await revokeToken(refreshToken, fetchImpl);
     await tokenStore.deleteRefreshToken(projectId, uid);
     await writeDisconnectedState(db, {uid, email, lastError: null, nowMs: now()});

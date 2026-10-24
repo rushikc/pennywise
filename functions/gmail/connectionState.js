@@ -81,24 +81,6 @@ async function assertAllowlisted(db, email) {
   return snap.exists;
 }
 
-/**
- * Placeholder until Gmail users.watch is wired in the push parser phase.
- * @param {object} _args
- * @returns {Promise<null>}
- */
-async function startGmailWatch(_args) {
-  return null;
-}
-
-/**
- * Placeholder until Gmail users.stop is wired in the push parser phase.
- * @param {object} _args
- * @returns {Promise<null>}
- */
-async function stopGmailWatch(_args) {
-  return null;
-}
-
 module.exports = {
   connectionEmailKey,
   connectedPrivateDoc,
@@ -108,6 +90,4 @@ module.exports = {
   writeConnectedState,
   writeDisconnectedState,
   assertAllowlisted,
-  startGmailWatch,
-  stopGmailWatch,
 };
