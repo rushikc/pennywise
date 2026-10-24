@@ -40,3 +40,12 @@ firebase-debug.log
 
 # Local temp data (exports, fixtures)
 /temp/
+/backups/
+
+# Terraform
+infra/terraform/backend.hcl
+infra/terraform/terraform.tfvars
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.*
+infra/terraform/.terraform/
+infra/terraform/.terraform.lock.hcl.bak

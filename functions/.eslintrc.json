@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "rules": {
+    "max-len": ["error", {"code": 120, "ignoreUrls": true}],
+    "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}]
+  }
+}

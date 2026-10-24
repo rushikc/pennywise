@@ -1,0 +1,13 @@
+project_id = "your-firebase-project-id"
+region     = "asia-south1"
+
+# Optional: users or service accounts that run `firebase deploy`
+# deployer_members = [
+#   "user:you@gmail.com",
+# ]
+
+# enable_kms             = false
+# enable_billing_budget  = false
+# billing_account        = "XXXXXX-XXXXXX-XXXXXX"
+# billing_budget_amount  = 15
+# billing_budget_currency = "INR"

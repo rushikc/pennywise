@@ -7,7 +7,23 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedReference
 
+const {setGlobalOptions} = require('firebase-functions/v2');
 const {onRequest} = require('firebase-functions/v2/https');
+const {functionsServiceAccountEmail, loadGcpNames} = require('./gcpNames');
+
+const gcpNames = loadGcpNames();
+const firebaseConfig = process.env.FIREBASE_CONFIG
+  ? JSON.parse(process.env.FIREBASE_CONFIG)
+  : {};
+const projectId = process.env.GCLOUD_PROJECT
+  || process.env.GCP_PROJECT
+  || firebaseConfig.projectId;
+if (projectId) {
+  setGlobalOptions({
+    region: gcpNames.functionsRegion,
+    serviceAccount: functionsServiceAccountEmail(projectId),
+  });
+}
 
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
