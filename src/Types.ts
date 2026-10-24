@@ -50,7 +50,7 @@ export interface BankConfig {
   creditCards: string[];
 }
 
-/** Banks used to detect transaction emails before sending text to Gemini (Apps Script + UI config). */
+/** Banks used to detect transaction emails before sending text to Gemini (Gmail ingest + UI config). */
 export interface BankEmailParsingEntry {
   id: string;
   displayName: string;

@@ -148,7 +148,6 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 ```
 pennywise/
 ├── build/                  # Production build output
-├── commands/               # Build and deployment scripts
 ├── functions/              # Firebase Cloud Functions (Gmail ingest)
 ├── infra/terraform/        # GCP resources firebase deploy cannot create
 ├── shared/                 # Names shared by Terraform and functions

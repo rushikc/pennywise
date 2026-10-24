@@ -66,6 +66,8 @@ exports.disconnectGmail = onCall({secrets: [oauthClientSecret]}, (request) =>
 exports.onGmailPush = onMessagePublished({
   topic: gcpNames.pubsubTopic,
   secrets: [oauthClientSecret, geminiApiKey],
+  timeoutSeconds: 540,
+  memory: '512MiB',
 }, (event) => handleGmailPush({
   db,
   tokenStore: gmailTokenStore,
@@ -81,6 +83,8 @@ exports.hourlyGmailSweep = onSchedule({
   schedule: 'every 1 hours',
   secrets: [oauthClientSecret, geminiApiKey],
   timeZone: 'Asia/Kolkata',
+  timeoutSeconds: 540,
+  memory: '512MiB',
 }, () => runHourlySweep({
   db,
   tokenStore: gmailTokenStore,

@@ -5,13 +5,25 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const {describe, it} = require('node:test');
 const assert = require('node:assert/strict');
-const {processConnectedUser, saveParsedExpense} = require('./ingest');
+const {processConnectedUser, saveParsedExpense, ingestDocPaths, processedIdPath} = require('./ingest');
 
-function collectionStore() {
+function assertEvenDocPath(path) {
+  const parts = String(path).split('/').filter(Boolean);
+  if (parts.length % 2 !== 0) {
+    throw new Error(
+      `Value for argument "documentPath" must point to a document, but was "${path}". ` +
+      'Your path does not contain an even number of components.',
+    );
+  }
+}
+
+function collectionStore(options = {}) {
   const docs = new Map();
+  const failCreates = new Set(options.failCreates || []);
   const db = {
     docs,
     doc(path) {
+      assertEvenDocPath(path);
       return {
         path,
         async get() {
@@ -22,6 +34,11 @@ function collectionStore() {
           docs.set(path, options && options.merge ? {...current, ...data} : data);
         },
         async create(data) {
+          if (failCreates.has(path)) {
+            const err = new Error('write failed');
+            err.code = 13;
+            throw err;
+          }
           if (docs.has(path)) {
             const err = new Error('already exists');
             err.code = 6;
@@ -55,6 +72,39 @@ function collectionStore() {
         },
       };
     },
+    batch() {
+      const ops = [];
+      return {
+        create(ref, data) {
+          ops.push({type: 'create', path: ref.path, data});
+        },
+        set(ref, data, options) {
+          ops.push({type: 'set', path: ref.path, data, options});
+        },
+        async commit() {
+          for (const op of ops) {
+            if (op.type === 'create' && failCreates.has(op.path)) {
+              const err = new Error('write failed');
+              err.code = 13;
+              throw err;
+            }
+            if (op.type === 'create' && docs.has(op.path)) {
+              const err = new Error('already exists');
+              err.code = 6;
+              throw err;
+            }
+          }
+          for (const op of ops) {
+            if (op.type === 'create') {
+              docs.set(op.path, op.data);
+            } else {
+              const current = docs.get(op.path) || {};
+              docs.set(op.path, op.options && op.options.merge ? {...current, ...op.data} : op.data);
+            }
+          }
+        },
+      };
+    },
     async runTransaction(fn) {
       const transaction = {
         async get(ref) {
@@ -85,6 +135,38 @@ function hdfcMessage(id) {
   };
 }
 
+function connectedDb(extra = {}) {
+  const db = collectionStore();
+  db.docs.set('users/u1/private/gmail', {
+    status: 'connected',
+    historyId: extra.historyId || '5',
+    lastProcessedAt: extra.lastProcessedAt,
+    ...extra.gmail,
+  });
+  db.docs.set('users/u1/config/emailParseBanks', {
+    banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
+  });
+  return db;
+}
+
+describe('ingest document paths', () => {
+  it('uses an even number of segments for every ingest doc path', () => {
+    for (const path of ingestDocPaths('u1', 'msg-1')) {
+      const segments = path.split('/').filter(Boolean);
+      assert.equal(segments.length % 2, 0, path);
+    }
+    assert.equal(processedIdPath('u1', 'msg-1'), 'users/u1/private/gmail/processedIds/msg-1');
+  });
+
+  it('throws on odd-segment doc paths like the Firestore client', () => {
+    const db = collectionStore();
+    assert.throws(
+      () => db.doc('users/u1/private/processedIds/msg-1'),
+      /even number of components/,
+    );
+  });
+});
+
 describe('saveParsedExpense', () => {
   it('uses the Gmail message id as the expense document id', async () => {
     const db = collectionStore();
@@ -107,7 +189,7 @@ describe('saveParsedExpense', () => {
     assert.equal(first.created, true);
     assert.equal(second.created, false);
     assert.ok(db.docs.has('users/u1/expense/msg-1'));
-    assert.ok(db.docs.has('users/u1/private/processedIds/msg-1'));
+    assert.ok(db.docs.has('users/u1/private/gmail/processedIds/msg-1'));
   });
 
   it('does not resurrect a deleted expense when the processed marker remains', async () => {
@@ -131,21 +213,29 @@ describe('saveParsedExpense', () => {
     );
     assert.equal(again.created, false);
     assert.equal(db.docs.has('users/u1/expense/msg-1'), false);
-    assert.ok(db.docs.has('users/u1/private/processedIds/msg-1'));
+    assert.ok(db.docs.has('users/u1/private/gmail/processedIds/msg-1'));
+  });
+
+  it('leaves no marker when the expense create fails', async () => {
+    const db = collectionStore({failCreates: ['users/u1/expense/msg-1']});
+    await assert.rejects(
+      () => saveParsedExpense(
+        db,
+        'u1',
+        {id: 'msg-1', internalDate: '10'},
+        {cost: 12, costType: 'debit', vendor: 'Shop', type: 'upi'},
+        [],
+        100,
+      ),
+    );
+    assert.equal(db.docs.has('users/u1/expense/msg-1'), false);
+    assert.equal(db.docs.has('users/u1/private/gmail/processedIds/msg-1'), false);
   });
 });
 
 describe('processConnectedUser history 404', () => {
   it('falls back to messages.list and resets the cursor from profile', async () => {
-    const db = collectionStore();
-    db.docs.set('users/u1/private/gmail', {
-      status: 'connected',
-      historyId: 'old',
-      lastProcessedAt: 1,
-    });
-    db.docs.set('users/u1/config/emailParseBanks', {
-      banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
-    });
+    const db = connectedDb({historyId: 'old', lastProcessedAt: 1});
     const fetchImpl = async (url) => {
       const href = String(url);
       if (href.includes('/history')) {
@@ -171,16 +261,38 @@ describe('processConnectedUser history 404', () => {
     assert.equal(db.docs.get('users/u1/private/gmail').historyId, '999');
   });
 
+  it('bounds fallback search to 30 days when lastProcessedAt is null', async () => {
+    const nowMs = Date.UTC(2026, 9, 25);
+    const db = connectedDb({historyId: 'old', lastProcessedAt: null});
+    const listed = [];
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/history')) {
+        return {ok: false, status: 404, json: async () => ({error: {code: 404}})};
+      }
+      if (href.includes('/messages?')) {
+        listed.push(href);
+        return {ok: true, json: async () => ({messages: []})};
+      }
+      if (href.includes('/profile')) {
+        return {ok: true, json: async () => ({historyId: '999'})};
+      }
+      return {ok: true, json: async () => ({})};
+    };
+    const result = await processConnectedUser({
+      db,
+      uid: 'u1',
+      accessToken: 'at',
+      geminiKey: '',
+      fetchImpl,
+      nowMs,
+    });
+    assert.match(listed[0], /after%3A2026%2F09%2F25/);
+    assert.match(result.fallbackQuery, /after:2026\/09\/25/);
+  });
+
   it('does not advance the cursor when messages.list fails', async () => {
-    const db = collectionStore();
-    db.docs.set('users/u1/private/gmail', {
-      status: 'connected',
-      historyId: 'old',
-      lastProcessedAt: 1,
-    });
-    db.docs.set('users/u1/config/emailParseBanks', {
-      banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
-    });
+    const db = connectedDb({historyId: 'old', lastProcessedAt: 1});
     const fetchImpl = async (url) => {
       const href = String(url);
       if (href.includes('/history')) {
@@ -209,15 +321,7 @@ describe('processConnectedUser history 404', () => {
   });
 
   it('pages through fallback list results and processes every id', async () => {
-    const db = collectionStore();
-    db.docs.set('users/u1/private/gmail', {
-      status: 'connected',
-      historyId: 'old',
-      lastProcessedAt: 1,
-    });
-    db.docs.set('users/u1/config/emailParseBanks', {
-      banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
-    });
+    const db = connectedDb({historyId: 'old', lastProcessedAt: 1});
     const listed = [];
     const formats = [];
     const fetchImpl = async (url) => {
@@ -282,11 +386,7 @@ describe('processConnectedUser history 404', () => {
   });
 
   it('skips full fetch when metadata does not match a bank', async () => {
-    const db = collectionStore();
-    db.docs.set('users/u1/private/gmail', {status: 'connected', historyId: '5'});
-    db.docs.set('users/u1/config/emailParseBanks', {
-      banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
-    });
+    const db = connectedDb();
     const urls = [];
     const fetchImpl = async (url) => {
       const href = String(url);
@@ -322,5 +422,136 @@ describe('processConnectedUser history 404', () => {
     });
     assert.equal(result.created, 0);
     assert.equal(urls.some((href) => href.includes('format=full')), false);
+  });
+});
+
+describe('processConnectedUser fetch errors', () => {
+  it('throws on metadata 429 and does not advance the cursor', async () => {
+    const db = connectedDb({historyId: '5'});
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '6',
+            history: [{messagesAdded: [{message: {id: 'm1'}}]}],
+          }),
+        };
+      }
+      if (href.includes('format=metadata')) {
+        return {ok: false, status: 429, json: async () => ({error: 'rate'})};
+      }
+      throw new Error(`unexpected ${url}`);
+    };
+    await assert.rejects(
+      () => processConnectedUser({
+        db,
+        uid: 'u1',
+        accessToken: 'at',
+        geminiKey: '',
+        fetchImpl,
+        nowMs: 50,
+      }),
+      /gmail_fetch_failed/,
+    );
+    assert.equal(db.docs.get('users/u1/private/gmail').historyId, '5');
+  });
+
+  it('throws on full-message 500 and does not advance the cursor', async () => {
+    const db = connectedDb({historyId: '5'});
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '6',
+            history: [{messagesAdded: [{message: {id: 'm1'}}]}],
+          }),
+        };
+      }
+      if (href.includes('format=metadata')) {
+        return {ok: true, json: async () => hdfcMessage('m1')};
+      }
+      if (href.includes('format=full')) {
+        return {ok: false, status: 500, json: async () => ({error: 'boom'})};
+      }
+      throw new Error(`unexpected ${url}`);
+    };
+    await assert.rejects(
+      () => processConnectedUser({
+        db,
+        uid: 'u1',
+        accessToken: 'at',
+        geminiKey: '',
+        fetchImpl,
+        nowMs: 50,
+      }),
+      /gmail_fetch_failed/,
+    );
+    assert.equal(db.docs.get('users/u1/private/gmail').historyId, '5');
+  });
+
+  it('skips a 404 message and still advances the cursor', async () => {
+    const db = connectedDb({historyId: '5'});
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '6',
+            history: [{messagesAdded: [{message: {id: 'gone'}}]}],
+          }),
+        };
+      }
+      if (href.includes('format=metadata')) {
+        return {ok: false, status: 404, json: async () => ({error: {code: 404}})};
+      }
+      throw new Error(`unexpected ${url}`);
+    };
+    const result = await processConnectedUser({
+      db,
+      uid: 'u1',
+      accessToken: 'at',
+      geminiKey: '',
+      fetchImpl,
+      nowMs: 50,
+    });
+    assert.equal(result.created, 0);
+    assert.equal(db.docs.get('users/u1/private/gmail').historyId, '6');
+  });
+
+  it('skips full fetch and Gemini when a processed marker already exists', async () => {
+    const db = connectedDb({historyId: '5'});
+    db.docs.set('users/u1/private/gmail/processedIds/done', {mailId: 'done', at: 1});
+    const urls = [];
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      urls.push(href);
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '6',
+            history: [{messagesAdded: [{message: {id: 'done'}}]}],
+          }),
+        };
+      }
+      throw new Error(`unexpected fetch ${url}`);
+    };
+    const result = await processConnectedUser({
+      db,
+      uid: 'u1',
+      accessToken: 'at',
+      geminiKey: 'should-not-be-used',
+      fetchImpl,
+      nowMs: 50,
+    });
+    assert.equal(result.created, 0);
+    assert.equal(urls.some((href) => href.includes('format=full')), false);
+    assert.equal(urls.some((href) => href.includes('format=metadata')), false);
+    assert.equal(db.docs.get('users/u1/private/gmail').historyId, '6');
   });
 });

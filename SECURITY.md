@@ -56,6 +56,7 @@ Gmail access uses Google Identity Services with a single scope:
 
 *   `https://www.googleapis.com/auth/gmail.readonly`: read mail. The app does not request `gmail.modify` and does not label or mark messages.
 *   Refresh tokens are stored in Secret Manager (`gmail-rt-{uid}`). Firestore `users/{uid}/private/**` is not client-readable.
+*   The Terraform custom role `pennywiseGmailRefreshTokenManager` is project-wide (it can create/get/delete any secret). IAM conditions cannot scope `secrets.create` to the `gmail-rt-` prefix; that prefix is enforced in `tokenStore`.
 *   Callable `connectGmail` / `disconnectGmail` require a signed-in allowlisted user.
 *   Pub/Sub push is processed by Cloud Functions running as the Terraform functions service account.
 

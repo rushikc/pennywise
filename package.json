@@ -19,7 +19,6 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "firebase": "^11.10.0",
-    "firebase-functions": "^6.3.1",
     "framer-motion": "^12.12.1",
     "idb": "^7.1.1",
     "json-2-csv": "^5.5.9",

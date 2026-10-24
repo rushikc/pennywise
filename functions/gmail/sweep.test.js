@@ -62,11 +62,28 @@ function sweepDb(users) {
     batch() {
       const ops = [];
       return {
-        set(ref, data) {
-          ops.push({path: ref.path, data});
+        create(ref, data) {
+          ops.push({type: 'create', path: ref.path, data});
+        },
+        set(ref, data, options) {
+          ops.push({type: 'set', path: ref.path, data, options});
         },
         async commit() {
-          ops.forEach((op) => docs.set(op.path, op.data));
+          for (const op of ops) {
+            if (op.type === 'create' && docs.has(op.path)) {
+              const err = new Error('already exists');
+              err.code = 6;
+              throw err;
+            }
+          }
+          for (const op of ops) {
+            if (op.type === 'create') {
+              docs.set(op.path, op.data);
+            } else {
+              const current = docs.get(op.path) || {};
+              docs.set(op.path, op.options && op.options.merge ? {...current, ...op.data} : op.data);
+            }
+          }
         },
       };
     },
@@ -198,5 +215,45 @@ describe('runHourlySweep', () => {
     assert.ok(db.docs.has('users/u-ok/expense/msg-lost'));
     assert.equal(db.docs.get('users/u-ok/private/gmail').historyId, '8');
     assert.notEqual(db.docs.get('users/u-ok/private/gmail').historyId, '99');
+  });
+
+  it('renews the watch even when ingest throws', async () => {
+    const nowMs = 1_700_000_000_000;
+    const db = sweepDb([{
+      uid: 'u-ok',
+      email: 'ok@example.com',
+      gmail: {status: 'connected', historyId: '5'},
+    }]);
+    const watches = [];
+    const tokenStore = {
+      readRefreshToken: async () => 'rt-u-ok',
+    };
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/token')) {
+        return {ok: true, json: async () => ({access_token: 'at'})};
+      }
+      if (href.includes('/history')) {
+        return {ok: false, status: 500, json: async () => ({error: 'boom'})};
+      }
+      if (href.includes('/watch')) {
+        watches.push(href);
+        return {ok: true, json: async () => ({historyId: '99', expiration: String(nowMs + 8 * 24 * 3600 * 1000)})};
+      }
+      return {ok: true, json: async () => ({})};
+    };
+    const summary = await runHourlySweep({
+      db,
+      tokenStore,
+      projectId: 'p',
+      clientId: 'id',
+      clientSecret: 'secret',
+      geminiKey: '',
+      fetchImpl,
+      nowMs,
+    });
+    assert.equal(summary.failed, 1);
+    assert.equal(watches.length, 1);
+    assert.ok(db.docs.get('users/u-ok/private/gmail').watchExpiration);
   });
 });

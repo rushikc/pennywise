@@ -9,37 +9,64 @@ const {createGmailCallables} = require('./callables');
 
 function memoryDb() {
   const docs = new Map();
-  return {
+  const db = {
     docs,
     doc(path) {
-      return {path};
+      return {
+        path,
+        async get() {
+          return {exists: docs.has(path), data: () => docs.get(path)};
+        },
+        async set(data, options) {
+          const current = docs.get(path) || {};
+          docs.set(path, options && options.merge ? {...current, ...data} : data);
+        },
+      };
     },
     batch() {
       const ops = [];
       return {
-        set(ref, data) {
-          ops.push({path: ref.path, data});
+        set(ref, data, options) {
+          ops.push({path: ref.path, data, options});
         },
         async commit() {
-          ops.forEach((op) => docs.set(op.path, op.data));
+          ops.forEach((op) => {
+            const current = docs.get(op.path) || {};
+            docs.set(op.path, op.options && op.options.merge ? {...current, ...op.data} : op.data);
+          });
         },
       };
     },
+    async runTransaction(fn) {
+      const transaction = {
+        async get(ref) {
+          return db.doc(ref.path).get();
+        },
+        set(ref, data, options) {
+          const current = docs.get(ref.path) || {};
+          docs.set(ref.path, options && options.merge ? {...current, ...data} : data);
+        },
+      };
+      return fn(transaction);
+    },
   };
+  return db;
 }
 
 function allowlistedDb() {
   const db = memoryDb();
-  db.doc = (path) => ({
-    path,
-    async get() {
-      return {exists: path === 'allowedUsers/ada@example.com' || db.docs.has(path), data: () => db.docs.get(path)};
-    },
-    async set(data, options) {
-      const current = db.docs.get(path) || {};
-      db.docs.set(path, options && options.merge ? {...current, ...data} : data);
-    },
-  });
+  const innerDoc = db.doc.bind(db);
+  db.doc = (path) => {
+    const ref = innerDoc(path);
+    const origGet = ref.get.bind(ref);
+    ref.get = async () => {
+      if (path === 'allowedUsers/ada@example.com') {
+        return {exists: true, data: () => ({})};
+      }
+      return origGet();
+    };
+    return ref;
+  };
   return db;
 }
 
@@ -53,6 +80,28 @@ function authedRequest(code) {
   };
 }
 
+function oauthFetch(profileEmail) {
+  return async (url) => {
+    if (String(url).includes('/profile')) {
+      return {ok: true, json: async () => ({emailAddress: profileEmail})};
+    }
+    if (String(url).includes('/watch') || String(url).includes('/stop')) {
+      return {ok: true, json: async () => ({historyId: '42', expiration: '99'})};
+    }
+    if (String(url).includes('revoke')) {
+      return {ok: true, json: async () => ({})};
+    }
+    return {
+      ok: true,
+      json: async () => ({
+        refresh_token: 'rt-keep',
+        access_token: 'at',
+        scope: 'https://www.googleapis.com/auth/gmail.readonly',
+      }),
+    };
+  };
+}
+
 describe('gmail callables', () => {
   it('stores connection state without logging the code', async () => {
     const db = allowlistedDb();
@@ -62,29 +111,13 @@ describe('gmail callables', () => {
         saved.push({uid, token});
       },
     };
-    const fetchImpl = async (url) => {
-      if (String(url).includes('/profile')) {
-        return {ok: true, json: async () => ({emailAddress: 'ada@example.com'})};
-      }
-      if (String(url).includes('/watch')) {
-        return {ok: true, json: async () => ({historyId: '42', expiration: '99'})};
-      }
-      return {
-        ok: true,
-        json: async () => ({
-          refresh_token: 'rt-keep',
-          access_token: 'at',
-          scope: 'https://www.googleapis.com/auth/gmail.readonly',
-        }),
-      };
-    };
     const {connectGmail} = createGmailCallables({
       db,
       tokenStore,
       projectId: 'proj',
       clientId: 'id',
       clientSecret: 'secret',
-      fetchImpl,
+      fetchImpl: oauthFetch('ada@example.com'),
       now: () => 1000,
     });
     const result = await connectGmail(authedRequest('one-time-code'));
@@ -100,31 +133,39 @@ describe('gmail callables', () => {
     db.docs.set('gmailConnections/ada@example.com', {uid: 'uid-other', status: 'connected'});
     const {connectGmail} = createGmailCallables({
       db,
-      tokenStore: {saveRefreshToken: async () => {
-        throw new Error('should not save');
-      }},
+      tokenStore: {saveRefreshToken: async () => {}},
       projectId: 'proj',
       clientId: 'id',
       clientSecret: 'secret',
-      fetchImpl: async (url) => {
-        if (String(url).includes('/profile')) {
-          return {ok: true, json: async () => ({emailAddress: 'ada@example.com'})};
-        }
-        return {
-          ok: true,
-          json: async () => ({
-            refresh_token: 'rt-keep',
-            access_token: 'at',
-            scope: 'https://www.googleapis.com/auth/gmail.readonly',
-          }),
-        };
-      },
+      fetchImpl: oauthFetch('ada@example.com'),
       now: () => 1000,
     });
     await assert.rejects(
       () => connectGmail(authedRequest('one-time-code')),
       (err) => err.code === 'already-exists',
     );
+  });
+
+  it('marks the previous Gmail index disconnected when reconnecting a different address', async () => {
+    const db = allowlistedDb();
+    db.docs.set('users/uid-1/private/gmail', {
+      email: 'old@gmail.com',
+      status: 'connected',
+    });
+    db.docs.set('gmailConnections/old@gmail.com', {uid: 'uid-1', status: 'connected'});
+    const {connectGmail} = createGmailCallables({
+      db,
+      tokenStore: {saveRefreshToken: async () => {}},
+      projectId: 'proj',
+      clientId: 'id',
+      clientSecret: 'secret',
+      fetchImpl: oauthFetch('inbox@gmail.com'),
+      now: () => 1000,
+    });
+    const result = await connectGmail(authedRequest('one-time-code'));
+    assert.equal(result.email, 'inbox@gmail.com');
+    assert.equal(db.docs.get('gmailConnections/inbox@gmail.com').status, 'connected');
+    assert.equal(db.docs.get('gmailConnections/old@gmail.com').status, 'disconnected');
   });
 
   it('rejects callers who are not allowlisted', async () => {
@@ -165,12 +206,41 @@ describe('gmail callables', () => {
       projectId: 'proj',
       clientId: 'id',
       clientSecret: 'secret',
-      fetchImpl: async () => ({ok: true, json: async () => ({access_token: 'at'})}),
+      fetchImpl: oauthFetch('ada@example.com'),
       now: () => 2000,
     });
     const result = await disconnectGmail(authedRequest());
     assert.equal(result.status, 'disconnected');
     assert.deepEqual(deleted, ['uid-1']);
     assert.equal(db.docs.get('users/uid-1/meta/gmailStatus').status, 'disconnected');
+  });
+
+  it('clears the connected Gmail address even when it differs from the sign-in email', async () => {
+    const db = allowlistedDb();
+    db.docs.set('users/uid-1/private/gmail', {
+      email: 'inbox@gmail.com',
+      status: 'connected',
+    });
+    db.docs.set('gmailConnections/inbox@gmail.com', {uid: 'uid-1', status: 'connected'});
+    const deleted = [];
+    const tokenStore = {
+      readRefreshToken: async () => 'rt-old',
+      deleteRefreshToken: async (_p, uid) => {
+        deleted.push(uid);
+      },
+    };
+    const {disconnectGmail} = createGmailCallables({
+      db,
+      tokenStore,
+      projectId: 'proj',
+      clientId: 'id',
+      clientSecret: 'secret',
+      fetchImpl: oauthFetch('inbox@gmail.com'),
+      now: () => 2000,
+    });
+    await disconnectGmail(authedRequest());
+    assert.equal(db.docs.get('gmailConnections/inbox@gmail.com').status, 'disconnected');
+    assert.equal(db.docs.has('gmailConnections/ada@example.com'), false);
+    assert.deepEqual(deleted, ['uid-1']);
   });
 });

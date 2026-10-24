@@ -55,22 +55,37 @@ async function sweepOneUser({
     clientSecret,
     fetchImpl,
   });
-  const result = await processConnectedUser({
-    db,
-    uid,
-    accessToken,
-    geminiKey,
-    fetchImpl,
-    nowMs,
-  });
-  const cursor = await readCursor(db, uid);
-  if (watchNeedsRenewal(cursor && cursor.watchExpiration, nowMs)) {
-    const watch = await startGmailWatch({accessToken, projectId, fetchImpl});
-    const patch = {watchExpiration: watch.watchExpiration};
-    if (!cursor || cursor.historyId == null || cursor.historyId === '') {
-      patch.historyId = watch.historyId;
+  let result = {processed: 0, created: 0};
+  let ingestError = null;
+  try {
+    result = await processConnectedUser({
+      db,
+      uid,
+      accessToken,
+      geminiKey,
+      fetchImpl,
+      nowMs,
+    });
+  } catch (error) {
+    ingestError = error;
+  }
+  try {
+    const cursor = await readCursor(db, uid);
+    if (watchNeedsRenewal(cursor && cursor.watchExpiration, nowMs)) {
+      const watch = await startGmailWatch({accessToken, projectId, fetchImpl});
+      const patch = {watchExpiration: watch.watchExpiration};
+      if (!cursor || cursor.historyId == null || cursor.historyId === '') {
+        patch.historyId = watch.historyId;
+      }
+      await db.doc(`users/${uid}/private/gmail`).set(patch, {merge: true});
     }
-    await db.doc(`users/${uid}/private/gmail`).set(patch, {merge: true});
+  } catch (watchError) {
+    if (!ingestError) {
+      throw watchError;
+    }
+  }
+  if (ingestError) {
+    throw ingestError;
   }
   console.log(JSON.stringify({
     event: 'gmail_sweep_user',

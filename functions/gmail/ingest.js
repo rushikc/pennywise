@@ -15,16 +15,48 @@ const {
   listMessages,
 } = require('./gmailClient');
 
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
 function loadParse() {
   return require('../lib/parse');
 }
 
+function expensePath(uid, messageId) {
+  return `users/${uid}/expense/${messageId}`;
+}
+
+function processedIdPath(uid, messageId) {
+  return `users/${uid}/private/gmail/processedIds/${messageId}`;
+}
+
+function gmailPrivatePath(uid) {
+  return `users/${uid}/private/gmail`;
+}
+
+function emailParseBanksPath(uid) {
+  return `users/${uid}/config/emailParseBanks`;
+}
+
+function dedupeRulesPath(uid) {
+  return `users/${uid}/config/dedupeRules`;
+}
+
+function ingestDocPaths(uid, messageId) {
+  return [
+    expensePath(uid, messageId),
+    processedIdPath(uid, messageId),
+    gmailPrivatePath(uid),
+    emailParseBanksPath(uid),
+    dedupeRulesPath(uid),
+  ];
+}
+
 function expenseRef(db, uid, messageId) {
-  return db.doc(`users/${uid}/expense/${messageId}`);
+  return db.doc(expensePath(uid, messageId));
 }
 
 function processedIdRef(db, uid, messageId) {
-  return db.doc(`users/${uid}/private/processedIds/${messageId}`);
+  return db.doc(processedIdPath(uid, messageId));
 }
 
 function isAlreadyExists(error) {
@@ -41,8 +73,14 @@ function gmailListFailed() {
   return err;
 }
 
+function gmailFetchFailed() {
+  const err = new Error('gmail_fetch_failed');
+  err.code = 'failed-precondition';
+  return err;
+}
+
 async function loadUserBanks(db, uid) {
-  const snap = await db.doc(`users/${uid}/config/emailParseBanks`).get();
+  const snap = await db.doc(emailParseBanksPath(uid)).get();
   if (!snap.exists) {
     return [];
   }
@@ -59,15 +97,6 @@ async function loadVendorTags(db, uid) {
 async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
   const parse = loadParse();
   const messageId = message.id;
-  const markerRef = processedIdRef(db, uid, messageId);
-  try {
-    await markerRef.create({mailId: messageId, at: nowMs});
-  } catch (error) {
-    if (isAlreadyExists(error)) {
-      return {created: false};
-    }
-    throw error;
-  }
   const vendor = parse.canonicalizeVendor(parsed.vendor);
   const tag = parse.resolveVendorTag(vendor, vendorTags);
   const expense = {
@@ -82,8 +111,11 @@ async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
     operation: 'add',
     user: parse.extractUsername(parse.getMailSenderReceiver(message).receiverEmail),
   };
+  const batch = db.batch();
+  batch.create(processedIdRef(db, uid, messageId), {mailId: messageId, at: nowMs});
+  batch.create(expenseRef(db, uid, messageId), expense);
   try {
-    await expenseRef(db, uid, messageId).create(expense);
+    await batch.commit();
   } catch (error) {
     if (isAlreadyExists(error)) {
       return {created: false};
@@ -106,7 +138,7 @@ async function applyDedupe(db, uid, nowMs) {
   });
   let ruleset = defaultRules;
   try {
-    const rulesDoc = await db.doc(`users/${uid}/config/dedupeRules`).get();
+    const rulesDoc = await db.doc(dedupeRulesPath(uid)).get();
     if (rulesDoc.exists && rulesDoc.data()) {
       ruleset = mergeRuleset(defaultRules, rulesDoc.data());
     }
@@ -179,17 +211,27 @@ async function parseAndSaveMessage({db, uid, message, banks, vendorTags, geminiK
 async function ingestMessageById({
   db, uid, id, accessToken, banks, vendorTags, geminiKey, fetchImpl, nowMs,
 }) {
+  const marker = await processedIdRef(db, uid, id).get();
+  if (marker.exists) {
+    return {created: false, skipped: true, reason: 'processed'};
+  }
   const parse = loadParse();
   const meta = await getMessage({accessToken, id, format: 'metadata', fetchImpl});
   if (!meta.ok) {
-    return {skipped: true, reason: 'fetch'};
+    if (meta.status === 404) {
+      return {skipped: true, reason: 'fetch'};
+    }
+    throw gmailFetchFailed();
   }
   if (!parse.findEmailParseBankMatch(metadataHaystack(meta.payload), banks)) {
     return {skipped: true, reason: 'bank'};
   }
   const full = await getMessage({accessToken, id, format: 'full', fetchImpl});
   if (!full.ok) {
-    return {skipped: true, reason: 'fetch'};
+    if (full.status === 404) {
+      return {skipped: true, reason: 'fetch'};
+    }
+    throw gmailFetchFailed();
   }
   return parseAndSaveMessage({
     db,
@@ -229,9 +271,10 @@ async function collectHistoryIds({accessToken, startHistoryId, fetchImpl}) {
   return {stale: false, ids: [...new Set(ids)], latestHistoryId};
 }
 
-async function fallbackList({accessToken, banks, lastProcessedAt, fetchImpl}) {
+async function fallbackList({accessToken, banks, lastProcessedAt, fetchImpl, nowMs}) {
   const parse = loadParse();
-  const q = parse.gmailSearchQuery(banks, lastProcessedAt);
+  const afterMs = lastProcessedAt || (nowMs - THIRTY_DAYS_MS);
+  const q = parse.gmailSearchQuery(banks, afterMs);
   const ids = [];
   let pageToken;
   for (;;) {
@@ -245,7 +288,7 @@ async function fallbackList({accessToken, banks, lastProcessedAt, fetchImpl}) {
       break;
     }
   }
-  return {ids: [...new Set(ids)]};
+  return {ids: [...new Set(ids)], q};
 }
 
 async function runBackfillPage({
@@ -294,7 +337,7 @@ async function runBackfillPage({
     }
   }
   const nextToken = listed.payload && listed.payload.nextPageToken;
-  await db.doc(`users/${uid}/private/gmail`).set({
+  await db.doc(gmailPrivatePath(uid)).set({
     backfillPageToken: nextToken || null,
     backfillDone: !nextToken,
     lastProcessedAt: nowMs,
@@ -332,6 +375,7 @@ async function processConnectedUser({
   const startedHistoryId = cursor.historyId;
   let messageIds = [];
   let nextHistoryId = startedHistoryId;
+  let fallbackQuery = null;
   if (startedHistoryId) {
     const history = await collectHistoryIds({
       accessToken,
@@ -344,8 +388,10 @@ async function processConnectedUser({
         banks,
         lastProcessedAt: cursor.lastProcessedAt,
         fetchImpl,
+        nowMs,
       });
       messageIds = listed.ids;
+      fallbackQuery = listed.q;
       const profile = await getProfile({accessToken, fetchImpl});
       if (!profile.ok) {
         throw gmailListFailed();
@@ -381,7 +427,7 @@ async function processConnectedUser({
   }
   const processed = messageIds.length + (backfill.processed || 0);
   const createdTotal = created + (backfill.created || 0);
-  return {processed, created: createdTotal, noop: processed === 0};
+  return {processed, created: createdTotal, noop: processed === 0, fallbackQuery};
 }
 
 module.exports = {
@@ -390,4 +436,8 @@ module.exports = {
   saveParsedExpense,
   applyDedupe,
   runBackfillPage,
+  ingestDocPaths,
+  processedIdPath,
+  expensePath,
+  THIRTY_DAYS_MS,
 };

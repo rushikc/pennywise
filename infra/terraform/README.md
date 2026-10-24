@@ -72,3 +72,5 @@ Existing installs: follow the **Existing install / upgrade** checklist in [SETUP
 | Firestore rules and indexes | `firestore.rules` / `firestore.indexes.json` in this repo |
 | OAuth consent + Web client | Manual (Console) |
 | `allowedUsers/{email}` | Manual (Console) |
+
+The custom IAM role `pennywiseGmailRefreshTokenManager` is granted at the **project** level. It can create, get, delete, and version **any** Secret Manager secret, not only `gmail-rt-*`. IAM conditions cannot restrict `secretmanager.secrets.create` to a name prefix; the prefix is enforced in application code (`functions/gmail/tokenStore.js`).

@@ -11,6 +11,7 @@ import {
   extractPlainTextFromHtml,
   extractUsername,
   findEmailParseBankMatch,
+  gmailSearchQuery,
   getMailSenderReceiver,
   getMailSubject,
   isOutsideExpenseWindow,
@@ -95,6 +96,17 @@ describe('findEmailParseBankMatch', () => {
 
   it('matches substrings, not whole words', () => {
     assert.equal(findEmailParseBankMatch('xxHDFC Bankyy', banks), 'HDFC');
+  });
+});
+
+describe('gmailSearchQuery', () => {
+  it('includes an after: bound when afterMs is set', () => {
+    const q = gmailSearchQuery(
+      [{matchStrings: ['HDFC Bank']}],
+      Date.UTC(2026, 8, 25),
+    );
+    assert.match(q, /after:2026\/09\/25/);
+    assert.match(q, /"HDFC Bank"/);
   });
 });
 

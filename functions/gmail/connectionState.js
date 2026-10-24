@@ -49,12 +49,35 @@ async function writeConnectedState(db, {uid, email, nowMs}) {
   const privateDoc = connectedPrivateDoc({email, nowMs});
   const statusDoc = publicStatusDoc(privateDoc);
   const emailKey = connectionEmailKey(email);
-  const batch = db.batch();
-  batch.set(db.doc(`users/${uid}/private/gmail`), privateDoc);
-  batch.set(db.doc(`users/${uid}/meta/gmailStatus`), statusDoc);
-  batch.set(db.doc(`gmailConnections/${emailKey}`), connectionIndexDoc({uid, status: 'connected'}));
-  await batch.commit();
-  return {privateDoc, statusDoc};
+  const privateRef = db.doc(`users/${uid}/private/gmail`);
+  const statusRef = db.doc(`users/${uid}/meta/gmailStatus`);
+  const connRef = db.doc(`gmailConnections/${emailKey}`);
+  return db.runTransaction(async (transaction) => {
+    const existing = await transaction.get(connRef);
+    if (existing.exists) {
+      const data = existing.data() || {};
+      if (data.status === 'connected' && data.uid && data.uid !== uid) {
+        const err = new Error('gmail_already_connected');
+        err.code = 'already-exists';
+        throw err;
+      }
+    }
+    const currentPrivate = await transaction.get(privateRef);
+    const oldEmail = currentPrivate.exists && currentPrivate.data() ?
+      currentPrivate.data().email :
+      null;
+    const oldKey = oldEmail ? connectionEmailKey(oldEmail) : '';
+    transaction.set(privateRef, privateDoc);
+    transaction.set(statusRef, statusDoc);
+    transaction.set(connRef, connectionIndexDoc({uid, status: 'connected'}));
+    if (oldKey && oldKey !== emailKey) {
+      transaction.set(
+        db.doc(`gmailConnections/${oldKey}`),
+        connectionIndexDoc({uid, status: 'disconnected'}),
+      );
+    }
+    return {privateDoc, statusDoc};
+  });
 }
 
 async function writeDisconnectedState(db, {uid, email, lastError, nowMs}) {
