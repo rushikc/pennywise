@@ -177,6 +177,63 @@ async function fallbackList({accessToken, banks, lastProcessedAt, fetchImpl}) {
   return {ids, pageToken: result.payload.nextPageToken || null};
 }
 
+async function runBackfillPage({
+  db,
+  uid,
+  cursor,
+  accessToken,
+  banks,
+  vendorTags,
+  geminiKey,
+  fetchImpl,
+  nowMs,
+  messageCap,
+}) {
+  if (!cursor.backfillAfterMs || cursor.backfillDone) {
+    return {ran: false, created: 0, processed: 0};
+  }
+  const parse = loadParse();
+  const q = parse.gmailSearchQuery(banks, cursor.backfillAfterMs);
+  const listed = await listMessages({
+    accessToken,
+    q,
+    pageToken: cursor.backfillPageToken || undefined,
+    fetchImpl,
+  });
+  if (!listed.ok) {
+    return {ran: true, created: 0, processed: 0};
+  }
+  const ids = ((listed.payload && listed.payload.messages) || []).map((item) => item.id).filter(Boolean)
+    .slice(0, messageCap);
+  let created = 0;
+  for (const id of ids) {
+    const got = await getMessage({accessToken, id, fetchImpl});
+    if (!got.ok) {
+      continue;
+    }
+    const result = await parseAndSaveMessage({
+      db,
+      uid,
+      message: got.payload,
+      banks,
+      vendorTags,
+      geminiKey,
+      fetchImpl,
+      nowMs,
+    });
+    if (result && result.created) {
+      created += 1;
+    }
+  }
+  const nextToken = listed.payload && listed.payload.nextPageToken;
+  await db.doc(`users/${uid}/private/gmail`).set({
+    backfillPageToken: nextToken || null,
+    backfillDone: !nextToken,
+    lastProcessedAt: nowMs,
+  }, {merge: true});
+  return {ran: true, created, processed: ids.length};
+}
+
 async function processConnectedUser({
   db,
   uid,
@@ -192,6 +249,18 @@ async function processConnectedUser({
   }
   const banks = await loadUserBanks(db, uid);
   const vendorTags = await loadVendorTags(db, uid);
+  const backfill = await runBackfillPage({
+    db,
+    uid,
+    cursor,
+    accessToken,
+    banks,
+    vendorTags,
+    geminiKey,
+    fetchImpl,
+    nowMs,
+    messageCap,
+  });
   const startedHistoryId = cursor.historyId;
   let messageIds = [];
   let nextHistoryId = startedHistoryId;
@@ -243,7 +312,9 @@ async function processConnectedUser({
   if (nextHistoryId) {
     await advanceCursor(db, uid, startedHistoryId, nextHistoryId, {lastProcessedAt: nowMs});
   }
-  return {processed: limited.length, created, noop: limited.length === 0};
+  const processed = limited.length + (backfill.processed || 0);
+  const createdTotal = created + (backfill.created || 0);
+  return {processed, created: createdTotal, noop: processed === 0};
 }
 
 module.exports = {
@@ -251,4 +322,5 @@ module.exports = {
   parseAndSaveMessage,
   saveParsedExpense,
   applyDedupe,
+  runBackfillPage,
 };

@@ -10,6 +10,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 const {setGlobalOptions} = require('firebase-functions/v2');
 const {onCall, onRequest} = require('firebase-functions/v2/https');
 const {onMessagePublished} = require('firebase-functions/v2/pubsub');
+const {onSchedule} = require('firebase-functions/v2/scheduler');
 const {defineSecret, defineString} = require('firebase-functions/params');
 const {functionsServiceAccountEmail, loadGcpNames} = require('./gcpNames');
 
@@ -87,6 +88,22 @@ exports.onGmailPush = onMessagePublished({
   clientSecret: oauthClientSecret.value(),
   geminiKey: geminiApiKey.value(),
   message: event.data && event.data.message,
+  fetchImpl: fetch,
+}));
+
+const {runHourlySweep} = require('./gmail/sweep');
+
+exports.hourlyGmailSweep = onSchedule({
+  schedule: 'every 1 hours',
+  secrets: [oauthClientSecret, geminiApiKey],
+  timeZone: 'Asia/Kolkata',
+}, () => runHourlySweep({
+  db,
+  tokenStore: gmailTokenStore,
+  projectId: process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT,
+  clientId: oauthClientId.value(),
+  clientSecret: oauthClientSecret.value(),
+  geminiKey: geminiApiKey.value(),
   fetchImpl: fetch,
 }));
 
