@@ -22,7 +22,13 @@ function decodePushMessage(message) {
     return null;
   }
   const raw = Buffer.from(message.data, 'base64').toString('utf8');
-  const parsed = JSON.parse(raw);
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    console.log(JSON.stringify({event: 'gmail_push_bad_payload'}));
+    return null;
+  }
   return {
     emailAddress: String(parsed.emailAddress || ''),
     historyId: parsed.historyId != null ? String(parsed.historyId) : null,

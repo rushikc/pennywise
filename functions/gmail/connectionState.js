@@ -77,7 +77,7 @@ async function assertAllowlisted(db, email) {
   if (!email) {
     return false;
   }
-  const snap = await db.doc(`allowedUsers/${email}`).get();
+  const snap = await db.doc(`allowedUsers/${connectionEmailKey(email)}`).get();
   return snap.exists;
 }
 

@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const {HttpsError} = require('firebase-functions/v2/https');
 const {exchangeAuthorizationCode, fetchGmailEmail, revokeToken} = require('./oauth');
-const {assertAllowlisted, writeConnectedState, writeDisconnectedState} =
+const {assertAllowlisted, connectionEmailKey, writeConnectedState, writeDisconnectedState} =
   require('./connectionState');
 const {startGmailWatch, stopGmailWatch} = require('./watch');
 const {refreshAccessToken} = require('./gmailClient');
@@ -41,6 +41,17 @@ function createGmailCallables({db, tokenStore, projectId, clientId, clientSecret
       fetchImpl,
     });
     const gmailEmail = await fetchGmailEmail(tokens.accessToken, fetchImpl) || email;
+    const existing = await db.doc(`gmailConnections/${connectionEmailKey(gmailEmail)}`).get();
+    if (existing.exists) {
+      const ownerUid = existing.data() && existing.data().uid;
+      const status = existing.data() && existing.data().status;
+      if (status === 'connected' && ownerUid && ownerUid !== uid) {
+        throw new HttpsError(
+          'already-exists',
+          'This Gmail account is already connected to another Pennywise user.',
+        );
+      }
+    }
     await tokenStore.saveRefreshToken(projectId, uid, tokens.refreshToken);
     await writeConnectedState(db, {uid, email: gmailEmail, nowMs: now()});
     if (tokens.accessToken) {

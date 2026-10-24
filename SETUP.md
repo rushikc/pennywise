@@ -355,7 +355,7 @@ To interact with Firebase services from your terminal, you need to install the F
 
 - **Enable Firestore Rules:**
   - Paste [`firestore.rules`](firestore.rules) into the Firebase console **Rules** tab, or run `firebase deploy --only firestore:rules`.
-  - Create one document per family member at `allowedUsers/{email}` (empty document is enough).
+  - Create one document per family member at `allowedUsers/{lowercase-email}` (empty document is enough). Document IDs must be the email in lowercase.
 
 ### Terraform and Gmail ingest
 
@@ -364,8 +364,24 @@ To interact with Firebase services from your terminal, you need to install the F
 3. Consent screen **In production**. Add scope `https://www.googleapis.com/auth/gmail.readonly` only.
 4. Put `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` and `GOOGLE_OAUTH_CLIENT_ID` in `functions/.env`.
 5. `firebase deploy` creates the Pub/Sub trigger subscription and the hourly scheduler job.
-6. Deploy or paste `firestore.rules`. Create `allowedUsers/{email}` for each family member.
+6. Deploy or paste `firestore.rules`. Create `allowedUsers/{lowercase-email}` for each family member.
 7. Sign in, open Settings, and **Connect Gmail**.
+
+### Existing install / upgrade
+
+Rules and the frontend now read and write `users/{uid}/...`. Data left in the old root collections (`expense`, `vendorTag`, `budget`, `config`) is **hidden until you migrate**. Do this before relying on live mode or Gmail ingest:
+
+1. **Back up.** From the repo root: `npm run backup` (see `scripts/backup`). Keep the timestamped export directory.
+2. **Allowlist.** Create `allowedUsers/{lowercase email}` documents (empty is enough). IDs must be lowercase; mixed-case IDs will not match.
+3. **Migrate.** Dry-run first, then apply (do not skip `config`, including `emailParseBanks` — ingest skips every message if banks are missing):
+   ```bash
+   npm run migrate -- --from <backup-dir> --uid <firebaseUid>
+   npm run migrate -- --from <backup-dir> --uid <firebaseUid> --apply
+   ```
+4. **Deploy rules and functions** (`firebase deploy --only firestore:rules,functions` or full `firebase deploy`).
+5. **Connect Gmail** in Settings after you sign in.
+
+See also [infra/terraform/README.md](infra/terraform/README.md) if GCP resources from the Gmail push re-architecture are not applied yet.
 
 ---
 
@@ -391,8 +407,8 @@ You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Stu
 
 1.  **Configure tags:** In **Settings**, add tags you want for categorization (not pre-populated).
 
-2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. The script only sends matching mail to Gemini—too few strings and you may miss mail; too generic and you may include noise.
+2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. Cloud Functions ingest only sends matching mail to Gemini—too few strings and you may miss mail; too generic and you may include noise.
 
-3.  **Vendor tags (optional):** Map normalized vendor strings to tags in **Settings → Vendor tags**; the script can attach `tag` when it finds a match after Gemini parsing.
+3.  **Vendor tags (optional):** Map normalized vendor strings to tags in **Settings → Vendor tags**; ingest can attach `tag` when it finds a match after Gemini parsing.
 
 Happy expense tracking!

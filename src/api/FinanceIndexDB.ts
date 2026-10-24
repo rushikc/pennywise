@@ -10,6 +10,19 @@ import {indexedDbName} from './firestorePaths';
 
 const isLive = () => getDataMode() === 'live';
 
+export const LEGACY_FINANCE_IDB_FLAG = 'pennywise-deleted-legacy-finance-idb';
+
+export function deleteLegacyFinanceIdb(): void {
+  if (typeof indexedDB === 'undefined' || typeof localStorage === 'undefined') {
+    return;
+  }
+  if (localStorage.getItem(LEGACY_FINANCE_IDB_FLAG) === '1') {
+    return;
+  }
+  indexedDB.deleteDatabase('Finance');
+  localStorage.setItem(LEGACY_FINANCE_IDB_FLAG, '1');
+}
+
 const dbVersion = 5;
 
 const dbName = (): string => {

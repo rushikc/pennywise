@@ -55,11 +55,6 @@ async function sweepOneUser({
     clientSecret,
     fetchImpl,
   });
-  const cursor = await readCursor(db, uid);
-  if (watchNeedsRenewal(cursor && cursor.watchExpiration, nowMs)) {
-    const watch = await startGmailWatch({accessToken, projectId, fetchImpl});
-    await db.doc(`users/${uid}/private/gmail`).set(watch, {merge: true});
-  }
   const result = await processConnectedUser({
     db,
     uid,
@@ -68,6 +63,15 @@ async function sweepOneUser({
     fetchImpl,
     nowMs,
   });
+  const cursor = await readCursor(db, uid);
+  if (watchNeedsRenewal(cursor && cursor.watchExpiration, nowMs)) {
+    const watch = await startGmailWatch({accessToken, projectId, fetchImpl});
+    const patch = {watchExpiration: watch.watchExpiration};
+    if (!cursor || cursor.historyId == null || cursor.historyId === '') {
+      patch.historyId = watch.historyId;
+    }
+    await db.doc(`users/${uid}/private/gmail`).set(patch, {merge: true});
+  }
   console.log(JSON.stringify({
     event: 'gmail_sweep_user',
     uidHash: uidHash(uid),

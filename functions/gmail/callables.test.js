@@ -63,8 +63,8 @@ describe('gmail callables', () => {
       },
     };
     const fetchImpl = async (url) => {
-      if (String(url).includes('userinfo')) {
-        return {ok: true, json: async () => ({email: 'ada@example.com'})};
+      if (String(url).includes('/profile')) {
+        return {ok: true, json: async () => ({emailAddress: 'ada@example.com'})};
       }
       if (String(url).includes('/watch')) {
         return {ok: true, json: async () => ({historyId: '42', expiration: '99'})};
@@ -93,6 +93,38 @@ describe('gmail callables', () => {
     assert.equal(db.docs.get('users/uid-1/meta/gmailStatus').status, 'connected');
     assert.equal(db.docs.get('gmailConnections/ada@example.com').uid, 'uid-1');
     assert.equal(db.docs.get('users/uid-1/private/gmail').status, 'connected');
+  });
+
+  it('rejects connecting a Gmail account already used by another uid', async () => {
+    const db = allowlistedDb();
+    db.docs.set('gmailConnections/ada@example.com', {uid: 'uid-other', status: 'connected'});
+    const {connectGmail} = createGmailCallables({
+      db,
+      tokenStore: {saveRefreshToken: async () => {
+        throw new Error('should not save');
+      }},
+      projectId: 'proj',
+      clientId: 'id',
+      clientSecret: 'secret',
+      fetchImpl: async (url) => {
+        if (String(url).includes('/profile')) {
+          return {ok: true, json: async () => ({emailAddress: 'ada@example.com'})};
+        }
+        return {
+          ok: true,
+          json: async () => ({
+            refresh_token: 'rt-keep',
+            access_token: 'at',
+            scope: 'https://www.googleapis.com/auth/gmail.readonly',
+          }),
+        };
+      },
+      now: () => 1000,
+    });
+    await assert.rejects(
+      () => connectGmail(authedRequest('one-time-code')),
+      (err) => err.code === 'already-exists',
+    );
   });
 
   it('rejects callers who are not allowlisted', async () => {

@@ -58,7 +58,9 @@ Do not commit `backend.hcl`, `terraform.tfvars`, `*.tfstate*`, or `.terraform/`.
 
 4. Set `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` to the Web client id. In `functions/.env` set `GOOGLE_OAUTH_CLIENT_ID` to the same value. Functions read the client secret from Secret Manager (`pennywise-oauth-client-secret`) and the Gemini key from `pennywise-gemini-api-key` via `defineSecret`. Use a billed Gemini key (paid / Vertex-equivalent privacy), not an unpaid experimental key, for inbox text.
 5. `firebase deploy` (functions use the Terraform service account via `setGlobalOptions`).
-6. Deploy or paste `firestore.rules`. Create `allowedUsers/{email}` docs for each family member in the Firebase console.
+6. Deploy or paste `firestore.rules`. Create `allowedUsers/{lowercase-email}` docs for each family member in the Firebase console.
+
+Existing installs: follow the **Existing install / upgrade** checklist in [SETUP.md](../../SETUP.md) (backup, allowlist, migrate including `config/emailParseBanks`, deploy rules/functions, then Connect Gmail). Rules and the app use `users/{uid}/...`; unmigrated root collections are hidden.
 
 ## Ownership split
 

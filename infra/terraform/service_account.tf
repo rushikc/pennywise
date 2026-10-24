@@ -1,3 +1,7 @@
+# Pub/Sub (onMessagePublished) and Scheduler (onSchedule) invoke the Cloud Run
+# services created by `firebase deploy`. The Firebase CLI binds roles/run.invoker
+# on those services to Eventarc/Pub/Sub/Scheduler identities. Terraform does not
+# manage those services, so project-wide run.invoker is omitted (too broad).
 resource "google_service_account" "functions" {
   project      = var.project_id
   account_id   = local.names.functionsServiceAccountId

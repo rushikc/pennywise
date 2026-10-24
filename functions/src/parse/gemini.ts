@@ -19,7 +19,7 @@ export async function callGemini(
   fetchImpl: typeof fetch = fetch,
 ): Promise<unknown> {
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent';
   const prompt = `${GEMINI_PROMPT}
 
     Email Subject: ${subject}
@@ -30,7 +30,10 @@ export async function callGemini(
   };
   const response = await fetchImpl(url, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey,
+    },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {

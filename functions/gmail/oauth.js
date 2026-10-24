@@ -5,6 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const REVOKE_URL = 'https://oauth2.googleapis.com/revoke';
+const GMAIL_PROFILE_URL = 'https://gmail.googleapis.com/gmail/v1/users/me/profile';
 const GMAIL_READONLY = 'https://www.googleapis.com/auth/gmail.readonly';
 
 function assertOfflineScope(scope) {
@@ -49,14 +50,14 @@ async function fetchGmailEmail(accessToken, fetchImpl) {
     return null;
   }
   const fetchFn = fetchImpl || fetch;
-  const response = await fetchFn('https://www.googleapis.com/oauth2/v3/userinfo', {
+  const response = await fetchFn(GMAIL_PROFILE_URL, {
     headers: {Authorization: `Bearer ${accessToken}`},
   });
   if (!response.ok) {
     return null;
   }
   const payload = await response.json();
-  return payload.email || null;
+  return payload.emailAddress || null;
 }
 
 async function revokeToken(token, fetchImpl) {

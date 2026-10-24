@@ -66,7 +66,7 @@ Signed-out visitors, and signed-in users denied by Firestore security rules, use
 
 ## Getting Started
 
-For detailed setup instructions, please refer to the guide below (30-60 min setup time)
+For detailed setup instructions, please refer to the guide below (30-60 min setup time). If you already run Pennywise, follow the **Existing install / upgrade** checklist in [SETUP.md](SETUP.md) before deploying the `users/{uid}` rules — old root collections stay hidden until you migrate.
 <p align="center">
   <a href="SETUP.md" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 10px 20px; background-color: #008CBA; color: white; text-decoration: none; border-radius: 5px;">
     View Setup Instructions

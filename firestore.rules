@@ -6,7 +6,7 @@ service cloud.firestore {
       return request.auth != null
         && request.auth.token.email_verified == true
         && request.auth.token.email is string
-        && exists(/databases/$(database)/documents/allowedUsers/$(request.auth.token.email));
+        && exists(/databases/$(database)/documents/allowedUsers/$(request.auth.token.email.lower()));
     }
 
     function isOwner(uid) {
@@ -29,8 +29,14 @@ service cloud.firestore {
       allow read, write: if isOwner(uid);
     }
 
+    match /users/{uid}/meta/gmailStatus {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
     match /users/{uid}/meta/{document} {
-      allow read, write: if isOwner(uid);
+      allow read: if isOwner(uid);
+      allow write: if isOwner(uid) && document != 'gmailStatus';
     }
   }
 }

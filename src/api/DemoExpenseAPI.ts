@@ -7,6 +7,7 @@ import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expen
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import {DemoStore} from '../demoData/createDemoStore';
+import {ClientUserCollection} from './firestorePaths';
 
 export class DemoExpenseAPI {
 
@@ -22,7 +23,7 @@ export class DemoExpenseAPI {
     return DemoExpenseAPI.storePromise;
   };
 
-  private static docKey = (collectionName: string, key: string) => `${collectionName}/${key}`;
+  private static docKey = (collectionName: ClientUserCollection, key: string) => `${collectionName}/${key}`;
 
   static isHiddenDuplicate = isHiddenDuplicate;
 
@@ -37,18 +38,18 @@ export class DemoExpenseAPI {
     return true;
   };
 
-  static setOneDoc = async (key: string, val: unknown, collectionName = 'config') => {
+  static setOneDoc = async (key: string, val: unknown, collectionName: ClientUserCollection = 'config') => {
     const store = await DemoExpenseAPI.getStore();
     store.docs[DemoExpenseAPI.docKey(collectionName, key)] = JSONCopy(val);
   };
 
-  static getOneDoc = async (key: string, collectionName = 'config') => {
+  static getOneDoc = async (key: string, collectionName: ClientUserCollection = 'config') => {
     const store = await DemoExpenseAPI.getStore();
     const saved = store.docs[DemoExpenseAPI.docKey(collectionName, key)];
     return saved == null ? null : JSONCopy(saved);
   };
 
-  static deleteOneDoc = async (key: string, collectionName = 'config') => {
+  static deleteOneDoc = async (key: string, collectionName: ClientUserCollection = 'config') => {
     const store = await DemoExpenseAPI.getStore();
     delete store.docs[DemoExpenseAPI.docKey(collectionName, key)];
     return true;

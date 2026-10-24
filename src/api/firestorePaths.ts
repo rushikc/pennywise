@@ -10,6 +10,7 @@ export const ALLOWED_USERS_COLLECTION = 'allowedUsers';
 export const GMAIL_CONNECTIONS_COLLECTION = 'gmailConnections';
 
 export type UserCollection = 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' | 'private';
+export type ClientUserCollection = Exclude<UserCollection, 'private'>;
 
 export function currentUid(): string {
   const uid = auth.currentUser?.uid;

@@ -23,6 +23,24 @@ function expenseRef(db, uid, messageId) {
   return db.doc(`users/${uid}/expense/${messageId}`);
 }
 
+function processedIdRef(db, uid, messageId) {
+  return db.doc(`users/${uid}/private/processedIds/${messageId}`);
+}
+
+function isAlreadyExists(error) {
+  return Boolean(error) && (
+    error.code === 6 ||
+    error.code === 'already-exists' ||
+    error.code === 'ALREADY_EXISTS'
+  );
+}
+
+function gmailListFailed() {
+  const err = new Error('gmail_list_failed');
+  err.code = 'failed-precondition';
+  return err;
+}
+
 async function loadUserBanks(db, uid) {
   const snap = await db.doc(`users/${uid}/config/emailParseBanks`).get();
   if (!snap.exists) {
@@ -41,10 +59,14 @@ async function loadVendorTags(db, uid) {
 async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
   const parse = loadParse();
   const messageId = message.id;
-  const ref = expenseRef(db, uid, messageId);
-  const existing = await ref.get();
-  if (existing.exists) {
-    return {created: false};
+  const markerRef = processedIdRef(db, uid, messageId);
+  try {
+    await markerRef.create({mailId: messageId, at: nowMs});
+  } catch (error) {
+    if (isAlreadyExists(error)) {
+      return {created: false};
+    }
+    throw error;
   }
   const vendor = parse.canonicalizeVendor(parsed.vendor);
   const tag = parse.resolveVendorTag(vendor, vendorTags);
@@ -60,7 +82,14 @@ async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
     operation: 'add',
     user: parse.extractUsername(parse.getMailSenderReceiver(message).receiverEmail),
   };
-  await ref.set(expense);
+  try {
+    await expenseRef(db, uid, messageId).create(expense);
+  } catch (error) {
+    if (isAlreadyExists(error)) {
+      return {created: false};
+    }
+    throw error;
+  }
   return {created: true, expense: {id: messageId, ...expense}};
 }
 
@@ -122,6 +151,13 @@ async function applyDedupe(db, uid, nowMs) {
   return {pairCount: pairs.length, reviewCount: needsReview.length};
 }
 
+function metadataHaystack(message) {
+  const parse = loadParse();
+  const subject = parse.getMailSubject(message);
+  const snippet = message && message.snippet ? String(message.snippet) : '';
+  return `${subject}\n${snippet}`;
+}
+
 async function parseAndSaveMessage({db, uid, message, banks, vendorTags, geminiKey, fetchImpl, nowMs}) {
   const parse = loadParse();
   const subject = parse.getMailSubject(message);
@@ -138,6 +174,33 @@ async function parseAndSaveMessage({db, uid, message, banks, vendorTags, geminiK
     return {skipped: true, reason: 'unparsed'};
   }
   return saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs);
+}
+
+async function ingestMessageById({
+  db, uid, id, accessToken, banks, vendorTags, geminiKey, fetchImpl, nowMs,
+}) {
+  const parse = loadParse();
+  const meta = await getMessage({accessToken, id, format: 'metadata', fetchImpl});
+  if (!meta.ok) {
+    return {skipped: true, reason: 'fetch'};
+  }
+  if (!parse.findEmailParseBankMatch(metadataHaystack(meta.payload), banks)) {
+    return {skipped: true, reason: 'bank'};
+  }
+  const full = await getMessage({accessToken, id, format: 'full', fetchImpl});
+  if (!full.ok) {
+    return {skipped: true, reason: 'fetch'};
+  }
+  return parseAndSaveMessage({
+    db,
+    uid,
+    message: full.payload,
+    banks,
+    vendorTags,
+    geminiKey,
+    fetchImpl,
+    nowMs,
+  });
 }
 
 async function collectHistoryIds({accessToken, startHistoryId, fetchImpl}) {
@@ -169,12 +232,20 @@ async function collectHistoryIds({accessToken, startHistoryId, fetchImpl}) {
 async function fallbackList({accessToken, banks, lastProcessedAt, fetchImpl}) {
   const parse = loadParse();
   const q = parse.gmailSearchQuery(banks, lastProcessedAt);
-  const result = await listMessages({accessToken, q, fetchImpl});
-  if (!result.ok) {
-    return {ids: [], pageToken: null};
+  const ids = [];
+  let pageToken;
+  for (;;) {
+    const result = await listMessages({accessToken, q, pageToken, fetchImpl});
+    if (!result.ok) {
+      throw gmailListFailed();
+    }
+    ids.push(...((result.payload.messages || []).map((item) => item.id).filter(Boolean)));
+    pageToken = result.payload.nextPageToken || null;
+    if (!pageToken) {
+      break;
+    }
   }
-  const ids = (result.payload.messages || []).map((item) => item.id).filter(Boolean);
-  return {ids, pageToken: result.payload.nextPageToken || null};
+  return {ids: [...new Set(ids)]};
 }
 
 async function runBackfillPage({
@@ -207,14 +278,11 @@ async function runBackfillPage({
     .slice(0, messageCap);
   let created = 0;
   for (const id of ids) {
-    const got = await getMessage({accessToken, id, fetchImpl});
-    if (!got.ok) {
-      continue;
-    }
-    const result = await parseAndSaveMessage({
+    const result = await ingestMessageById({
       db,
       uid,
-      message: got.payload,
+      id,
+      accessToken,
       banks,
       vendorTags,
       geminiKey,
@@ -279,23 +347,22 @@ async function processConnectedUser({
       });
       messageIds = listed.ids;
       const profile = await getProfile({accessToken, fetchImpl});
+      if (!profile.ok) {
+        throw gmailListFailed();
+      }
       nextHistoryId = profile.payload.historyId ? String(profile.payload.historyId) : startedHistoryId;
     } else {
       messageIds = history.ids;
       nextHistoryId = history.latestHistoryId || startedHistoryId;
     }
   }
-  const limited = messageIds.slice(0, messageCap);
   let created = 0;
-  for (const id of limited) {
-    const got = await getMessage({accessToken, id, fetchImpl});
-    if (!got.ok) {
-      continue;
-    }
-    const result = await parseAndSaveMessage({
+  for (const id of messageIds) {
+    const result = await ingestMessageById({
       db,
       uid,
-      message: got.payload,
+      id,
+      accessToken,
       banks,
       vendorTags,
       geminiKey,
@@ -312,7 +379,7 @@ async function processConnectedUser({
   if (nextHistoryId) {
     await advanceCursor(db, uid, startedHistoryId, nextHistoryId, {lastProcessedAt: nowMs});
   }
-  const processed = limited.length + (backfill.processed || 0);
+  const processed = messageIds.length + (backfill.processed || 0);
   const createdTotal = created + (backfill.created || 0);
   return {processed, created: createdTotal, noop: processed === 0};
 }

@@ -59,8 +59,13 @@ async function listMessages({accessToken, q, pageToken, fetchImpl}) {
   return gmailGet(`/messages?${params.toString()}`, accessToken, fetchImpl);
 }
 
-async function getMessage({accessToken, id, fetchImpl}) {
-  return gmailGet(`/messages/${encodeURIComponent(id)}?format=full`, accessToken, fetchImpl);
+async function getMessage({accessToken, id, fetchImpl, format = 'full'}) {
+  const fmt = format || 'full';
+  return gmailGet(
+    `/messages/${encodeURIComponent(id)}?format=${encodeURIComponent(fmt)}`,
+    accessToken,
+    fetchImpl,
+  );
 }
 
 async function getProfile({accessToken, fetchImpl}) {

@@ -86,6 +86,7 @@ jest.mock('./pages/dataValidations', async () => {
 });
 
 jest.mock('./api/FinanceIndexDB', () => ({
+  deleteLegacyFinanceIdb: jest.fn(),
   FinanceIndexDB: {
     initDB: jest.fn(),
     clearIndexedDBData: () => mockClearIndexedDBData(),

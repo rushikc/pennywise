@@ -19,36 +19,6 @@ declare module '../../shared/gcpNames.json' {
   export default value;
 }
 
-declare global {
-  interface GisCodeClient {
-    requestCode: () => void;
-  }
-
-  interface GisCodeResponse {
-    code?: string;
-    error?: string;
-  }
-
-  interface Window {
-    google?: {
-      accounts: {
-        oauth2: {
-          initCodeClient: (config: {
-            client_id: string;
-            scope: string;
-            ux_mode: 'popup' | 'redirect';
-            access_type?: string;
-            prompt?: string;
-            callback: (response: GisCodeResponse) => void;
-          }) => GisCodeClient;
-        };
-      };
-    };
-  }
-}
-
-export {};
-
 declare module 'virtual:build-info' {
   export interface BuildInfo {
     version: string;

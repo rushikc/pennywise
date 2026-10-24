@@ -53,6 +53,7 @@ describe('firestore.rules', () => {
       await db.doc('allowedUsers/other@example.com').set({role: 'family'});
       await db.doc('users/uid-owner/expense/exp-1').set({cost: 10, vendor: 'A'});
       await db.doc('users/uid-owner/private/gmail').set({status: 'connected'});
+      await db.doc('users/uid-owner/meta/gmailStatus').set({status: 'connected', email: 'owner@example.com'});
       await db.doc('gmailConnections/owner@example.com').set({uid: 'uid-owner'});
     });
   });
@@ -95,5 +96,21 @@ describe('firestore.rules', () => {
     await assertFails(db.doc('users/uid-owner/private/gmail').set({status: 'hack'}));
     await assertFails(db.doc('allowedUsers/owner@example.com').get());
     await assertFails(db.doc('gmailConnections/owner@example.com').get());
+  });
+
+  it('allows the owner to read gmailStatus and denies writes', async () => {
+    const db = authed(owner);
+    await assertSucceeds(db.doc('users/uid-owner/meta/gmailStatus').get());
+    await assertFails(db.doc('users/uid-owner/meta/gmailStatus').set({status: 'hack'}));
+    const otherDb = authed(other);
+    await assertFails(otherDb.doc('users/uid-owner/meta/gmailStatus').get());
+  });
+
+  it('matches allowlist ids in lowercase', async () => {
+    const mixed = testEnv.authenticatedContext('uid-mixed', {
+      email: 'Owner@Example.com',
+      email_verified: true,
+    }).firestore();
+    await assertSucceeds(mixed.doc('users/uid-mixed/meta/profile').set({ok: true}));
   });
 });

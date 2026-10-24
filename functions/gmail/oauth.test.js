@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const {describe, it} = require('node:test');
 const assert = require('node:assert/strict');
-const {exchangeAuthorizationCode, revokeToken} = require('./oauth');
+const {exchangeAuthorizationCode, fetchGmailEmail, revokeToken} = require('./oauth');
 
 describe('exchangeAuthorizationCode', () => {
   it('exchanges a code with offline redirect_uri and returns a refresh token', async () => {
@@ -43,6 +43,16 @@ describe('exchangeAuthorizationCode', () => {
       () => exchangeAuthorizationCode({code: 'x', clientId: 'id', clientSecret: 's', fetchImpl}),
       /oauth_exchange_failed/,
     );
+  });
+});
+
+describe('fetchGmailEmail', () => {
+  it('reads emailAddress from Gmail users.me.profile', async () => {
+    const fetchImpl = async (url) => {
+      assert.match(String(url), /gmail\.googleapis\.com\/gmail\/v1\/users\/me\/profile/);
+      return {ok: true, json: async () => ({emailAddress: 'ada@example.com'})};
+    };
+    assert.equal(await fetchGmailEmail('at', fetchImpl), 'ada@example.com');
   });
 });
 

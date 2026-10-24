@@ -15,6 +15,43 @@ require('dotenv').config({
   path: path.resolve(repoRoot, '.env'),
 });
 
+async function exportCollection(collection) {
+  const refs = await collection.listDocuments();
+  const docs = [];
+  for (const ref of refs) {
+    docs.push(await exportDocument(ref));
+  }
+  return docs;
+}
+
+async function exportDocument(docRef) {
+  const snap = await docRef.get();
+  const out = {id: docRef.id};
+  if (snap.exists) {
+    Object.assign(out, serialize(snap.data()));
+  }
+  const subcols = await docRef.listCollections();
+  if (subcols.length > 0) {
+    out.__collections = {};
+    for (const col of subcols) {
+      out.__collections[col.id] = await exportCollection(col);
+    }
+  }
+  return out;
+}
+
+async function walkRootCollections(db) {
+  const collections = await db.listCollections();
+  const tree = {};
+  const counts = {};
+  for (const collection of collections) {
+    const docs = await exportCollection(collection);
+    tree[collection.id] = docs;
+    counts[collection.id] = docs.length;
+  }
+  return {tree, counts};
+}
+
 async function main() {
   const projectId = process.env.REACT_APP_FIREBASE_PROJECT_ID;
   if (!projectId) {
@@ -44,21 +81,14 @@ async function main() {
   }
 
   const db = admin.firestore();
-  const collections = await db.listCollections();
   const exportedAt = new Date();
   const outDir = path.join(outRoot, timestampFolderName(exportedAt));
   fs.mkdirSync(outDir, {recursive: true});
 
-  const counts = {};
-  for (const collection of collections) {
-    const snapshot = await collection.get();
-    const docs = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...serialize(doc.data()),
-    }));
-    fs.writeFileSync(path.join(outDir, `${collection.id}.json`), JSON.stringify(docs, null, 2));
-    counts[collection.id] = docs.length;
-    console.log(`${collection.id}: ${docs.length} documents`);
+  const {tree, counts} = await walkRootCollections(db);
+  for (const [name, docs] of Object.entries(tree)) {
+    fs.writeFileSync(path.join(outDir, `${name}.json`), JSON.stringify(docs, null, 2));
+    console.log(`${name}: ${docs.length} documents`);
   }
 
   fs.writeFileSync(path.join(outDir, '_manifest.json'), JSON.stringify({
@@ -69,7 +99,15 @@ async function main() {
   console.log(`Wrote ${Object.keys(counts).length} collections to ${outDir}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  exportCollection,
+  exportDocument,
+  walkRootCollections,
+};

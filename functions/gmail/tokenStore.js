@@ -31,10 +31,28 @@ function createTokenStore(client = new SecretManagerServiceClient()) {
         secret: {replication: {automatic: {}}},
       });
     }
-    await client.addSecretVersion({
+    const [added] = await client.addSecretVersion({
       parent: name,
       payload: {data: Buffer.from(refreshToken, 'utf8')},
     });
+    await destroyOlderSecretVersions(client, name, added && added.name);
+  }
+
+  async function destroyOlderSecretVersions(client, parent, keepName) {
+    if (!client.listSecretVersions || !client.destroySecretVersion) {
+      return;
+    }
+    const [versions] = await client.listSecretVersions({parent});
+    for (const version of versions || []) {
+      if (!version || !version.name || version.name === keepName) {
+        continue;
+      }
+      const state = String(version.state || '');
+      if (state === 'DESTROYED' || state === '3') {
+        continue;
+      }
+      await client.destroySecretVersion({name: version.name});
+    }
   }
 
   async function readRefreshToken(projectId, uid) {

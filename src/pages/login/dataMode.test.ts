@@ -11,7 +11,7 @@ jest.mock('firebase/app', () => ({
   getApp: jest.fn(() => ({})),
 }));
 
-const mockDoc = jest.fn((_db: unknown, ...path: string[]) => ({path}));
+const mockDoc = jest.fn((..._args: unknown[]) => ({path: _args}));
 
 jest.mock('firebase/firestore/lite', () => ({
   getFirestore: jest.fn(() => ({})),

@@ -12,7 +12,7 @@ import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
-import {currentUid, userCollectionSegments, userDocSegments} from './firestorePaths';
+import {ClientUserCollection, currentUid, userCollectionSegments, userDocSegments} from './firestorePaths';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
@@ -22,16 +22,16 @@ export type DocumentData = { [field: string]: unknown };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const userCol = (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta') =>
+const userCol = (collectionName: ClientUserCollection) =>
   collection(db, ...userCollectionSegments(currentUid(), collectionName));
 
-const userDoc = (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) =>
+const userDoc = (collectionName: ClientUserCollection, key: string) =>
   doc(db, ...userDocSegments(currentUid(), collectionName, key));
 
 // Utility for CRUD operations on single docs
 const fireStoreDoc = {
   // eslint-disable-next-line
-  set: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string, val: unknown) => {
+  set: async (collectionName: ClientUserCollection, key: string, val: unknown) => {
     try {
       await setDoc(userDoc(collectionName, key), val);
     } catch (e) {
@@ -39,7 +39,7 @@ const fireStoreDoc = {
       console.error('Error adding document:', e);
     }
   },
-  get: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) => {
+  get: async (collectionName: ClientUserCollection, key: string) => {
     try {
       const snap = await getDoc(userDoc(collectionName, key));
       return snap.exists() ? snap.data() : null;
@@ -49,7 +49,7 @@ const fireStoreDoc = {
       return null;
     }
   },
-  delete: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) => {
+  delete: async (collectionName: ClientUserCollection, key: string) => {
     try {
       await deleteDoc(userDoc(collectionName, key));
       return true;
@@ -154,7 +154,7 @@ export class LiveExpenseAPI {
     key: string,
     // eslint-disable-next-line
     val: unknown,
-    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config') =>
+    collectionName: ClientUserCollection = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
   /**
@@ -163,7 +163,7 @@ export class LiveExpenseAPI {
    */
   static getOneDoc = async (
     key: string,
-    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config',
+    collectionName: ClientUserCollection = 'config',
   ) => fireStoreDoc.get(collectionName, key);
 
   /**
@@ -173,7 +173,7 @@ export class LiveExpenseAPI {
    */
   static deleteOneDoc = async (
     key: string,
-    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config',
+    collectionName: ClientUserCollection = 'config',
   ) => fireStoreDoc.delete(collectionName, key);
 
   /**

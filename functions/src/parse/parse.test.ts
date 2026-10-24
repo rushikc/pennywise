@@ -92,6 +92,10 @@ describe('findEmailParseBankMatch', () => {
   it('falls back to Bank when displayName is empty', () => {
     assert.equal(findEmailParseBankMatch('Mystery Bank alert', banks), 'Bank');
   });
+
+  it('matches substrings, not whole words', () => {
+    assert.equal(findEmailParseBankMatch('xxHDFC Bankyy', banks), 'HDFC');
+  });
 });
 
 describe('email header helpers', () => {
@@ -136,14 +140,36 @@ describe('vendor helpers', () => {
     assert.equal(isOutsideExpenseWindow(23), true);
   });
 
+  it('runs at hours 9 and 22', () => {
+    assert.equal(isOutsideExpenseWindow(9), false);
+    assert.equal(isOutsideExpenseWindow(22), false);
+  });
+
   it('reorders UPI id-then-name to NAME ID', () => {
     assert.equal(canonicalizeVendor('user@ybl Shop Name'), 'SHOP NAME USER@YBL');
+  });
+
+  it('does not reorder a vendor without a trailing name', () => {
+    assert.equal(canonicalizeVendor('user@ybl'), 'USER@YBL');
+  });
+
+  it('truncates to 100 characters', () => {
+    const long = 'a'.repeat(120);
+    assert.equal(canonicalizeVendor(long).length, 100);
   });
 
   it('matches the truncated uppercase vendor', () => {
     const vendor = canonicalizeVendor('user@ybl Shop');
     const tag = resolveVendorTag(vendor, [{vendor: 'SHOP USER@YBL', tag: 'food'}]);
     assert.equal(tag, 'food');
+  });
+
+  it('treats a non-array tag list as empty', () => {
+    assert.equal(resolveVendorTag('SHOP', null), undefined);
+  });
+
+  it('skips entries without vendor', () => {
+    assert.equal(resolveVendorTag('SHOP', [{tag: 'food'}]), undefined);
   });
 });
 
@@ -154,6 +180,7 @@ describe('mailDateFromMessage', () => {
   });
   it('falls back to now for invalid or missing dates', () => {
     assert.equal(mailDateFromMessage({internalDate: 'not-a-number'}, now), now);
+    assert.equal(mailDateFromMessage({}, now), now);
   });
 });
 
@@ -168,6 +195,16 @@ describe('validateExpense retry', () => {
     assert.equal(calls, 0);
   });
 
+  it('does not retry when the first body is valid', () => {
+    let calls = 0;
+    const result = validateExpense(valid, 't', 's', 'k', () => {
+      calls += 1;
+      return valid;
+    });
+    assert.equal(result?.vendor, 'Shop');
+    assert.equal(calls, 0);
+  });
+
   it('retries once when the first body is invalid then valid', () => {
     let calls = 0;
     const result = validateExpense({cost: 0, costType: 'debit', vendor: 'X'}, 't', 's', 'k', () => {
@@ -176,6 +213,17 @@ describe('validateExpense retry', () => {
     });
     assert.equal(result?.cost, 10.5);
     assert.equal(calls, 1);
+  });
+
+  it('returns null after an invalid retry', () => {
+    const result = validateExpense(
+      {vendor: 'X'},
+      't',
+      's',
+      'k',
+      () => ({vendor: 'still-bad'}),
+    );
+    assert.equal(result, null);
   });
 });
 
@@ -193,5 +241,21 @@ describe('extractPlainTextFromHtml', () => {
   it('strips style, script, and comments', () => {
     const html = '<style>p{}</style><script>x()</script><!-- hi --><p>Hello</p>';
     assert.equal(extractPlainTextFromHtml(html), 'Hello');
+  });
+
+  it('decodes entities and collapses whitespace', () => {
+    const html = 'A&nbsp;&amp;&nbsp;B<br/>C&#8364;';
+    const text = extractPlainTextFromHtml(html);
+    assert.match(text, /A & B/);
+    assert.match(text, /€/);
+  });
+
+  it('returns empty string for non-string input', () => {
+    assert.equal(extractPlainTextFromHtml(null), '');
+    assert.equal(extractPlainTextFromHtml(''), '');
+  });
+
+  it('keeps inner text of nested tags', () => {
+    assert.equal(extractPlainTextFromHtml('<div><b>Shop</b> bill</div>'), 'Shop bill');
   });
 });

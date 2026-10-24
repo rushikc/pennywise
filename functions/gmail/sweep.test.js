@@ -25,6 +25,14 @@ function sweepDb(users) {
           const current = docs.get(path) || {};
           docs.set(path, options && options.merge ? {...current, ...data} : data);
         },
+        async create(data) {
+          if (docs.has(path)) {
+            const err = new Error('already exists');
+            err.code = 6;
+            throw err;
+          }
+          docs.set(path, data);
+        },
       };
     },
     collection(path) {
@@ -125,5 +133,70 @@ describe('runHourlySweep', () => {
     assert.equal(summary.ok, 1);
     assert.equal(db.docs.get('users/u-bad/meta/gmailStatus').status, 'disconnected');
     assert.equal(db.docs.get('users/u-bad/meta/gmailStatus').lastError, 'invalid_grant');
+  });
+
+  it('processes a lost push after watch renewal without overwriting historyId', async () => {
+    const nowMs = 1_700_000_000_000;
+    const db = sweepDb([{
+      uid: 'u-ok',
+      email: 'ok@example.com',
+      gmail: {status: 'connected', historyId: '5', watchExpiration: nowMs + 60_000},
+    }]);
+    db.docs.set('users/u-ok/config/emailParseBanks', {
+      banks: [{displayName: 'HDFC', matchStrings: ['HDFC Bank']}],
+    });
+    const tokenStore = {
+      readRefreshToken: async () => 'rt-u-ok',
+    };
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/token')) {
+        return {ok: true, json: async () => ({access_token: 'at'})};
+      }
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '8',
+            history: [{messagesAdded: [{message: {id: 'msg-lost'}}]}],
+          }),
+        };
+      }
+      if (href.includes('/messages/msg-lost')) {
+        return {
+          ok: true,
+          json: async () => ({
+            id: 'msg-lost',
+            snippet: 'HDFC Bank debit',
+            payload: {
+              headers: [{name: 'Subject', value: 'HDFC Bank alert'}],
+              body: {
+                data: Buffer.from(
+                  'Rs.1,234.50 is debited from your HDFC Bank Credit Card ending 1234 towards AMAZON on 01-01-26',
+                ).toString('base64url'),
+              },
+            },
+          }),
+        };
+      }
+      if (href.includes('/watch')) {
+        return {ok: true, json: async () => ({historyId: '99', expiration: String(nowMs + 8 * 24 * 3600 * 1000)})};
+      }
+      return {ok: true, json: async () => ({})};
+    };
+    const summary = await runHourlySweep({
+      db,
+      tokenStore,
+      projectId: 'p',
+      clientId: 'id',
+      clientSecret: 'secret',
+      geminiKey: '',
+      fetchImpl,
+      nowMs,
+    });
+    assert.equal(summary.ok, 1);
+    assert.ok(db.docs.has('users/u-ok/expense/msg-lost'));
+    assert.equal(db.docs.get('users/u-ok/private/gmail').historyId, '8');
+    assert.notEqual(db.docs.get('users/u-ok/private/gmail').historyId, '99');
   });
 });

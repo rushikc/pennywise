@@ -8,6 +8,7 @@ import {getDataMode} from '../pages/login/dataMode';
 import {isHiddenDuplicate} from './duplicateLogic';
 import {DemoExpenseAPI} from './DemoExpenseAPI';
 import {LiveExpenseAPI} from './LiveExpenseAPI';
+import {ClientUserCollection} from './firestorePaths';
 
 export type {DocumentData} from './LiveExpenseAPI';
 
@@ -23,13 +24,13 @@ export class ExpenseAPI {
   static updateEmailParseBankList = (banks: BankEmailParsingEntry[]): Promise<boolean> =>
     api().updateEmailParseBankList(banks);
 
-  static setOneDoc = (key: string, val: unknown, collectionName = 'config') =>
+  static setOneDoc = (key: string, val: unknown, collectionName: ClientUserCollection = 'config') =>
     api().setOneDoc(key, val, collectionName);
 
-  static getOneDoc = (key: string, collectionName = 'config') =>
+  static getOneDoc = (key: string, collectionName: ClientUserCollection = 'config') =>
     api().getOneDoc(key, collectionName);
 
-  static deleteOneDoc = (key: string, collectionName = 'config') =>
+  static deleteOneDoc = (key: string, collectionName: ClientUserCollection = 'config') =>
     api().deleteOneDoc(key, collectionName);
 
   static processData = () => api().processData();

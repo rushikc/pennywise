@@ -14,4 +14,9 @@ describe('decodePushMessage', () => {
     assert.equal(decoded.emailAddress, 'a@b.com');
     assert.equal(decoded.historyId, '9');
   });
+
+  it('returns null for invalid JSON without throwing', () => {
+    const decoded = decodePushMessage({data: Buffer.from('{not-json').toString('base64')});
+    assert.equal(decoded, null);
+  });
 });

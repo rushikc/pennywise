@@ -33,7 +33,6 @@ digraph SimpleDataFlow {
         node [style=filled];
 
         Gmail [label="Gmail", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
-        AppScript [label="AppScript", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
         CloudFunctions [label="Cloud Functions", shape=box, fillcolor="#D5E8D4", color="#82B366"];
     }
 
@@ -58,7 +57,6 @@ digraph SimpleDataFlow {
     FirestoreDB -> StateManager [label="read/write data"];
     StateManager -> IndexDB [label="browser cache"];
     IndexDB -> StateManager [label="read/write cached data"];
-    Gmail -> AppScript [label="fetches emails"];
-    AppScript -> CloudFunctions [label="invokes"];
+    Gmail -> CloudFunctions [label="push notifications"];
     CloudFunctions -> FirestoreDB [label="writes expense data"];
 }

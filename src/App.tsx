@@ -6,7 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {CssBaseline, ThemeProvider} from '@mui/material';
 import React, {Suspense, useEffect} from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {FinanceIndexDB} from './api/FinanceIndexDB';
+import {deleteLegacyFinanceIdb, FinanceIndexDB} from './api/FinanceIndexDB';
 import './App.scss';
 import AppShell from './components/AppShell';
 import BottomNav from './components/BottomNav';
@@ -37,6 +37,10 @@ const ThemedApp: React.FC = () => {
   const {currentUser, loading, dataMode} = useAuth();
   const {appConfig, isTagModal, isAppLoading} = useSelector(selectExpense);
   const theme = createAppTheme(appConfig.darkMode ? 'dark' : 'light');
+
+  useEffect(() => {
+    deleteLegacyFinanceIdb();
+  }, []);
 
   useEffect(() => {
     if (loading || dataMode === 'checking') {
