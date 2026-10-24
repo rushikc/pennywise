@@ -25,9 +25,9 @@
 </p>
 
 ---
-> **How email import works:** Transaction emails are **not** parsed with hard-coded bank regexes. Google **Gemini** reads the message (subject + body text the script can access) and returns structured fields (amount, debit/credit, vendor, payment type).  
-> **Bank list (filter):** In **Settings → Banks** you add one or more entries with a display name and **match strings** (phrases that appear in that bank’s alert emails). The Apps Script only sends an email to Gemini if the plain text matches one of your banks—this cuts noise and API cost.  
-> **Practical limit:** Your bank or card issuer should send **consistent** alert layouts for the transactions you care about. If formats vary wildly, Gemini may occasionally mis-read a field; you can adjust prompts or bank strings over time. Any institution whose alerts you can fingerprint with match strings is a candidate—not limited to a single bank brand.
+> **How email import works:** After you connect Gmail (read-only), Gmail push notifications land on a Pub/Sub topic and a Cloud Function reads new INBOX mail within seconds. Known bank templates are parsed with regex first; **Gemini** is the fallback for unparseable messages.  
+> **Bank list (filter):** In **Settings → Banks** you add one or more entries with a display name and **match strings**. Only matching mail is parsed.  
+> **Practical limit:** Your bank or card issuer should send **consistent** alert layouts for the transactions you care about. If formats vary, adjust match strings or rely on Gemini. An hourly sweep renews `users.watch` and catches dropped push events.
 
 ## License
 
@@ -44,7 +44,7 @@ a user-friendly experience with robust features, including offline support and s
 ## Features
 
 * 📊 **Expense Tracking**: Easily add, edit, and manage your daily expenses with detailed inputs.
-* 📧 **Gmail + Gemini**: Periodically scan Gmail for messages that match **banks you configure**; **Gemini** extracts amount, vendor, and payment type from the email text.
+* 📧 **Gmail + Gemini**: Connect Gmail in Settings. Push notifications plus an hourly sweep import messages that match **banks you configure**; regex parses known templates and **Gemini** fills in the rest.
 * 🏦 **Configurable banks**: Under **Settings → Banks**, add or remove banks and **match strings** so only relevant sender/templates are sent to the model.
 * 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
 * 🤖 **Auto Tagging**: Cloud functions automatically apply tags to new expenses based on previously user-marked
@@ -97,7 +97,7 @@ gives you complete control over your data and infrastructure. Here’s what make
 * **🔐 Secure Authentication**: We use Google OAuth for authentication, which provides a secure and reliable way to log
   in to your account without us ever seeing or storing your password.
 
-* **🔑 Minimal Permissions**: The web app uses Google Sign-In; the **Apps Script** add-on uses **Gmail read-only** to list and read messages. The script filters messages using **your** bank match strings, then calls **Gemini** and your **Cloud Functions**—it does not broad-scan third parties beyond what you configure.
+* **🔑 Minimal Permissions**: The web app uses Google Sign-In. Gmail ingest requests **gmail.readonly** only. Mail is never labelled or marked; processing state lives in Firestore. Tokens are stored in Secret Manager, not in client-readable docs.
 
 * **⚙️ You Control Updates**: Since you host the application, you are in full control of when and how you update it. You
   will never be forced into an update that changes the functionality or privacy in a way you don't agree with.
@@ -147,10 +147,11 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 ```
 pennywise/
-├── appScript/              # Google Apps Script for email integration
 ├── build/                  # Production build output
 ├── commands/               # Build and deployment scripts
-├── functions/              # Firebase Cloud Functions
+├── functions/              # Firebase Cloud Functions (Gmail ingest)
+├── infra/terraform/        # GCP resources firebase deploy cannot create
+├── shared/                 # Names shared by Terraform and functions
 ├── node_modules/           # Node.js dependencies
 ├── public/                 # Static assets served directly
 ├── scripts/                # Build and utility scripts
@@ -190,13 +191,13 @@ Pennywise is built using a modern front-end architecture with the following key 
   - Changes are saved to both IndexedDB and Firebase
   - Data synchronization happens automatically when online
 
-### Gmail automation (Apps Script + Gemini)
+### Gmail automation (push + Gemini)
 
-1. **Bank routing config** is stored in Firestore as `config/emailParseBanks` (`banks[]` with `displayName` + `matchStrings`). The React app **Settings → Banks** edits this list.
-2. **Apps Script** (`appScript/`) runs on a schedule (e.g. hourly). It loads the latest bank list via your **Cloud Function** `getOneDoc`, fetches recent Gmail messages, and builds plain text from snippets/HTML.
-3. If the text contains any configured **match string** (case-insensitive), the message is a candidate. The script sends **subject + body text** to the **Gemini API** with a JSON schema style prompt.
-4. A validated object (cost, `costType`, vendor, `type`) is posted to **`addExpenseData`**, which writes to Firestore. **Vendor tags** you define in the app can still be applied when the normalized vendor string matches.
-5. Optional safeguards in script: **IST quiet hours** (skip runs outside the configured daily window) and **Script properties / env** for `GEMINI_API_KEY` and project routing—see [SETUP.md](SETUP.md).
+1. **Bank routing config** is stored per user at `users/{uid}/config/emailParseBanks`. **Settings → Banks** edits this list.
+2. **Connect Gmail** in Settings uses Google Identity Services (`gmail.readonly`) and a callable function that stores the refresh token in Secret Manager.
+3. Gmail `users.watch` publishes to the Terraform topic `gmail-push`. The `onGmailPush` function reads `history.list`, parses new bank mail, and writes `users/{uid}/expense/{gmailMessageId}`.
+4. An hourly scheduled function renews the watch (it expires after 7 days) and runs a catch-up plus a resumable 30-day backfill.
+5. Terraform owns the topic, service account, and secret shells. `firebase deploy` owns functions, Hosting, and Firestore rules/indexes. See [infra/terraform/README.md](infra/terraform/README.md).
 
 ### Architecture Diagram
 
@@ -220,7 +221,7 @@ The React application is divided into several key sections, each serving a speci
 ## Future Roadmap
 
 - [ ] Per-bank prompt hints or templates (optional tuning on top of Gemini)
-- [ ] Google pub sub integration for real-time event driven updates instead of using AppScript as hourly jobs
+- [x] Gmail push (Pub/Sub) instead of Apps Script hourly jobs
 - [ ] Enhancing Insights with more detailed analytics & better graph support grouped by category
 - [ ] Multi-selected expense tagging feature
 - [ ] Expense analysis using historical data (Firebase AI Logic)

@@ -50,17 +50,14 @@ exports.getExpenses = (req, res) => {
 };
 ```
 
-### 3. Google Apps Script Security
+### 3. Gmail ingest security
 
-The Google Apps Script is used to scan your Gmail for transaction emails. Its security is managed through Google's OAuth 2.0 consent screen.
+Gmail access uses Google Identity Services with a single scope:
 
-*   **User-Granted Permissions**: When you run the script for the first time, you are prompted to grant it specific permissions via an OAuth consent screen. The script only has the permissions you explicitly grant.
-*   **Scoped Access**: The script requests narrow OAuth scopes to limit its access to only what is necessary:
-    *   `https://www.googleapis.com/auth/gmail.readonly`: Allows the script to read your emails but not modify or delete them.
-    *   `https://www.googleapis.com/auth/script.external_request`: Allows the script to make HTTP requests to the Cloud Function endpoint to add expenses.
-    *   `https://www.googleapis.com/auth/script.scriptapp`: Allows the script to manage its own triggers.
-    *   `https://www.googleapis.com/auth/userinfo.email`: Allows the script to access your email address to associate data correctly.
-*   **No Third-Party Access**: The script runs under your Google account's authority. No external user or service can trigger it or access its data.
+*   `https://www.googleapis.com/auth/gmail.readonly`: read mail. The app does not request `gmail.modify` and does not label or mark messages.
+*   Refresh tokens are stored in Secret Manager (`gmail-rt-{uid}`). Firestore `users/{uid}/private/**` is not client-readable.
+*   Callable `connectGmail` / `disconnectGmail` require a signed-in allowlisted user.
+*   Pub/Sub push is processed by Cloud Functions running as the Terraform functions service account.
 
 ### 4. Firestore Security Rules
 
@@ -70,26 +67,6 @@ Data access in the Firestore database is governed by a set of security rules tha
 *   **Authentication-Based Access**: The rules are configured to only allow access to authenticated users.
 *   **Ownership-Based Access**: The rules ensure that a user can only access documents when their `email-id` matches .
 
-Here is the recommended `firestore.rules` configuration, which restricts access to the authenticated user whose email is verified and matches the one you specify:
-
-```
-rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    // Function to check if the authenticated user's email matches your specified email
-    function isOwner() {
-      return request.auth.token.email == "your-email@gmail.com" && request.auth.token.email_verified == true;
-    }
-
-    // This rule applies to all documents in the dathe `ema` stored in the documenttabase.
-    // It grants read/write access ONLY if the user is authenticated and is the designated owner.
-    match /{document=**} {
-      allow read, write: if request.auth != null && isOwner();
-    }
-  }
-}
-```
+The repo file [`firestore.rules`](firestore.rules) is the source of truth: allowlisted users may read and write only their `users/{uid}` expense, config, budget, vendorTag, and meta docs. Paste it into the Firebase console or deploy with `firebase deploy --only firestore:rules`.
 
 This multi-layered security approach ensures that your financial data remains private and under your control at all times.

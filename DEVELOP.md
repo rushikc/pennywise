@@ -43,7 +43,7 @@ To deploy the Firebase functions and hosting, follow these steps:
     ```bash
     firebase login
     ```
-2.  **Deploy Firebase functions and hosting**:
+2.  **Deploy Firebase functions and hosting** (after Terraform apply; see [infra/terraform/README.md](infra/terraform/README.md)):
     ```bash
     firebase deploy
     ```
@@ -51,44 +51,6 @@ To deploy the Firebase functions and hosting, follow these steps:
     ```bash
     firebase deploy --only hosting
     ```
-
-### AppScript development
-
-For developing Google Apps Script code, you have two main options:
-
-1.  **Using `clasp`**:
-    *   `clasp` is a command-line tool that lets you develop your Apps Script projects locally.
-    *   You can write code in your favorite editor and then use `clasp push` to upload the code to your script project.
-    *   Create **`appScript/env.js`** locally (see [SETUP.md](SETUP.md)): it defines `PROJECT_ID`, `PROJECT_REGION`, and `GEMINI_API_KEY` (typically loaded from **Script properties**). The file is **gitignored**; it must exist on your machine before you push.
-    *   For `clasp push` to work, you need a `.clasp.json` file in the `appScript/` directory. This file links your local code to the correct Google Apps Script project.
-    *   The `.clasp.json` file should contain the `scriptId` of your project, which you can find in the Apps Script editor under "Project Settings."
-        ```json
-        {
-        "scriptId": "your-apps-script-id",
-        "rootDir": "",
-        "scriptExtensions": [
-        ".js",
-        ".gs"
-        ],
-        "htmlExtensions": [
-        ".html"
-        ],
-        "jsonExtensions": [
-        ".json"
-        ],
-        "filePushOrder": [],
-        "skipSubdirectories": false
-        }
-        ```
-    *   This is the recommended approach for managing larger projects and for integrating with version control systems like Git.
-
-
-2.  **Using the AppScript Web Editor**:
-    *   You can also work directly in the Google Apps Script web editor.
-    *   This allows you to write, save, run, and test your code in the same environment.
-    *   It's a good option for quick changes or for those who prefer an all-in-one, web-based IDE.
-
-
 
 ### Branching Strategy
 
@@ -132,18 +94,16 @@ The React web app is designed to be fast and efficient by minimizing direct quer
 
 This "delta sync" approach ensures the app stays up-to-date without re-downloading the entire database, saving bandwidth and reducing costs.
 
-#### 2. Automated Expense Tracking: Apps Script, Gemini, and Cloud Functions
+#### 2. Automated Expense Tracking: Gmail push, Gemini, and Cloud Functions
 
-Pennywise automates expense tracking by combining Gmail, **Google Gemini**, and Firebase Cloud Functions. There is **no** fixed regex-per-bank pipeline in the main flow—the model interprets each candidate email’s text.
+Pennywise automates expense tracking with Gmail push notifications, regex parsing, **Google Gemini** as a fallback, and Firebase Cloud Functions.
 
-1.  **Bank list in Firestore**: The web app stores `users/{uid}/config/emailParseBanks` with an array of `{ id, displayName, matchStrings[] }`. **Settings → Banks** (`ManageBanks.tsx`) edits this list. Match strings are simple substrings that must appear in the email body/snippet (case-insensitive) before the message is sent to Gemini—think of them as fingerprints for “this is my bank’s alert template.”
-2.  **Google Apps Script** (`appScript/`): Runs on a time-driven trigger (see `trigger.js`). It loads `emailParseBanks` via the `getOneDoc` Cloud Function, reads recent Gmail messages, and derives plain text (snippet + HTML body via `utility.js`).
-3.  **Gemini**: For each message that matches at least one bank entry, the script calls the **Generative Language API** (`callGemini` in `expenses.js`) with subject + body and expects JSON (`cost`, `costType`, `vendor`, `type`, or `null` if not a transaction). Validation helpers live in `functions.js` (`isValidExpenseGeminiShape`, `normalizeGeminiExpense`).
-4.  **Cloud Functions** (`functions/`): `addExpenseData` persists the expense to Firestore; `getOneDoc` / `setOneDoc` / `getAllDoc` sync config and vendor tags. The script authenticates with the same OAuth model described in [SETUP.md](SETUP.md).
+1.  **Bank list in Firestore**: `users/{uid}/config/emailParseBanks` with `{ id, displayName, matchStrings[] }`. **Settings → Banks** edits this list.
+2.  **Connect Gmail** stores a refresh token in Secret Manager (`gmail-rt-{uid}`). `users.watch` publishes to Pub/Sub topic `gmail-push`.
+3.  **`onGmailPush`** reads `history.list`, parses bank mail (regex first, Gemini fallback), and writes `users/{uid}/expense/{gmailMessageId}`.
+4.  **`hourlyGmailSweep`** renews the watch and runs catch-up plus a resumable 30-day backfill. `invalid_grant` sets status disconnected.
 
-**Secrets**: `GEMINI_API_KEY` and Firebase project routing (`PROJECT_ID`, `PROJECT_REGION`) are **not** in the React `.env`. They are provided to Apps Script via **`appScript/env.js`** (gitignored) and/or **Script properties**—see [SETUP.md](SETUP.md).
-
-This design keeps Gmail access in the script you own, while the React app only talks to Firebase.
+**Secrets**: OAuth client secret and Gemini API key live in Secret Manager shells created by Terraform. The React `.env` only has the public OAuth client id (`REACT_APP_GOOGLE_OAUTH_CLIENT_ID`) plus Firebase web config.
 
 #### 3. Security: A Multi-Layered Approach
 

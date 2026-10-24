@@ -13,7 +13,8 @@ Before finishing any implementation, including work done from a plan, run ESLint
 |---|---|
 | `src/**` | `npm test` |
 | `functions/**` | `npm test --prefix functions` |
-| `appScript/**` | `node --test appScript/*.test.js` |
+| `firestore.rules` / `tests/firestore.rules.test.js` | `npm run test:rules` |
+| `infra/terraform/**` | `terraform fmt -check` and `terraform validate` in `infra/terraform` |
 
 A change that spans domains runs each matching test and ESLint command. Do not skip existing tests. Do not call live Firebase, Gmail, or Gemini in unit tests.
 
@@ -21,8 +22,6 @@ A change that spans domains runs each matching test and ESLint command. Do not s
 |---|---|
 | `src/**` | `npm run lint` |
 | `functions/**` | `npm run lint --prefix functions` |
-| `appScript/**` | `npx eslint appScript` |
 
-- React: grouping, search, budgets, duplicate visibility, merge math, and UI for Duplicate Review / Merge / Tag / Edit Budget.
-- Functions: `detect`, survivor/tag merge, scan filters. Keep synthetic fixtures in-repo; skip the gitignored dump when missing.
-- Apps Script: Gemini shape, bank match, HTML extract, UPI/vendor/tag, validation retry, quiet hours.
+- React: grouping, search, budgets, duplicate visibility, merge math, and UI for Duplicate Review / Merge / Tag / Edit Budget / Gmail connect.
+- Functions: `detect`, survivor/tag merge, scan filters, Gmail parse, cursor/dedupe, history-404 fallback, invalid_grant. Keep synthetic fixtures in-repo; skip the gitignored dump when missing.

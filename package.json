@@ -73,7 +73,6 @@
     "build": "vite build",
     "preview": "vite preview --port 3000 --host 127.0.0.1",
     "test": "vitest run",
-    "test:appscript": "node --test appScript/*.test.js",
     "test:rules": "firebase emulators:exec --only firestore --project demo-pennywise \"node --test tests/firestore.rules.test.js\"",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
   },

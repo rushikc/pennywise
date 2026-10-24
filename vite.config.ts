@@ -127,7 +127,7 @@ export default defineConfig(({mode}) => {
       strictPort: true,
       host: '127.0.0.1',
       watch: {
-        ignored: ['**/build/**', '**/functions/**', '**/appScript/**'],
+        ignored: ['**/build/**', '**/functions/**', '**/infra/**'],
       },
     },
     preview: {

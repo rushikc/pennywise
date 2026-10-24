@@ -41,8 +41,9 @@ jobs:
         run: npm test
         working-directory: functions
 
-      - name: Test Apps Script
-        run: node --test appScript/*.test.js
+      - name: Lint cloud functions
+        run: npm run lint
+        working-directory: functions
 
       - name: Build project
         run: npm run build

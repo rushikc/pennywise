@@ -21,8 +21,7 @@
 .env.test.local
 .env.production.local
 
-#appscript
-appScript/env.js
+# clasp leftovers
 .clasp.json
 
 # Logs

@@ -305,7 +305,7 @@ To interact with Firebase services from your terminal, you need to install the F
 - **Install Firebase CLI:**
   Open your terminal and run the following command:
     ```bash
-    npm install -g firebase-tools @google/clasp
+    npm install -g firebase-tools
     ```
 
 ### Project Setup
@@ -319,32 +319,12 @@ To interact with Firebase services from your terminal, you need to install the F
 - **Set up Environment Files:**
 
   1. **Create a `.env` file in the functions folder:**
-     - Create a new file named `.env` in the `functions` folder.
-     - Add the following content to the file:
+     - Create `functions/.env` with the public OAuth web client id (same value as the React env var):
      ```
-     USER_EMAIL=your-actual-mail@gmail.com
+     GOOGLE_OAUTH_CLIENT_ID=your-oauth-web-client-id.apps.googleusercontent.com
      ```
-     - Replace `your-actual-mail@gmail.com` with the actual email address with which the
-     Firebase project is running.
 
-  2. **Create the `env.js` file in the `appScript` folder (local only; it is gitignored):**
-     - Create `appScript/env.js`. It exposes globals that the Apps Script files expect (`functions.js`, `expenses.js`).
-     - Use the same **Firebase / Cloud Functions region** you deploy to (often `us-central1`).
-     - **Gemini API key**: create a key in [Google AI Studio](https://aistudio.google.com/apikey) (or Google Cloud Console → APIs & Services → Credentials). Restrict the key appropriately; the script calls `generativelanguage.googleapis.com`.
-     - Recommended: store the key in **Apps Script → Project Settings → Script properties** as `GEMINI_API_KEY`, and read it at runtime (so the key is not committed). Example file:
-     ```javascript
-     const PROJECT_ID = 'your-firebase-project-id';
-     const PROJECT_REGION = 'us-central1';
-
-     /**
-      * Loads Gemini key from Script properties (Project Settings → Script properties → GEMINI_API_KEY).
-      * For quick local tests only, you could assign a string literal—never commit that.
-      */
-     const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-     ```
-     - After the first `clasp push`, open the script in the browser, go to **Project Settings** (gear) → **Script properties** → **Add row**: property = `GEMINI_API_KEY`, value = your API key.
-     - Replace `your-firebase-project-id` with the same ID as in `.firebaserc`.
-
+  2. **OAuth client secret and Gemini API key** are not committed. After Terraform apply, add versions to the secret shells named in `shared/gcpNames.json`. See [infra/terraform/README.md](infra/terraform/README.md).
 
 - **Build web app:**
   Run the following command to build the web app from the root folder:
@@ -374,153 +354,18 @@ To interact with Firebase services from your terminal, you need to install the F
   ```
 
 - **Enable Firestore Rules:**
-  - Open your web browser and go to [https://console.firebase.google.com/](https://console.firebase.google.com/).
-  - Select your project from the Firebase console.
-  - In the left sidebar, navigate to **Firestore Database** under the `Build` option, then click on the **Rules** tab.
-  - Click on the **Rules** tab and replace the content with the following rules to restrict access to your email.
-  - Replace `your-email@gmail.com` with your actual email address.
-  - You can add multiple user emails for single app access via Google sign-in.
-    ```txt
-    rules_version = '2';
+  - Paste [`firestore.rules`](firestore.rules) into the Firebase console **Rules** tab, or run `firebase deploy --only firestore:rules`.
+  - Create one document per family member at `allowedUsers/{email}` (empty document is enough).
 
-    service cloud.firestore {
-    match /databases/{database}/documents {
+### Terraform and Gmail ingest
 
-        function isAuthorizedUser() {
-          // Define the list of authorized email addresses
-          let authorizedEmails = [
-            "your-email@gmail.com",
-            "spouse-email@gmail.com",
-            "family-member@gmail.com"
-          ];
-
-          // Check if the authenticated user's email is in the authorized list
-          // and that their email is verified
-          return request.auth.token.email in authorizedEmails &&
-                 request.auth.token.email_verified == true;
-        }
-
-        // This rule applies to ALL documents in the database
-        // and grants read/write access ONLY if the user is authenticated
-        // and their email is in the authorized list AND it's verified.
-        match /{document=**} {
-          allow read, write: if request.auth != null && isAuthorizedUser();
-        }
-      }
-    }
-    ```
-
-
-### AppScript Setup
-
-1. **Enable the Google Apps Script API:**
-    - Go to the [Google Apps Script](https://script.google.com) website in your web browser.
-    - Navigate to `Settings` and ensure the **Google Apps Script API** is enabled.
-
-    ![Google App Script](public/docs/pics/ss3.png)
-
-2. **Go to the AppScript Directory:**
-    - Open your terminal and navigate to the `appScript` directory within your project:
-    ```bash
-    cd appScript
-    ```
-
-3. **Log in with `clasp`:**
-    Run the following command to authorize `clasp` with your Google account:
-    ```bash
-    clasp login
-    ```
-    This will open a browser window. Log in to your Google account and grant the requested permissions.
-
-4. **Navigate to the `appScript` Directory:**
-    Change your current directory to the `appScript` folder within your project:
-    ```bash
-    cd appScript
-    ```
-
-5. **Create a New Apps Script Project:**
-    Run the following command to create a new, standalone Apps Script project:
-    ```bash
-    clasp create --title "Pennywise App Script" --type standalone
-    ```
-
-6. **Update appsscript.json:**
-    - Open the `appsscript.json` file in the `appScript` directory.
-    - Replace its content with the following:
-    ```json
-    {
-      "timeZone": "Asia/Kolkata",
-      "dependencies": {
-        "enabledAdvancedServices": [
-          {
-          "userSymbol": "Gmail",
-          "version": "v1",
-          "serviceId": "gmail"
-          }
-        ]
-      },
-      "oauthScopes": [
-        "https://www.googleapis.com/auth/gmail.readonly",
-        "https://www.googleapis.com/auth/script.external_request",
-        "https://www.googleapis.com/auth/script.scriptapp",
-        "https://www.googleapis.com/auth/userinfo.email"
-      ],
-      "exceptionLogging": "STACKDRIVER",
-      "runtimeVersion": "V8",
-        "webapp": {
-        "access": "MYSELF",
-        "executeAs": "USER_DEPLOYING"
-      }
-    }
-   ```
-
-    **Configuration Breakdown:**
-
-    - **`"timeZone": "Asia/Kolkata"`** - Sets the timezone for the Apps Script project to Indian Standard Time. This affects how time-based functions and triggers work in your script.
-
-    - **`"dependencies" → "enabledAdvancedServices"`** - Enables the Gmail API (v1) for your Apps Script project:
-      - `"userSymbol": "Gmail"` - Allows you to use `Gmail` as the service name in your code
-      - `"serviceId": "gmail"` - Specifies which Google service to enable
-      - This is required to read emails programmatically
-
-    - **`"oauthScopes"`** - These define what permissions your script needs:
-      - `"gmail.readonly"` - Read-only access to Gmail messages
-      - `"script.external_request"` - Ability to make HTTP requests to external services (like Firebase)
-      - `"script.scriptapp"` - Access to Apps Script functionality
-      - `"userinfo.email"` - Access to the user's email address
-
-    - **`"exceptionLogging": "STACKDRIVER"`** - Enables Google Cloud logging for error tracking and debugging. Helps you see detailed error messages when things go wrong.
-
-    - **`"runtimeVersion": "V8"`** - Uses the modern V8 JavaScript runtime (supports ES6+ features). More efficient and supports newer JavaScript syntax.
-
-    - **`"webapp"` configuration:**
-      - `"access": "MYSELF"` - Only you can access the web app
-      - `"executeAs": "USER_DEPLOYING"` - The script runs with your permissions
-
-    This configuration essentially sets up your Apps Script to securely read your Gmail messages, process expense information, and send it to your Firebase database while running in your timezone with proper error logging.
-
-    **`emailParsingConfig.json`** in `appScript/` is a **legacy, HDFC-oriented sample** from an older regex-based flow. The **current** automation uses **Gemini** plus the **`config/emailParseBanks`** document you edit in the app (**Settings → Banks**). You can ignore or delete the JSON sample locally if you do not need it for reference.
-
-
-7. **Push Local Code to Apps Script:**
-   To upload your local code to the newly created Apps Script project, run:
-
-    ```bash
-    clasp push
-    ```
-   - Enter `yes` or `y` for `✔ Manifest file has been updated. Do you want to push and overwrite? Yes`
-
-
-8. **Run the Apps Script files:**
-
-    - Open your project in the [Google Apps Script](https://script.google.com) editor (after `clasp push`, filenames may appear as `.gs`; locally they are `trigger.js`, `expenses.js`, `functions.js`, etc.).
-    - Ensure **`env.js`** exists in the project (pushed from your machine) and **Script property `GEMINI_API_KEY`** is set if you use the recommended template above.
-    - Open the **trigger** file (`createTrigger` / `trigger.js`), select **`createTrigger`** in the function dropdown, and click **Run** (▶️).
-    - Complete OAuth: grant Gmail read-only, external URL fetch, and other requested scopes.
-    - If Google shows an “unverified app” screen, use **Advanced** → proceed for your own project.
-    - A successful run registers the hourly trigger for **`myExpenseFunction`** (see `trigger.js`).
-    - Optionally run **`myExpenseFunction`** once manually to test: it only performs work during **09:00–22:00 IST** (quiet hours skip the rest of the logic—see `expenses.js`).
-    - The script loads your **Banks** config from Firestore (`config/emailParseBanks`). Configure banks in the web app first (**Settings → Banks**) so match strings exist; otherwise no messages will be sent to Gemini.
+1. Follow the Bootstrap checklist in [infra/terraform/README.md](infra/terraform/README.md): create the state bucket, `terraform init -backend-config=backend.hcl`, `plan`, `apply`.
+2. Create an OAuth **Web** client. Authorized JavaScript origins: `http://127.0.0.1:3000` and `https://<project-id>.web.app`.
+3. Consent screen **In production**. Add scope `https://www.googleapis.com/auth/gmail.readonly` only.
+4. Put `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` and `GOOGLE_OAUTH_CLIENT_ID` in `functions/.env`.
+5. `firebase deploy` creates the Pub/Sub trigger subscription and the hourly scheduler job.
+6. Deploy or paste `firestore.rules`. Create `allowedUsers/{email}` for each family member.
+7. Sign in, open Settings, and **Connect Gmail**.
 
 ---
 
@@ -538,13 +383,9 @@ For a more native experience, you can install Pennywise as a Progressive Web App
 
 ### Automatic expense tracking
 
-The Google Apps Script runs on your **time-driven trigger** (e.g. every hour). For each run inside the **IST** window (**09:00–22:00**), it:
+Gmail `users.watch` publishes new INBOX mail to Pub/Sub. The Cloud Function parses matching bank mail (regex first, Gemini fallback) into `users/{uid}/expense/{gmailMessageId}`. An hourly job renews the watch and backfills gaps.
 
-1. Loads **`config/emailParseBanks`** (your **Settings → Banks** list).
-2. Scans recent Gmail messages and builds plain text from each message.
-3. If the text matches any of your **match strings**, calls **Gemini**, validates JSON, and posts expenses via **`addExpenseData`**.
-
-You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Studio billing.
+You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Studio billing. Use a billed key.
 
 ### Important next steps
 

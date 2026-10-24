@@ -41,7 +41,6 @@ Plan-file-only or docs-only edits skip this pass. If a touched package has no ma
 | Touched paths | Lint | Typecheck | Build |
 |---|---|---|---|
 | `src/**` | `npm run lint` | `npx tsc --noEmit` | `npm run build` |
-| `functions/**` | `npm run lint --prefix functions` | skip (no tsconfig) | skip |
-| `appScript/**` | `npx eslint appScript` | skip (JS) | skip |
+| `functions/**` | `npm run lint --prefix functions` | `npm run build --prefix functions` | skip |
 
 Fix every error that pass reports. Do not treat unused-import, missing antd/MUI exports, or `Select`/`DatePicker` callback types as overlay noise. Do not re-run the full test suite. The user will run tests. Domain tests stay in `.cursor/rules/run-domain-tests.mdc`.
