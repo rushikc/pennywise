@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAllowlisted() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email is string
+        && exists(/databases/$(database)/documents/allowedUsers/$(request.auth.token.email));
+    }
+
+    function isOwner(uid) {
+      return request.auth.uid == uid && isAllowlisted();
+    }
+
+    match /users/{uid}/expense/{document} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /users/{uid}/vendorTag/{document} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /users/{uid}/budget/{document} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /users/{uid}/config/{document} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /users/{uid}/meta/{document} {
+      allow read, write: if isOwner(uid);
+    }
+  }
+}

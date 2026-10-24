@@ -5,11 +5,17 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {Config, Expense, VendorTag, Budget} from '../Types';
 import {getDataMode} from '../pages/login/dataMode';
+import {auth} from '../firebase/firebaseConfig';
+import {indexedDbName} from './firestorePaths';
 
 const isLive = () => getDataMode() === 'live';
 
-const dbName = 'Finance';
 const dbVersion = 5;
+
+const dbName = (): string => {
+  const uid = auth.currentUser?.uid;
+  return uid ? indexedDbName(uid) : 'Finance';
+};
 
 type TableNames = 'expense' | 'vendorTag' | 'config' | 'budget';
 type StoreData = {
@@ -34,7 +40,7 @@ export class FinanceIndexDB {
       return;
     }
 
-    const financeDB = indexedDB.open(dbName, dbVersion);
+    const financeDB = indexedDB.open(dbName(), dbVersion);
 
     financeDB.onupgradeneeded = () => {
       const db = financeDB.result;
@@ -58,7 +64,7 @@ export class FinanceIndexDB {
     mode: IDBTransactionMode = 'readwrite'
   ): Promise<T> => {
     return new Promise((resolve, reject) => {
-      const financeDB = indexedDB.open(dbName, dbVersion);
+      const financeDB = indexedDB.open(dbName(), dbVersion);
 
       financeDB.onsuccess = () => {
         try {
@@ -74,7 +80,7 @@ export class FinanceIndexDB {
         }
       };
 
-      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName}`));
+      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName()}`));
     });
   };
 
@@ -86,7 +92,7 @@ export class FinanceIndexDB {
     items: StoreData[T][]
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const financeDB = indexedDB.open(dbName, dbVersion);
+      const financeDB = indexedDB.open(dbName(), dbVersion);
 
       financeDB.onsuccess = () => {
         try {
@@ -103,7 +109,7 @@ export class FinanceIndexDB {
         }
       };
 
-      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName}`));
+      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName()}`));
     });
   };
 
@@ -170,7 +176,7 @@ export class FinanceIndexDB {
     }
     return new Promise<void>((resolve, reject) => {
       try {
-        const deleteRequest = indexedDB.deleteDatabase(dbName);
+        const deleteRequest = indexedDB.deleteDatabase(dbName());
 
         deleteRequest.onsuccess = () => {
           console.log('IndexedDB data cleared successfully');

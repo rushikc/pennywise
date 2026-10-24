@@ -12,6 +12,7 @@ import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
+import {currentUid, userCollectionSegments, userDocSegments} from './firestorePaths';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
@@ -21,21 +22,26 @@ export type DocumentData = { [field: string]: unknown };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const userCol = (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta') =>
+  collection(db, ...userCollectionSegments(currentUid(), collectionName));
+
+const userDoc = (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) =>
+  doc(db, ...userDocSegments(currentUid(), collectionName, key));
+
 // Utility for CRUD operations on single docs
 const fireStoreDoc = {
   // eslint-disable-next-line
-  set: async (collectionName: string, key: string, val: unknown) => {
+  set: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string, val: unknown) => {
     try {
-      await setDoc(doc(db, collectionName, key), val);
-      // console.debug('Document written:', collectionName, key, val);
+      await setDoc(userDoc(collectionName, key), val);
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       console.error('Error adding document:', e);
     }
   },
-  get: async (collectionName: string, key: string) => {
+  get: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) => {
     try {
-      const snap = await getDoc(doc(db, collectionName, key));
+      const snap = await getDoc(userDoc(collectionName, key));
       return snap.exists() ? snap.data() : null;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -43,10 +49,9 @@ const fireStoreDoc = {
       return null;
     }
   },
-  delete: async (collectionName: string, key: string) => {
+  delete: async (collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta', key: string) => {
     try {
-      await deleteDoc(doc(db, collectionName, key));
-      // console.debug('Document deleted:', collectionName, key);
+      await deleteDoc(userDoc(collectionName, key));
       return true;
     } catch (e) {
       ErrorHandlers.handleApiError(e);
@@ -149,23 +154,27 @@ export class LiveExpenseAPI {
     key: string,
     // eslint-disable-next-line
     val: unknown,
-    collectionName = 'config') =>
+    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config') =>
     fireStoreDoc.set(collectionName, key, val);
 
   /**
    * Retrieves a single document from a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    */
-  static getOneDoc = async (key: string, collectionName = 'config') =>
-    fireStoreDoc.get(collectionName, key);
+  static getOneDoc = async (
+    key: string,
+    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config',
+  ) => fireStoreDoc.get(collectionName, key);
 
   /**
    * Deletes a single document from a specified Firestore collection.
    * If no collection is specified, it defaults to the 'config' collection.
    * Returns true on successful deletion, false otherwise.
    */
-  static deleteOneDoc = async (key: string, collectionName = 'config') =>
-    fireStoreDoc.delete(collectionName, key);
+  static deleteOneDoc = async (
+    key: string,
+    collectionName: 'expense' | 'vendorTag' | 'budget' | 'config' | 'meta' = 'config',
+  ) => fireStoreDoc.delete(collectionName, key);
 
   /**
    * A utility function for processing and migrating data in Firestore.
@@ -194,7 +203,7 @@ export class LiveExpenseAPI {
       expense.cost = Number(expense.cost.toFixed(2));
       expense.operation = operation;
 
-      const docRef = doc(db, 'expense', key);
+      const docRef = userDoc('expense', key);
 
       // eslint-disable-next-line
       const {id, ...expenseWithoutId} = expense;
@@ -222,7 +231,7 @@ export class LiveExpenseAPI {
   static deleteExpense = async (expense: Expense): Promise<boolean> => {
     try {
       // First, delete from Firebase
-      const docRef = doc(db, 'expense', expense.id);
+      const docRef = userDoc('expense', expense.id);
       await deleteDoc(docRef);
       // console.debug('Expense deleted from Firebase with key: ', expense.id);
 
@@ -260,13 +269,13 @@ export class LiveExpenseAPI {
       if (configData) lastUpdatedDate = Number(configData.value);
       if (overrideLastDate) lastUpdatedDate = overrideLastDate;
 
-      const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
+      const q = query(userCol(table), where('modifiedDate', '>=', lastUpdatedDate));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {
-        fireDocList.push(...querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
+        fireDocList.push(...querySnapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          ...docSnap.data()
         } as Expense)));
         await FinanceIndexDB.addExpenseList(fireDocList);
       }
@@ -465,7 +474,7 @@ export class LiveExpenseAPI {
         lastUpdatedDate = Number(configData.value);
       }
 
-      const q = query(collection(db, table), where('date', '>', lastUpdatedDate));
+      const q = query(userCol(table), where('date', '>', lastUpdatedDate));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {
@@ -498,7 +507,7 @@ export class LiveExpenseAPI {
       vendorTagWithoutId.date = Date.now();
 
       // Update in Firestore
-      const docRef = doc(db, 'vendorTag', id);
+      const docRef = userDoc('vendorTag', id);
       await setDoc(docRef, vendorTagWithoutId);
       // console.debug('VendorTag updated in Firestore with ID:', id);
       return true;
@@ -517,7 +526,7 @@ export class LiveExpenseAPI {
   static deleteVendorTag = async (vendorTagId: string): Promise<boolean> => {
     try {
       // Delete from Firestore
-      const docRef = doc(db, 'vendorTag', vendorTagId);
+      const docRef = userDoc('vendorTag', vendorTagId);
       await deleteDoc(docRef);
       // console.debug('VendorTag deleted from Firestore with ID:', vendorTagId);
 
@@ -550,7 +559,7 @@ export class LiveExpenseAPI {
       }
 
       // 2. Fetch expenses from Firestore starting from the given date
-      const expenseQuery = query(collection(db, 'expense'),
+      const expenseQuery = query(userCol('expense'),
         where('modifiedDate', '>=', startDate));
       const querySnapshot = await getDocs(expenseQuery);
 
@@ -594,7 +603,7 @@ export class LiveExpenseAPI {
           const updatePromises = batch.map(async (expense) => {
             const {id, ...expenseWithoutId} = expense;
             if (id) {
-              const docRef = doc(db, 'expense', id);
+              const docRef = userDoc('expense', id);
               await setDoc(docRef, expenseWithoutId);
             }
           });
@@ -638,7 +647,7 @@ export class LiveExpenseAPI {
       budget.modifiedDate = Date.now();
       budget.operation = operation;
 
-      const docRef = doc(db, 'budget', key);
+      const docRef = userDoc('budget', key);
 
       // eslint-disable-next-line
       const {id, ...budgetWithoutId} = budget;
@@ -666,7 +675,7 @@ export class LiveExpenseAPI {
       budget.modifiedDate = Date.now();
       budget.operation = 'update';
 
-      const docRef = doc(db, 'budget', budget.id);
+      const docRef = userDoc('budget', budget.id);
 
       // eslint-disable-next-line
       const {id, ...budgetWithoutId} = budget;
@@ -690,7 +699,7 @@ export class LiveExpenseAPI {
   static deleteBudget = async (budget: Budget): Promise<boolean> => {
     try {
       // First, delete from Firebase
-      const docRef = doc(db, 'budget', budget.id);
+      const docRef = userDoc('budget', budget.id);
       await deleteDoc(docRef);
       // console.debug('Budget deleted from Firebase with key: ', budget.id);
 
@@ -723,7 +732,7 @@ export class LiveExpenseAPI {
       if (configData) lastUpdatedDate = Number(configData.value);
       if (overrideLastDate) lastUpdatedDate = overrideLastDate;
 
-      const q = query(collection(db, table), where('modifiedDate', '>=', lastUpdatedDate));
+      const q = query(userCol(table), where('modifiedDate', '>=', lastUpdatedDate));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {

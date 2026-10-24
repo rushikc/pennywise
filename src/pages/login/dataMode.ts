@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {getApp} from 'firebase/app';
 import {doc, getDoc, getFirestore} from 'firebase/firestore/lite';
 import '../../firebase/firebaseConfig';
+import {profileProbeSegments} from '../../api/firestorePaths';
 
 export type DataMode = 'demo' | 'live' | 'checking';
 
@@ -24,9 +25,9 @@ const isDeniedCode = (code: unknown): boolean => {
   return code.includes('permission-denied') || code.includes('unauthenticated');
 };
 
-export const probeFirestoreAccess = async (): Promise<'demo' | 'live'> => {
+export const probeFirestoreAccess = async (uid: string): Promise<'demo' | 'live'> => {
   try {
-    await getDoc(doc(getFirestore(getApp()), 'config', 'darkMode'));
+    await getDoc(doc(getFirestore(getApp()), ...profileProbeSegments(uid)));
     return 'live';
   } catch (error) {
     const code = typeof error === 'object' && error !== null
@@ -47,7 +48,7 @@ export const resolveModeForAuth = async (
     return 'demo';
   }
   setDataMode('checking');
-  const mode = await probeFirestoreAccess();
+  const mode = await probeFirestoreAccess(user.uid);
   setDataMode(mode);
   return mode;
 };

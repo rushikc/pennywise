@@ -7,7 +7,7 @@ export const EXPENSE_LAST_UPDATE = 'expenseLastUpdate';
 export const TAG_LAST_UPDATE = 'tagLastUpdate';
 export const BUDGET_LAST_UPDATE = 'budgetLastUpdate';
 
-/** IndexedDB config key; mirrors Firestore `config/emailParseBanks` document. */
+/** IndexedDB config key; mirrors Firestore `users/{uid}/config/emailParseBanks`. */
 export const EMAIL_PARSE_BANKS_CACHE_KEY = 'emailParseBanks';
 
 export {chartColors as CHART_COLORS} from '../styles/designTokens';

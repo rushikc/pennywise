@@ -12,6 +12,7 @@ import {isEmpty, JSONCopy, sleep} from '../utility/utility';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {Budget} from '../Types';
 import {getDataMode} from '../pages/login/dataMode';
+import {currentUid, userCollectionSegments} from './firestorePaths';
 
 
 const app = initializeApp(firebaseConfig);
@@ -51,7 +52,7 @@ export class ProcessData {
       console.log('Process Data Init');
 
       // const q = query(collection(db, "expense"), where("date", ">", new Date("2020-01-01")));
-      const q = query(collection(db, 'expense'));
+      const q = query(collection(db, ...userCollectionSegments(currentUid(), 'expense')));
       const querySnapshot = await getDocs(q);
 
       const queryResultLen = querySnapshot.docs.length;

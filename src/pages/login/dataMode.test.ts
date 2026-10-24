@@ -11,13 +11,17 @@ jest.mock('firebase/app', () => ({
   getApp: jest.fn(() => ({})),
 }));
 
+const mockDoc = jest.fn((_db: unknown, ...path: string[]) => ({path}));
+
 jest.mock('firebase/firestore/lite', () => ({
   getFirestore: jest.fn(() => ({})),
-  doc: jest.fn((_db: unknown, collectionName: string, id: string) => ({collectionName, id})),
+  doc: (...args: unknown[]) => mockDoc(...args),
   getDoc: (...args: unknown[]) => mockGetDoc(...args),
 }));
 
-jest.mock('../../firebase/firebaseConfig', () => ({}));
+jest.mock('../../firebase/firebaseConfig', () => ({
+  auth: {currentUser: null},
+}));
 
 jest.mock('../../components/ErrorHandlers', () => ({
   ErrorHandlers: {
@@ -31,6 +35,7 @@ import {getDataMode, resolveModeForAuth, setDataMode} from './dataMode';
 describe('dataMode', () => {
   beforeEach(() => {
     mockGetDoc.mockReset();
+    mockDoc.mockClear();
     mockHandleApiError.mockReset();
     mockShowAccessDeniedModal.mockReset();
     setDataMode('checking');
@@ -48,6 +53,7 @@ describe('dataMode', () => {
     const mode = await resolveModeForAuth({uid: 'user-1'});
     expect(mode).toBe('live');
     expect(mockGetDoc).toHaveBeenCalledTimes(1);
+    expect(mockDoc).toHaveBeenCalledWith(expect.anything(), 'users', 'user-1', 'meta', 'profile');
   });
 
   it.each(['permission-denied', 'unauthenticated', 'firestore/permission-denied'])(

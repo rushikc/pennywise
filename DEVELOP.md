@@ -126,8 +126,8 @@ This section provides a high-level overview of the project's architecture to hel
 
 The React web app is designed to be fast and efficient by minimizing direct queries to Firestore. Here’s how it works:
 
-1.  **Initial Data Fetch**: When you first load the app, it fetches all your expense and tag data from Firestore.
-2.  **Local Caching**: This data is immediately cached in your browser’s **IndexedDB**. This creates a local copy of your database, allowing the app to load quickly on subsequent visits without waiting for the network.
+1.  **Initial Data Fetch**: When you first load the app, it fetches expense, tag, budget, and config data from Firestore under `users/{uid}/...`. Access is gated by `allowedUsers/{email}` in Firestore rules. Signed-in users who are not listed stay in demo mode.
+2.  **Local Caching**: This data is immediately cached in your browser’s **IndexedDB** (`Finance-{uid}`). This creates a local copy of your database, allowing the app to load quickly on subsequent visits without waiting for the network.
 3.  **Delta Sync**: The app listens for real-time updates from Firestore. When a change occurs in the database (e.g., a new expense is added), only the new or modified data (**the delta**) is sent to the app. This update is then synced with the local IndexedDB cache and the UI.
 
 This "delta sync" approach ensures the app stays up-to-date without re-downloading the entire database, saving bandwidth and reducing costs.
@@ -136,7 +136,7 @@ This "delta sync" approach ensures the app stays up-to-date without re-downloadi
 
 Pennywise automates expense tracking by combining Gmail, **Google Gemini**, and Firebase Cloud Functions. There is **no** fixed regex-per-bank pipeline in the main flow—the model interprets each candidate email’s text.
 
-1.  **Bank list in Firestore**: The web app stores `config/emailParseBanks` with an array of `{ id, displayName, matchStrings[] }`. **Settings → Banks** (`ManageBanks.tsx`) edits this list. Match strings are simple substrings that must appear in the email body/snippet (case-insensitive) before the message is sent to Gemini—think of them as fingerprints for “this is my bank’s alert template.”
+1.  **Bank list in Firestore**: The web app stores `users/{uid}/config/emailParseBanks` with an array of `{ id, displayName, matchStrings[] }`. **Settings → Banks** (`ManageBanks.tsx`) edits this list. Match strings are simple substrings that must appear in the email body/snippet (case-insensitive) before the message is sent to Gemini—think of them as fingerprints for “this is my bank’s alert template.”
 2.  **Google Apps Script** (`appScript/`): Runs on a time-driven trigger (see `trigger.js`). It loads `emailParseBanks` via the `getOneDoc` Cloud Function, reads recent Gmail messages, and derives plain text (snippet + HTML body via `utility.js`).
 3.  **Gemini**: For each message that matches at least one bank entry, the script calls the **Generative Language API** (`callGemini` in `expenses.js`) with subject + body and expects JSON (`cost`, `costType`, `vendor`, `type`, or `null` if not a transaction). Validation helpers live in `functions.js` (`isValidExpenseGeminiShape`, `normalizeGeminiExpense`).
 4.  **Cloud Functions** (`functions/`): `addExpenseData` persists the expense to Firestore; `getOneDoc` / `setOneDoc` / `getAllDoc` sync config and vendor tags. The script authenticates with the same OAuth model described in [SETUP.md](SETUP.md).
@@ -149,9 +149,9 @@ This design keeps Gmail access in the script you own, while the React app only t
 
 Security is a top priority. Pennywise protects your data at every layer:
 
-1.  **React Web App**: The front end is secured with **Google Sign-In (OAuth)**. Only authenticated users can access the application. You control who has access by adding authorized email addresses in the Firestore rules.
+1.  **React Web App**: The front end is secured with **Google Sign-In (OAuth)**. Live data is available only when Firestore rules allow it. You control access by creating `allowedUsers/{email}` documents.
 2.  **Cloud Functions**: The backend Cloud Functions are protected and can only be accessed by authenticated users. Every request to a function must include a valid **OAuth token (JWT)**, which the function verifies before executing. This prevents unauthorized access to your backend logic.
-3.  **Firestore Database**: The database is protected by **Firestore Security Rules**. These server-side rules ensure that users can only read and write their own data. For example, a rule can specify that a user’s email must match the email associated with the data they are trying to access.
+3.  **Firestore Database**: Rules allow an allowlisted user to read and write only `users/{uid}/**` collections listed in `firestore.rules`. Clients cannot read token or connection private docs. The access probe reads `users/{uid}/meta/profile`; permission-denied means demo mode.
 
 This layered security model ensures that your financial data is kept private and accessible only to you.
 
