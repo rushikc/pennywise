@@ -9,6 +9,7 @@ import {BUDGET_LIST} from './budgetList';
 import {GET_LATEST_EXPENSE} from './expenseFunctions';
 import {SAMPLE_BANKS} from './sampleBanks';
 import {TAG_LIST} from './tagList';
+import {PENDING_PAIRS} from './pendingPairs';
 import {VendorTags} from './vendorTag';
 
 export type DemoStore = {
@@ -21,11 +22,6 @@ export type DemoStore = {
   darkMode: boolean;
   docs: Record<string, unknown>;
 };
-
-const PENDING_PAIRS: Array<[string, string]> = [
-  ['19858be39996186a', '19858be411073c6b'],
-  ['198578b8b873fb57', '198578b93dde58cb'],
-];
 
 const markPendingDuplicates = (expenses: Expense[]): void => {
   for (const [keepMailId, dropMailId] of PENDING_PAIRS) {
