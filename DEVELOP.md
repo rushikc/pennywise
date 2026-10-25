@@ -68,24 +68,42 @@ Without a signed-in, allowlisted account the app runs in **demo mode** on the mo
 Vite HMR is not a type-check, so run `npm run typecheck` before you push. The ingest emulator test in `functions/gmail` is skipped unless `FIRESTORE_EMULATOR_HOST` is set.
 
 ### Firebase Deployment
-To deploy the Firebase functions and hosting, follow these steps:
+Local deploys use git-ignored `.firebaserc` aliases. Copy [`.firebaserc.example`](.firebaserc.example) to `.firebaserc` and set `default` / `personal` to your project.
+
 1.  **Login to Firebase from the root folder**:
     ```bash
     firebase login
     ```
-2.  **Build the web app** (Hosting serves the `build/` folder):
+2.  **Deploy the personal app** (functions, hosting, and Firestore rules/indexes after Terraform apply; see [infra/terraform/README.md](infra/terraform/README.md)):
     ```bash
-    npm run build
+    npm run deploy:personal
     ```
-3.  **Deploy Firebase functions, hosting, and Firestore rules/indexes** (after Terraform apply; see [infra/terraform/README.md](infra/terraform/README.md)):
+    Or `firebase deploy --project personal`. `firebase deploy` with no `--project` still uses the `default` alias. The functions predeploy step copies `shared/gcpNames.json` into `functions/shared/`, builds the TypeScript parsers, and lints the functions.
+3.  **Deploy only personal hosting**:
     ```bash
-    firebase deploy
+    npm run deploy:personal:hosting
     ```
-    The functions predeploy step copies `shared/gcpNames.json` into `functions/shared/`, builds the TypeScript parsers, and lints the functions.
-4.  **Deploy only hosting (web app hosting)**:
-    ```bash
-    firebase deploy --only hosting
-    ```
+
+### CI/CD and demo deploy
+
+Every push to `main` (and `workflow_dispatch`) runs [`.github/workflows/deploy-demo.yml`](.github/workflows/deploy-demo.yml). The `check` job runs `npm run lint`, `npm run typecheck`, and `npm test`. The `deploy` job builds a self-contained demo bundle (`npm run build:demo`), verifies it (`npm run verify:demo-bundle`), and deploys Hosting only with `firebase.demo.json`.
+
+`vite build --mode demo` sets `__DEMO_BUILD__`. That build blanks Firebase env keys, never initializes Firebase, Auth, Firestore, Functions, or Google Identity Services, hides `/login` and the Gmail card, and ships synthetic data from `src/demoData`. [`firebase.demo.json`](firebase.demo.json) has only a `hosting` key, so a demo deploy cannot touch functions or Firestore.
+
+Local preview:
+
+```bash
+npm run build:demo
+npm run preview:demo
+```
+
+GitHub Environment `demo` (restrict it to `main`) holds:
+
+- Secret `DEMO_FIREBASE_PROJECT_ID`
+- Secrets `GCP_WORKLOAD_IDENTITY_PROVIDER` and `GCP_DEMO_DEPLOY_SERVICE_ACCOUNT` (Workload Identity Federation) **or** `FIREBASE_SERVICE_ACCOUNT_DEMO` (JSON key)
+- Variable `DEMO_HOSTING_SITE` (optional custom Hosting site id)
+
+The one-time console setup is in [docs/DEMO_DEPLOY.md](docs/DEMO_DEPLOY.md). `npm run deploy:demo` deploys locally using the `demo` `.firebaserc` alias. Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (app lint/typecheck/test plus functions lint and tests).
 
 ### Branching Strategy
 

@@ -256,7 +256,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
   ![Create web app](public/docs/pics/ff5.png)
 
-  - Create a `.env` file in the root folder of your project and paste each key-value configuration in the format below.
+  - Copy [`.env.example`](.env.example) to `.env` in the root folder and paste each key-value configuration in the format below.
   - The app is built with Vite but keeps the `REACT_APP_` prefix for its variables. Use the following format:
   ```env
   REACT_APP_FIREBASE_API_KEY=your-api-key
@@ -277,13 +277,14 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
 7. **Update Project ID in Firebase config:**
 
-  - Create a file named `.firebaserc` in the root directory.
-  - Add the following content to the `.firebaserc` file:
-  - Replace `actual-project-id` with your actual Firebase project ID.
+  - Copy [`.firebaserc.example`](.firebaserc.example) to `.firebaserc` in the root directory (the real file is gitignored).
+  - Set `default` and `personal` to your Firebase project ID. `demo` is only for the public Hosting-only demo project.
   ```txt
       {
           "projects": {
-            "default": "actual-project-id"  // Replace with your actual project ID
+            "default": "your-personal-project-id",
+            "personal": "your-personal-project-id",
+            "demo": "your-demo-project-id"
           }
       }
   ```

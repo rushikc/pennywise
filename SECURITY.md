@@ -10,6 +10,7 @@ Pennywise is designed with the following core security principles in mind:
 *   **Self-Hosted Infrastructure**: The entire backend, including Cloud Functions and the database, runs within your personal Google Cloud project. This gives you full control over the operational environment.
 *   **Transparency**: The entire codebase is open-source and available on GitHub. You can inspect the code at any time to verify its functionality and security.
 *   **Principle of Least Privilege**: The application and its components only request the minimum permissions necessary to function.
+*   **Public demo**: The hosted demo is a separate Firebase Hosting-only project. It has no Auth, Firestore, or Cloud Functions, ships synthetic sample data, and is deployed by a least-privilege service account (`roles/firebasehosting.admin` plus Service Usage roles). Personal project IDs and web config stay out of the repo and out of that bundle.
 
 ---
 

@@ -62,6 +62,8 @@ import, and separate layouts tuned for desktop and phone.
 
 ## Demo
 
+Public demo: [https://pennywise-demo.web.app](https://pennywise-demo.web.app). It runs on synthetic sample data and redeploys on every push to `main`.
+
 ### Demo mode
 Signed-out visitors, and signed-in users whose email is not on the allowlist, use this same app on mock data and see a "You're viewing demo data." banner. Only verified Google accounts with a document in the Firestore `allowedUsers` collection (document ID = lowercase email) can read live data. The Firestore security rules enforce this allowlist; no extra environment variable is needed.
 
