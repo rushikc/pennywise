@@ -11,7 +11,7 @@ Before finishing any implementation, including work done from a plan, run ESLint
 
 | Touched paths | Command |
 |---|---|
-| `src/**` | `npm test` |
+| `src/**` | `CI=true npm test` (`vitest run`; do not pass `--watchAll=false`) |
 | `functions/**` | `npm test --prefix functions` |
 | `firestore.rules` / `tests/firestore.rules.test.js` | `npm run test:rules` |
 | `infra/terraform/**` | `terraform fmt -check` and `terraform validate` in `infra/terraform` |

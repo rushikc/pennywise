@@ -56,7 +56,7 @@ Without a signed-in, allowlisted account the app runs in **demo mode** on the mo
 
 | What | Command |
 |------|---------|
-| Web app unit tests (Vitest + jsdom) | `npm test` |
+| Web app unit tests (Vitest + jsdom) | `CI=true npm test` (`vitest run`; do not pass `--watchAll=false`) |
 | Web app lint | `npm run lint` |
 | Web app type-check | `npm run typecheck` (`tsc --noEmit`) |
 | Cloud Functions tests (builds the TypeScript parsers first) | `npm test --prefix functions` |
@@ -88,7 +88,7 @@ Local deploys use git-ignored `.firebaserc` aliases. Copy [`.firebaserc.example`
 
 Every push to `main` (and `workflow_dispatch`) runs [`.github/workflows/deploy-demo.yml`](.github/workflows/deploy-demo.yml). The `check` job runs `npm run lint`, `npm run typecheck`, and `npm test`. The `deploy` job builds a self-contained demo bundle (`npm run build:demo`), verifies it (`npm run verify:demo-bundle`), and deploys Hosting only with `firebase.demo.json`.
 
-`vite build --mode demo` sets `__DEMO_BUILD__`. That build blanks Firebase env keys, never initializes Firebase, Auth, Firestore, Functions, or Google Identity Services, hides `/login` and the Gmail card, and ships synthetic data from `src/demoData`. [`firebase.demo.json`](firebase.demo.json) has only a `hosting` key, so a demo deploy cannot touch functions or Firestore.
+`vite build --mode demo` sets `__DEMO_BUILD__`. That build blanks Firebase env keys, never initializes Firebase, Auth, Firestore, Functions, or Google Identity Services, hides `/login` and the Gmail card, and ships synthetic data from `src/demoData`. [`firebase.demo.json`](firebase.demo.json) has only a `hosting` key, so a demo deploy cannot touch functions or Firestore. It also ignores `docs/**`, so README/SETUP screenshots under `public/docs` are not uploaded to the demo site.
 
 Local preview:
 
