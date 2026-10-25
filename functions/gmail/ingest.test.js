@@ -458,6 +458,66 @@ describe('processConnectedUser fetch errors', () => {
     assert.equal(db.docs.get('users/u1/private/gmail').historyId, '5');
   });
 
+  it('runs applyDedupe after a 429 if an earlier message was saved', async () => {
+    const db = connectedDb({historyId: '5'});
+    db.docs.set('users/u1/expense/existing', {
+      cost: 199,
+      vendor: 'NETFLIX',
+      type: 'upi',
+      date: 50,
+      operation: 'add',
+    });
+    const netflixMessage = {
+      ...hdfcMessage('m1'),
+      payload: {
+        headers: [{name: 'Subject', value: 'HDFC Bank alert'}],
+        body: {
+          data: Buffer.from(
+            'Rs.199.00 is debited from your HDFC Bank Credit Card ending 1234 towards NETFLIX on 01-01-26',
+          ).toString('base64url'),
+        },
+      },
+    };
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/history')) {
+        return {
+          ok: true,
+          json: async () => ({
+            historyId: '6',
+            history: [
+              {messagesAdded: [{message: {id: 'm1'}}]},
+              {messagesAdded: [{message: {id: 'm2'}}]},
+            ],
+          }),
+        };
+      }
+      if (href.includes('/messages/m1')) {
+        return {ok: true, json: async () => netflixMessage};
+      }
+      if (href.includes('/messages/m2') && href.includes('format=metadata')) {
+        return {ok: false, status: 429, json: async () => ({error: 'rate'})};
+      }
+      throw new Error(`unexpected ${url}`);
+    };
+    await assert.rejects(
+      () => processConnectedUser({
+        db,
+        uid: 'u1',
+        accessToken: 'at',
+        geminiKey: '',
+        fetchImpl,
+        nowMs: 50,
+      }),
+      /gmail_fetch_failed/,
+    );
+    assert.ok(db.docs.has('users/u1/expense/m1'));
+    assert.equal(db.docs.get('users/u1/private/gmail').historyId, '5');
+    const marked = db.docs.get('users/u1/expense/m1').duplicateOf === 'existing' ||
+      db.docs.get('users/u1/expense/existing').duplicateOf === 'm1';
+    assert.equal(marked, true);
+  });
+
   it('throws on full-message 500 and does not advance the cursor', async () => {
     const db = connectedDb({historyId: '5'});
     const fetchImpl = async (url) => {

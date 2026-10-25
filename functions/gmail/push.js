@@ -12,11 +12,16 @@ function decodePushMessage(message) {
   if (!message) {
     return null;
   }
-  if (message.json && message.json.emailAddress) {
-    return {
-      emailAddress: String(message.json.emailAddress),
-      historyId: message.json.historyId != null ? String(message.json.historyId) : null,
-    };
+  try {
+    if (message.json && message.json.emailAddress) {
+      return {
+        emailAddress: String(message.json.emailAddress),
+        historyId: message.json.historyId != null ? String(message.json.historyId) : null,
+      };
+    }
+  } catch {
+    console.log(JSON.stringify({event: 'gmail_push_bad_payload'}));
+    return null;
   }
   if (!message.data) {
     return null;

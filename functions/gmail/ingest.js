@@ -360,74 +360,83 @@ async function processConnectedUser({
   }
   const banks = await loadUserBanks(db, uid);
   const vendorTags = await loadVendorTags(db, uid);
-  const backfill = await runBackfillPage({
-    db,
-    uid,
-    cursor,
-    accessToken,
-    banks,
-    vendorTags,
-    geminiKey,
-    fetchImpl,
-    nowMs,
-    messageCap,
-  });
   const startedHistoryId = cursor.historyId;
+  let backfill = {ran: false, created: 0, processed: 0};
   let messageIds = [];
   let nextHistoryId = startedHistoryId;
   let fallbackQuery = null;
-  if (startedHistoryId) {
-    const history = await collectHistoryIds({
-      accessToken,
-      startHistoryId: startedHistoryId,
-      fetchImpl,
-    });
-    if (history.stale) {
-      const listed = await fallbackList({
-        accessToken,
-        banks,
-        lastProcessedAt: cursor.lastProcessedAt,
-        fetchImpl,
-        nowMs,
-      });
-      messageIds = listed.ids;
-      fallbackQuery = listed.q;
-      const profile = await getProfile({accessToken, fetchImpl});
-      if (!profile.ok) {
-        throw gmailListFailed();
-      }
-      nextHistoryId = profile.payload.historyId ? String(profile.payload.historyId) : startedHistoryId;
-    } else {
-      messageIds = history.ids;
-      nextHistoryId = history.latestHistoryId || startedHistoryId;
-    }
-  }
   let created = 0;
-  for (const id of messageIds) {
-    const result = await ingestMessageById({
+  let ingestError = null;
+  try {
+    backfill = await runBackfillPage({
       db,
       uid,
-      id,
+      cursor,
       accessToken,
       banks,
       vendorTags,
       geminiKey,
       fetchImpl,
       nowMs,
+      messageCap,
     });
-    if (result && result.created) {
-      created += 1;
+    created += backfill.created || 0;
+    if (startedHistoryId) {
+      const history = await collectHistoryIds({
+        accessToken,
+        startHistoryId: startedHistoryId,
+        fetchImpl,
+      });
+      if (history.stale) {
+        const listed = await fallbackList({
+          accessToken,
+          banks,
+          lastProcessedAt: cursor.lastProcessedAt,
+          fetchImpl,
+          nowMs,
+        });
+        messageIds = listed.ids;
+        fallbackQuery = listed.q;
+        const profile = await getProfile({accessToken, fetchImpl});
+        if (!profile.ok) {
+          throw gmailListFailed();
+        }
+        nextHistoryId = profile.payload.historyId ? String(profile.payload.historyId) : startedHistoryId;
+      } else {
+        messageIds = history.ids;
+        nextHistoryId = history.latestHistoryId || startedHistoryId;
+      }
     }
+    for (const id of messageIds) {
+      const result = await ingestMessageById({
+        db,
+        uid,
+        id,
+        accessToken,
+        banks,
+        vendorTags,
+        geminiKey,
+        fetchImpl,
+        nowMs,
+      });
+      if (result && result.created) {
+        created += 1;
+      }
+    }
+  } catch (error) {
+    ingestError = error;
   }
-  if (created > 0) {
+  if (created > 0 || ingestError) {
     await applyDedupe(db, uid, nowMs);
+  }
+  if (ingestError) {
+    throw ingestError;
   }
   if (nextHistoryId) {
     await advanceCursor(db, uid, startedHistoryId, nextHistoryId, {lastProcessedAt: nowMs});
   }
   const processed = messageIds.length + (backfill.processed || 0);
-  const createdTotal = created + (backfill.created || 0);
-  return {processed, created: createdTotal, noop: processed === 0, fallbackQuery};
+  return {processed, created, noop: processed === 0, fallbackQuery};
 }
 
 module.exports = {

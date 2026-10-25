@@ -131,9 +131,47 @@ describe('gmail callables', () => {
   it('rejects connecting a Gmail account already used by another uid', async () => {
     const db = allowlistedDb();
     db.docs.set('gmailConnections/ada@example.com', {uid: 'uid-other', status: 'connected'});
+    const tokens = {'uid-1': 'rt-existing'};
+    const saved = [];
+    const revoked = [];
+    const fetchImpl = async (url) => {
+      if (String(url).includes('revoke')) {
+        revoked.push(String(url));
+      }
+      return oauthFetch('ada@example.com')(url);
+    };
     const {connectGmail} = createGmailCallables({
       db,
-      tokenStore: {saveRefreshToken: async () => {}},
+      tokenStore: {
+        saveRefreshToken: async (_p, uid, token) => {
+          saved.push({uid, token});
+          tokens[uid] = token;
+        },
+      },
+      projectId: 'proj',
+      clientId: 'id',
+      clientSecret: 'secret',
+      fetchImpl,
+      now: () => 1000,
+    });
+    await assert.rejects(
+      () => connectGmail(authedRequest('one-time-code')),
+      (err) => err.code === 'already-exists',
+    );
+    assert.deepEqual(saved, []);
+    assert.equal(tokens['uid-1'], 'rt-existing');
+    assert.equal(revoked.some((url) => url.includes('revoke')), true);
+  });
+
+  it('disconnects Firestore state when saving the refresh token fails', async () => {
+    const db = allowlistedDb();
+    const {connectGmail} = createGmailCallables({
+      db,
+      tokenStore: {
+        saveRefreshToken: async () => {
+          throw new Error('secret_write_failed');
+        },
+      },
       projectId: 'proj',
       clientId: 'id',
       clientSecret: 'secret',
@@ -142,8 +180,11 @@ describe('gmail callables', () => {
     });
     await assert.rejects(
       () => connectGmail(authedRequest('one-time-code')),
-      (err) => err.code === 'already-exists',
+      /secret_write_failed/,
     );
+    assert.equal(db.docs.get('users/uid-1/meta/gmailStatus').status, 'disconnected');
+    assert.equal(db.docs.get('users/uid-1/meta/gmailStatus').lastError, 'token_save_failed');
+    assert.equal(db.docs.get('gmailConnections/ada@example.com').status, 'disconnected');
   });
 
   it('marks the previous Gmail index disconnected when reconnecting a different address', async () => {

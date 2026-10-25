@@ -41,16 +41,27 @@ function createGmailCallables({db, tokenStore, projectId, clientId, clientSecret
       fetchImpl,
     });
     const gmailEmail = await fetchGmailEmail(tokens.accessToken, fetchImpl) || email;
-    await tokenStore.saveRefreshToken(projectId, uid, tokens.refreshToken);
     try {
       await writeConnectedState(db, {uid, email: gmailEmail, nowMs: now()});
     } catch (error) {
       if (error.code === 'already-exists') {
+        await revokeToken(tokens.refreshToken, fetchImpl);
         throw new HttpsError(
           'already-exists',
           'This Gmail account is already connected to another Pennywise user.',
         );
       }
+      throw error;
+    }
+    try {
+      await tokenStore.saveRefreshToken(projectId, uid, tokens.refreshToken);
+    } catch (error) {
+      await writeDisconnectedState(db, {
+        uid,
+        email: gmailEmail,
+        lastError: 'token_save_failed',
+        nowMs: now(),
+      });
       throw error;
     }
     if (tokens.accessToken) {

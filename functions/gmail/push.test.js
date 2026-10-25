@@ -19,4 +19,14 @@ describe('decodePushMessage', () => {
     const decoded = decodePushMessage({data: Buffer.from('{not-json').toString('base64')});
     assert.equal(decoded, null);
   });
+
+  it('returns null when the json getter throws', () => {
+    const message = {
+      get json() {
+        throw new Error('bad json');
+      },
+      data: Buffer.from(JSON.stringify({emailAddress: 'a@b.com'})).toString('base64'),
+    };
+    assert.equal(decodePushMessage(message), null);
+  });
 });
