@@ -1,0 +1,89 @@
+name: Deploy demo site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-demo
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+        env:
+          CI: 'true'
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: demo
+      url: ${{ steps.url.outputs.url }}
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DEMO_FIREBASE_PROJECT_ID: ${{ secrets.DEMO_FIREBASE_PROJECT_ID }}
+      DEMO_HOSTING_SITE: ${{ vars.DEMO_HOSTING_SITE }}
+      HAS_WIF: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Fail fast if required config is missing
+        run: |
+          test -n "$DEMO_FIREBASE_PROJECT_ID" || { echo "::error::DEMO_FIREBASE_PROJECT_ID secret is not set on the 'demo' environment"; exit 1; }
+
+      - name: Build demo bundle
+        run: npm run build:demo
+
+      - name: Verify bundle has no Firebase config or personal identifiers
+        run: npm run verify:demo-bundle
+
+      - name: Authenticate to Google Cloud (Workload Identity Federation)
+        if: env.HAS_WIF == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEMO_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Authenticate to Google Cloud (service account JSON)
+        if: env.HAS_WIF != 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMO }}
+
+      - name: Optional custom site id
+        if: env.DEMO_HOSTING_SITE != ''
+        run: |
+          node -e "const f='firebase.demo.json';const c=require('./'+f);c.hosting.site=process.env.DEMO_HOSTING_SITE;require('fs').writeFileSync(f,JSON.stringify(c,null,2));"
+
+      - name: Deploy to Firebase Hosting (live)
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message || 'manual run' }}
+        run: npx firebase deploy --only hosting --config firebase.demo.json --project "$DEMO_FIREBASE_PROJECT_ID" --non-interactive --message "${COMMIT_SHA:0:7} ${COMMIT_MESSAGE}"
+
+      - id: url
+        run: echo "url=https://${DEMO_HOSTING_SITE:-$DEMO_FIREBASE_PROJECT_ID}.web.app" >> "$GITHUB_OUTPUT"

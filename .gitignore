@@ -16,6 +16,7 @@
 .DS_Store
 .env
 .env*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
@@ -25,6 +26,7 @@
 .clasp.json
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

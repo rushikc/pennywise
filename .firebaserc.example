@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "your-personal-project-id",
+    "personal": "your-personal-project-id",
+    "demo": "your-demo-project-id"
+  }
+}
