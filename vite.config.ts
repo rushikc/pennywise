@@ -152,7 +152,7 @@ export default defineConfig(({mode, command}) => {
       demoModuleAliases(isDemo),
       stripDemoFirebaseHosts(mode),
       mode !== 'test' && checker({typescript: true}),
-      command === 'build' && visualizer({
+      command === 'build' && !isDemo && visualizer({
         filename: path.join(rootDir, 'build/bundle-analysis-report.html'),
         open: false,
         gzipSize: true,

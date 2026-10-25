@@ -88,7 +88,7 @@ Local deploys use git-ignored `.firebaserc` aliases. Copy [`.firebaserc.example`
 
 Every push to `main` (and `workflow_dispatch`) runs [`.github/workflows/deploy-demo.yml`](.github/workflows/deploy-demo.yml). The `check` job runs `npm run lint`, `npm run typecheck`, and `npm test`. The `deploy` job builds a self-contained demo bundle (`npm run build:demo`), verifies it (`npm run verify:demo-bundle`), and deploys Hosting only with `firebase.demo.json`.
 
-`vite build --mode demo` sets `__DEMO_BUILD__`. That build blanks Firebase env keys, never initializes Firebase, Auth, Firestore, Functions, or Google Identity Services, hides `/login` and the Gmail card, and ships synthetic data from `src/demoData`. [`firebase.demo.json`](firebase.demo.json) has only a `hosting` key, so a demo deploy cannot touch functions or Firestore. It also ignores `docs/**`, so README/SETUP screenshots under `public/docs` are not uploaded to the demo site.
+`vite build --mode demo` sets `__DEMO_BUILD__`. That build blanks Firebase env keys, never initializes Firebase, Auth, Firestore, Functions, or Google Identity Services, hides `/login` and the Gmail card, and ships synthetic data from `src/demoData`. [`firebase.demo.json`](firebase.demo.json) has only a `hosting` key, so a demo deploy cannot touch functions or Firestore. It also ignores `docs/**`, so README/SETUP screenshots under `public/docs` are not uploaded to the demo site, and the bundle analysis report is not generated or uploaded for demo builds.
 
 Local preview:
 

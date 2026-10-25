@@ -52,6 +52,11 @@ if (!fs.existsSync(BUILD_DIR)) {
   process.exit(1);
 }
 
+if (fs.existsSync(path.join(BUILD_DIR, 'bundle-analysis-report.html'))) {
+  console.error('verify:demo-bundle: bundle-analysis-report.html must not be in a demo build.');
+  process.exit(1);
+}
+
 const files = listFiles(BUILD_DIR);
 let failed = false;
 const warnings = [];
