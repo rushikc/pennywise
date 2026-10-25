@@ -7,7 +7,7 @@ import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expen
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import {DemoStore} from '../demoData/createDemoStore';
-import {ClientUserCollection} from './firestorePaths';
+import type {ClientUserCollection} from './firestorePaths';
 
 export class DemoExpenseAPI {
 

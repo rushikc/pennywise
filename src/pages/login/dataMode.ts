@@ -3,14 +3,12 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {getApp} from 'firebase/app';
-import {doc, getDoc, getFirestore} from 'firebase/firestore/lite';
-import '../../firebase/firebaseConfig';
+import {IS_DEMO_BUILD} from '../../utility/buildMode';
 import {profileProbeSegments} from '../../api/firestorePaths';
 
 export type DataMode = 'demo' | 'live' | 'checking';
 
-let dataMode: DataMode = 'checking';
+let dataMode: DataMode = (__DEMO_BUILD__ || IS_DEMO_BUILD) ? 'demo' : 'checking';
 
 export const getDataMode = (): DataMode => dataMode;
 
@@ -25,7 +23,12 @@ const isDeniedCode = (code: unknown): boolean => {
   return code.includes('permission-denied') || code.includes('unauthenticated');
 };
 
-export const probeFirestoreAccess = async (uid: string): Promise<'demo' | 'live'> => {
+const probeLiveFirestore = async (uid: string): Promise<'demo' | 'live'> => {
+  if (__DEMO_BUILD__) {
+    return 'demo';
+  }
+  const {getApp} = await import('firebase/app');
+  const {doc, getDoc, getFirestore} = await import('firebase/firestore/lite');
   try {
     await getDoc(doc(getFirestore(getApp()), ...profileProbeSegments(uid)));
     return 'live';
@@ -40,10 +43,17 @@ export const probeFirestoreAccess = async (uid: string): Promise<'demo' | 'live'
   }
 };
 
+export const probeFirestoreAccess = async (uid: string): Promise<'demo' | 'live'> => {
+  if (__DEMO_BUILD__ || IS_DEMO_BUILD) {
+    return 'demo';
+  }
+  return probeLiveFirestore(uid);
+};
+
 export const resolveModeForAuth = async (
   user: {uid: string} | null,
 ): Promise<'demo' | 'live'> => {
-  if (!user) {
+  if (__DEMO_BUILD__ || IS_DEMO_BUILD || !user) {
     setDataMode('demo');
     return 'demo';
   }

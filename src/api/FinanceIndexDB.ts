@@ -5,8 +5,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {Config, Expense, VendorTag, Budget} from '../Types';
 import {getDataMode} from '../pages/login/dataMode';
-import {auth} from '../firebase/firebaseConfig';
-import {indexedDbName} from './firestorePaths';
+import {IS_DEMO_BUILD} from '../utility/buildMode';
+import {liveIndexedDbName} from './liveIndexedDbName';
 
 const isLive = () => getDataMode() === 'live';
 
@@ -26,8 +26,10 @@ export function deleteLegacyFinanceIdb(): void {
 const dbVersion = 5;
 
 const dbName = (): string => {
-  const uid = auth.currentUser?.uid;
-  return uid ? indexedDbName(uid) : 'Finance';
+  if (__DEMO_BUILD__ || IS_DEMO_BUILD || !isLive()) {
+    return 'Finance';
+  }
+  return liveIndexedDbName();
 };
 
 type TableNames = 'expense' | 'vendorTag' | 'config' | 'budget';

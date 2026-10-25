@@ -26,7 +26,11 @@ import {selectExpense, toggleDarkMode} from '../../store/expenseActions';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {createTimedAlert} from '../../store/alertActions';
 import {buildInfo} from '../../utility/buildInfo';
-import GmailConnectCard from './setting-views/GmailConnectCard';
+import {IS_DEMO_BUILD} from '../../utility/buildMode';
+
+const GmailConnectCard = (__DEMO_BUILD__ || IS_DEMO_BUILD)
+  ? () => null
+  : React.lazy(() => import('./setting-views/GmailConnectCard'));
 
 /**
  * Settings page component with user profile and settings options
@@ -40,11 +44,13 @@ const Settings: React.FC = () => {
   // Use the custom hook for authentication
   const {currentUser, signOut, dataMode} = useAuth();
   const deniedLiveUser = Boolean(currentUser) && dataMode === 'demo';
-  const userProfile = {
-    name: currentUser?.displayName || 'User',
-    email: currentUser?.email || 'No email',
-    photoUrl: currentUser?.photoURL ?? null,
-  };
+  const userProfile = (__DEMO_BUILD__ || IS_DEMO_BUILD)
+    ? null
+    : {
+      name: currentUser?.displayName || 'User',
+      email: currentUser?.email || 'No email',
+      photoUrl: currentUser?.photoURL ?? null,
+    };
 
   useEffect(() => {
     void ExpenseAPI.getDuplicateCandidates().then((pairs) => {
@@ -208,36 +214,55 @@ const Settings: React.FC = () => {
     }
   };
 
+  const tiles = (__DEMO_BUILD__ || IS_DEMO_BUILD)
+    ? dashboardTiles.filter((tile) => tile.route !== '/signout')
+    : deniedLiveUser
+      ? dashboardTiles.filter((tile) => tile.route === '/signout')
+      : dashboardTiles.filter((tile) => currentUser || tile.route !== '/signout');
+
   return (
     <Container maxWidth="sm" className="dashboard-main-container">
-      {/* User Profile Card */}
-      <Paper
-        component={motion.div}
-        initial={{opacity: 0, y: -20}}
-        animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.5}}
-        elevation={3}
-        className="user-profile-paper"
-        sx={{bgcolor: 'transparent'}}
-      >
-        <Box className="user-profile-box">
-          <ProfileAvatar
-            photoUrl={userProfile.photoUrl}
-            name={userProfile.name}
-            className="user-avatar"
-          />
-          <Box className="user-info-box">
-            <Typography variant="h5">
-              {userProfile.name}
-            </Typography>
-            <Typography variant="body2" className="user-email">
-              {userProfile.email}
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
+      {(__DEMO_BUILD__ || IS_DEMO_BUILD) && (
+        <Paper elevation={0} className="demo-build-note">
+          <Typography variant="body2">
+            Demo build: data resets on reload
+          </Typography>
+        </Paper>
+      )}
 
-      <GmailConnectCard/>
+      {!(__DEMO_BUILD__ || IS_DEMO_BUILD) && (
+        <Paper
+          component={motion.div}
+          initial={{opacity: 0, y: -20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.5}}
+          elevation={3}
+          className="user-profile-paper"
+          sx={{bgcolor: 'transparent'}}
+        >
+          <Box className="user-profile-box">
+            <ProfileAvatar
+              photoUrl={userProfile?.photoUrl ?? null}
+              name={userProfile?.name || 'User'}
+              className="user-avatar"
+            />
+            <Box className="user-info-box">
+              <Typography variant="h5">
+                {userProfile?.name || 'User'}
+              </Typography>
+              <Typography variant="body2" className="user-email">
+                {userProfile?.email || 'No email'}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      )}
+
+      {!(__DEMO_BUILD__ || IS_DEMO_BUILD) && (
+        <React.Suspense fallback={null}>
+          <GmailConnectCard/>
+        </React.Suspense>
+      )}
 
       <motion.div
         variants={containerVariants}
@@ -245,10 +270,7 @@ const Settings: React.FC = () => {
         animate="visible"
         className="dashboard-options-container"
       >
-        {(deniedLiveUser
-          ? dashboardTiles.filter((tile) => tile.route === '/signout')
-          : dashboardTiles.filter((tile) => currentUser || tile.route !== '/signout')
-        ).map((tile, index, tiles) => (
+        {tiles.map((tile, index, tiles) => (
           <DashboardTile
             key={tile.id}
             id={tile.id}

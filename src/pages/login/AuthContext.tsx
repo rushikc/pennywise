@@ -4,10 +4,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {User} from 'firebase/auth';
+import type {User} from 'firebase/auth';
 import {AuthService} from './AuthService';
 import Loading from '../../components/Loading';
 import {DataMode, getDataMode, resolveModeForAuth} from './dataMode';
+import {IS_DEMO_BUILD} from '../../utility/buildMode';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -29,7 +30,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!(__DEMO_BUILD__ || IS_DEMO_BUILD));
   const [dataMode, setModeState] = useState<DataMode>(getDataMode);
 
   useEffect(() => {
@@ -40,6 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
   }, []);
 
   useEffect(() => {
+    if (__DEMO_BUILD__ || IS_DEMO_BUILD) {
+      return;
+    }
     if (loading) {
       return;
     }

@@ -16,14 +16,17 @@ import AlertComponent from './components/Alert';
 import TagExpenses from './pages/home/home-views/TagExpenses';
 import {resetExpenseState, selectExpense} from './store/expenseActions';
 import {useSelector} from 'react-redux';
-import Login from './pages/login/Login';
 import {AuthProvider, useAuth} from './pages/login/AuthContext';
+import {IS_DEMO_BUILD} from './utility/buildMode';
 import {loadInitialAppData} from './pages/dataValidations';
 import {routes} from './routes';
 import Loading from './components/Loading';
 import {useIsDesktop} from './hooks/useIsDesktop';
 import {createAppTheme} from './styles/appTheme';
 
+const LoginPage = (__DEMO_BUILD__ || IS_DEMO_BUILD)
+  ? () => <Navigate to="/home" replace/>
+  : React.lazy(() => import('./pages/login/Login'));
 
 function App() {
   return (
@@ -69,7 +72,7 @@ const ThemedApp: React.FC = () => {
       <DemoBanner/>
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/login" element={<Login/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
           {routes.map((route) => (
             <Route
               key={route.key}

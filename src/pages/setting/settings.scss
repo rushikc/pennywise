@@ -17,6 +17,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   box-shadow: var(--box-shadow);
 }
 
+.demo-build-note {
+  background: var(--bg-tertiary) !important;
+  padding: var(--space-md);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
 .user-profile-box {
   display: flex;
   align-items: center;

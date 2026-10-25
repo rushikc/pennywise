@@ -3,40 +3,51 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {onAuthStateChanged, signInWithPopup, signOut, User} from 'firebase/auth';
-import {auth, googleProvider} from '../../firebase/firebaseConfig';
-import {FinanceIndexDB} from '../../api/FinanceIndexDB';
+import type {User} from 'firebase/auth';
+import {IS_DEMO_BUILD} from '../../utility/buildMode';
+import {demoAuthService} from './demoAuthService';
 
-export const AuthService = {
-  // Sign in with Google
-  signInWithGoogle: async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      return result.user;
-    } catch (error) {
-      console.error('Error signing in with Google', error);
-      throw error;
-    }
-  },
-
-  // Sign out
-  signOut: async () => {
-    try {
-      await FinanceIndexDB.clearIndexedDBData();
-      await signOut(auth);
-    } catch (error) {
-      console.error('Error signing out', error);
-      throw error;
-    }
-  },
-
-  // Get current user
-  getCurrentUser: () => {
-    return auth.currentUser;
-  },
-
-  // Listen to auth state changes
-  onAuthStateChanged: (callback: (user: User | null) => void) => {
-    return onAuthStateChanged(auth, callback);
-  }
+type AuthServiceApi = {
+  signInWithGoogle: () => Promise<User>;
+  signOut: () => Promise<void>;
+  getCurrentUser: () => User | null;
+  onAuthStateChanged: (callback: (user: User | null) => void) => () => void;
 };
+
+const loadLiveAuthService = () => {
+  if (__DEMO_BUILD__) {
+    return Promise.resolve({liveAuthService: demoAuthService});
+  }
+  return import('./liveAuthService');
+};
+
+const liveAuthServiceProxy: AuthServiceApi = {
+  signInWithGoogle: async () => {
+    const {liveAuthService} = await loadLiveAuthService();
+    return liveAuthService.signInWithGoogle();
+  },
+  signOut: async () => {
+    const {liveAuthService} = await loadLiveAuthService();
+    return liveAuthService.signOut();
+  },
+  getCurrentUser: () => {
+    return null;
+  },
+  onAuthStateChanged: (callback) => {
+    let unsubscribe = (): void => undefined;
+    let cancelled = false;
+    void loadLiveAuthService().then(({liveAuthService}) => {
+      if (!cancelled) {
+        unsubscribe = liveAuthService.onAuthStateChanged(callback);
+      }
+    });
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  },
+};
+
+export const AuthService: AuthServiceApi = (__DEMO_BUILD__ || IS_DEMO_BUILD)
+  ? demoAuthService
+  : liveAuthServiceProxy;

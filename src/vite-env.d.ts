@@ -6,6 +6,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 /// <reference types="vite/client" />
 /// <reference types="vitest/globals" />
 
+declare const __DEMO_BUILD__: boolean;
+
 declare module '../../shared/gcpNames.json' {
   const value: {
     pubsubTopic: string;

@@ -12,7 +12,8 @@ import {isEmpty, JSONCopy, sleep} from '../utility/utility';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {Budget} from '../Types';
 import {getDataMode} from '../pages/login/dataMode';
-import {currentUid, userCollectionSegments} from './firestorePaths';
+import {userCollectionSegments} from './firestorePaths';
+import {currentUid} from './liveCurrentUid';
 
 
 const app = initializeApp(firebaseConfig);

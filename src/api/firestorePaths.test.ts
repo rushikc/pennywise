@@ -3,20 +3,19 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
+const mockAuth = {currentUser: null as {uid: string} | null};
+
 jest.mock('../firebase/firebaseConfig', () => ({
-  auth: {currentUser: null as {uid: string} | null},
+  getFirebaseAuth: () => mockAuth,
 }));
 
-import {auth} from '../firebase/firebaseConfig';
+import {currentUid} from './liveCurrentUid';
 import {
-  currentUid,
   indexedDbName,
   profileProbeSegments,
   userCollectionSegments,
   userDocSegments,
 } from './firestorePaths';
-
-const mockAuth = auth as {currentUser: {uid: string} | null};
 
 describe('firestorePaths', () => {
   beforeEach(() => {

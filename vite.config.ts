@@ -68,14 +68,14 @@ const buildInfoPlugin = (): Plugin => ({
   },
 });
 
-const manualChunk = (id: string): string | undefined => {
+const manualChunk = (id: string, isDemo: boolean): string | undefined => {
   if (!id.includes('node_modules')) {
     return undefined;
   }
   if (id.includes('@mui') || id.includes('@emotion')) {
     return 'mui';
   }
-  if (id.includes('firebase') || id.includes('@firebase')) {
+  if (!isDemo && (id.includes('firebase') || id.includes('@firebase'))) {
     return 'firebase';
   }
   if (
@@ -94,15 +94,52 @@ const manualChunk = (id: string): string | undefined => {
   return undefined;
 };
 
-export default defineConfig(({mode}) => {
-  const env = loadEnv(mode, rootDir, 'REACT_APP_');
+const demoModuleAliases = (isDemo: boolean): Plugin => ({
+  name: 'demo-module-aliases',
+  enforce: 'pre',
+  resolveId(source) {
+    if (!isDemo) {
+      return undefined;
+    }
+    if (source.endsWith('liveIndexedDbName')) {
+      return path.resolve(rootDir, 'src/api/liveIndexedDbName.demo.ts');
+    }
+    if (source.endsWith('firebase/firebaseConfig') || source.endsWith('/firebaseConfig')) {
+      return path.resolve(rootDir, 'src/firebase/firebaseConfig.demo.ts');
+    }
+    return undefined;
+  },
+});
+
+const stripDemoFirebaseHosts = (mode: string): Plugin => ({
+  name: 'strip-demo-firebase-hosts',
+  transformIndexHtml(html) {
+    if (mode !== 'demo') {
+      return html;
+    }
+    return html
+      .split('\n')
+      .filter((line) => {
+        if (!/rel="(?:preconnect|dns-prefetch)"/.test(line)) {
+          return true;
+        }
+        return /fonts\.googleapis\.com|fonts\.gstatic\.com/.test(line);
+      })
+      .join('\n');
+  },
+});
+
+export default defineConfig(({mode, command}) => {
+  const isDemo = mode === 'demo';
+  const env = isDemo ? {} : loadEnv(mode, rootDir, 'REACT_APP_');
   const processEnvDefines: Record<string, string> = {
     'process.env.NODE_ENV': JSON.stringify(
-      mode === 'production' ? 'production' : 'development',
+      command === 'build' ? 'production' : 'development',
     ),
+    __DEMO_BUILD__: JSON.stringify(isDemo),
   };
   for (const key of firebaseEnvKeys) {
-    processEnvDefines[`process.env.${key}`] = JSON.stringify(env[key] ?? '');
+    processEnvDefines[`process.env.${key}`] = JSON.stringify(isDemo ? '' : (env[key] ?? ''));
   }
 
   return {
@@ -112,8 +149,10 @@ export default defineConfig(({mode}) => {
       react(),
       jestCompatPlugin(),
       buildInfoPlugin(),
+      demoModuleAliases(isDemo),
+      stripDemoFirebaseHosts(mode),
       mode !== 'test' && checker({typescript: true}),
-      mode === 'production' && visualizer({
+      command === 'build' && visualizer({
         filename: path.join(rootDir, 'build/bundle-analysis-report.html'),
         open: false,
         gzipSize: true,
@@ -139,7 +178,7 @@ export default defineConfig(({mode}) => {
       emptyOutDir: true,
       rollupOptions: {
         output: {
-          manualChunks: manualChunk,
+          manualChunks: (id) => manualChunk(id, isDemo),
         },
       },
     },

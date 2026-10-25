@@ -7,82 +7,104 @@ import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expen
 import {getDataMode} from '../pages/login/dataMode';
 import {isHiddenDuplicate} from './duplicateLogic';
 import {DemoExpenseAPI} from './DemoExpenseAPI';
-import {LiveExpenseAPI} from './LiveExpenseAPI';
-import {ClientUserCollection} from './firestorePaths';
+import type {ClientUserCollection} from './firestorePaths';
+import {IS_DEMO_BUILD} from '../utility/buildMode';
 
-export type {DocumentData} from './LiveExpenseAPI';
+export type DocumentData = { [field: string]: unknown };
 
-const api = () => getDataMode() === 'demo' ? DemoExpenseAPI : LiveExpenseAPI;
+type ExpenseApiImpl = typeof DemoExpenseAPI;
+
+const loadLiveExpenseAPI = () => {
+  if (__DEMO_BUILD__) {
+    return Promise.resolve({LiveExpenseAPI: DemoExpenseAPI});
+  }
+  return import('./LiveExpenseAPI');
+};
+
+const api = async (): Promise<ExpenseApiImpl> => {
+  if (IS_DEMO_BUILD || getDataMode() === 'demo') {
+    return DemoExpenseAPI;
+  }
+  const {LiveExpenseAPI} = await loadLiveExpenseAPI();
+  return LiveExpenseAPI as unknown as ExpenseApiImpl;
+};
 
 export class ExpenseAPI {
 
   static isHiddenDuplicate = isHiddenDuplicate;
 
   static getEmailParseBankList = (): Promise<BankEmailParsingEntry[]> =>
-    api().getEmailParseBankList();
+    api().then((impl) => impl.getEmailParseBankList());
 
   static updateEmailParseBankList = (banks: BankEmailParsingEntry[]): Promise<boolean> =>
-    api().updateEmailParseBankList(banks);
+    api().then((impl) => impl.updateEmailParseBankList(banks));
 
   static setOneDoc = (key: string, val: unknown, collectionName: ClientUserCollection = 'config') =>
-    api().setOneDoc(key, val, collectionName);
+    api().then((impl) => impl.setOneDoc(key, val, collectionName));
 
   static getOneDoc = (key: string, collectionName: ClientUserCollection = 'config') =>
-    api().getOneDoc(key, collectionName);
+    api().then((impl) => impl.getOneDoc(key, collectionName));
 
   static deleteOneDoc = (key: string, collectionName: ClientUserCollection = 'config') =>
-    api().deleteOneDoc(key, collectionName);
+    api().then((impl) => impl.deleteOneDoc(key, collectionName));
 
-  static processData = () => api().processData();
+  static processData = () => api().then((impl) => impl.processData());
 
   static addExpense = (_expense: Expense, operation = 'update'): Promise<Expense> =>
-    api().addExpense(_expense, operation);
+    api().then((impl) => impl.addExpense(_expense, operation));
 
   static deleteExpense = (expense: Expense): Promise<boolean> =>
-    api().deleteExpense(expense);
+    api().then((impl) => impl.deleteExpense(expense));
 
   static getExpenseList = (overrideLastDate: number | undefined = undefined): Promise<Expense[]> =>
-    api().getExpenseList(overrideLastDate);
+    api().then((impl) => impl.getExpenseList(overrideLastDate));
 
   static getDuplicateCandidates = (): Promise<DuplicateCandidatePair[]> =>
-    api().getDuplicateCandidates();
+    api().then((impl) => impl.getDuplicateCandidates());
 
   static resolveDuplicate = (
     keep: Expense,
     drop: Expense,
     action: 'confirmed' | 'rejected',
-  ): Promise<Expense> => api().resolveDuplicate(keep, drop, action);
+  ): Promise<Expense> => api().then((impl) => impl.resolveDuplicate(keep, drop, action));
 
-  static getTagList = () => api().getTagList();
+  static getTagList = () => api().then((impl) => impl.getTagList());
 
-  static updateTagList = (tags: string[]) => api().updateTagList(tags);
+  static updateTagList = (tags: string[]) => api().then((impl) => impl.updateTagList(tags));
 
-  static getBankConfig = (): Promise<BankConfig> => api().getBankConfig();
+  static getBankConfig = (): Promise<BankConfig> =>
+    api().then((impl) => impl.getBankConfig());
 
-  static updateBankConfig = (config: BankConfig) => api().updateBankConfig(config);
+  static updateBankConfig = (config: BankConfig) =>
+    api().then((impl) => impl.updateBankConfig(config));
 
-  static getDarkModeConfig = (): Promise<boolean> => api().getDarkModeConfig();
+  static getDarkModeConfig = (): Promise<boolean> =>
+    api().then((impl) => impl.getDarkModeConfig());
 
-  static updateDarkMode = (val: boolean) => api().updateDarkMode(val);
+  static updateDarkMode = (val: boolean) =>
+    api().then((impl) => impl.updateDarkMode(val));
 
-  static getVendorTagList = (): Promise<VendorTag[]> => api().getVendorTagList();
+  static getVendorTagList = (): Promise<VendorTag[]> =>
+    api().then((impl) => impl.getVendorTagList());
 
-  static updateVendorTag = (vendorTag: VendorTag) => api().updateVendorTag(vendorTag);
+  static updateVendorTag = (vendorTag: VendorTag) =>
+    api().then((impl) => impl.updateVendorTag(vendorTag));
 
-  static deleteVendorTag = (vendorTagId: string) => api().deleteVendorTag(vendorTagId);
+  static deleteVendorTag = (vendorTagId: string) =>
+    api().then((impl) => impl.deleteVendorTag(vendorTagId));
 
   static autoTagPastExpenses = (startDate: number): Promise<number> =>
-    api().autoTagPastExpenses(startDate);
+    api().then((impl) => impl.autoTagPastExpenses(startDate));
 
   static addBudget = (_budget: Budget, operation = 'update'): Promise<Budget> =>
-    api().addBudget(_budget, operation);
+    api().then((impl) => impl.addBudget(_budget, operation));
 
   static updateBudget = (_budget: Budget): Promise<Budget> =>
-    api().updateBudget(_budget);
+    api().then((impl) => impl.updateBudget(_budget));
 
   static deleteBudget = (budget: Budget): Promise<boolean> =>
-    api().deleteBudget(budget);
+    api().then((impl) => impl.deleteBudget(budget));
 
   static getBudgetList = (overrideLastDate: number | undefined = undefined): Promise<Budget[]> =>
-    api().getBudgetList(overrideLastDate);
+    api().then((impl) => impl.getBudgetList(overrideLastDate));
 }

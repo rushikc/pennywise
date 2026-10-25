@@ -12,7 +12,9 @@ import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
-import {ClientUserCollection, currentUid, userCollectionSegments, userDocSegments} from './firestorePaths';
+import type {ClientUserCollection} from './firestorePaths';
+import {userCollectionSegments, userDocSegments} from './firestorePaths';
+import {currentUid} from './liveCurrentUid';
 
 // DocumentDB from Firebase document types
 // eslint-disable-next-line
