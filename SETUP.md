@@ -22,6 +22,9 @@ This guide will walk you through setting up the Pennywise project on a Linux/Mic
     - 1 GB of data transfer in Firebase Hosting
     - 1 GB of data transfer in Firebase Functions
     - 1 GB of data transfer in Firebase Authentication
+    - Gmail import also uses Pub/Sub, Cloud Scheduler (one hourly job), Secret Manager, and the Gemini API. For one
+      person's bank alerts these usually stay within free quotas or cost very little, but check
+      https://cloud.google.com/pricing and the Gemini API pricing page for current limits.
 
 > **Note:** I have been using this project for tracking my expenses for the last 2 years, and I have rarely crossed the
 > free tier limits. Occasionally, I was billed ₹1-2 when I was testing Firestore with a high volume of requests.
@@ -34,6 +37,9 @@ Before you begin, please ensure you have the following minimum versions installe
 
 - **Node.js:** `v22.0.0` or higher
 - **npm:** `v10.0.0` or higher
+- **Firebase CLI:** installed in [Install Firebase CLI](#install-firebase-cli) below
+- **Google Cloud CLI (`gcloud`)** and **Terraform** `v1.6.0` or higher: needed for the Gmail import infrastructure
+  (see [Terraform and Gmail ingest](#terraform-and-gmail-ingest)) and for `npm run backup`
 
 ## Recommended Code Editor
 
@@ -251,7 +257,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
   ![Create web app](public/docs/pics/ff5.png)
 
   - Create a `.env` file in the root folder of your project and paste each key-value configuration in the format below.
-  - For a React project, you can use the following format:
+  - The app is built with Vite but keeps the `REACT_APP_` prefix for its variables. Use the following format:
   ```env
   REACT_APP_FIREBASE_API_KEY=your-api-key
   REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
@@ -259,11 +265,14 @@ Here’s how you can install Node.js and npm on different operating systems. We 
   REACT_APP_FIREBASE_STORAGE_BUCKET=your-storage-bucket
   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
   REACT_APP_FIREBASE_APP_ID=your-app-id
+  # Filled in later, in "Terraform and Gmail ingest" (public OAuth Web client id):
+  REACT_APP_GOOGLE_OAUTH_CLIENT_ID=your-oauth-web-client-id.apps.googleusercontent.com
   # Optional, only if you wire Firebase Analytics:
   # REACT_APP_FIREBASE_MEASUREMENT_ID=G-xxxxxxxxxx
   ```
-  - The final `.env` content should look like the image below:
+  - The final `.env` content should look like the image below (plus the `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` line):
 
+  <!-- TODO: update screenshot -->
   ![Create web app](public/docs/pics/ff9.png)
 
 7. **Update Project ID in Firebase config:**
@@ -307,6 +316,7 @@ To interact with Firebase services from your terminal, you need to install the F
     ```bash
     npm install -g firebase-tools
     ```
+  `firebase-tools` is also a dev dependency of the project, so after `npm install` you can run it with `npx firebase` instead.
 
 ### Project Setup
 
@@ -314,7 +324,9 @@ To interact with Firebase services from your terminal, you need to install the F
   Run the following command to install all necessary dependencies:
   ```bash
   npm install
+  npm ci --prefix functions
   ```
+  The second command installs the Cloud Functions dependencies; `firebase deploy` builds and lints the functions but does not install them.
 
 - **Set up Environment Files:**
 
@@ -327,7 +339,7 @@ To interact with Firebase services from your terminal, you need to install the F
   2. **OAuth client secret and Gemini API key** are not committed. After Terraform apply, add versions to the secret shells named in `shared/gcpNames.json`. See [infra/terraform/README.md](infra/terraform/README.md).
 
 - **Build web app:**
-  Run the following command to build the web app from the root folder:
+  Run the following command to build the web app from the root folder (Vite writes the output to `build/`, which Firebase Hosting serves):
   ```bash
   npm run build
   ```
@@ -340,11 +352,13 @@ To interact with Firebase services from your terminal, you need to install the F
    - This will open a browser window for you to log in with your Google account.
 
 
--  **Initialize Firestore:**
+-  **Initialize Firestore and Hosting:**
     - You will see a few warnings saying the API is not enabled, but you can ignore them.
     - Firebase will enable them on your behalf during the first deployment.
+    - Deploy Firestore and Hosting first. The Cloud Functions need the service account and secrets created in
+      [Terraform and Gmail ingest](#terraform-and-gmail-ingest), so deploy them after that section.
    ```bash
-   firebase deploy
+   firebase deploy --only firestore,hosting
    ```
 
 - **Artifact Storage:**
@@ -363,9 +377,9 @@ To interact with Firebase services from your terminal, you need to install the F
 2. Create an OAuth **Web** client. Authorized JavaScript origins: `http://127.0.0.1:3000` and `https://<project-id>.web.app`.
 3. Consent screen **In production**. Add scope `https://www.googleapis.com/auth/gmail.readonly` only.
 4. Put `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` and `GOOGLE_OAUTH_CLIENT_ID` in `functions/.env`.
-5. `firebase deploy` creates the Pub/Sub trigger subscription and the hourly scheduler job.
+5. Add the OAuth client secret and Gemini API key as secret versions (commands in [infra/terraform/README.md](infra/terraform/README.md)), rebuild the web app with `npm run build`, then run `firebase deploy`. It deploys the functions (`connectGmail`, `disconnectGmail`, `onGmailPush`, `hourlyGmailSweep`) and creates the Pub/Sub trigger subscription and the hourly scheduler job.
 6. Deploy or paste `firestore.rules`. Create `allowedUsers/{lowercase-email}` for each family member.
-7. Sign in, open Settings, and **Connect Gmail**.
+7. Sign in, open Settings, and **Connect Gmail**. The first connection imports matching bank mail from the last 30 days in the background.
 
 ### Existing install / upgrade
 
@@ -399,7 +413,9 @@ For a more native experience, you can install Pennywise as a Progressive Web App
 
 ### Automatic expense tracking
 
-Gmail `users.watch` publishes new INBOX mail to Pub/Sub. The Cloud Function parses matching bank mail (regex first, Gemini fallback) into `users/{uid}/expense/{gmailMessageId}`. An hourly job renews the watch and backfills gaps.
+Gmail `users.watch` publishes new INBOX mail to Pub/Sub. The Cloud Function parses matching bank mail (regex first, Gemini fallback) into `users/{uid}/expense/{gmailMessageId}`. An hourly job renews the watch and backfills gaps. After each import, duplicate alerts are merged automatically or queued in **Settings → Duplicate Review**.
+
+New imports show up the next time the app loads data. Use **Settings → Reload Data** to pull them in sooner. **Settings** also shows the Gmail connection status and any last error.
 
 You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Studio billing. Use a billed key.
 
@@ -407,8 +423,10 @@ You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Stu
 
 1.  **Configure tags:** In **Settings**, add tags you want for categorization (not pre-populated).
 
-2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. Cloud Functions ingest only sends matching mail to Gemini—too few strings and you may miss mail; too generic and you may include noise.
+2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. Cloud Functions ingest only parses matching mail (regex first, Gemini when regex fails)—too few strings and you may miss mail; too generic and you may include noise.
 
-3.  **Vendor tags (optional):** Map normalized vendor strings to tags in **Settings → Vendor tags**; ingest can attach `tag` when it finds a match after Gemini parsing.
+3.  **Vendor tags (optional):** Map normalized vendor strings to tags in **Settings → Manage Vendor Tags**; ingest attaches `tag` when the parsed vendor matches a map exactly. Use **Settings → Auto-tag Expenses** to apply your maps to older untagged expenses.
+
+4.  **Duplicate review (optional):** Check **Settings → Duplicate Review** now and then. It lists pairs that might be the same transaction; choose **Confirm duplicate** or **Not a duplicate**.
 
 Happy expense tracking!

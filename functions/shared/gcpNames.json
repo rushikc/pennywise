@@ -1,0 +1,9 @@
+{
+  "pubsubTopic": "gmail-push",
+  "functionsServiceAccountId": "pennywise-functions",
+  "functionsRegion": "asia-south1",
+  "oauthClientSecretId": "pennywise-oauth-client-secret",
+  "geminiApiKeySecretId": "pennywise-gemini-api-key",
+  "gmailRefreshTokenPrefix": "gmail-rt-",
+  "gmailReadonlyScope": "https://www.googleapis.com/auth/gmail.readonly"
+}

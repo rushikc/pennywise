@@ -33,7 +33,11 @@ digraph SimpleDataFlow {
         node [style=filled];
 
         Gmail [label="Gmail", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
-        CloudFunctions [label="Cloud Functions", shape=box, fillcolor="#D5E8D4", color="#82B366"];
+        PubSub [label="Pub/Sub\n(gmail-push)", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
+        Scheduler [label="Cloud Scheduler\n(hourly sweep)", shape=box, fillcolor="#DAE8FC", color="#7EA6E0"];
+        CloudFunctions [label="Cloud Functions\n(ingest + dedupe)", shape=box, fillcolor="#D5E8D4", color="#82B366"];
+        SecretManager [label="Secret Manager", shape=box, fillcolor="#E1D5E7", color="#9673A6"];
+        Gemini [label="Gemini API", shape=box, fillcolor="#FFF2CC", color="#D6B656"];
     }
 
     // Firebase
@@ -57,6 +61,12 @@ digraph SimpleDataFlow {
     FirestoreDB -> StateManager [label="read/write data"];
     StateManager -> IndexDB [label="browser cache"];
     IndexDB -> StateManager [label="read/write cached data"];
-    Gmail -> CloudFunctions [label="push notifications"];
+    Frontend -> CloudFunctions [label="connect / disconnect Gmail"];
+    Gmail -> PubSub [label="push notifications"];
+    PubSub -> CloudFunctions [label="onGmailPush"];
+    Scheduler -> CloudFunctions [label="renew watch, catch up"];
+    CloudFunctions -> SecretManager [label="refresh tokens, API keys"];
+    CloudFunctions -> Gmail [label="read matching mail"];
+    CloudFunctions -> Gemini [label="parse when regex fails"];
     CloudFunctions -> FirestoreDB [label="writes expense data"];
 }

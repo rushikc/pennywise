@@ -39,29 +39,35 @@ This project is licensed under the [MIT License](LICENSE).
 Pennywise is a comprehensive, open-source web application designed to empower individuals in managing their personal
 finances. It provides an intuitive platform to track, categorize, and visualize expenses, helping users gain clear
 insights into their spending patterns and achieve financial mastery. Built with modern web technologies, Pennywise offers
-a user-friendly experience with robust features, including offline support and secure authentication.
+a user-friendly experience with robust features, including offline caching, secure authentication, automatic Gmail
+import, and separate layouts tuned for desktop and phone.
 
 ## Features
 
-* 📊 **Expense Tracking**: Easily add, edit, and manage your daily expenses with detailed inputs.
-* 📧 **Gmail + Gemini**: Connect Gmail in Settings. Push notifications plus an hourly sweep import messages that match **banks you configure**; regex parses known templates and **Gemini** fills in the rest.
-* 🏦 **Configurable banks**: Under **Settings → Banks**, add or remove banks and **match strings** so only relevant sender/templates are sent to the model.
+* 📊 **Expense Tracking**: Easily add, edit, delete, and search your daily expenses with detailed inputs.
+* 📧 **Gmail + Gemini**: Connect Gmail in Settings. Push notifications plus an hourly sweep import messages that match **banks you configure**; regex parses known templates and **Gemini** fills in the rest. A new connection backfills the last 30 days.
+* 🏦 **Configurable banks**: Under **Settings → Banks**, add or remove banks and **match strings** so only relevant sender/templates are parsed (and, when regex fails, sent to the model).
 * 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
-* 🤖 **Auto Tagging**: Cloud functions automatically apply tags to new expenses based on previously user-marked
-  vendor-tag associations.
-* 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, & more) for focused
-  analysis.
-* 📊 **Visualization**: Understand spending patterns at a glance through interactive statistical charts and graphs.
+* 🤖 **Auto Tagging**: Imported expenses get a tag automatically when their vendor matches one of your **vendor–tag maps**. **Settings → Auto-tag Expenses** applies the same maps to older untagged expenses from a date you pick.
+* 🧹 **Duplicate Detection**: After each import, Cloud Functions look for duplicate alerts (for example the same payment reported by a card and a UPI app). Clear duplicates are hidden automatically; doubtful pairs wait in **Settings → Duplicate Review**, where you choose **Confirm duplicate** or **Not a duplicate**.
+* 🔗 **Merge & Bulk Actions**: Long-press to select several expenses on Home, then merge them into one expense or delete them together.
+* 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, & more) and group them by day, vendor, tag, or cost.
+* 📊 **Visualization**: Understand spending patterns at a glance through interactive charts, a top-vendors table, and spending/daily/monthly figures on **Insights**.
+* 📤 **Export**: Download the expenses behind your current Insights view as **XLSX** or **CSV**.
+* 💰 **Budgets**: Create budgets that cover one or more tags and track monthly progress; the desktop dashboard flags budgets that are over 80%.
+* 🖥️📱 **Desktop & Mobile Layouts**: From 800px up, a side navigation and a "This month" dashboard panel; on phones, a bottom navigation and a compact stats header.
 * 🔄 **Offline Caching**: Data is cached locally using IndexedDB to reduce Firestore queries, but the app requires
   internet connectivity to function fully.
-* 🔒 **Google Authentication**: Secure and convenient login via Google OAuth for user management.
+* 🔒 **Google Authentication**: Secure and convenient login with Google through Firebase Authentication, limited to email addresses you allow.
 
 ## Demo
 
 ### Demo mode
-Signed-out visitors, and signed-in users denied by Firestore security rules, use this same app on mock data. Only accounts the rules allow read live Firestore data. Access is controlled only by those rules—there is no email allowlist or extra environment variable.
+Signed-out visitors, and signed-in users whose email is not on the allowlist, use this same app on mock data and see a "You're viewing demo data." banner. Only verified Google accounts with a document in the Firestore `allowedUsers` collection (document ID = lowercase email) can read live data. The Firestore security rules enforce this allowlist; no extra environment variable is needed.
 
+<!-- TODO: update screenshot -->
 ![APP](public/docs/pics/app.png)
+<!-- TODO: update screenshot -->
 ![APP2](public/docs/pics/app2.png)
 
 ## Getting Started
@@ -85,7 +91,9 @@ gives you complete control over your data and infrastructure. Here’s what make
   manage the entire infrastructure, ensuring that you are the only one with access to the backend services and database.
 
 * **💸 No Hidden Costs**: Pennywise is open-source and free to use. You only pay for what you use on the Google Cloud
-  Platform, which offers a generous free tier for Firebase and Cloud Functions.
+  Platform, which offers a generous free tier for Firebase and Cloud Functions. Gmail import also uses Pub/Sub, Cloud
+  Scheduler, Secret Manager, and the Gemini API; for one person's mail these usually cost little or nothing, and you can
+  enable an optional billing budget alert in Terraform.
 
 * **🚫 No Ads, No Tracking**: Pennywise is a completely ad-free platform. We do not track your behavior or sell your data
   to third parties. Our goal is to provide a tool that helps you manage your finances, not to monetize your personal
@@ -94,7 +102,7 @@ gives you complete control over your data and infrastructure. Here’s what make
 * **📖 Open Source Transparency**: The entire codebase is open-source. You can inspect the code yourself to verify that
   there are no hidden trackers or malicious logic. This transparency ensures that we are accountable to our users.
 
-* **🔐 Secure Authentication**: We use Google OAuth for authentication, which provides a secure and reliable way to log
+* **🔐 Secure Authentication**: We use Google Sign-In through Firebase Authentication, which provides a secure and reliable way to log
   in to your account without us ever seeing or storing your password.
 
 * **🔑 Minimal Permissions**: The web app uses Google Sign-In. Gmail ingest requests **gmail.readonly** only. Mail is never labelled or marked; processing state lives in Firestore. Tokens are stored in Secret Manager, not in client-readable docs.
@@ -103,8 +111,8 @@ gives you complete control over your data and infrastructure. Here’s what make
   will never be forced into an update that changes the functionality or privacy in a way you don't agree with.
 
 * **🔒 Secured Infrastructure**: All backend services on Google Cloud are protected by Google's authentication mechanisms,
-  including the infrastructure exposed to the public internet. This ensures that only authenticated requests from
-  your application can access your data and services.
+  including the infrastructure exposed to the public internet. Firestore rules only serve data to allowlisted, signed-in
+  owners, and the Cloud Functions are either authenticated callables or triggered internally by Pub/Sub and Cloud Scheduler.
 
 By putting you in control of your data and the application's infrastructure, Pennywise offers a transparent and secure
 way to manage your personal finances.
@@ -117,11 +125,13 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 ### Frontend
 
-* **UI Framework**: [React](https://reactjs.org/)
+* **UI Framework**: [React 18](https://react.dev/)
 * **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
-* **Component Library**: [Material-UI v6](https://mui.com/)
+* **Build Tool**: [Vite](https://vite.dev/)
+* **Component Libraries**: [Material-UI v6](https://mui.com/) and [Ant Design](https://ant.design/)
 * **Animations**: [Framer Motion](https://www.framer.com/motion/)
 * **Charts**: [Recharts](https://recharts.org/en-US/)
+* **Styling**: SCSS with shared design tokens (`src/styles/theme.scss`)
 
 ### State Management
 
@@ -129,44 +139,62 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 ### Data Storage
 
-* **Cloud Database**: [Firebase Firestore](https://firebase.google.com/docs/firestore)
+* **Cloud Database**: [Firebase Firestore](https://firebase.google.com/docs/firestore) (per-user data under `users/{uid}`)
 * **Offline Storage**: [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) (
   via [idb](https://www.npmjs.com/package/idb) library)
 
 ### Authentication
 
-* **OAuth Provider**: [Google OAuth](https://developers.google.com/identity/protocols/oauth2) (integrated
-  using [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
+* **Sign-in**: [Firebase Authentication](https://firebase.google.com/docs/auth) with the Google provider
+* **Gmail consent**: [Google Identity Services](https://developers.google.com/identity/oauth2/web/guides/use-code-model) authorization-code popup (`gmail.readonly`)
+
+### Backend & Infrastructure
+
+* **Serverless**: [Cloud Functions for Firebase](https://firebase.google.com/docs/functions) (2nd gen, Node.js 22)
+* **Messaging & Scheduling**: [Pub/Sub](https://cloud.google.com/pubsub) (Gmail push) and [Cloud Scheduler](https://cloud.google.com/scheduler) (hourly sweep)
+* **Secrets**: [Secret Manager](https://cloud.google.com/secret-manager)
+* **AI Parsing**: [Gemini API](https://ai.google.dev/)
+* **Infrastructure as Code**: [Terraform](https://www.terraform.io/)
+* **Hosting**: [Firebase Hosting](https://firebase.google.com/docs/hosting)
 
 ### Utilities
 
 * **Date Manipulation**: [dayjs](https://day.js.org/)
-* **HTTP Client**: [axios](https://axios-http.com/)
+* **Exports**: [ExcelJS](https://github.com/exceljs/exceljs) and [json-2-csv](https://www.npmjs.com/package/json-2-csv)
+* **Testing**: [Vitest](https://vitest.dev/), Node's built-in test runner, and the Firestore emulator for security rules
 
 ## Project Structure
 
 ```
 pennywise/
-├── build/                  # Production build output
-├── functions/              # Firebase Cloud Functions (Gmail ingest)
+├── build/                  # Production build output (Vite)
+├── functions/              # Firebase Cloud Functions
+│   ├── gmail/              # Gmail connect/disconnect, push handler, hourly sweep, ingest
+│   ├── dedupe/             # Duplicate expense detection
+│   └── src/parse/          # TypeScript parsers (bank regex + Gemini)
 ├── infra/terraform/        # GCP resources firebase deploy cannot create
-├── shared/                 # Names shared by Terraform and functions
-├── node_modules/           # Node.js dependencies
+├── shared/                 # Names shared by Terraform, functions, and the web app
 ├── public/                 # Static assets served directly
-├── scripts/                # Build and utility scripts
+│   └── docs/               # Diagrams and screenshots used by the docs
+├── scripts/                # Utility scripts
+│   ├── backup/             # Full Firestore backup (npm run backup)
+│   ├── migrate/            # Move old root collections into users/{uid}
+│   └── export/             # Legacy top-level collection export
+├── tests/                  # Firestore security rules tests
 └── src/                    # React application source code
-    ├── api/                # API clients and data fetching
-    ├── components/         # Reusable UI components
+    ├── api/                # Live (Firestore) and demo data APIs, Gmail connect
+    ├── components/         # Reusable UI components (app shell, navigation, demo banner)
+    ├── demoData/           # Mock data shown in demo mode
     ├── firebase/           # Firebase configuration & utilities
     ├── hooks/              # Custom React hooks
     ├── pages/              # Application pages & views
     │   ├── budget/         # Budget management pages
     │   ├── home/           # Main dashboard and expense views
-    │   ├── insights/       # Analytics and insights pages
+    │   ├── insights/       # Analytics, exports, and insights pages
     │   ├── login/          # Authentication flow
     │   └── setting/        # Application settings
     ├── store/              # Redux store configuration
-    ├── styles/             # Global styles and themes
+    ├── styles/             # Global styles, themes, and design tokens
     └── utility/            # Helper functions & constants
 ```
 
@@ -177,50 +205,68 @@ Pennywise is built using a modern front-end architecture with the following key 
 ### Overview
 
 1. **User Authentication**:
-  - Users authenticate using Google OAuth
+  - Users sign in with Google through Firebase Authentication
+  - Live data is limited to verified emails listed in `allowedUsers`; everyone else gets demo mode
 2. **Data Fetching**:
-  - On app initialization, data is fetched from Firebase Firestore
-  - Data is stored locally in IndexedDB for offline access
-  - Redux store is populated with expense and tag data
+  - On app initialization, data is fetched from Firebase Firestore (`users/{uid}/...`)
+  - After the first load, only documents whose `modifiedDate` changed since the last fetch are requested
+  - Data is stored locally in IndexedDB (one database per user) for offline access
+  - Redux store is populated with expense, tag, vendor-tag, and budget data
 3. **User Interactions**:
-  - Users can view, filter, and group expenses
-  - New expenses can be added manually or imported
-  - Expenses can be tagged for categorization
+  - Users can view, search, filter, and group expenses
+  - New expenses can be added manually or imported from Gmail
+  - Expenses can be tagged, merged, and deleted, and duplicate pairs can be reviewed
 4. **Data Persistence**:
   - Changes are saved to both IndexedDB and Firebase
-  - Data synchronization happens automatically when online
+  - Changes made elsewhere (for example new Gmail imports) appear on the next data load; **Settings → Reload Data** forces a refresh
 
 ### Gmail automation (push + Gemini)
 
 1. **Bank routing config** is stored per user at `users/{uid}/config/emailParseBanks`. **Settings → Banks** edits this list.
-2. **Connect Gmail** in Settings uses Google Identity Services (`gmail.readonly`) and a callable function that stores the refresh token in Secret Manager.
-3. Gmail `users.watch` publishes to the Terraform topic `gmail-push`. The `onGmailPush` function reads `history.list`, parses new bank mail, and writes `users/{uid}/expense/{gmailMessageId}`.
-4. An hourly scheduled function renews the watch (it expires after 7 days) and runs a catch-up plus a resumable 30-day backfill.
-5. Terraform owns the topic, service account, and secret shells. `firebase deploy` owns functions, Hosting, and Firestore rules/indexes. See [infra/terraform/README.md](infra/terraform/README.md).
+2. **Connect Gmail** in Settings uses Google Identity Services (`gmail.readonly`) and a callable function that stores the refresh token in Secret Manager. A Gmail account can be connected to only one Pennywise user.
+3. Gmail `users.watch` publishes to the Terraform topic `gmail-push`. The `onGmailPush` function reads `history.list`, keeps only mail that matches a bank, parses it with regex first and Gemini second, and writes `users/{uid}/expense/{gmailMessageId}`.
+4. Each imported expense gets its vendor normalized and, when a vendor–tag map matches exactly, a tag. A processed-message marker keeps imports idempotent.
+5. An hourly scheduled function renews the watch (it expires after 7 days) and runs a catch-up plus a resumable 30-day backfill.
+6. Terraform owns the topic, service account, and secret shells. `firebase deploy` owns functions, Hosting, and Firestore rules/indexes. See [infra/terraform/README.md](infra/terraform/README.md).
+
+### Duplicate detection
+
+After an import, Cloud Functions scan the last 7 days of expenses for duplicates:
+
+1. **Alias groups**: the same service billed under different vendor names within a few minutes (for example Netflix or YouTube) is merged automatically.
+2. **Payment rails**: one investment reported by the broker, the exchange, and the clearing house within 24 hours is merged automatically.
+3. **Needs review**: same vendor and type, or the same amount from different vendors within 5 minutes, is never merged on its own. The pair appears in **Settings → Duplicate Review**.
+
+Merged duplicates stay in Firestore but are hidden from lists. The rules can be tuned per user at `users/{uid}/config/dedupeRules`.
 
 ### Architecture Diagram
 
+<!-- TODO: update screenshot -->
 ![Architecture Diagram](public/docs/Pennywise.drawio.svg)
+
+The Graphviz source for the data flow lives in [public/docs/dataflow.dot](public/docs/dataflow.dot).
 
 ## Application Sections
 
-The React application is divided into several key sections, each serving a specific purpose:
+The React application is divided into several key sections, each serving a specific purpose. On screens 800px and wider, a side navigation replaces the phone's bottom navigation.
 
-*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, attach a tag to the expense, and apply filters to view expenses from different time periods or by different grouping.
+*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, attach a tag to the expense, search, and apply filters to view expenses from different time periods or by different grouping. Long-press to select expenses, then merge or delete them. On desktop, a "This month" panel shows spent and received totals, top vendors, tag split, and budget alerts; on phones, a stats header sits above the list.
 
 
-*   **Insights**: This page offers a visual breakdown of your spending. It features charts and graphs that categorize your expenses by tags, helping you quickly identify your top spending areas. You can download the reports in xlsx & csv format.
+*   **Insights**: This page offers a visual breakdown of your spending. It shows spending, daily, and monthly figures (average or median), charts grouped by days, vendor, tags, or cost, and a top-vendors table. You can download the reports in xlsx & csv format.
 
 
 *   **Budget**: This section is for managing your financial goals. You can set monthly budgets for different expense categories and track your progress to see how your spending aligns with your budget.
 
 
-*   **Settings**: Customize tags, **vendor–tag maps**, your profile, and other options. Use **Banks** (`/setting-banks`) to maintain the list of banks (match strings) that gate which emails are sent to Gemini—add or remove entries as you add accounts or change issuers.
+*   **Settings**: Connect or disconnect Gmail, and manage **Tags**, **Manage Vendor Tags**, **Auto-tag Expenses**, **Duplicate Review**, **Reload Data** (reload from a date, reload everything, or clear the local cache), the dark/light theme, and sign-out. Use **Banks** (`/setting-banks`) to maintain the list of banks (match strings) that gate which emails are parsed—add or remove entries as you add accounts or change issuers.
 
 ## Future Roadmap
 
 - [ ] Per-bank prompt hints or templates (optional tuning on top of Gemini)
 - [x] Gmail push (Pub/Sub) instead of Apps Script hourly jobs
+- [x] Automatic duplicate detection with a review screen
+- [x] Separate desktop and mobile layouts
 - [ ] Enhancing Insights with more detailed analytics & better graph support grouped by category
 - [ ] Multi-selected expense tagging feature
 - [ ] Expense analysis using historical data (Firebase AI Logic)

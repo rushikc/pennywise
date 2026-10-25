@@ -38,3 +38,5 @@ temp/export-data-<timestamp>/
 The timestamp looks like `2026-10-12T00-52-10`. `_manifest.json` records the project ID, export time, and document count for each collection. Each collection file is an array of documents, with the Firestore document id in `id`. Timestamps are ISO strings.
 
 `temp/` is gitignored. This export does not include subcollections.
+
+> **Per-user data layout:** Pennywise now stores each user's expenses, vendor tags, budgets, and config under `users/{uid}/...` subcollections, so this script no longer captures that data. For a complete backup (including subcollections), use `npm run backup` from the repo root (`scripts/backup/backupFirestore.js`), which writes to `backups/<timestamp>/` (or `PENNYWISE_BACKUP_DIR`). This script is still useful for exports of an old, pre-migration database with root collections.
