@@ -5,15 +5,14 @@ on:
     branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: deploy-demo
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   check:
+    concurrency:
+      group: deploy-demo-check
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,6 +32,9 @@ jobs:
     needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: deploy-demo
+      cancel-in-progress: false
     environment:
       name: demo
       url: ${{ steps.url.outputs.url }}
