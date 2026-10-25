@@ -45,7 +45,8 @@ function createGmailCallables({db, tokenStore, projectId, clientId, clientSecret
       await writeConnectedState(db, {uid, email: gmailEmail, nowMs: now()});
     } catch (error) {
       if (error.code === 'already-exists') {
-        await revokeToken(tokens.refreshToken, fetchImpl);
+        // Do not revoke the newly exchanged refresh token: Google revokes the
+        // whole grant for that account and would invalidate the owner's stored token.
         throw new HttpsError(
           'already-exists',
           'This Gmail account is already connected to another Pennywise user.',

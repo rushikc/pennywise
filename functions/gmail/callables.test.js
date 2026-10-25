@@ -160,7 +160,7 @@ describe('gmail callables', () => {
     );
     assert.deepEqual(saved, []);
     assert.equal(tokens['uid-1'], 'rt-existing');
-    assert.equal(revoked.some((url) => url.includes('revoke')), true);
+    assert.deepEqual(revoked, []);
   });
 
   it('disconnects Firestore state when saving the refresh token fails', async () => {

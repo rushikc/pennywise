@@ -427,7 +427,13 @@ async function processConnectedUser({
     ingestError = error;
   }
   if (created > 0 || ingestError) {
-    await applyDedupe(db, uid, nowMs);
+    try {
+      await applyDedupe(db, uid, nowMs);
+    } catch (dedupeError) {
+      if (!ingestError) {
+        throw dedupeError;
+      }
+    }
   }
   if (ingestError) {
     throw ingestError;
