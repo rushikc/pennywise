@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const fs = require('fs');
 const path = require('path');
-const {payloadWithoutId} = require('../firestoreJson');
+const {payloadWithoutId} = require('../lib/firestoreJson');
 
 const USER_COLLECTIONS = ['expense', 'vendorTag', 'budget', 'config'];
 

@@ -12,5 +12,5 @@
 - [ADRs](adr/README.md) — decision log. 0006 (external write API) is Proposed.
 - [Tests](../tests/README.md) — unit, rules, migrate, and Playwright commands.
 - [Migrate scripts](../scripts/migrate/README.md) — dry-run defaults for the migrate scripts.
-- [Legacy export](../scripts/export/export-data/README.md) — pre-`users/{uid}` collection export.
+- [Legacy export](../scripts/export/README.md) — pre-`users/{uid}` collection export.
 - [Terraform](../infra/terraform/README.md) — GCP resources `firebase deploy` cannot create.

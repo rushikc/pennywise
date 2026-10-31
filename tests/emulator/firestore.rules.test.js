@@ -14,7 +14,7 @@ const {
 } = require('@firebase/rules-unit-testing');
 
 const PROJECT_ID = 'pennywise-rules-test';
-const RULES_PATH = path.join(__dirname, '..', 'firestore.rules');
+const RULES_PATH = path.join(__dirname, '..', '..', 'firestore.rules');
 
 const owner = {
   uid: 'uid-owner',

@@ -186,11 +186,13 @@ pennywise/
 │   ├── backup/             # Full Firestore backup (npm run backup)
 │   ├── ci/                 # Demo-bundle check and the doc link checker
 │   ├── demo/               # Synthetic demo data generator
-│   ├── export/             # Legacy top-level collection export
+│   ├── export/             # Legacy (pre-users/{uid}) top-level collection export
+│   ├── lib/                # Shared JSON helpers for backup and migrate
 │   └── migrate/            # User move, tags-v1 migration, and import
 ├── docs/                   # Data model, demo deploy, and other guides
 ├── tests/
 │   ├── e2e/                # Playwright specs
+│   ├── emulator/           # Firestore rules and migrate-emulator tests
 │   └── fixtures/           # Synthetic seed data for the emulators
 ├── playwright.config.ts    # e2e servers and projects
 ├── .cursor/rules/          # Agent rules (tests, commits, docs, design tokens)

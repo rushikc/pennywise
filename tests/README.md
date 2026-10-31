@@ -7,9 +7,9 @@
 | `e2e/` | Playwright end-to-end tests against the built app and the local Firebase emulators | `npm run test:e2e` |
 | `fixtures/` | Synthetic seed data and the emulator seeding helpers used by `e2e/` | `npm run test:e2e:seed` |
 | emulators left running for a manual look | Firestore, Auth, and Functions emulators | `npm run test:e2e:emulators` |
-| `firestore.rules.test.js` | Firestore security rules | `npm run test:rules` |
+| `emulator/firestore.rules.test.js` | Firestore security rules | `npm run test:rules` |
 | `scripts/migrate/*.test.js` | Migration script unit tests | `npm run test:migrate` |
-| `migrateTagsFirestore.emulator.test.js` | Tag migration script against the Firestore emulator | `npm run test:migrate:emulator` |
+| `emulator/migrateTagsFirestore.emulator.test.js` | Tag migration script against the Firestore emulator | `npm run test:migrate:emulator` |
 | `functions/api/api.emulator.test.js` | Pennywise API against the Firestore + Auth emulators | `npm run test:api:emulator` |
 
 One-time, before the first Playwright run: `npx playwright install chromium`.

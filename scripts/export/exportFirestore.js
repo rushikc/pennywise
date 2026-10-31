@@ -8,10 +8,10 @@ const {
   DocumentReference,
 } = require('firebase-admin/firestore');
 
-const repoRoot = path.resolve(__dirname, '../../..');
+const repoRoot = path.resolve(__dirname, '../..');
 
 require('dotenv').config({
-  path: path.resolve(__dirname, '../../../.env'),
+  path: path.resolve(__dirname, '../../.env'),
 });
 
 function serialize(value) {

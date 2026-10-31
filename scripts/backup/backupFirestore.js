@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
 const {GoogleAuth} = require('google-auth-library');
-const {serialize, timestampFolderName} = require('../firestoreJson');
+const {serialize, timestampFolderName} = require('../lib/firestoreJson');
 
 const repoRoot = path.resolve(__dirname, '../..');
 

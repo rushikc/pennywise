@@ -9,7 +9,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const admin = require('firebase-admin');
-const {applyUpdates, rollbackFromFile, planExpenseDocs} = require('../scripts/migrate/migrateTagsFirestore');
+const {applyUpdates, rollbackFromFile, planExpenseDocs} = require('../../scripts/migrate/migrateTagsFirestore');
 
 const PROJECT_ID = 'demo-pennywise';
 const UID = 'uid-migrate';

@@ -1,6 +1,6 @@
 # Firestore export
 
-Read-only export of every top-level Firestore collection to JSON. The Firebase project ID comes from `REACT_APP_FIREBASE_PROJECT_ID` in the repo root `.env`. Credentials come from your gcloud login, not from a key file.
+Legacy (pre-`users/{uid}` layout). Read-only export of every top-level Firestore collection to JSON. The Firebase project ID comes from `REACT_APP_FIREBASE_PROJECT_ID` in the repo root `.env`. Credentials come from your gcloud login, not from a key file.
 
 ## Setup
 
@@ -22,7 +22,7 @@ gcloud auth application-default login
 From the repo root, or from any other directory:
 
 ```bash
-node scripts/export/export-data/exportFirestore.js
+node scripts/export/exportFirestore.js
 ```
 
 ## Output

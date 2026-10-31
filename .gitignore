@@ -14,18 +14,15 @@
 
 # Miscellaneous
 .DS_Store
-.env
 .env*
 !.env.example
+!functions/.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .secret.local
 functions/.secret.local
-
-# clasp leftovers
-.clasp.json
 
 # Logs
 *.log
