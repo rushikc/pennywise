@@ -14,15 +14,8 @@ This guide will walk you through setting up the Pennywise project on a Linux/Mic
   You will get an email from the Google Cloud team with detailed steps.
 
 
-- **Free Tier Usage**: The Firebase Blaze plan offers a generous free tier, which should be sufficient for most personal use cases. https://firebase.google.com/pricing
-    - 1 GB of storage in Firestore.
-    - 50,000 reads, 20,000 writes, and 20,000 deletes per day
-    - 1 GB of data transfer per month
-    - 1 GB of storage in Firebase Storage
-    - 1 GB of data transfer in Firebase Hosting
-    - 1 GB of data transfer in Firebase Functions
-    - 1 GB of data transfer in Firebase Authentication
-    - Gmail import also uses Pub/Sub, Cloud Scheduler (one hourly job), Secret Manager, and the Gemini API. For one
+- **Free Tier Usage**: Current Firebase quotas are on the [Firebase pricing page](https://firebase.google.com/pricing).
+    Gmail import also uses Pub/Sub, Cloud Scheduler (one hourly job), Secret Manager, and the Gemini API. For one
       person's bank alerts these usually stay within free quotas or cost very little, but check
       https://cloud.google.com/pricing and the Gemini API pricing page for current limits.
 
@@ -54,7 +47,6 @@ We strongly recommend using a code editor like Visual Studio Code for this proje
 
 Other suitable code editors include:
 - [Sublime Text](https://www.sublimetext.com/)
-- [Atom](https://atom.io/)
 - [WebStorm](https://www.jetbrains.com/webstorm/)
 
 ### Cloning the Project
@@ -245,8 +237,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 
   ![Create web app](public/docs/pics/ff2.png)
 
-  - Enter a nickname for your app (e.g., `hello-2a`) and do not check the box to set up Firebase Hosting.
-  - Firebase Hosting is only required if you want to use an externally bought domain, which is not required for this project.
+  - Enter a nickname for your app (e.g., `hello-2a`). The "set up Firebase Hosting" checkbox can stay unchecked. Hosting is used (`npm run deploy:personal`); [`firebase.json`](firebase.json) already configures it.
   - Click **"Register app"**.
 
   ![Create web app](public/docs/pics/ff4.png)
@@ -388,7 +379,7 @@ Rules and the frontend now read and write `users/{uid}/...`. Data left in the ol
 
 1. **Back up.** From the repo root: `npm run backup` (see `scripts/backup`). Keep the timestamped export directory.
 2. **Allowlist.** Create `allowedUsers/{lowercase email}` documents (empty is enough). IDs must be lowercase; mixed-case IDs will not match.
-3. **Migrate.** Dry-run first, then apply (do not skip `config`, including `emailParseBanks` — ingest skips every message if banks are missing):
+3. **Migrate.** Dry-run first, then apply (do not skip `config`, including `emailParseBanks` — ingest skips every message if banks are missing). `npm run migrate` moves the old root collections. The tags-v1 field migration is a separate pass: [docs/runbooks/tags-v1-migration.md](docs/runbooks/tags-v1-migration.md).
    ```bash
    npm run migrate -- --from <backup-dir> --uid <firebaseUid>
    npm run migrate -- --from <backup-dir> --uid <firebaseUid> --apply
@@ -422,7 +413,7 @@ You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Stu
 
 ### Important next steps
 
-1.  **Configure tags:** In **Settings**, add tags you want for categorization (not pre-populated).
+1.  **Configure tags:** A new account starts with an empty tag picker (`config/tags` `tagList` defaults to `[]`). Any short label is a valid tag. The list is a spelling hint, not a membership gate. Demo mode is the exception and ships a sample list. See [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
 
 2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. Cloud Functions ingest only parses matching mail (regex first, Gemini when regex fails)—too few strings and you may miss mail; too generic and you may include noise.
 
