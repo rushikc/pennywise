@@ -53,16 +53,17 @@ Grouping, dashboard tag totals, Insights, and budgets use the **primary** tag vi
 
 ## Local enrichment process (external)
 
-A separate local worker (not in this repo) may add extras and descriptions. Contract:
+A separate local worker (not in this repo) may add extras and descriptions. The sanctioned write path is the token-protected [`pennywiseApi`](API.md) Cloud Function (Admin SDK). Direct client writes are still owner-only via rules.
 
 - Write path: `users/{uid}/expense/{id}` using `update()` only. Never `set()` a whole doc. Never `create()`. Never delete.
 - May add or replace `tags[1..]` and `description`.
-- Must **not** change `tags[0]` once it is set.
+- Must **not** change `tags[0]` once it is set, unless the API caller sets `replacePrimary: true`.
 - On an untagged expense, may set `tags[0]` to any short primary; the tag list is not a membership gate.
 - Must keep the `tag` mirror equal to `tags[0] ?? null`.
 - Sets `enrichedAt` and `modifiedDate = Date.now()`.
 - Respects the limits above.
 - Uses `normalizeTags` semantics; [`shared/tagCases.json`](../shared/tagCases.json) is the executable spec.
+- Idempotency and rate-limit docs live at `users/{uid}/private/api/*` (clients cannot read or write `private/**`).
 
 Gmail ingest and Gemini must **not** produce extra tags or descriptions. Ingest writes `tags: [primary]` or `[]` plus the mirror.
 

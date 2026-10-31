@@ -152,7 +152,7 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 ### Backend & Infrastructure
 
-* **Serverless**: [Cloud Functions for Firebase](https://firebase.google.com/docs/functions) (2nd gen, Node.js 22)
+* **Serverless**: [Cloud Functions for Firebase](https://firebase.google.com/docs/functions) (2nd gen, Node.js 22), including the token-protected [Pennywise API](docs/API.md)
 * **Messaging & Scheduling**: [Pub/Sub](https://cloud.google.com/pubsub) (Gmail push) and [Cloud Scheduler](https://cloud.google.com/scheduler) (hourly sweep)
 * **Secrets**: [Secret Manager](https://cloud.google.com/secret-manager)
 * **AI Parsing**: [Gemini API](https://ai.google.dev/)
@@ -171,6 +171,7 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 pennywise/
 ├── build/                  # Production build output (Vite)
 ├── functions/              # Firebase Cloud Functions
+│   ├── api/                # Token-protected HTTPS API (list/patch expenses)
 │   ├── gmail/              # Gmail connect/disconnect, push handler, hourly sweep, ingest
 │   ├── dedupe/             # Duplicate expense detection
 │   └── src/parse/          # TypeScript parsers (bank regex + Gemini)

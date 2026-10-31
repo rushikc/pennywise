@@ -378,7 +378,7 @@ To interact with Firebase services from your terminal, you need to install the F
 2. Create an OAuth **Web** client. Authorized JavaScript origins: `http://127.0.0.1:3000` and `https://<project-id>.web.app`.
 3. Consent screen **In production**. Add scope `https://www.googleapis.com/auth/gmail.readonly` only.
 4. Put `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` in the app `.env` and `GOOGLE_OAUTH_CLIENT_ID` in `functions/.env`.
-5. Add the OAuth client secret and Gemini API key as secret versions (commands in [infra/terraform/README.md](infra/terraform/README.md)), rebuild the web app with `npm run build`, then run `firebase deploy`. It deploys the functions (`connectGmail`, `disconnectGmail`, `onGmailPush`, `hourlyGmailSweep`) and creates the Pub/Sub trigger subscription and the hourly scheduler job.
+5. Add the OAuth client secret, Gemini API key, and API token **digests** as secret versions (commands in [infra/terraform/README.md](infra/terraform/README.md) and [docs/API.md](docs/API.md)). Rebuild the web app with `npm run build`, then run `firebase deploy`. It deploys the functions (`connectGmail`, `disconnectGmail`, `onGmailPush`, `hourlyGmailSweep`, `pennywiseApi`) and creates the Pub/Sub trigger subscription and the hourly scheduler job. Set `PENNYWISE_API_OWNER_EMAIL` in `functions/.env` before deploying `pennywiseApi`.
 6. Deploy or paste `firestore.rules`. Create `allowedUsers/{lowercase-email}` for each family member.
 7. Sign in, open Settings, and **Connect Gmail**. The first connection imports matching bank mail from the last 30 days in the background.
 

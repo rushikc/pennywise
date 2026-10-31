@@ -6,6 +6,7 @@
 | `fixtures/` | Synthetic seed data and the emulator seeding helpers used by `e2e/` | `npm run test:e2e:seed` |
 | `firestore.rules.test.js` | Firestore security rules | `npm run test:rules` |
 | `migrateTagsFirestore.emulator.test.js` | Tag migration script against the Firestore emulator | `npm run test:migrate` |
+| `functions/api/api.emulator.test.js` | Pennywise API against the Firestore + Auth emulators | `npm run test:api:emulator` |
 
 Unit tests live next to the code under `src/` and run with `npm test` (Vitest).
 
@@ -31,7 +32,7 @@ npx playwright show-report               # HTML report after a run
 
 `playwright.config.ts` starts both servers on its own:
 
-1. The Firestore and Auth emulators (`firebase emulators:start --only firestore,auth --project demo-pennywise`).
+1. The Firestore, Auth, and Functions emulators (`firebase emulators:start --only firestore,auth,functions --project demo-pennywise`) after `tests/fixtures/writeApiEmulatorEnv.mjs` writes gitignored `functions/.secret.local` and `functions/.env.demo-pennywise` (files must start with `# pennywise-e2e generated` or the writer refuses to overwrite them). Cold start is slower because it also builds Cloud Functions.
 2. `vite build --mode e2e` then `vite preview` on `http://127.0.0.1:3100`.
 
 Outside CI, already-running servers are reused. **If you keep `vite preview` running, rebuild with
@@ -77,9 +78,11 @@ same `NOW` (`page.clock.install`), so month filters and "this month" totals don'
 | `settings.spec.ts` | manage tags (retire, case-insensitive duplicate, re-add, restore retired); auto-tag; Reload All; stale schema forces refetch; clear cache |
 | `insights.spec.ts` | budget counts only the primary tag; CSV export columns; tag groups and "not in list" chips |
 | `auth.spec.ts` | signed-out demo data; allowlisted vs. not allowlisted users; Google sign-in popup |
+| `api.spec.ts` | health and 401s; untagged list; PATCH then Reload All; app note save keeps API extras; primary conflict 409 (desktop only, serial) |
 
 ### Skipped by design
 
 - Layout-only tests run on just one project (`test.skip(isDesktop …)` or the reverse).
 - The Google popup test runs on desktop only. The emulator's sign-in widget loads its scripts from
   `unpkg.com`, so it needs internet. Set `E2E_SKIP_POPUP=1` to skip it offline.
+- `api.spec.ts` runs on desktop only against the Functions emulator. Set `E2E_SKIP_API=1` to skip it.
