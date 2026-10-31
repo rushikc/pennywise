@@ -77,6 +77,17 @@ test.describe('auto-tag', () => {
 });
 
 test.describe('reload data', () => {
+  // Live Reload All writes IndexedDB and does not refresh Redux, so an in-app return to /home
+  // still hides the row. A full page load (page.goto) would mask it.
+  test.fail('reload all shows a late row on home without a full page load', async ({app: page, user}) => {
+    await insertLateExpense(user);
+    await page.goto('/reload-expense');
+    await page.getByRole('button', {name: 'Reload All Expenses'}).click();
+    await expect(page.getByText('All expenses reloaded successfully.')).toBeVisible();
+    await page.getByRole('button', {name: 'Home'}).click();
+    await expect(rowFor(page, 'late arrival')).toHaveCount(1);
+  });
+
   test('reload all fetches docs an incremental sync skips', async ({app: page, user}) => {
     await insertLateExpense(user);
     await page.reload();
