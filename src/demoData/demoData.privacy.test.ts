@@ -23,8 +23,9 @@ describe('synthetic demo data privacy', () => {
   it('only uses tags from tagList', () => {
     const allowed = new Set(TAG_LIST);
     for (const expense of ExpenseListNew) {
-      if (expense.tag) {
-        expect(allowed.has(expense.tag)).toBe(true);
+      const primary = (expense.tags && expense.tags[0]) || expense.tag;
+      if (primary) {
+        expect(allowed.has(primary)).toBe(true);
       }
     }
     for (const vendorTag of VendorTags) {

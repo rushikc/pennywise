@@ -20,8 +20,8 @@ const MONTHS = 12;
 const TARGET_COUNT = 1080;
 
 const MERCHANTS = [
-  {vendor: 'SWIGGY', tag: 'food', type: 'upi', min: 120, max: 650},
-  {vendor: 'ZOMATO', tag: 'food', type: 'upi', min: 150, max: 800},
+  {vendor: 'SWIGGY', tag: 'food', extras: ['swiggy', 'online food ordering'], type: 'upi', min: 120, max: 650},
+  {vendor: 'ZOMATO', tag: 'food', extras: ['zomato', 'online food ordering'], type: 'upi', min: 150, max: 800},
   {vendor: 'BigBasket', tag: 'groceries', type: 'upi', min: 400, max: 3200},
   {vendor: 'Local Kirana', tag: 'groceries', type: 'upi', min: 80, max: 900},
   {vendor: 'Uber', tag: 'transport', type: 'upi', min: 80, max: 450},
@@ -144,10 +144,12 @@ const main = () => {
     usedMailIds.add(mailId);
     const vendorShort = merchant.vendor.split(' ')[0].slice(0, 12);
     const idDate = new Date(date).toISOString().slice(0, 16).replace('T', ' ');
+    const tags = [merchant.tag, ...(merchant.extras || [])];
     expenses.push({
       cost: money(merchant.min, merchant.max),
       costType: random() > 0.08 ? 'debit' : 'credit',
       vendor: merchant.vendor,
+      tags,
       tag: merchant.tag,
       type: merchant.type,
       date,
@@ -160,6 +162,15 @@ const main = () => {
   }
 
   expenses.sort((a, b) => b.date - a.date);
+
+  const zomatoNote = expenses.find((item) => item.vendor === 'ZOMATO');
+  if (zomatoNote) {
+    zomatoNote.description = 'Weekend treat';
+  }
+  const irctcNote = expenses.find((item) => item.vendor === 'IRCTC');
+  if (irctcNote) {
+    irctcNote.description = 'Long-distance trip';
+  }
 
   const duplicateSources = [
     expenses.find((item) => item.vendor === 'SWIGGY'),
