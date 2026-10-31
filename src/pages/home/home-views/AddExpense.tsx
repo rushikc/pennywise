@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {selectExpense, updateExpense} from '../../../store/expenseActions';
+import {createTimedAlert} from '../../../store/alertActions';
 import {getDateMonthTime} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
@@ -93,6 +94,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
         onExpenseAdded(newExpense);
       }
       onClose();
+    }).catch(() => {
+      createTimedAlert({type: 'error', message: 'Could not save this expense'});
     });
   };
 
