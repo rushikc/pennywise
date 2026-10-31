@@ -32,6 +32,58 @@ const dbName = (): string => {
   return liveIndexedDbName();
 };
 
+const storeNames: TableNames[] = ['expense', 'vendorTag', 'config', 'budget'];
+
+const recreateStores = (db: IDBDatabase): void => {
+  storeNames.forEach((name) => {
+    if (db.objectStoreNames.contains(name)) {
+      db.deleteObjectStore(name);
+    }
+  });
+
+  const expenseStore = db.createObjectStore('expense', {keyPath: 'mailId'});
+  expenseStore.createIndex('vendor_index', ['vendor'], {unique: false});
+  expenseStore.createIndex('date_index', ['date'], {unique: false});
+
+  db.createObjectStore('vendorTag', {keyPath: 'vendor'});
+  db.createObjectStore('config', {keyPath: 'key'});
+  db.createObjectStore('budget', {keyPath: 'id'});
+};
+
+const openDatabase = (): Promise<IDBDatabase> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName(), dbVersion);
+    request.onupgradeneeded = () => {
+      recreateStores(request.result);
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName()}`));
+  });
+};
+
+const deleteDatabase = (name: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(name);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error(`Deleting IndexedDB ${name} was blocked`));
+  });
+};
+
+/** A database left at the current version without a store cannot upgrade, so open a fresh one. */
+const openDatabaseWithStore = async (storeName: TableNames, allowRecover = true): Promise<IDBDatabase> => {
+  const db = await openDatabase();
+  if (db.objectStoreNames.contains(storeName)) {
+    return db;
+  }
+  db.close();
+  if (!allowRecover) {
+    throw new Error(`IndexedDB is missing the ${storeName} store`);
+  }
+  await deleteDatabase(dbName());
+  return openDatabaseWithStore(storeName, false);
+};
+
 type TableNames = 'expense' | 'vendorTag' | 'config' | 'budget';
 type StoreData = {
   expense: Expense;
@@ -55,76 +107,64 @@ export class FinanceIndexDB {
       return;
     }
 
-    const financeDB = indexedDB.open(dbName(), dbVersion);
-
-    financeDB.onupgradeneeded = () => {
-      const db = financeDB.result;
-
-      const expenseStore = db.createObjectStore('expense', {keyPath: 'mailId'});
-      expenseStore.createIndex('vendor_index', ['vendor'], {unique: false});
-      expenseStore.createIndex('date_index', ['date'], {unique: false});
-
-      db.createObjectStore('vendorTag', {keyPath: 'vendor'});
-      db.createObjectStore('config', {keyPath: 'key'});
-      db.createObjectStore('budget', {keyPath: 'id'}); // Create budget store
-    };
+    void openDatabase().catch(() => undefined);
   };
 
   /**
    * Generic method to execute operations on IndexedDB stores
    */
-  private static executeStoreOperation = <T>(
+  private static executeStoreOperation = async <T>(
     storeName: TableNames,
     operation: (store: IDBObjectStore) => IDBRequest<T>,
     mode: IDBTransactionMode = 'readwrite'
   ): Promise<T> => {
+    const db = await openDatabaseWithStore(storeName);
     return new Promise((resolve, reject) => {
-      const financeDB = indexedDB.open(dbName(), dbVersion);
+      try {
+        const transaction = db.transaction(storeName, mode);
+        const store = transaction.objectStore(storeName);
+        const request = operation(store);
 
-      financeDB.onsuccess = () => {
-        try {
-          const db = financeDB.result;
-          const transaction = db.transaction(storeName, mode);
-          const store = transaction.objectStore(storeName);
-          const request = operation(store);
-
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(new Error(`IndexedDB operation failed on ${storeName}`));
-        } catch (error) {
-          reject(error);
-        }
-      };
-
-      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName()}`));
+        request.onsuccess = () => {
+          db.close();
+          resolve(request.result);
+        };
+        request.onerror = () => {
+          db.close();
+          reject(new Error(`IndexedDB operation failed on ${storeName}`));
+        };
+      } catch (error) {
+        reject(error);
+      }
     });
   };
 
   /**
    * Batch insert operations for better performance
    */
-  private static batchInsert = <T extends TableNames>(
+  private static batchInsert = async <T extends TableNames>(
     storeName: T,
     items: StoreData[T][]
   ): Promise<void> => {
+    const db = await openDatabaseWithStore(storeName);
     return new Promise((resolve, reject) => {
-      const financeDB = indexedDB.open(dbName(), dbVersion);
+      try {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
 
-      financeDB.onsuccess = () => {
-        try {
-          const db = financeDB.result;
-          const transaction = db.transaction(storeName, 'readwrite');
-          const store = transaction.objectStore(storeName);
+        items.forEach(item => store.put(item));
 
-          items.forEach(item => store.put(item));
-
-          transaction.oncomplete = () => resolve();
-          transaction.onerror = () => reject(new Error(`Batch insert failed on ${storeName}`));
-        } catch (error) {
-          reject(error);
-        }
-      };
-
-      financeDB.onerror = () => reject(new Error(`Failed to open IndexedDB: ${dbName()}`));
+        transaction.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        transaction.onerror = () => {
+          db.close();
+          reject(new Error(`Batch insert failed on ${storeName}`));
+        };
+      } catch (error) {
+        reject(error);
+      }
     });
   };
 
