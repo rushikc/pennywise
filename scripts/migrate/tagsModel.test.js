@@ -36,6 +36,16 @@ describe('computeLegacyTags', () => {
     );
     assert.deepEqual(legacy, ['alcohol', 'tech']);
   });
+
+  it('keeps unlisted primaries as informational legacy entries', () => {
+    const legacy = computeLegacyTags(
+      [{tag: 'mystery'}],
+      [],
+      [],
+      ['food'],
+    );
+    assert.deepEqual(legacy, ['mystery']);
+  });
 });
 
 describe('countMailIdCollisions', () => {

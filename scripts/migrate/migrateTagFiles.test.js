@@ -19,15 +19,22 @@ describe('migrateTagFiles', () => {
       {id: '2', tag: null},
       {id: '3', tag: 'alcohol'},
     ]));
-    fs.writeFileSync(path.join(dir, 'vendorTag.json'), JSON.stringify([{id: 'v', vendor: 'X', tag: 'food'}]));
-    fs.writeFileSync(path.join(dir, 'budget.json'), JSON.stringify([{id: 'b', tagList: ['food']}]));
+    fs.writeFileSync(path.join(dir, 'vendorTag.json'), JSON.stringify([
+      {id: 'v', vendor: 'X', tag: 'food'},
+      {id: 'v2', vendor: 'Y', tag: 'mystery'},
+    ]));
+    fs.writeFileSync(path.join(dir, 'budget.json'), JSON.stringify([{id: 'b', tagList: ['food', 'ghost']}]));
     fs.writeFileSync(path.join(dir, 'config.json'), JSON.stringify([{id: 'tags', tagList: ['food']}, {id: 'darkMode', value: false}]));
     fs.writeFileSync(path.join(dir, 'processedIds.json'), JSON.stringify([{id: 'p'}]));
     const plan = planFileMigration(dir);
     assert.equal(plan.expenseStats.stringToArray, 2);
     assert.equal(plan.expenseStats.nullToEmpty, 1);
-    assert.deepEqual(plan.legacyTagList, ['alcohol']);
-    assert.deepEqual(plan.nextConfig.find((item) => item.id === 'tags').legacyTagList, ['alcohol']);
+    assert.deepEqual(plan.legacyTagList, ['alcohol', 'ghost', 'mystery']);
+    assert.equal(plan.expenseStats.unlistedPrimaries, 1);
+    assert.equal(plan.unlistedVendorTags, 1);
+    assert.equal(plan.unlistedBudgetTags, 1);
+    assert.equal(plan.informational, true);
+    assert.deepEqual(plan.nextConfig.find((item) => item.id === 'tags').legacyTagList, ['alcohol', 'ghost', 'mystery']);
     assert.equal(plan.nextConfig.find((item) => item.id === 'darkMode').value, false);
 
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pw-tags-out-'));

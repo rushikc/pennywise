@@ -217,14 +217,6 @@ export function displayTag(
   return canonicalPrimary(primary, {tagList, legacyTagList});
 }
 
-export function isValidPrimary(
-  tag: unknown,
-  tagList: string[] = [],
-  legacyTagList: string[] = [],
-): boolean {
-  return isListedTag(tag, tagList, legacyTagList);
-}
-
 export function isPersistedExpenseId(id: unknown): boolean {
   const existingId = typeof id === 'string' ? id.trim() : '';
   return Boolean(existingId && existingId !== 'manual');

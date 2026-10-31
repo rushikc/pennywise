@@ -25,7 +25,7 @@ function loadJson(dir, name) {
 }
 
 function planFileMigration(inDir) {
-  const {isValidPrimary} = loadTags();
+  const {tagListStatus} = loadTags();
   const expenses = loadJson(inDir, 'expense');
   const vendorTags = loadJson(inDir, 'vendorTag');
   const budgets = loadJson(inDir, 'budget');
@@ -47,7 +47,7 @@ function planFileMigration(inDir) {
     stringToArray: 0,
     nullToEmpty: 0,
     alreadyArray: 0,
-    invalidPrimaries: 0,
+    unlistedPrimaries: 0,
     dropped: 0,
     changed: 0,
   };
@@ -62,18 +62,18 @@ function planFileMigration(inDir) {
     }
     if (changed) expenseStats.changed += 1;
     const primary = next.tags[0];
-    if (primary && !isValidPrimary(primary, tagList, legacyTagList)) {
-      expenseStats.invalidPrimaries += 1;
+    if (primary && tagListStatus(primary, tagList, []) === 'unlisted') {
+      expenseStats.unlistedPrimaries += 1;
     }
     return next;
   });
 
-  const invalidVendor = vendorTags.filter((item) => item.tag && !isValidPrimary(item.tag, tagList, legacyTagList));
-  const invalidBudget = [];
+  const unlistedVendorTags = vendorTags.filter((item) => item.tag && tagListStatus(item.tag, tagList, []) === 'unlisted');
+  const unlistedBudgetTags = [];
   for (const budget of budgets) {
     for (const tag of budget.tagList || []) {
-      if (tag !== 'All' && !isValidPrimary(tag, tagList, legacyTagList)) {
-        invalidBudget.push({id: budget.id, tag});
+      if (tag !== 'All' && tagListStatus(tag, tagList, []) === 'unlisted') {
+        unlistedBudgetTags.push({id: budget.id, tag});
       }
     }
   }
@@ -89,8 +89,9 @@ function planFileMigration(inDir) {
     counts,
     expenseStats,
     legacyTagList,
-    invalidVendorCount: invalidVendor.length,
-    invalidBudgetCount: invalidBudget.length,
+    unlistedVendorTags: unlistedVendorTags.length,
+    unlistedBudgetTags: unlistedBudgetTags.length,
+    informational: true,
     allowed,
     nextExpenses,
     nextConfig,
@@ -151,8 +152,9 @@ async function main(argv = process.argv) {
     counts: plan.counts,
     expenses: plan.expenseStats,
     legacyTagList: plan.legacyTagList,
-    invalidVendorCount: plan.invalidVendorCount,
-    invalidBudgetCount: plan.invalidBudgetCount,
+    unlistedVendorTags: plan.unlistedVendorTags,
+    unlistedBudgetTags: plan.unlistedBudgetTags,
+    informational: true,
   };
   console.log(JSON.stringify(report, null, 2));
   if (!args.apply) {

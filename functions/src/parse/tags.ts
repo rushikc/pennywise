@@ -209,10 +209,3 @@ export function displayTag(
   return canonicalPrimary(primary, {tagList, legacyTagList});
 }
 
-export function isValidPrimary(
-  tag: unknown,
-  tagList: string[] = [],
-  legacyTagList: string[] = [],
-): boolean {
-  return isListedTag(tag, tagList, legacyTagList);
-}
