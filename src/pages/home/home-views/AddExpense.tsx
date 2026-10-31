@@ -21,7 +21,7 @@ import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import {Expense} from '../../../Types';
 import {v4 as uuidv4} from 'uuid';
-import {extraTags, isValidPrimary, normalizeDescription, normalizeTags, withTags} from '../../../domain/tags';
+import {extraTags, normalizeDescription, normalizeTags, withTags} from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
 import {TagEditorFields} from './TagEditorFields';
 
@@ -62,10 +62,6 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   }, [expenseList]);
 
   const onSaveExpense = () => {
-    if (selectedPrimary && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
-      setPrimaryError('Choose a tag from the list, or leave this expense untagged.');
-      return;
-    }
     if (!selectedPrimary && extras.length > 0) {
       if (!window.confirm('Untagging drops extra tags. Continue?')) {
         return;
@@ -145,6 +141,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
           <div>
             <TagEditorFields
               tagList={tagList}
+              legacyTagList={legacyTagList}
               selectedPrimary={selectedPrimary}
               extras={extras}
               extraSuggestions={extraSuggestions}

@@ -134,6 +134,17 @@ describe('DemoExpenseAPI', () => {
     expect(updated?.foo).toBe('bar');
   });
 
+  it('does not call getTagConfig when adding an expense', async () => {
+    const spy = jest.spyOn(DemoExpenseAPI, 'getTagConfig');
+    await DemoExpenseAPI.addExpense(makeExpense({
+      id: '',
+      mailId: 'no-config-mail',
+      tags: ['mystery'],
+    }));
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it('treats the placeholder id manual as a new expense', async () => {
     const created = await DemoExpenseAPI.addExpense(makeExpense({
       id: 'manual',

@@ -26,7 +26,7 @@ import {
   normalizeTags,
   ownedExpenseFields,
   primaryTag,
-  withConfiguredTags,
+  readTags,
   withTags,
 } from '../domain/tags';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
@@ -226,8 +226,7 @@ export class LiveExpenseAPI {
       expense.cost = Number(expense.cost.toFixed(2));
       expense.operation = operation;
       expense.id = key;
-      const config = await LiveExpenseAPI.getTagConfig();
-      Object.assign(expense, withConfiguredTags(expense, config));
+      Object.assign(expense, withTags(expense, readTags(expense)));
 
       const docRef = userDoc('expense', key);
       if (persisted) {

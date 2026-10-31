@@ -11,8 +11,6 @@ import {configureStore} from '@reduxjs/toolkit';
 import TagExpenses from './TagExpenses';
 import expenseReducer, {expenseSlice} from '../../../store/expenseSlice';
 import {makeExpense} from '../../../testUtils';
-import * as tagHelpers from '../../../domain/tags';
-
 jest.mock('../../../api/ExpenseAPI', () => ({
   ExpenseAPI: {addExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn()},
 }));
@@ -102,6 +100,22 @@ describe('TagExpenses', () => {
     expect(saved.enrichedAt).toBe(77);
   });
 
+  it('labels a legacy primary as retired', async () => {
+    const store = configureStore({reducer: {expense: expenseReducer}});
+    store.dispatch(expenseSlice.actions.setTagList(['food']));
+    store.dispatch(expenseSlice.actions.setLegacyTagList(['alcohol']));
+    store.dispatch(expenseSlice.actions.setTagExpense(makeExpense({
+      vendor: 'SHOP',
+      tags: ['alcohol'],
+    })));
+    render(
+      <Provider store={store}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    expect(await screen.findByRole('button', {name: /select tag alcohol \(retired\)/i})).toBeInTheDocument();
+  });
+
   it('re-saves a retired primary that is not in legacyTagList with a new note', async () => {
     const store = configureStore({reducer: {expense: expenseReducer}});
     store.dispatch(expenseSlice.actions.setTagList(['food']));
@@ -124,18 +138,41 @@ describe('TagExpenses', () => {
     expect(saved.description).toBe('keep retired');
   });
 
-  it('shows an error and does not save an invalid new primary', async () => {
-    jest.spyOn(tagHelpers, 'isValidPrimary').mockReturnValue(false);
+  it('saves an unlisted primary without error', async () => {
+    const store = configureStore({reducer: {expense: expenseReducer}});
+    store.dispatch(expenseSlice.actions.setTagList(['food']));
+    store.dispatch(expenseSlice.actions.setTagExpense(makeExpense({
+      vendor: 'SHOP',
+      tags: ['mystery'],
+    })));
     render(
-      <Provider store={makeTagStore(true)}>
+      <Provider store={store}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    expect(await screen.findByRole('button', {name: /select tag mystery \(not in list\)/i})).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
+    expect(screen.queryByText(/choose a tag from the list/i)).not.toBeInTheDocument();
+    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
+    expect(saved.tags).toEqual(['mystery']);
+  });
+
+  it('canonicalises a picked list tag to the list spelling', async () => {
+    const store = configureStore({reducer: {expense: expenseReducer}});
+    store.dispatch(expenseSlice.actions.setTagList(['food']));
+    store.dispatch(expenseSlice.actions.setTagExpense(makeExpense({
+      vendor: 'SHOP',
+      tags: ['mystery'],
+    })));
+    render(
+      <Provider store={store}>
         <TagExpenses/>
       </Provider>,
     );
     await userEvent.click(await screen.findByRole('button', {name: /select tag food/i}));
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
-    expect(await screen.findByText(/choose a tag from the list/i)).toBeInTheDocument();
-    expect(ExpenseAPI.addExpense).not.toHaveBeenCalled();
-    jest.restoreAllMocks();
+    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
+    expect(saved.tags).toEqual(['food']);
   });
 
   it('untags and writes empty tags', async () => {

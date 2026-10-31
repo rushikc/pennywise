@@ -26,10 +26,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {createTimedAlert} from '../../../store/alertActions';
 import {
   extraTags,
-  isValidPrimary,
   normalizeDescription,
   normalizeTags,
   primaryTag,
+  sameTag,
   withTags,
 } from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
@@ -82,14 +82,6 @@ const TagExpenses: FC = (): ReactElement => {
   };
 
   const onSaveExpense = () => {
-    const current = primaryTag(expense);
-    const matchesCurrent = Boolean(
-      current && selectedPrimary && selectedPrimary.toLowerCase() === current.toLowerCase(),
-    );
-    if (selectedPrimary && !matchesCurrent && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
-      setPrimaryError('Choose a tag from the list, or keep the current tag.');
-      return;
-    }
     if (!selectedPrimary && extras.length > 0) {
       if (!window.confirm('Untagging drops extra tags. Continue?')) {
         return;
@@ -98,7 +90,8 @@ const TagExpenses: FC = (): ReactElement => {
     setPrimaryError('');
     if (autoTag && selectedPrimary) {
       const _vendor = expense.vendor;
-      let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === selectedPrimary);
+      let tagObj = vendorTagList.find(({vendor, tag}) =>
+        vendor.trim().toUpperCase() === _vendor.trim().toUpperCase() && sameTag(tag, selectedPrimary));
       if (!tagObj) {
         tagObj = {
           id: _vendor,
@@ -203,7 +196,8 @@ const TagExpenses: FC = (): ReactElement => {
           <div>
             <TagEditorFields
               tagList={tagList}
-              legacyPrimary={currentPrimary}
+              legacyTagList={legacyTagList}
+              currentPrimaries={currentPrimary ? [currentPrimary] : []}
               selectedPrimary={selectedPrimary}
               extras={extras}
               extraSuggestions={extraSuggestions}

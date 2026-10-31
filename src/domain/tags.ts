@@ -230,13 +230,6 @@ export function isPersistedExpenseId(id: unknown): boolean {
   return Boolean(existingId && existingId !== 'manual');
 }
 
-export function withConfiguredTags<T extends Partial<Expense>>(
-  expense: T,
-  opts?: TagNormalizeOpts,
-): T & {tags: string[]; tag: string | null} {
-  return withTags(expense, normalizeTags(primaryTag(expense), extraTags(expense), opts).tags);
-}
-
 const DUPE_KEYS = ['duplicateOf', 'dupeCandidateOf', 'dupeStatus', 'dupeRule'] as const;
 
 export type OwnedExpenseFields = {

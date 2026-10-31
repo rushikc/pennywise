@@ -9,12 +9,30 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import {TAG_LIMITS, normalizeTags, sameTag} from '../../../domain/tags';
+import {TAG_LIMITS, groupKey, normalizeTags, sameTag, tagListStatus} from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
+
+const uniqueUnlistedPrimaries = (currentPrimaries: string[], tagList: string[]): string[] => {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const tag of currentPrimaries) {
+    const key = groupKey(tag);
+    if (!key || tagList.some((item) => sameTag(item, tag))) {
+      continue;
+    }
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    result.push(tag);
+  }
+  return result;
+};
 
 export const TagEditorFields: FC<{
   tagList: string[];
-  legacyPrimary?: string | null;
+  legacyTagList?: string[];
+  currentPrimaries?: string[];
   selectedPrimary: string;
   extras: string[];
   extraSuggestions: string[];
@@ -26,7 +44,8 @@ export const TagEditorFields: FC<{
   onNoteOpen: () => void;
 }> = ({
   tagList,
-  legacyPrimary,
+  legacyTagList = [],
+  currentPrimaries = [],
   selectedPrimary,
   extras,
   extraSuggestions,
@@ -38,10 +57,7 @@ export const TagEditorFields: FC<{
   onNoteOpen,
 }): ReactElement => {
   const isDesktop = useIsDesktop();
-  const showLegacy = Boolean(
-    legacyPrimary &&
-    !tagList.some((tag) => tag.toLowerCase() === legacyPrimary.toLowerCase()),
-  );
+  const extraPrimaries = uniqueUnlistedPrimaries(currentPrimaries, tagList);
   const extraLimit = TAG_LIMITS.maxTags - 1;
 
   const applyExtras = (values: string[]) => {
@@ -65,17 +81,23 @@ export const TagEditorFields: FC<{
             className={`tag-expense-chip${!selectedPrimary ? ' selected' : ''}`}
             aria-label="Select tag untagged"
           />
-          {showLegacy && legacyPrimary && (
-            <Chip
-              label={`${legacyPrimary} (retired)`}
-              clickable
-              color={sameTag(selectedPrimary, legacyPrimary) ? 'primary' : 'default'}
-              variant={sameTag(selectedPrimary, legacyPrimary) ? 'filled' : 'outlined'}
-              onClick={() => onPrimaryChange(legacyPrimary)}
-              className={`tag-expense-chip${sameTag(selectedPrimary, legacyPrimary) ? ' selected' : ''}`}
-              aria-label={`Select tag ${legacyPrimary}`}
-            />
-          )}
+          {extraPrimaries.map((tag) => {
+            const status = tagListStatus(tag, tagList, legacyTagList);
+            const suffix = status === 'retired' ? 'retired' : 'not in list';
+            const selected = sameTag(selectedPrimary, tag);
+            return (
+              <Chip
+                key={groupKey(tag) || tag}
+                label={`${tag} (${suffix})`}
+                clickable
+                color={selected ? 'primary' : 'default'}
+                variant={selected ? 'filled' : 'outlined'}
+                onClick={() => onPrimaryChange(tag)}
+                className={`tag-expense-chip${selected ? ' selected' : ''}`}
+                aria-label={`Select tag ${tag} (${suffix})`}
+              />
+            );
+          })}
           {tagList.map((tag) => (
             <Chip
               key={tag}

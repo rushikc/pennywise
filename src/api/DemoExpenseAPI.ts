@@ -11,7 +11,7 @@ import {
   normalizeTags,
   ownedExpenseFields,
   primaryTag,
-  withConfiguredTags,
+  readTags,
   withTags,
 } from '../domain/tags';
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
@@ -80,8 +80,7 @@ export class DemoExpenseAPI {
     expense.cost = Number(expense.cost.toFixed(2));
     expense.operation = operation;
     expense.id = key;
-    const config = await DemoExpenseAPI.getTagConfig();
-    Object.assign(expense, withConfiguredTags(expense, config));
+    Object.assign(expense, withTags(expense, readTags(expense)));
 
     const index = store.expenses.findIndex((item) => item.mailId === expense.mailId || item.id === expense.id);
     if (index > -1 && persisted) {

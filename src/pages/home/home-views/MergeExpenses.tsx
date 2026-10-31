@@ -24,7 +24,7 @@ import {createTimedAlert} from '../../../store/alertActions';
 import {mergedCostAndType, signedExpenseTotal} from './mergeMath';
 import {
   extraTags,
-  isValidPrimary,
+  groupKey,
   normalizeDescription,
   normalizeTags,
   primaryTag,
@@ -75,8 +75,9 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       const seen = new Set<string>();
       const union: string[] = [];
       for (const tag of expenses.flatMap((item) => extraTags(item))) {
-        if (!seen.has(tag)) {
-          seen.add(tag);
+        const key = groupKey(tag) || tag.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
           union.push(tag);
         }
       }
@@ -103,17 +104,6 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     // Find the expense object that corresponds to the selected vendor or use first expense as fallback
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
     const sourcePrimary = primaryTag(vendorExpense);
-    const matchesCurrent = Boolean(
-      selectedTag &&
-      expenses.some((item) => {
-        const primary = primaryTag(item);
-        return primary && selectedTag.toLowerCase() === primary.toLowerCase();
-      }),
-    );
-    if (selectedTag && !matchesCurrent && !isValidPrimary(selectedTag, tagList, legacyTagList)) {
-      setPrimaryError('Choose a tag from the list, or keep a current tag.');
-      return;
-    }
     if (!selectedTag && !sourcePrimary && extras.length > 0) {
       setPrimaryError('Choose a primary tag to keep extra tags.');
       return;
@@ -234,7 +224,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
           <div>
             <TagEditorFields
               tagList={tagList}
-              legacyPrimary={primaryTag(expenses[0])}
+              legacyTagList={legacyTagList}
+              currentPrimaries={expenses.map((item) => primaryTag(item)).filter((tag): tag is string => Boolean(tag))}
               selectedPrimary={selectedTag}
               extras={extras}
               extraSuggestions={[...new Set(expenseList.flatMap((item) => extraTags(item)))].sort()}

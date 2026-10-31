@@ -164,6 +164,17 @@ describe('LiveExpenseAPI.addExpense', () => {
     expect(payload.tag).toBe('food');
   });
 
+  it('does not call getTagConfig and keeps an unlisted primary', async () => {
+    const spy = jest.spyOn(LiveExpenseAPI, 'getTagConfig');
+    await LiveExpenseAPI.addExpense(makeExpense({
+      id: 'existing-mystery',
+      tags: ['mystery'],
+    }));
+    expect(spy).not.toHaveBeenCalled();
+    const payload = mockSetDoc.mock.calls[0][1] as {tags: string[]};
+    expect(payload.tags).toEqual(['mystery']);
+  });
+
   it('deletes description when the note is cleared', async () => {
     jest.spyOn(LiveExpenseAPI, 'getTagConfig').mockResolvedValue({
       tagList: ['food'],
