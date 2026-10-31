@@ -8,6 +8,7 @@ const assert = require('node:assert/strict');
 const {
   shouldScanExpense,
   shouldWriteKeepTag,
+  shouldWriteKeepTags,
   pickReviewSurvivor,
   mergeRuleset,
 } = require('./apply');
@@ -41,12 +42,25 @@ describe('shouldWriteKeepTag', () => {
     assert.equal(shouldWriteKeepTag({id: 'k'}, 'food'), true);
   });
 
-  it('does not write when keep already has a tag', () => {
-    assert.equal(shouldWriteKeepTag({id: 'k', tag: 'travel'}, 'food'), false);
-  });
-
   it('does not write when inherited tag is missing', () => {
     assert.equal(shouldWriteKeepTag({id: 'k'}, undefined), false);
+  });
+});
+
+describe('shouldWriteKeepTags', () => {
+  it('writes when merged tags differ from keep', () => {
+    assert.equal(shouldWriteKeepTags({id: 'k', tag: 'travel'}, {tags: ['food']}), true);
+  });
+
+  it('does not write when tags already match', () => {
+    assert.equal(shouldWriteKeepTags({id: 'k', tags: ['food', 'zomato']}, {tags: ['food', 'zomato']}), false);
+  });
+
+  it('writes when a description is added', () => {
+    assert.equal(shouldWriteKeepTags(
+      {id: 'k', tags: ['food']},
+      {tags: ['food'], description: 'rare'},
+    ), true);
   });
 });
 

@@ -190,6 +190,23 @@ describe('saveParsedExpense', () => {
     assert.equal(second.created, false);
     assert.ok(db.docs.has('users/u1/expense/msg-1'));
     assert.ok(db.docs.has('users/u1/private/gmail/processedIds/msg-1'));
+    assert.deepEqual(db.docs.get('users/u1/expense/msg-1').tags, []);
+    assert.equal(db.docs.get('users/u1/expense/msg-1').tag, null);
+  });
+
+  it('writes tags array and the tag mirror from a vendor map', async () => {
+    const db = collectionStore();
+    const created = await saveParsedExpense(
+      db,
+      'u1',
+      {id: 'msg-2', internalDate: '10'},
+      {cost: 12, costType: 'debit', vendor: 'Shop', type: 'upi'},
+      [{vendor: 'SHOP', tag: 'food'}],
+      100,
+    );
+    assert.equal(created.created, true);
+    assert.deepEqual(created.expense.tags, ['food']);
+    assert.equal(created.expense.tag, 'food');
   });
 
   it('does not resurrect a deleted expense when the processed marker remains', async () => {

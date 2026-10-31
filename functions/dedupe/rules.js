@@ -92,9 +92,11 @@ function resolveRail(expense, railGroup) {
  * @param {object} neverMerge
  * @returns {boolean}
  */
+const {primaryTag, extraTags, normalizeTags, normalizeDescription, readTags} = require('../lib/parse/tags');
+
 function violatesDistinctTags(a, b, neverMerge) {
-  const tagA = a.tag || null;
-  const tagB = b.tag || null;
+  const tagA = primaryTag(a);
+  const tagB = primaryTag(b);
   if (!tagA || !tagB || tagA === tagB) {
     return false;
   }
@@ -361,16 +363,26 @@ function detect(expenses, rulesetOverride) {
  * @param {Expense} drop
  * @returns {string|undefined}
  */
-function mergedTag(keep, drop) {
-  if (keep.tag) {
-    return keep.tag;
+function mergedTags(keep, drop) {
+  const primary = primaryTag(keep) || primaryTag(drop);
+  const {tags} = normalizeTags(primary, [...extraTags(keep), ...extraTags(drop)]);
+  const description = normalizeDescription(keep && keep.description) ||
+    normalizeDescription(drop && drop.description);
+  const result = {tags};
+  if (description) {
+    result.description = description;
   }
-  return drop.tag || undefined;
+  return result;
+}
+
+function mergedTag(keep, drop) {
+  return mergedTags(keep, drop).tags[0];
 }
 
 module.exports = {
   detect,
   mergedTag,
+  mergedTags,
   vendorMatchesPattern,
   resolveAliasEntity,
   resolveRail,

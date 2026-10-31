@@ -3,8 +3,8 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-const {detect, mergedTag, defaultRules} = require('../dedupe/rules');
-const {shouldScanExpense, shouldWriteKeepTag, pickReviewSurvivor, mergeRuleset} =
+const {detect, mergedTags, defaultRules} = require('../dedupe/rules');
+const {shouldScanExpense, shouldWriteKeepTags, pickReviewSurvivor, mergeRuleset} =
   require('../dedupe/apply');
 const {advanceCursor, readCursor} = require('./cursor');
 const {
@@ -99,10 +99,12 @@ async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
   const messageId = message.id;
   const vendor = parse.canonicalizeVendor(parsed.vendor);
   const tag = parse.resolveVendorTag(vendor, vendorTags);
+  // Extra tags and description are added by the external local enrichment process; see docs/DATA_MODEL.md.
   const expense = {
     cost: parsed.cost,
     costType: parsed.costType,
     vendor,
+    tags: tag ? [tag] : [],
     tag: tag || null,
     type: parsed.type,
     date: parse.mailDateFromMessage(message, nowMs),
@@ -148,11 +150,19 @@ async function applyDedupe(db, uid, nowMs) {
   const {pairs, needsReview} = detect(expenses, ruleset);
   const writes = [];
   for (const pair of pairs) {
-    const inheritedTag = mergedTag(pair.keep, pair.drop);
-    if (shouldWriteKeepTag(pair.keep, inheritedTag)) {
+    const merged = mergedTags(pair.keep, pair.drop);
+    if (shouldWriteKeepTags(pair.keep, merged)) {
+      const data = {
+        tags: merged.tags,
+        tag: merged.tags[0] || null,
+        modifiedDate: nowMs,
+      };
+      if (merged.description) {
+        data.description = merged.description;
+      }
       writes.push({
         ref: expenseRef(db, uid, pair.keep.id),
-        data: {tag: inheritedTag, modifiedDate: nowMs},
+        data,
       });
     }
     writes.push({

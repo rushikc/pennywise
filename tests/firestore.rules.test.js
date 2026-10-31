@@ -108,6 +108,26 @@ describe('firestore.rules', () => {
     await assertFails(otherDb.doc('users/uid-owner/meta/gmailStatus').get());
   });
 
+  it('allows expense tags lists of at most 8 and descriptions of at most 280', async () => {
+    const db = authed(owner);
+    await assertSucceeds(db.doc('users/uid-owner/expense/exp-tags').set({
+      cost: 1,
+      vendor: 'A',
+      tags: ['food', 'a', 'b', 'c', 'd', 'e', 'f', 'g'],
+      description: 'ok',
+    }));
+    await assertFails(db.doc('users/uid-owner/expense/exp-tags-too-many').set({
+      cost: 1,
+      vendor: 'A',
+      tags: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    }));
+    await assertFails(db.doc('users/uid-owner/expense/exp-desc-too-long').set({
+      cost: 1,
+      vendor: 'A',
+      description: 'x'.repeat(281),
+    }));
+  });
+
   it('matches allowlist ids in lowercase', async () => {
     const mixed = testEnv.authenticatedContext('uid-mixed', {
       email: 'Owner@Example.com',

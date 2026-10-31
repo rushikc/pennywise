@@ -27,8 +27,30 @@ function shouldScanExpense(data) {
  * @param {string|undefined} inheritedTag
  * @returns {boolean}
  */
+const {readTags, normalizeDescription} = require('../lib/parse/tags');
+
+function tagsEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function shouldWriteKeepTags(keep, merged) {
+  if (!keep || !merged) {
+    return false;
+  }
+  const current = readTags(keep);
+  const nextTags = Array.isArray(merged.tags) ? merged.tags : [];
+  if (!tagsEqual(current, nextTags) && nextTags.length > 0) {
+    return true;
+  }
+  const nextDescription = merged.description;
+  if (nextDescription && nextDescription !== normalizeDescription(keep.description)) {
+    return true;
+  }
+  return false;
+}
+
 function shouldWriteKeepTag(keep, inheritedTag) {
-  return Boolean(inheritedTag && keep && !keep.tag);
+  return shouldWriteKeepTags(keep, {tags: inheritedTag ? [inheritedTag] : []});
 }
 
 /**
@@ -60,6 +82,7 @@ function mergeRuleset(defaults, override) {
 module.exports = {
   shouldScanExpense,
   shouldWriteKeepTag,
+  shouldWriteKeepTags,
   pickReviewSurvivor,
   mergeRuleset,
 };

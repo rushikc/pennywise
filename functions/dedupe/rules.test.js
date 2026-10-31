@@ -12,6 +12,7 @@ const path = require('node:path');
 const {
   detect,
   mergedTag,
+  mergedTags,
   vendorMatchesPattern,
   resolveAliasEntity,
   resolveRail,
@@ -96,6 +97,15 @@ describe('pickSurvivor and mergedTag', () => {
     assert.equal(mergedTag({tag: 'food'}, {tag: 'travel'}), 'food');
     assert.equal(mergedTag({tag: null}, {tag: 'travel'}), 'travel');
     assert.equal(mergedTag({}, {}), undefined);
+  });
+
+  it('mergedTags unions extras and keeps the survivor description', () => {
+    const merged = mergedTags(
+      {tags: ['food', 'zomato'], description: 'keep'},
+      {tags: ['travel', 'online food ordering'], description: 'drop'},
+    );
+    assert.deepEqual(merged.tags, ['food', 'zomato', 'online food ordering']);
+    assert.equal(merged.description, 'keep');
   });
 });
 
