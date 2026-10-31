@@ -54,6 +54,9 @@ infra/terraform/*.tfstate.*
 infra/terraform/.terraform/
 infra/terraform/.terraform.lock.hcl.bak
 
+# Test coverage
+/coverage/
+
 # Playwright e2e
 /playwright-report/
 /test-results/

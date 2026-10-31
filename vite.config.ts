@@ -210,6 +210,18 @@ export default defineConfig(({mode, command}) => {
       environment: 'jsdom',
       setupFiles: 'src/setupTests.ts',
       include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text-summary', 'html', 'json-summary'],
+        include: ['src/**'],
+        exclude: [
+          'src/**/*.test.ts',
+          'src/**/*.test.tsx',
+          'src/demoData/expense.ts',
+          'src/**/*.d.ts',
+          'src/index.tsx',
+        ],
+      },
       server: {
         deps: {
           inline: [/^firebase(?:\/|$)/, /^@firebase(?:\/|$)/],
