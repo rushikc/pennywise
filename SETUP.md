@@ -426,7 +426,7 @@ You are responsible for **Gemini API usage/costs** on your Google Cloud / AI Stu
 
 2.  **Configure banks (required for automation):** Open **Settings → Banks**. For each bank or card program that sends transaction emails, add a **display name** and one or more **match strings** (unique phrases that appear in those alerts, e.g. bank name + “debited” or “UPI”). Add several strings if templates differ slightly. Cloud Functions ingest only parses matching mail (regex first, Gemini when regex fails)—too few strings and you may miss mail; too generic and you may include noise.
 
-3.  **Vendor tags (optional):** Map normalized vendor strings to tags in **Settings → Manage Vendor Tags**; ingest attaches `tag` when the parsed vendor matches a map exactly. Use **Settings → Auto-tag Expenses** to apply your maps to older untagged expenses.
+3.  **Vendor tags (optional):** Map normalized vendor strings to a **primary** tag in **Settings → Manage Vendor Tags**; ingest attaches `tags: [primary]` (and the `tag` mirror) when the parsed vendor matches a map exactly. Use **Settings → Auto-tag Expenses** to apply your maps to older untagged expenses. Extra tags and notes come from a local enrichment process, not from Gmail. See [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
 
 4.  **Duplicate review (optional):** Check **Settings → Duplicate Review** now and then. It lists pairs that might be the same transaction; choose **Confirm duplicate** or **Not a duplicate**.
 

@@ -48,7 +48,7 @@ import, and separate layouts tuned for desktop and phone.
 * 📧 **Gmail + Gemini**: Connect Gmail in Settings. Push notifications plus an hourly sweep import messages that match **banks you configure**; regex parses known templates and **Gemini** fills in the rest. A new connection backfills the last 30 days.
 * 🏦 **Configurable banks**: Under **Settings → Banks**, add or remove banks and **match strings** so only relevant sender/templates are parsed (and, when regex fails, sent to the model).
 * 🏷️ **Tagging System**: Categorize expenses with custom tags for flexible and granular organization.
-* 🤖 **Auto Tagging**: Imported expenses get a tag automatically when their vendor matches one of your **vendor–tag maps**. **Settings → Auto-tag Expenses** applies the same maps to older untagged expenses from a date you pick.
+* 🤖 **Auto Tagging**: Imported expenses get a **primary tag** automatically when their vendor matches one of your **vendor–tag maps**. Extra tags and notes are added later by a local enrichment process, not by Gmail/Gemini. **Settings → Auto-tag Expenses** applies the same maps to older untagged expenses from a date you pick.
 * 🧹 **Duplicate Detection**: After each import, Cloud Functions look for duplicate alerts (for example the same payment reported by a card and a UPI app). Clear duplicates are hidden automatically; doubtful pairs wait in **Settings → Duplicate Review**, where you choose **Confirm duplicate** or **Not a duplicate**.
 * 🔗 **Merge & Bulk Actions**: Long-press to select several expenses on Home, then merge them into one expense or delete them together.
 * 📅 **Date Filtering**: Filter expenses by various time periods (e.g., 1 day, 7 days, 2 weeks, & more) and group them by day, vendor, tag, or cost.
@@ -227,7 +227,7 @@ Pennywise is built using a modern front-end architecture with the following key 
 1. **Bank routing config** is stored per user at `users/{uid}/config/emailParseBanks`. **Settings → Banks** edits this list.
 2. **Connect Gmail** in Settings uses Google Identity Services (`gmail.readonly`) and a callable function that stores the refresh token in Secret Manager. A Gmail account can be connected to only one Pennywise user.
 3. Gmail `users.watch` publishes to the Terraform topic `gmail-push`. The `onGmailPush` function reads `history.list`, keeps only mail that matches a bank, parses it with regex first and Gemini second, and writes `users/{uid}/expense/{gmailMessageId}`.
-4. Each imported expense gets its vendor normalized and, when a vendor–tag map matches exactly, a tag. A processed-message marker keeps imports idempotent.
+4. Each imported expense gets its vendor normalized and, when a vendor–tag map matches exactly, a **primary** tag (`tags` array plus deprecated `tag` mirror). Extra tags and notes are not written here. A processed-message marker keeps imports idempotent.
 5. An hourly scheduled function renews the watch (it expires after 7 days) and runs a catch-up plus a resumable 30-day backfill.
 6. Terraform owns the topic, service account, and secret shells. `firebase deploy` owns functions, Hosting, and Firestore rules/indexes. See [infra/terraform/README.md](infra/terraform/README.md).
 
@@ -252,7 +252,7 @@ The Graphviz source for the data flow lives in [public/docs/dataflow.dot](public
 
 The React application is divided into several key sections, each serving a specific purpose. On screens 800px and wider, a side navigation replaces the phone's bottom navigation.
 
-*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, attach a tag to the expense, search, and apply filters to view expenses from different time periods or by different grouping. Long-press to select expenses, then merge or delete them. On desktop, a "This month" panel shows spent and received totals, top vendors, tag split, and budget alerts; on phones, a stats header sits above the list.
+*   **Home**: This is the main dashboard where you can see a list of your recent transactions. You can add new expenses manually, edit existing ones, set a primary tag plus optional extra tags and a rare note, search (including extras and notes), and apply filters. Grouping and the tag split use the **primary** tag. Long-press to select expenses, then merge or delete them. On desktop, a "This month" panel shows spent and received totals, top vendors, tag split, and budget alerts; on phones, a stats header sits above the list.
 
 
 *   **Insights**: This page offers a visual breakdown of your spending. It shows spending, daily, and monthly figures (average or median), charts grouped by days, vendor, tags, or cost, and a top-vendors table. You can download the reports in xlsx & csv format.
@@ -261,7 +261,7 @@ The React application is divided into several key sections, each serving a speci
 *   **Budget**: This section is for managing your financial goals. You can set monthly budgets for different expense categories and track your progress to see how your spending aligns with your budget.
 
 
-*   **Settings**: Connect or disconnect Gmail, and manage **Tags**, **Manage Vendor Tags**, **Auto-tag Expenses**, **Duplicate Review**, **Reload Data** (reload from a date, reload everything, or clear the local cache), the dark/light theme, and sign-out. Use **Banks** (`/setting-banks`) to maintain the list of banks (match strings) that gate which emails are parsed—add or remove entries as you add accounts or change issuers.
+*   **Settings**: Connect or disconnect Gmail, and manage **Tags** (delete retires a tag so existing expenses keep it; restore brings it back), **Manage Vendor Tags** (primary tag only), **Auto-tag Expenses**, **Duplicate Review**, **Reload Data** (reload from a date, reload everything, or clear the local cache), the dark/light theme, and sign-out. Use **Banks** (`/setting-banks`) to maintain the list of banks (match strings) that gate which emails are parsed—add or remove entries as you add accounts or change issuers. The expense field layout is documented in [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
 
 ## Future Roadmap
 
