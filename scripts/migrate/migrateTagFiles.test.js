@@ -26,6 +26,7 @@ describe('migrateTagFiles', () => {
     fs.writeFileSync(path.join(dir, 'budget.json'), JSON.stringify([{id: 'b', tagList: ['food', 'ghost']}]));
     fs.writeFileSync(path.join(dir, 'config.json'), JSON.stringify([{id: 'tags', tagList: ['food']}, {id: 'darkMode', value: false}]));
     fs.writeFileSync(path.join(dir, 'processedIds.json'), JSON.stringify([{id: 'p'}]));
+    fs.writeFileSync(path.join(dir, 'import-to-firestore.js'), '/* leftover importer copy */');
     const plan = planFileMigration(dir);
     assert.equal(plan.expenseStats.stringToArray, 2);
     assert.equal(plan.expenseStats.nullToEmpty, 1);
@@ -43,7 +44,9 @@ describe('migrateTagFiles', () => {
     const written = JSON.parse(fs.readFileSync(path.join(outDir, 'expense.json'), 'utf8'));
     assert.deepEqual(written[0].tags, ['food']);
     assert.deepEqual(written[1].tags, []);
-    assert.equal(fs.existsSync(path.join(outDir, 'README.md')), true);
+    const readme = fs.readFileSync(path.join(outDir, 'README.md'), 'utf8');
+    assert.match(readme, /scripts\/migrate\/importToFirestore\.js/);
+    assert.equal(fs.existsSync(path.join(outDir, 'import-to-firestore.js')), false);
     assert.equal(JSON.parse(fs.readFileSync(path.join(outDir, '_manifest.json'), 'utf8')).schema, 'tags-v1');
     assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'expense.json'), 'utf8'))[0].tags, undefined);
   });

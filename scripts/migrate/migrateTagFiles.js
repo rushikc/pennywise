@@ -125,14 +125,10 @@ function writeOutput(outDir, plan, inDir) {
     'Import this folder, not the original `temp/new-data/`.',
     '',
     '```text',
-    'node temp/new-data/import-to-firestore.js --dir temp/new-data-v2 --email <me>',
+    'node scripts/migrate/importToFirestore.js --dir temp/new-data-v2 --email <me>',
     '```',
     '',
   ].join('\n'));
-  const importSrc = path.join(inDir, 'import-to-firestore.js');
-  if (fs.existsSync(importSrc)) {
-    fs.copyFileSync(importSrc, path.join(outDir, 'import-to-firestore.js'));
-  }
 }
 
 async function main(argv = process.argv) {
