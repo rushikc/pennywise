@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Chip,
+  Collapse,
   Container,
   Dialog,
   DialogActions,
@@ -22,26 +23,33 @@ import {
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import AddIcon from '@mui/icons-material/Add';
 import {ArrowBack as BackIcon} from '@mui/icons-material';
-import {useSelector} from 'react-redux';
-import {addTag, deleteTag, selectExpense, setTagList} from '../../../store/expenseActions';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectExpense} from '../../../store/expenseActions';
+import {expenseSlice} from '../../../store/expenseSlice';
 import './settingViews.scss';
 import {useNavigate} from 'react-router-dom';
 
 const ManageTags: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const {tagList} = useSelector(selectExpense);
+  const {tagList, legacyTagList} = useSelector(selectExpense);
   const [newTagName, setNewTagName] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<boolean>(false);
   const [tagToDelete, setTagToDelete] = useState<string>('');
-
+  const [retiredOpen, setRetiredOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    ExpenseAPI.getTagList().then((tags: string[]) => {
-      setTagList(tags);
+    ExpenseAPI.getTagConfig().then((config) => {
+      dispatch(expenseSlice.actions.setTagList(config.tagList));
+      dispatch(expenseSlice.actions.setLegacyTagList(config.legacyTagList || []));
     });
   }, []);
+
+  const persistConfig = (nextTagList: string[], nextLegacy: string[]) => {
+    void ExpenseAPI.updateTagConfig({tagList: nextTagList, legacyTagList: nextLegacy});
+  };
 
   const handleDeleteTag = (tag: string) => {
     setTagToDelete(tag);
@@ -49,8 +57,10 @@ const ManageTags: React.FC = () => {
   };
 
   const confirmDeleteTag = () => {
-    deleteTag(tagToDelete);
-    void ExpenseAPI.updateTagList(tagList.filter(t => t !== tagToDelete));
+    const nextTagList = tagList.filter((item) => item !== tagToDelete);
+    const nextLegacy = legacyTagList.includes(tagToDelete) ? legacyTagList : [...legacyTagList, tagToDelete];
+    dispatch(expenseSlice.actions.deleteTag(tagToDelete));
+    persistConfig(nextTagList, nextLegacy);
     setDeleteConfirmDialog(false);
   };
 
@@ -65,11 +75,24 @@ const ManageTags: React.FC = () => {
 
   const handleAddTag = () => {
     const trimmed = newTagName.trim();
-    if (trimmed && !tagList.includes(trimmed)) {
-      addTag(trimmed);
+    if (!trimmed || tagList.includes(trimmed)) {
       handleCloseAddDialog();
-      void ExpenseAPI.updateTagList([...tagList, trimmed]);
+      return;
     }
+    dispatch(expenseSlice.actions.addTag(trimmed));
+    persistConfig(
+      tagList.includes(trimmed) ? tagList : [...tagList, trimmed],
+      legacyTagList.filter((item) => item !== trimmed),
+    );
+    handleCloseAddDialog();
+  };
+
+  const handleRestoreTag = (tag: string) => {
+    dispatch(expenseSlice.actions.addTag(tag));
+    persistConfig(
+      tagList.includes(tag) ? tagList : [...tagList, tag],
+      legacyTagList.filter((item) => item !== tag),
+    );
   };
 
   return (
@@ -92,7 +115,7 @@ const ManageTags: React.FC = () => {
           align="center"
           sx={{display: 'block', mb: 'var(--space-lg)'}}
         >
-          Add or remove tags. Tap the × on a pill to delete.
+          Add or remove tags. Deleting a tag retires it; existing expenses keep it.
         </Typography>
 
         <Box className="tag-pills-cloud">
@@ -123,6 +146,35 @@ const ManageTags: React.FC = () => {
         >
           Add New Tag
         </Button>
+
+        {legacyTagList.length > 0 && (
+          <Box sx={{mt: 'var(--space-lg)', width: '100%'}}>
+            <Button
+              variant="text"
+              onClick={() => setRetiredOpen((open) => !open)}
+              sx={{textTransform: 'none', color: 'var(--text-secondary)'}}
+            >
+              Retired tags ({legacyTagList.length})
+            </Button>
+            <Collapse in={retiredOpen}>
+              <Box className="tag-pills-cloud" sx={{mt: 'var(--space-sm)'}}>
+                {legacyTagList.map((tag) => (
+                  <Box key={tag} sx={{display: 'inline-flex', alignItems: 'center', gap: 'var(--space-xs)'}}>
+                    <Chip label={tag} variant="outlined"/>
+                    <Button
+                      size="small"
+                      onClick={() => handleRestoreTag(tag)}
+                      aria-label={`Restore tag ${tag}`}
+                      sx={{textTransform: 'none'}}
+                    >
+                      Restore
+                    </Button>
+                  </Box>
+                ))}
+              </Box>
+            </Collapse>
+          </Box>
+        )}
       </Paper>
 
       <Dialog open={openDialog} onClose={handleCloseAddDialog}>
@@ -157,7 +209,7 @@ const ManageTags: React.FC = () => {
         <DialogTitle>Delete Tag</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {`Are you sure you want to delete the tag "${tagToDelete}"?`}
+            {`Retire "${tagToDelete}"? Existing expenses keep this tag. You can restore it later.`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
