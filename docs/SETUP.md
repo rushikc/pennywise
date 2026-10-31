@@ -61,7 +61,7 @@ You can get the project files either by cloning the repository using Git or by d
    ```bash
       https://github.com/rushikc/pennywise.git
    ```
-  ![VSCODE](../public/docs/pics/vscode.png)
+  ![VSCODE](assets/pics/vscode.png)
 
 - **With Git:**
   ```bash
@@ -205,7 +205,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
 3. **Access Your Project Dashboard:**
    Once the project is created, you will be redirected to the project's dashboard.
 
-   ![Firebase Dashboard](../public/docs/pics/ss1.png)
+   ![Firebase Dashboard](assets/pics/ss1.png)
 
 4. **Upgrade to the Blaze Plan:**
     - By default, your project will be on the "Spark" plan. To enable all features required for Pennywise, you must
@@ -220,32 +220,32 @@ Here’s how you can install Node.js and npm on different operating systems. We 
     - For example, you can set a monthly budget of ₹15.
     - Once your budget is set, link the Cloud Billing account to your project.
 
-   ![Link Cloud Billing Account](../public/docs/pics/ss2.png)
+   ![Link Cloud Billing Account](assets/pics/ss2.png)
 
 6. **Enable Web App Configuration:**
 
   - In the Firebase console, you will get two types of landing pages.
   - If you get the one below, click on the **"+ Add app"** button, then the web app icon to add a web app to your project.
 
-  ![Create web app](../public/docs/pics/ff1.png)
+  ![Create web app](assets/pics/ff1.png)
 
   - Click on the web icon to add a web app to your project.
 
-  ![Create web app](../public/docs/pics/ff3.png)
+  ![Create web app](assets/pics/ff3.png)
 
   - If you get the one below, click on the web app icon pointed to in the screenshot.
 
-  ![Create web app](../public/docs/pics/ff2.png)
+  ![Create web app](assets/pics/ff2.png)
 
   - Enter a nickname for your app (e.g., `hello-2a`). The "set up Firebase Hosting" checkbox can stay unchecked. Hosting is used (`npm run deploy:personal`); [`firebase.json`](../firebase.json) already configures it.
   - Click **"Register app"**.
 
-  ![Create web app](../public/docs/pics/ff4.png)
+  ![Create web app](assets/pics/ff4.png)
 
   - After registering your app, you will see a configuration snippet.
   - Copy this snippet, highlighted in blue in the screenshot below.
 
-  ![Create web app](../public/docs/pics/ff5.png)
+  ![Create web app](assets/pics/ff5.png)
 
   - Copy [`.env.example`](../.env.example) to `.env` in the root folder and paste each key-value configuration in the format below.
   - The app is built with Vite but keeps the `REACT_APP_` prefix for its variables. Use the following format:
@@ -264,7 +264,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
   - The final `.env` content should look like the image below (plus the `REACT_APP_GOOGLE_OAUTH_CLIENT_ID` line):
 
   <!-- TODO: update screenshot -->
-  ![Create web app](../public/docs/pics/ff9.png)
+  ![Create web app](assets/pics/ff9.png)
 
 7. **Update Project ID in Firebase config:**
 
@@ -288,7 +288,7 @@ Here’s how you can install Node.js and npm on different operating systems. We 
    - Click on **Enable** and provide your email as the support email.
    - Click on **Save**. It should look like the screenshot below after setup.
 
-![Google auth](../public/docs/pics/ff8.png)
+![Google auth](assets/pics/ff8.png)
 
 
 9. **Enable Firestore API:**

@@ -68,9 +68,9 @@ Public demo: [https://pennywise-demo.web.app](https://pennywise-demo.web.app). I
 Signed-out visitors, and signed-in users whose email is not on the allowlist, use this same app on mock data and see a "You're viewing demo data." banner. Only verified Google accounts with a document in the Firestore `allowedUsers` collection (document ID = lowercase email) can read live data. The Firestore security rules enforce this allowlist; no extra environment variable is needed.
 
 <!-- TODO: update screenshot -->
-![APP](public/docs/pics/app.png)
+![APP](docs/assets/pics/app.png)
 <!-- TODO: update screenshot -->
-![APP2](public/docs/pics/app2.png)
+![APP2](docs/assets/pics/app2.png)
 
 ## Getting Started
 
@@ -181,7 +181,6 @@ pennywise/
 │   ├── gcpNames.json       # Topic, region, and secret ids shared with Terraform and functions
 │   └── tagCases.json       # Tag spec shared by the web app and Cloud Functions
 ├── public/                 # Static assets copied into the Vite build
-│   └── docs/               # Diagrams and screenshots used by the docs
 ├── scripts/
 │   ├── backup/             # Full Firestore backup (npm run backup)
 │   ├── ci/                 # Demo-bundle check and the doc link checker
@@ -189,7 +188,7 @@ pennywise/
 │   ├── export/             # Legacy (pre-users/{uid}) top-level collection export
 │   ├── lib/                # Shared JSON helpers for backup and migrate
 │   └── migrate/            # User move, tags-v1 migration, and import
-├── docs/                   # Data model, demo deploy, and other guides
+├── docs/                   # Guides, ADRs, and screenshots (docs/assets is not in the build)
 ├── tests/
 │   ├── e2e/                # Playwright specs
 │   ├── emulator/           # Firestore rules and migrate-emulator tests
