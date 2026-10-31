@@ -6,21 +6,6 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 const mockTxUpdate = jest.fn();
 let serverData: Record<string, unknown> = {};
 
-const mockRunTransaction = jest.fn(async (_db: unknown, fn: (tx: {
-  get: () => Promise<{exists: () => boolean; id: string; data: () => Record<string, unknown>}>;
-  update: (...args: unknown[]) => void;
-}) => Promise<unknown>) => {
-  const tx = {
-    get: async () => ({
-      exists: () => true,
-      id: 'exp-1',
-      data: () => serverData,
-    }),
-    update: (...args: unknown[]) => mockTxUpdate(...args),
-  };
-  return fn(tx);
-});
-
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(() => ({})),
 }));
@@ -29,7 +14,7 @@ const deleteFieldSentinel = {__deleteField: true};
 
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(() => ({})),
-  runTransaction: mockRunTransaction,
+  runTransaction: jest.fn(),
   doc: jest.fn((...args: unknown[]) => ({path: args.slice(1).join('/')})),
 }));
 
@@ -65,9 +50,28 @@ jest.mock('./FinanceIndexDB', () => ({
   },
 }));
 
+import {runTransaction} from 'firebase/firestore';
 import {getDocs} from 'firebase/firestore/lite';
 import {LiveExpenseAPI} from './LiveExpenseAPI';
 import {FinanceIndexDB} from './FinanceIndexDB';
+
+const mockRunTransaction = runTransaction as jest.Mock;
+
+mockRunTransaction.mockImplementation(async (_db: unknown, fn: (tx: {
+  get: () => Promise<{exists: () => boolean; id: string; data: () => Record<string, unknown>}>;
+  update: (...args: unknown[]) => void;
+}) => Promise<unknown>) => {
+  const tx = {
+    get: async () => ({
+      exists: () => true,
+      id: 'exp-1',
+      data: () => serverData,
+    }),
+    update: (...args: unknown[]) => mockTxUpdate(...args),
+  };
+  return fn(tx);
+});
+
 describe('LiveExpenseAPI.updateExpense', () => {
   beforeEach(() => {
     mockTxUpdate.mockClear();

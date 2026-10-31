@@ -5,9 +5,12 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {render, screen} from '@testing-library/react';
 import type {CSSProperties, ReactNode} from 'react';
+import {Provider} from 'react-redux';
+import {configureStore} from '@reduxjs/toolkit';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
 import {makeExpense} from '../../testUtils';
+import expenseReducer from '../../store/expenseSlice';
 import Insights from './Insights';
 import {vendorTableBodyHeight, vendorTableColumns} from './vendorTable';
 
@@ -117,7 +120,14 @@ describe('Insights vendor table', () => {
   const renderInsights = async (desktopLayout: boolean) => {
     mockedDesktop.mockReturnValue(desktopLayout);
     mockedGet.mockResolvedValue(vendors);
-    render(<Insights/>);
+    const store = configureStore({
+      reducer: {expense: expenseReducer},
+    });
+    render(
+      <Provider store={store}>
+        <Insights/>
+      </Provider>,
+    );
     expect(await screen.findByRole('columnheader', {name: 'Vendor'})).toBeVisible();
   };
 
