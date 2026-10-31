@@ -28,6 +28,7 @@ import {
   normalizeTags,
   primaryTag,
   readTags,
+  vendorKey,
   withTags,
   type ExpenseEdit,
 } from '../domain/tags';
@@ -663,7 +664,9 @@ export class LiveExpenseAPI {
 
       // 1. Fetch all vendor tags from IndexDB
       const vendorTags: VendorTag[] = await FinanceIndexDB.getAllData('vendorTag');
-      const vendorTagMap = new Map(vendorTags.map(vt => [vt.vendor.toLowerCase(), vt.tag]));
+      const vendorTagMap = new Map(vendorTags
+        .filter((vt) => vendorKey(vt?.vendor))
+        .map((vt) => [vendorKey(vt.vendor), vt.tag]));
 
       if (vendorTagMap.size === 0) {
         // console.log('No vendor tags found. Aborting auto-tagging.');
@@ -683,7 +686,11 @@ export class LiveExpenseAPI {
         if (primaryTag(expense)) {
           return;
         }
-        const newTag = vendorTagMap.get(expense.vendor.toLowerCase());
+        const key = vendorKey(expense.vendor);
+        if (!key) {
+          return;
+        }
+        const newTag = vendorTagMap.get(key);
         if (newTag) {
           expensesToUpdate.push({id: expense.id, vendorTag: newTag});
         }

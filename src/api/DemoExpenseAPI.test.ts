@@ -199,6 +199,18 @@ describe('DemoExpenseAPI', () => {
     expect(await DemoExpenseAPI.getDarkModeConfig()).toBe(true);
   });
 
+  it('updates a newly added expense after the returned object is frozen', async () => {
+    const created = await DemoExpenseAPI.addExpense(makeExpense({
+      id: '',
+      mailId: 'frozen-return',
+      vendor: 'FROZEN SHOP',
+    }));
+    Object.freeze(created);
+    const saved = await DemoExpenseAPI.updateExpense(created.id, {description: 'round3 note'});
+    expect(saved.description).toBe('round3 note');
+    expect(saved.tags ?? []).toEqual([]);
+  });
+
   it('keeps server extras and enrichedAt when the primary is updated', async () => {
     const created = await DemoExpenseAPI.addExpense(makeExpense({
       id: 'edit-keep-extra',
@@ -252,6 +264,20 @@ describe('DemoExpenseAPI', () => {
     expect(count).toBeGreaterThan(0);
     const tagged = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === 'auto-tag-mail');
     expect(tagged?.tag).toBe('food');
+    expect(tagged?.tags).toEqual(['food']);
+  });
+
+  it('auto-tags with trimmed, case-insensitive vendor keys and skips missing vendors', async () => {
+    await DemoExpenseAPI.updateVendorTag({
+      id: 'TRIM VENDOR',
+      vendor: '  trim vendor ',
+      tag: 'food',
+      date: Date.now(),
+    });
+    await DemoExpenseAPI.addExpense(makeExpense({id: 'trim-mail', mailId: 'trim-mail', vendor: 'TRIM VENDOR  ', tags: []}));
+    await DemoExpenseAPI.addExpense(makeExpense({id: 'no-vendor-mail', mailId: 'no-vendor-mail', vendor: '', tags: []}));
+    await expect(DemoExpenseAPI.autoTagPastExpenses(0)).resolves.toBeGreaterThan(0);
+    const tagged = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === 'trim-mail');
     expect(tagged?.tags).toEqual(['food']);
   });
 

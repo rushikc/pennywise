@@ -140,4 +140,53 @@ describe('LiveExpenseAPI.autoTagPastExpenses', () => {
     expect(count).toBe(0);
     expect(mockTxUpdate).not.toHaveBeenCalled();
   });
+
+  it('matches a vendor tag with surrounding spaces and different case', async () => {
+    mockTxUpdate.mockClear();
+    jest.mocked(FinanceIndexDB.getAllData).mockResolvedValueOnce([
+      {id: 'V', vendor: '  Shop ', tag: 'food', date: 1},
+    ]);
+    jest.mocked(getDocs).mockResolvedValueOnce({
+      forEach: (fn: (doc: {id: string; data: () => Record<string, unknown>}) => void) => {
+        fn({id: 'exp-1', data: () => ({vendor: 'SHOP  ', tags: [], modifiedDate: 10})});
+      },
+    } as never);
+    serverData = {vendor: 'SHOP  ', tags: []};
+    const count = await LiveExpenseAPI.autoTagPastExpenses(0);
+    expect(count).toBe(1);
+    expect((mockTxUpdate.mock.calls[0][1] as Record<string, unknown>).tags).toEqual(['food']);
+  });
+
+  it('skips an expense with no vendor instead of aborting the run', async () => {
+    mockTxUpdate.mockClear();
+    jest.mocked(FinanceIndexDB.getAllData).mockResolvedValueOnce([
+      {id: 'V', vendor: 'SHOP', tag: 'food', date: 1},
+      {id: 'W', vendor: '', tag: 'travel', date: 1},
+    ]);
+    jest.mocked(getDocs).mockResolvedValueOnce({
+      forEach: (fn: (doc: {id: string; data: () => Record<string, unknown>}) => void) => {
+        fn({id: 'no-vendor', data: () => ({tags: [], modifiedDate: 10})});
+        fn({id: 'exp-1', data: () => ({vendor: 'shop', tags: [], modifiedDate: 10})});
+      },
+    } as never);
+    serverData = {vendor: 'shop', tags: []};
+    const count = await LiveExpenseAPI.autoTagPastExpenses(0);
+    expect(count).toBe(1);
+    expect(mockTxUpdate).toHaveBeenCalledTimes(1);
+  });
 });
+
+describe('LiveExpenseAPI.updateExpense stale dialog', () => {
+  it('keeps tags added after the dialog opened when only the note is saved', async () => {
+    mockTxUpdate.mockClear();
+    // The dialog opened on an untagged doc; the local process tagged it meanwhile.
+    serverData = {vendor: 'SHOP', cost: 10, tags: ['food', 'zomato'], tag: 'food'};
+    const saved = await LiveExpenseAPI.updateExpense('exp-1', {description: 'note only'});
+    expect(saved.tags).toEqual(['food', 'zomato']);
+    const patch = mockTxUpdate.mock.calls[0][1] as Record<string, unknown>;
+    expect(patch).not.toHaveProperty('tags');
+    expect(patch).not.toHaveProperty('tag');
+    expect(patch.description).toBe('note only');
+  });
+});
+

@@ -217,6 +217,11 @@ export function displayTag(
   return canonicalPrimary(primary, {tagList, legacyTagList});
 }
 
+/** Case- and whitespace-insensitive key used to match vendors to vendorTags. */
+export function vendorKey(vendor: unknown): string {
+  return typeof vendor === 'string' ? vendor.trim().toUpperCase() : '';
+}
+
 export function isPersistedExpenseId(id: unknown): boolean {
   const existingId = typeof id === 'string' ? id.trim() : '';
   return Boolean(existingId && existingId !== 'manual');

@@ -12,6 +12,7 @@ import {
   normalizeTags,
   primaryTag,
   readTags,
+  vendorKey,
   withTags,
   type ExpenseEdit,
 } from '../domain/tags';
@@ -35,6 +36,24 @@ export class DemoExpenseAPI {
   };
 
   private static docKey = (collectionName: ClientUserCollection, key: string) => `${collectionName}/${key}`;
+
+  private static commitExpense = (
+    store: DemoStore,
+    index: number,
+    next: Expense,
+    patch: Record<string, unknown>,
+    id = next.id,
+  ): Expense => {
+    const saved = JSONCopy(next) as Expense;
+    Object.entries(patch).forEach(([field, value]) => {
+      if (value === null && field !== 'tag') {
+        delete saved[field as keyof Expense];
+      }
+    });
+    saved.id = id;
+    store.expenses[index] = saved;
+    return JSONCopy(saved);
+  };
 
   static isHiddenDuplicate = isHiddenDuplicate;
 
@@ -98,21 +117,14 @@ export class DemoExpenseAPI {
           ? {description: expense.description ?? null}
           : {}),
       });
-      Object.assign(store.expenses[index], next);
-      Object.entries(patch).forEach(([field, value]) => {
-        if (value === null && field !== 'tag') {
-          delete store.expenses[index][field as keyof Expense];
-        }
-      });
-      store.expenses[index].id = key;
-      return JSONCopy(store.expenses[index]);
+      return DemoExpenseAPI.commitExpense(store, index, next, patch, key);
     }
     if (index > -1) {
-      store.expenses[index] = expense;
+      store.expenses[index] = JSONCopy(expense);
     } else {
-      store.expenses.push(expense);
+      store.expenses.push(JSONCopy(expense));
     }
-    return expense;
+    return JSONCopy(expense);
   };
 
   static updateExpense = async (id: string, edit: ExpenseEdit): Promise<Expense> => {
@@ -122,13 +134,7 @@ export class DemoExpenseAPI {
       throw new Error('Expense no longer exists');
     }
     const {next, patch} = applyExpenseEdit(store.expenses[index], edit);
-    Object.assign(store.expenses[index], next);
-    Object.entries(patch).forEach(([field, value]) => {
-      if (value === null && field !== 'tag') {
-        delete store.expenses[index][field as keyof Expense];
-      }
-    });
-    return JSONCopy(store.expenses[index]);
+    return DemoExpenseAPI.commitExpense(store, index, next, patch);
   };
 
   static deleteExpense = async (expense: Expense): Promise<boolean> => {
@@ -264,14 +270,16 @@ export class DemoExpenseAPI {
 
   static autoTagPastExpenses = async (startDate: number): Promise<number> => {
     const store = await DemoExpenseAPI.getStore();
-    const vendorTagMap = new Map(store.vendorTags.map((vt) => [vt.vendor.toLowerCase(), vt.tag]));
+    const vendorTagMap = new Map(store.vendorTags
+      .filter((vt) => vendorKey(vt?.vendor))
+      .map((vt) => [vendorKey(vt.vendor), vt.tag]));
     if (vendorTagMap.size === 0) {
       return 0;
     }
 
     const candidateIds = store.expenses
       .filter((expense) => !primaryTag(expense) && expense.modifiedDate >= startDate)
-      .filter((expense) => vendorTagMap.has(expense.vendor.toLowerCase()))
+      .filter((expense) => vendorKey(expense.vendor) && vendorTagMap.has(vendorKey(expense.vendor)))
       .map((expense) => expense.id);
     let processedCount = 0;
     for (const id of candidateIds) {
@@ -283,7 +291,7 @@ export class DemoExpenseAPI {
       if (primaryTag(current)) {
         continue;
       }
-      const newTag = vendorTagMap.get(current.vendor.toLowerCase());
+      const newTag = vendorTagMap.get(vendorKey(current.vendor));
       if (!newTag) {
         continue;
       }

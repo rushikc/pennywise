@@ -97,3 +97,13 @@ describe('tag helpers', () => {
     expect(withTags({}, []).tag).toBeNull();
   });
 });
+
+describe('vendorKey', () => {
+  it('trims and upper-cases, and is empty for missing vendors', async () => {
+    const {vendorKey} = await import('./tags');
+    expect(vendorKey('  Shop  ')).toBe('SHOP');
+    expect(vendorKey(undefined)).toBe('');
+    expect(vendorKey(null)).toBe('');
+    expect(vendorKey(42)).toBe('');
+  });
+});
