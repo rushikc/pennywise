@@ -11,8 +11,10 @@ jest.mock('firebase/app', () => ({
 }));
 
 const deleteFieldSentinel = {__deleteField: true};
+const fullDeleteFieldSentinel = {__fullDeleteField: true};
 
 jest.mock('firebase/firestore', () => ({
+  deleteField: () => fullDeleteFieldSentinel,
   getFirestore: jest.fn(() => ({})),
   runTransaction: jest.fn(),
   doc: jest.fn((...args: unknown[]) => ({path: args.slice(1).join('/')})),
@@ -121,6 +123,29 @@ describe('LiveExpenseAPI.updateExpense', () => {
     const patch = mockTxUpdate.mock.calls[0][1] as Record<string, unknown>;
     expect(patch.description).toBe('new');
     expect(patch.tags).toBeUndefined();
+  });
+});
+
+describe('LiveExpenseAPI.updateExpense field removal', () => {
+  it('uses the transaction SDK delete sentinel when a duplicate is rejected', async () => {
+    mockTxUpdate.mockClear();
+    serverData = {...serverData, dupeCandidateOf: 'keep-1', dupeStatus: 'pending', dupeRule: 'review'};
+    await LiveExpenseAPI.updateExpense('exp-1', {
+      dupe: {dupeStatus: 'rejected', duplicateOf: null, dupeCandidateOf: null, dupeRule: null},
+    });
+    const patch = mockTxUpdate.mock.calls[0][1] as Record<string, unknown>;
+    expect(patch.dupeStatus).toBe('rejected');
+    expect(patch.dupeCandidateOf).toBe(fullDeleteFieldSentinel);
+    expect(patch.dupeRule).toBe(fullDeleteFieldSentinel);
+    expect(Object.values(patch)).not.toContain(deleteFieldSentinel);
+  });
+
+  it('uses the transaction SDK delete sentinel when a note is cleared', async () => {
+    mockTxUpdate.mockClear();
+    serverData = {...serverData, description: 'old'};
+    await LiveExpenseAPI.updateExpense('exp-1', {description: ''});
+    const patch = mockTxUpdate.mock.calls[0][1] as Record<string, unknown>;
+    expect(patch.description).toBe(fullDeleteFieldSentinel);
   });
 });
 

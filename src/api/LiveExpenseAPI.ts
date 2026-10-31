@@ -15,6 +15,7 @@ import {
   TAG_LAST_UPDATE,
 } from '../utility/constants';
 import {firebaseConfig} from '../firebase/firebase-public';
+import {connectEmulators, connectFullFirestoreEmulator} from '../firebase/e2eEmulators';
 import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
@@ -43,18 +44,24 @@ export type DocumentData = { [field: string]: unknown };
 
 
 const app = initializeApp(firebaseConfig);
+connectEmulators(app);
 const db = getFirestore(app);
 
 const loadFullFirestore = async () => {
   const firestore = await import('firebase/firestore');
   const fullDb = firestore.getFirestore(app);
+  connectFullFirestoreEmulator(firestore, fullDb);
   return {firestore, fullDb};
 };
 
-const toFirestorePatch = (patch: Record<string, unknown>): Record<string, unknown> => {
+// The delete sentinel must come from the same SDK that writes the patch.
+const toFirestorePatch = (
+  patch: Record<string, unknown>,
+  removeField: () => unknown,
+): Record<string, unknown> => {
   const out: Record<string, unknown> = {};
   Object.entries(patch).forEach(([key, value]) => {
-    out[key] = value === null && key !== 'tag' ? deleteField() : value;
+    out[key] = value === null && key !== 'tag' ? removeField() : value;
   });
   return out;
 };
@@ -293,7 +300,7 @@ export class LiveExpenseAPI {
         }
         const server = adaptExpense({id: snap.id, ...snap.data()} as Expense);
         const {next, patch} = applyExpenseEdit(server, edit);
-        transaction.update(ref, toFirestorePatch(patch) as never);
+        transaction.update(ref, toFirestorePatch(patch, firestore.deleteField) as never);
         return next as Expense;
       });
       await FinanceIndexDB.addExpenseList([merged]);
