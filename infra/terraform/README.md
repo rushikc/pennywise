@@ -73,4 +73,6 @@ Existing installs: follow the **Existing install / upgrade** checklist in [SETUP
 | OAuth consent + Web client | Manual (Console) |
 | `allowedUsers/{email}` | Manual (Console) |
 
+Terraform also creates the secret shells `pennywise-api-token` and `pennywise-api-token-next`. The unreleased `pennywiseApi` export reads them. There is no API document while [ADR 0006](../../docs/adr/0006-external-write-api.md) is Proposed.
+
 The custom IAM role `pennywiseGmailRefreshTokenManager` is granted at the **project** level. It can create, get, delete, and version **any** Secret Manager secret, not only `gmail-rt-*`. IAM conditions cannot restrict `secretmanager.secrets.create` to a name prefix; the prefix is enforced in application code (`functions/gmail/tokenStore.js`).

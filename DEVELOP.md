@@ -26,7 +26,26 @@ First, complete the setup instructions in the [Setup Documentation](SETUP.md).
     # Optional, for Firebase Analytics if you enable it in code:
     # REACT_APP_FIREBASE_MEASUREMENT_ID=G-xxxxxxxxxx
     ```
-- Cloud Functions read the same OAuth client id from `functions/.env` (`GOOGLE_OAUTH_CLIENT_ID=...`). The OAuth client secret and Gemini API key are **never** placed in `.env`; they live in Secret Manager.
+- Cloud Functions read `GOOGLE_OAUTH_CLIENT_ID` and `PENNYWISE_API_OWNER_EMAIL` from `functions/.env`. Copy [functions/.env.example](functions/.env.example). The OAuth client secret and Gemini API key are **never** placed in `.env`; they live in Secret Manager.
+- `REACT_APP_FIREBASE_MEASUREMENT_ID` is loaded by Vite and unused by `src/`.
+
+### Environment variables
+
+| Variable | Read in | Default | Who sets it |
+| --- | --- | --- | --- |
+| `REACT_APP_*` | Vite (`vite.config.ts` `envPrefix`), `src/firebase/firebase-public.ts`, `src/api/gmailConnect.ts`, and the backup and migrate scripts for `REACT_APP_FIREBASE_PROJECT_ID` | empty string in the client; scripts exit if the project id is missing | you, from [.env.example](.env.example) |
+| `GOOGLE_OAUTH_CLIENT_ID` | `functions/index.js` (`defineString`) | unset; functions fail closed when the param is missing | you, in `functions/.env` |
+| `PENNYWISE_API_OWNER_EMAIL` | `functions/index.js` (`defineString`), for the unreleased `pennywiseApi` export | unset | you, in `functions/.env` |
+| `PENNYWISE_BACKUP_DIR` | `scripts/backup/backupFirestore.js` | `backups/<timestamp>/` under the repo root | you, optional |
+| `FIRESTORE_EMULATOR_HOST` | `scripts/migrate/importToFirestore.js`, `tests/fixtures/seedEmulator.ts`, `playwright.config.ts`, `functions/gmail/ingest.emulator.test.js` | unset (talk to live Firestore) | the emulator, Playwright, or `npm run test:e2e:seed` (`127.0.0.1:8080`) |
+| `FIREBASE_AUTH_EMULATOR_HOST` | `scripts/migrate/importToFirestore.js`, `tests/fixtures/seedEmulator.ts`, `playwright.config.ts` | unset | the emulator, Playwright, or `npm run test:e2e:seed` (`127.0.0.1:9099`) |
+| `GCLOUD_PROJECT` | `functions/index.js`, `scripts/migrate/importToFirestore.js`, `tests/fixtures/seedEmulator.ts`, `playwright.config.ts`, `functions/gmail/ingest.emulator.test.js` | on Cloud Functions, the runtime; locally unset unless a script sets `demo-pennywise` | Cloud Functions, Playwright, or the seed script |
+| `GCP_PROJECT` | `functions/index.js`, fallback after `GCLOUD_PROJECT` | unset | the Cloud Functions runtime |
+| `FIREBASE_CONFIG` | `functions/index.js` | unset locally | the Cloud Functions runtime |
+| `E2E_SKIP_POPUP` | `tests/e2e/auth.spec.ts` | unset (the popup test runs) | you, set to `1` to skip it offline |
+| `E2E_SKIP_API` | `tests/e2e/api.spec.ts` | unset (the API spec runs) | you, set to `1` to skip it |
+| `CI` | `playwright.config.ts`; Vitest when `npm test` runs in GitHub Actions | unset locally | GitHub Actions (`true` on the test step) |
+| `PERSONAL_FIREBASE_PROJECT_ID` | `scripts/ci/verifyDemoBundle.js` | unset, and the project-id scan is skipped | you, or a CI secret if you add one |
 
 1.  **Clone the Repository**:
     ```bash

@@ -29,7 +29,7 @@ The Pennywise web application is a client-side React application that runs in yo
 
 The backend logic is handled by Cloud Functions for Firebase (2nd gen), which are protected by multiple layers of security.
 
-*   **No public HTTP endpoints**: The only functions are two callables (`connectGmail`, `disconnectGmail`), a Pub/Sub-triggered function (`onGmailPush`), and a scheduled function (`hourlyGmailSweep`). The Pub/Sub and scheduled functions are invoked only by Google Cloud (Eventarc, Pub/Sub, and Cloud Scheduler), not by browsers.
+*   **HTTPS function**: `functions/index.js` exports `pennywiseApi` as a public HTTPS function. It is unreleased. Update this section before that function is treated as a supported API. The other functions are the callables `connectGmail` and `disconnectGmail`, the Pub/Sub function `onGmailPush`, and the scheduled function `hourlyGmailSweep`. The callables require a signed-in user. The Pub/Sub and scheduled functions are invoked only by Google Cloud (Eventarc, Pub/Sub, and Cloud Scheduler).
 *   **Callable verification**: Firebase verifies the caller's ID token before a callable runs. `connectGmail` and `disconnectGmail` additionally require a verified email that is on the `allowedUsers` allowlist, and they only act on the caller's own `uid`.
 *   **Dedicated service account**: All functions run as a Terraform-created service account with only the roles they need (Firestore access, log writing, Eventarc event receiving, and the refresh-token secret role described below).
 
