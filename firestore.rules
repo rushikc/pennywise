@@ -17,14 +17,14 @@ service cloud.firestore {
       return !('tags' in data)
         || (data.tags is list
           && data.tags.size() <= 8
-          && (data.tags.size() < 1 || data.tags[0] is string)
-          && (data.tags.size() < 2 || data.tags[1] is string)
-          && (data.tags.size() < 3 || data.tags[2] is string)
-          && (data.tags.size() < 4 || data.tags[3] is string)
-          && (data.tags.size() < 5 || data.tags[4] is string)
-          && (data.tags.size() < 6 || data.tags[5] is string)
-          && (data.tags.size() < 7 || data.tags[6] is string)
-          && (data.tags.size() < 8 || data.tags[7] is string));
+          && (data.tags.size() < 1 || (data.tags[0] is string && data.tags[0].size() >= 1 && data.tags[0].size() <= 40))
+          && (data.tags.size() < 2 || (data.tags[1] is string && data.tags[1].size() >= 1 && data.tags[1].size() <= 40))
+          && (data.tags.size() < 3 || (data.tags[2] is string && data.tags[2].size() >= 1 && data.tags[2].size() <= 40))
+          && (data.tags.size() < 4 || (data.tags[3] is string && data.tags[3].size() >= 1 && data.tags[3].size() <= 40))
+          && (data.tags.size() < 5 || (data.tags[4] is string && data.tags[4].size() >= 1 && data.tags[4].size() <= 40))
+          && (data.tags.size() < 6 || (data.tags[5] is string && data.tags[5].size() >= 1 && data.tags[5].size() <= 40))
+          && (data.tags.size() < 7 || (data.tags[6] is string && data.tags[6].size() >= 1 && data.tags[6].size() <= 40))
+          && (data.tags.size() < 8 || (data.tags[7] is string && data.tags[7].size() >= 1 && data.tags[7].size() <= 40)));
     }
 
     function validExpenseDescription(data) {

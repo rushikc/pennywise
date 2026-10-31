@@ -142,6 +142,16 @@ describe('firestore.rules', () => {
       tags: ['food'],
       description: 'updated',
     }));
+    await assertSucceeds(db.doc('users/uid-owner/expense/exp-mystery').set({
+      cost: 1,
+      vendor: 'A',
+      tags: ['mystery'],
+    }));
+    await assertFails(db.doc('users/uid-owner/expense/exp-tag-too-long').set({
+      cost: 1,
+      vendor: 'A',
+      tags: ['x'.repeat(41)],
+    }));
   });
 
   it('matches allowlist ids in lowercase', async () => {
