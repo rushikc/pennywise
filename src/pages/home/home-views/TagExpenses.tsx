@@ -43,6 +43,9 @@ const TagExpenses: FC = (): ReactElement => {
   const [noteOpen, setNoteOpen] = useState(false);
   const [autoTag, setAutoTag] = useState(false);
   const [primaryError, setPrimaryError] = useState('');
+  const [openedPrimary, setOpenedPrimary] = useState<string | null>(null);
+  const [openedExtras, setOpenedExtras] = useState<string[]>([]);
+  const [openedNote, setOpenedNote] = useState<string | null>(null);
   const isDesktop = useIsDesktop();
 
   const {vendorTagList, expense, isTagModal, tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -51,14 +54,19 @@ const TagExpenses: FC = (): ReactElement => {
     if (!expense || !isTagModal) {
       return;
     }
-    const primary = primaryTag(expense) || '';
-    setSelectedPrimary(primary);
-    setExtras(extraTags(expense));
+    const primary = primaryTag(expense);
+    const extrasAtOpen = extraTags(expense);
+    const noteAtOpen = normalizeDescription(expense.description) ?? null;
+    setSelectedPrimary(primary || '');
+    setOpenedPrimary(primary);
+    setExtras(extrasAtOpen);
+    setOpenedExtras(extrasAtOpen);
     setDescription(expense.description || '');
-    setNoteOpen(Boolean(expense.description));
+    setOpenedNote(noteAtOpen);
+    setNoteOpen(Boolean(noteAtOpen));
     setAutoTag(false);
     setPrimaryError('');
-  }, [expense, isTagModal]);
+  }, [isTagModal, expense?.id]);
 
   const extraSuggestions = useMemo(() => {
     const found = new Set<string>();
@@ -107,33 +115,32 @@ const TagExpenses: FC = (): ReactElement => {
 
     const {tags} = normalizeTags(selectedPrimary, extras, {tagList, legacyTagList});
     const normalised = withTags({}, tags);
-    const openedPrimary = primaryTag(expense);
-    const openedExtras = extraTags(expense);
     const edit: ExpenseEdit = {};
     const nextPrimary = normalised.tag;
-    if (!sameTag(openedPrimary, nextPrimary) && (openedPrimary || nextPrimary)) {
-      edit.primary = nextPrimary;
-    }
-    if (!openedPrimary && !nextPrimary) {
-      edit.primary = null;
+    const primaryChanged = Boolean(openedPrimary || nextPrimary) && !sameTag(openedPrimary, nextPrimary);
+    if (primaryChanged) {
+      edit.primary = nextPrimary ?? null;
     }
     const nextExtras = nextPrimary ? extras : [];
-    const removeExtras = openedExtras.filter((tag) => !nextExtras.some((item) => sameTag(item, tag)));
-    const addExtras = nextExtras.filter((tag) => !openedExtras.some((item) => sameTag(item, tag)));
-    if (removeExtras.length > 0) {
-      edit.removeExtras = removeExtras;
-    }
-    if (addExtras.length > 0) {
-      edit.addExtras = addExtras;
+    if (primaryChanged || nextPrimary) {
+      const removeExtras = openedExtras.filter((tag) => !nextExtras.some((item) => sameTag(item, tag)));
+      const addExtras = nextExtras.filter((tag) => !openedExtras.some((item) => sameTag(item, tag)));
+      if (removeExtras.length > 0) {
+        edit.removeExtras = removeExtras;
+      }
+      if (addExtras.length > 0) {
+        edit.addExtras = addExtras;
+      }
     }
     const note = normalizeDescription(description) ?? null;
-    const openedNote = normalizeDescription(expense.description) ?? null;
     if (note !== openedNote) {
       edit.description = note;
     }
     void ExpenseAPI.updateExpense(expense.id, edit).then((saved) => {
       updateExpense(saved);
       hideTagExpense();
+    }).catch(() => {
+      createTimedAlert({type: 'error', message: 'Could not save this expense'});
     });
   };
 

@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import userEvent from '@testing-library/user-event';
 import {Provider} from 'react-redux';
@@ -11,6 +11,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import TagExpenses from './TagExpenses';
 import expenseReducer, {expenseSlice} from '../../../store/expenseSlice';
 import {makeExpense} from '../../../testUtils';
+import {createTimedAlert} from '../../../store/alertActions';
 jest.mock('../../../api/ExpenseAPI', () => ({
   ExpenseAPI: {updateExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn()},
 }));
@@ -34,7 +35,9 @@ const makeTagStore = (open: boolean) => {
 
 describe('TagExpenses', () => {
   beforeEach(() => {
-    jest.mocked(ExpenseAPI.updateExpense).mockClear();
+    jest.mocked(ExpenseAPI.updateExpense).mockReset();
+    jest.mocked(ExpenseAPI.updateExpense).mockResolvedValue({} as never);
+    jest.mocked(createTimedAlert).mockClear();
   });
 
   it('renders nothing when the modal is closed', () => {
@@ -61,7 +64,24 @@ describe('TagExpenses', () => {
     expect(await screen.findByRole('button', {name: /select tag food/i})).toHaveClass('MuiChip-colorPrimary');
   });
 
-  it('saves an untagged expense as empty tags', async () => {
+  it('omits primary when an untagged expense is saved with only a note', async () => {
+    render(
+      <Provider store={makeTagStore(true)}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    await userEvent.click(await screen.findByRole('button', {name: /add note/i}));
+    await userEvent.type(screen.getByLabelText(/note/i), 'just a note');
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBeUndefined();
+    expect(edit.addExtras).toBeUndefined();
+    expect(edit.removeExtras).toBeUndefined();
+    expect(edit.description).toBe('just a note');
+  });
+
+  it('does not write primary when staying untagged', async () => {
     render(
       <Provider store={makeTagStore(true)}>
         <TagExpenses/>
@@ -70,7 +90,22 @@ describe('TagExpenses', () => {
     await userEvent.click(await screen.findByRole('button', {name: /save/i}));
     expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
     const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
-    expect(edit.primary).toBeNull();
+    expect(edit.primary).toBeUndefined();
+  });
+
+  it('alerts and keeps the dialog open when save fails', async () => {
+    jest.mocked(ExpenseAPI.updateExpense).mockRejectedValueOnce(new Error('offline'));
+    render(
+      <Provider store={makeTagStore(true)}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    await userEvent.click(await screen.findByRole('button', {name: /save/i}));
+    await waitFor(() => expect(createTimedAlert).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'Could not save this expense',
+    }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('saves extras and a note while preserving unknown fields', async () => {
