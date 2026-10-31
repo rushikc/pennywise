@@ -96,6 +96,10 @@ describe('firestore.rules', () => {
     await assertFails(db.doc('users/uid-owner/private/gmail').set({status: 'hack'}));
     await assertFails(db.doc('users/uid-owner/private/gmail/processedIds/msg-1').get());
     await assertFails(db.doc('users/uid-owner/private/gmail/processedIds/msg-1').set({mailId: 'msg-1'}));
+    await assertFails(db.doc('users/uid-owner/private/api/requests/current_req1').get());
+    await assertFails(db.doc('users/uid-owner/private/api/requests/current_req1').set({status: 200}));
+    await assertFails(db.doc('users/uid-owner/private/api/rateLimits/current_1').get());
+    await assertFails(db.doc('users/uid-owner/private/api/rateLimits/current_1').set({count: 1}));
     await assertFails(db.doc('allowedUsers/owner@example.com').get());
     await assertFails(db.doc('gmailConnections/owner@example.com').get());
   });

@@ -78,6 +78,7 @@
     "deploy:demo": "npm run build:demo && npm run verify:demo-bundle && firebase deploy --only hosting --config firebase.demo.json --project demo",
     "test": "vitest run",
     "test:rules": "firebase emulators:exec --only firestore --project demo-pennywise \"node --test tests/firestore.rules.test.js\"",
+    "test:api:emulator": "firebase emulators:exec --only firestore,auth --project demo-pennywise \"npm run build --prefix functions && node --test functions/api/api.emulator.test.js functions/gmail/ingest.emulator.test.js\"",
     "test:migrate": "node --test scripts/migrate/*.test.js",
     "test:migrate:emulator": "firebase emulators:exec --only firestore --project demo-pennywise \"node --test tests/migrateTagsFirestore.emulator.test.js\"",
     "backup": "node scripts/backup/backupFirestore.js",
