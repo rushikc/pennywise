@@ -86,22 +86,6 @@ Persisted edits go through `ExpenseAPI.updateExpense` (Live: `runTransaction`). 
 
 IndexedDB is not version-bumped. On startup, if config `expenseSchemaVersion` is not `tags-v1`, the app resets `expenseLastUpdate` to 2020-01-01 so the next fetch pulls every expense once (including imported docs whose original `modifiedDate` is older than last sync). Every expense loaded from IndexedDB or Firestore goes through `readTags`.
 
-## Migration order (you run steps 2–7)
+## Migration
 
-1. Implement and test in this repo (local commits only).
-2. `npm run build --prefix functions`, then  
-   `node scripts/migrate/migrateTagFiles.js --in temp/new-data --out temp/new-data-v2`  
-   then the same with `--apply`.
-3. `npm run backup`, then  
-   `node scripts/migrate/importToFirestore.js --dir temp/new-data-v2 --email <me>`  
-   dry-run, then `--apply`.
-4. `node scripts/migrate/migrateTagsFirestore.js --email <me>` dry-run, then `--apply`. This live rewrite is **optional**: readers already tolerate `tag` without `tags`. Imported docs already have `tags` and are skipped. Live Gmail docs without `tags` are updated. The dry-run prints a **count** of expense docs that share a `mailId` with another doc (shadow docs from the old addExpense-by-id bug). Do not delete them from the script.
-5. Deploy functions, then the app.
-6. Re-run the Firestore dry-run to catch docs ingested by old functions between 4 and 5. `--apply` if the count is more than 0.
-7. Open the app on each device. The schema-version bump forces one full refetch. **Settings → Reload Data** also works.
-
-`importToFirestore.js` only creates docs (existing ids are skipped) and stamps `users/{uid}/meta/profile`: `lastImportRunAt` on every run, and `migratedAt` only on the first successful run that created at least one doc, so re-runs never move it. Against the emulator (`FIRESTORE_EMULATOR_HOST` set) without the auth emulator, pass `--uid`; `--email` exits 1 because it cannot be resolved safely.
-
-Both migration scripts default to dry-run. Never pass `--apply` against live Firestore from an agent.
-
-Rollback for the live backfill is optional. If you used `--apply`, undo with `node scripts/migrate/migrateTagsFirestore.js --rollback temp/migrations/tags-<timestamp>.json` (dry-run by default). Rollback preconditions on each doc's post-migration `writeTime` and restores `tag` / `tags` (or deletes `tags` when they were absent).
+Operator steps, flags, and rollback live in [the tags-v1 runbook](runbooks/tags-v1-migration.md). This page stays the schema.
