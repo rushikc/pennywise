@@ -14,6 +14,8 @@ describe('gcpNames', () => {
     assert.equal(names.functionsServiceAccountId, 'pennywise-functions');
     assert.equal(names.gmailRefreshTokenPrefix, 'gmail-rt-');
     assert.equal(names.gmailReadonlyScope, 'https://www.googleapis.com/auth/gmail.readonly');
+    assert.equal(names.apiTokenSecretId, 'pennywise-api-token');
+    assert.equal(names.apiTokenNextSecretId, 'pennywise-api-token-next');
   });
 
   it('builds the functions service account email', () => {

@@ -25,3 +25,11 @@ output "gemini_api_key_secret_id" {
 output "gmail_refresh_token_prefix" {
   value = local.names.gmailRefreshTokenPrefix
 }
+
+output "api_token_secret_id" {
+  value = google_secret_manager_secret.api_token.secret_id
+}
+
+output "api_token_next_secret_id" {
+  value = google_secret_manager_secret.api_token_next.secret_id
+}

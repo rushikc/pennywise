@@ -21,6 +21,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.secret.local
+functions/.secret.local
 
 # clasp leftovers
 .clasp.json

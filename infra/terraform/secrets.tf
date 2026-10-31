@@ -34,6 +34,42 @@ resource "google_secret_manager_secret_iam_member" "gemini_accessor" {
   member    = "serviceAccount:${google_service_account.functions.email}"
 }
 
+resource "google_secret_manager_secret" "api_token" {
+  project   = var.project_id
+  secret_id = local.names.apiTokenSecretId
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.apis]
+}
+
+resource "google_secret_manager_secret" "api_token_next" {
+  project   = var.project_id
+  secret_id = local.names.apiTokenNextSecretId
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.apis]
+}
+
+resource "google_secret_manager_secret_iam_member" "api_token_accessor" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.api_token.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.functions.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "api_token_next_accessor" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.api_token_next.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.functions.email}"
+}
+
 # IAM conditions cannot gate secretmanager.secrets.create: create is authorized
 # on the project (not the new secret), and conditions match the project NUMBER.
 # A project-level custom role is the least privilege that actually works.
