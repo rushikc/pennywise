@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import userEvent from '@testing-library/user-event';
 import {Provider} from 'react-redux';
@@ -13,7 +13,7 @@ import expenseReducer, {expenseSlice} from '../../../store/expenseSlice';
 import {makeExpense} from '../../../testUtils';
 import {createTimedAlert} from '../../../store/alertActions';
 jest.mock('../../../api/ExpenseAPI', () => ({
-  ExpenseAPI: {updateExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn()},
+  ExpenseAPI: {updateExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn().mockResolvedValue(true)},
 }));
 
 jest.mock('../../../store/alertActions', () => ({
@@ -88,9 +88,8 @@ describe('TagExpenses', () => {
       </Provider>,
     );
     await userEvent.click(await screen.findByRole('button', {name: /save/i}));
-    expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
-    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
-    expect(edit.primary).toBeUndefined();
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
+    expect(createTimedAlert).not.toHaveBeenCalled();
   });
 
   it('alerts and keeps the dialog open when save fails', async () => {
@@ -100,7 +99,9 @@ describe('TagExpenses', () => {
         <TagExpenses/>
       </Provider>,
     );
-    await userEvent.click(await screen.findByRole('button', {name: /save/i}));
+    await userEvent.click(await screen.findByRole('button', {name: /add note/i}));
+    await userEvent.type(screen.getByLabelText(/note/i), 'n');
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
     await waitFor(() => expect(createTimedAlert).toHaveBeenCalledWith({
       type: 'error',
       message: 'Could not save this expense',
@@ -185,8 +186,8 @@ describe('TagExpenses', () => {
     expect(await screen.findByRole('button', {name: /select tag mystery \(not in list\)/i})).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
     expect(screen.queryByText(/choose a tag from the list/i)).not.toBeInTheDocument();
-    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
-    expect(edit.primary).toBeUndefined();
+    // Nothing changed, so the save is a no-op that closes the dialog.
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
   });
 
   it('canonicalises a picked list tag to the list spelling', async () => {
@@ -228,4 +229,82 @@ describe('TagExpenses', () => {
     expect(edit.removeExtras).toEqual(['zomato']);
     confirm.mockRestore();
   });
+
+  const openWith = (tags: string[], extra: Partial<Parameters<typeof makeExpense>[0]> = {}) => {
+    const store = configureStore({reducer: {expense: expenseReducer}});
+    store.dispatch(expenseSlice.actions.setTagList(['food', 'travel']));
+    store.dispatch(expenseSlice.actions.setTagExpense(makeExpense({vendor: 'SHOP', tags, ...extra})));
+    render(
+      <Provider store={store}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    return store;
+  };
+
+  it('does not write the vendor tag when the expense save fails', async () => {
+    jest.mocked(ExpenseAPI.updateVendorTag).mockClear();
+    jest.mocked(ExpenseAPI.updateExpense).mockRejectedValueOnce(new Error('offline'));
+    openWith([]);
+    await userEvent.click(await screen.findByRole('checkbox'));
+    await userEvent.click(screen.getByRole('button', {name: /select tag food/i}));
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
+    await waitFor(() => expect(createTimedAlert).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'Could not save this expense',
+    }));
+    expect(ExpenseAPI.updateVendorTag).not.toHaveBeenCalled();
+  });
+
+  it('writes the vendor tag after a successful save', async () => {
+    jest.mocked(ExpenseAPI.updateVendorTag).mockClear();
+    jest.mocked(ExpenseAPI.updateExpense).mockResolvedValueOnce(makeExpense({vendor: 'SHOP', tags: ['food']}) as never);
+    openWith([]);
+    await userEvent.click(await screen.findByRole('checkbox'));
+    await userEvent.click(screen.getByRole('button', {name: /select tag food/i}));
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
+    await waitFor(() => expect(ExpenseAPI.updateVendorTag).toHaveBeenCalled());
+    const order = jest.mocked(ExpenseAPI.updateExpense).mock.invocationCallOrder[0];
+    expect(order).toBeLessThan(jest.mocked(ExpenseAPI.updateVendorTag).mock.invocationCallOrder[0]);
+    expect(jest.mocked(ExpenseAPI.updateVendorTag).mock.calls[0][0]).toMatchObject({vendor: 'SHOP', tag: 'food'});
+  });
+
+  it('disables Save while the save is pending and ignores a second click', async () => {
+    let resolveSave: (value: unknown) => void = () => undefined;
+    jest.mocked(ExpenseAPI.updateExpense).mockImplementationOnce(
+      () => new Promise((resolve) => { resolveSave = resolve; }) as never,
+    );
+    openWith([]);
+    await userEvent.click(await screen.findByRole('button', {name: /select tag food/i}));
+    const save = screen.getByTestId('tag-save');
+    await userEvent.click(save);
+    expect(save).toBeDisabled();
+    fireEvent.click(save);
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalledTimes(1);
+    resolveSave(makeExpense({tags: ['food']}));
+    await waitFor(() => expect(save).not.toBeDisabled());
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips the API on an empty edit and closes', async () => {
+    openWith(['food', 'zomato'], {description: 'kept'});
+    await userEvent.click(await screen.findByRole('button', {name: /save/i}));
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
+    expect(createTimedAlert).not.toHaveBeenCalled();
+  });
+
+  it('does not call the API when offline', async () => {
+    const online = jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
+    openWith([]);
+    await userEvent.click(await screen.findByRole('button', {name: /select tag food/i}));
+    await userEvent.click(screen.getByRole('button', {name: /save/i}));
+    expect(createTimedAlert).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'You\'re offline, the save needs a connection',
+    });
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    online.mockRestore();
+  });
 });
+

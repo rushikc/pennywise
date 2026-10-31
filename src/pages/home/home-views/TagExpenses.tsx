@@ -30,11 +30,14 @@ import {
   normalizeTags,
   primaryTag,
   sameTag,
+  vendorKey,
   withTags,
   type ExpenseEdit,
 } from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
 import {TagEditorFields} from './TagEditorFields';
+import {Expense} from '../../../Types';
+import {OFFLINE_SAVE_MESSAGE} from '../../../utility/constants';
 
 const TagExpenses: FC = (): ReactElement => {
   const [selectedPrimary, setSelectedPrimary] = useState('');
@@ -46,6 +49,7 @@ const TagExpenses: FC = (): ReactElement => {
   const [openedPrimary, setOpenedPrimary] = useState<string | null>(null);
   const [openedExtras, setOpenedExtras] = useState<string[]>([]);
   const [openedNote, setOpenedNote] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const isDesktop = useIsDesktop();
 
   const {vendorTagList, expense, isTagModal, tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -66,6 +70,7 @@ const TagExpenses: FC = (): ReactElement => {
     setNoteOpen(Boolean(noteAtOpen));
     setAutoTag(false);
     setPrimaryError('');
+    setSaving(false);
     // Snapshot only when this dialog opens for an expense id, not on later list updates.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTagModal, expense?.id]);
@@ -92,28 +97,16 @@ const TagExpenses: FC = (): ReactElement => {
     }
   };
 
-  const onSaveExpense = () => {
+  const onSaveExpense = async () => {
+    if (saving) {
+      return;
+    }
     if (!selectedPrimary && extras.length > 0) {
       if (!window.confirm('Untagging drops extra tags. Continue?')) {
         return;
       }
     }
     setPrimaryError('');
-    if (autoTag && selectedPrimary) {
-      const _vendor = expense.vendor;
-      let tagObj = vendorTagList.find(({vendor, tag}) =>
-        vendor.trim().toUpperCase() === _vendor.trim().toUpperCase() && sameTag(tag, selectedPrimary));
-      if (!tagObj) {
-        tagObj = {
-          id: _vendor,
-          vendor: _vendor,
-          tag: selectedPrimary,
-          date: Date.now(),
-        };
-        void ExpenseAPI.updateVendorTag(tagObj);
-        setTagMap(tagObj);
-      }
-    }
 
     const {tags} = normalizeTags(selectedPrimary, extras, {tagList, legacyTagList});
     const normalised = withTags({}, tags);
@@ -138,12 +131,49 @@ const TagExpenses: FC = (): ReactElement => {
     if (note !== openedNote) {
       edit.description = note;
     }
-    void ExpenseAPI.updateExpense(expense.id, edit).then((saved) => {
+
+    const _vendor = expense.vendor;
+    const wantsVendorTag = autoTag && Boolean(selectedPrimary) && Boolean(vendorKey(_vendor));
+    const vendorTagExists = wantsVendorTag && vendorTagList.some(({vendor, tag}) =>
+      vendorKey(vendor) === vendorKey(_vendor) && sameTag(tag, selectedPrimary));
+    const needsVendorTag = wantsVendorTag && !vendorTagExists;
+
+    if (Object.keys(edit).length === 0 && !needsVendorTag) {
+      hideTagExpense();
+      return;
+    }
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      createTimedAlert({type: 'error', message: OFFLINE_SAVE_MESSAGE});
+      return;
+    }
+
+    setSaving(true);
+    try {
+      let saved: Expense = expense;
+      if (Object.keys(edit).length > 0) {
+        saved = await ExpenseAPI.updateExpense(expense.id, edit);
+      }
+      if (needsVendorTag) {
+        const tagObj = {
+          id: _vendor,
+          vendor: _vendor,
+          tag: normalised.tag || selectedPrimary,
+          date: Date.now(),
+        };
+        const ruleSaved = await ExpenseAPI.updateVendorTag(tagObj).catch(() => false);
+        if (ruleSaved === false) {
+          createTimedAlert({type: 'error', message: 'Saved, but the auto tag rule could not be saved'});
+        } else {
+          setTagMap(tagObj);
+        }
+      }
       updateExpense(saved);
       hideTagExpense();
-    }).catch(() => {
+    } catch {
       createTimedAlert({type: 'error', message: 'Could not save this expense'});
-    });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const vendorNames = formatVendorName(expense.vendor);
@@ -251,14 +281,17 @@ const TagExpenses: FC = (): ReactElement => {
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          onClick={onSaveExpense}
+          onClick={() => void onSaveExpense()}
+          disabled={saving}
           className="tag-save-btn"
+          data-testid="tag-save"
         >
-          Save
+          {saving ? 'Saving…' : 'Save'}
         </Button>
         <Button
           variant="outlined"
           onClick={hideTagExpense}
+          disabled={saving}
           className="tag-close-btn"
         >
           Close

@@ -17,3 +17,4 @@ export function expenseSchemaNeedsFullRefetch(stored: string | number | undefine
 export const EMAIL_PARSE_BANKS_CACHE_KEY = 'emailParseBanks';
 
 export {chartColors as CHART_COLORS} from '../styles/designTokens';
+export const OFFLINE_SAVE_MESSAGE = 'You\'re offline, the save needs a connection';
