@@ -103,6 +103,8 @@ const TagExpenses: FC = (): ReactElement => {
     const note = normalizeDescription(description);
     if (note) {
       expenseNew.description = note;
+    } else if (expense.description) {
+      expenseNew.description = '';
     } else {
       delete expenseNew.description;
     }

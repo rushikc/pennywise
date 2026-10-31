@@ -170,3 +170,66 @@ export function isValidPrimary(
     return collapseWhitespace(item).toLowerCase() === primary.toLowerCase();
   });
 }
+
+export function isPersistedExpenseId(id: unknown): boolean {
+  const existingId = typeof id === 'string' ? id.trim() : '';
+  return Boolean(existingId && existingId !== 'manual');
+}
+
+export function withConfiguredTags<T extends Partial<Expense>>(
+  expense: T,
+  opts?: TagNormalizeOpts,
+): T & {tags: string[]; tag: string | null} {
+  return withTags(expense, normalizeTags(primaryTag(expense), extraTags(expense), opts).tags);
+}
+
+const DUPE_KEYS = ['duplicateOf', 'dupeCandidateOf', 'dupeStatus', 'dupeRule'] as const;
+
+export type OwnedExpenseFields = {
+  tags: string[];
+  tag: string | null;
+  cost: number;
+  vendor: string;
+  date: number;
+  type: string;
+  costType: Expense['costType'];
+  operation: string;
+  modifiedDate: number;
+  enrichedAt?: number;
+  description?: string | null;
+  duplicateOf?: string | null;
+  dupeCandidateOf?: string | null;
+  dupeStatus?: Expense['dupeStatus'] | null;
+  dupeRule?: string | null;
+};
+
+export function ownedExpenseFields(
+  expense: Expense,
+  source: Partial<Expense>,
+): OwnedExpenseFields {
+  const fields: OwnedExpenseFields = {
+    tags: expense.tags || [],
+    tag: expense.tag ?? null,
+    cost: expense.cost,
+    vendor: expense.vendor,
+    date: expense.date,
+    type: expense.type,
+    costType: expense.costType,
+    operation: expense.operation,
+    modifiedDate: expense.modifiedDate,
+  };
+  if (Object.prototype.hasOwnProperty.call(source, 'enrichedAt')) {
+    fields.enrichedAt = source.enrichedAt;
+  }
+  if (Object.prototype.hasOwnProperty.call(source, 'description')) {
+    fields.description = normalizeDescription(source.description) ?? null;
+  }
+  const hasDupe = DUPE_KEYS.some((key) => Object.prototype.hasOwnProperty.call(source, key));
+  if (hasDupe) {
+    fields.duplicateOf = source.duplicateOf ?? null;
+    fields.dupeCandidateOf = source.dupeCandidateOf ?? null;
+    fields.dupeStatus = source.dupeStatus ?? null;
+    fields.dupeRule = source.dupeRule ?? null;
+  }
+  return fields;
+}

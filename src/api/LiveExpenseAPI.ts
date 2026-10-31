@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {initializeApp} from 'firebase/app';
-import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
+import {collection, deleteDoc, deleteField, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
 import {
   BUDGET_LAST_UPDATE,
   EMAIL_PARSE_BANKS_CACHE_KEY,
@@ -19,7 +19,16 @@ import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/u
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
-import {adaptExpense, extraTags, normalizeTags, primaryTag, withTags} from '../domain/tags';
+import {
+  adaptExpense,
+  extraTags,
+  isPersistedExpenseId,
+  normalizeTags,
+  ownedExpenseFields,
+  primaryTag,
+  withConfiguredTags,
+  withTags,
+} from '../domain/tags';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import type {ClientUserCollection} from './firestorePaths';
 import {userCollectionSegments, userDocSegments} from './firestorePaths';
@@ -208,21 +217,35 @@ export class LiveExpenseAPI {
     try {
 
       const expense = JSONCopy(_expense);
-      const existingId = typeof expense.id === 'string' ? expense.id.trim() : '';
-      const key = existingId && existingId !== 'manual'
-        ? existingId
+      const persisted = isPersistedExpenseId(expense.id);
+      const key = persisted
+        ? String(expense.id).trim()
         : getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
 
       expense.modifiedDate = Date.now(); // date to epoch
       expense.cost = Number(expense.cost.toFixed(2));
       expense.operation = operation;
       expense.id = key;
+      const config = await LiveExpenseAPI.getTagConfig();
+      Object.assign(expense, withConfiguredTags(expense, config));
 
       const docRef = userDoc('expense', key);
-
-      // eslint-disable-next-line
-      const {id, ...expenseWithoutId} = expense;
-      await setDoc(docRef, expenseWithoutId);
+      if (persisted) {
+        const owned = ownedExpenseFields(expense, _expense);
+        const patch: Record<string, unknown> = {};
+        (Object.entries(owned) as [keyof typeof owned, unknown][]).forEach(([key, value]) => {
+          if (value === null && key !== 'tag') {
+            patch[key] = deleteField();
+          } else {
+            patch[key] = value;
+          }
+        });
+        await setDoc(docRef, patch, {merge: true});
+      } else {
+        // eslint-disable-next-line
+        const {id, ...expenseWithoutId} = expense;
+        await setDoc(docRef, expenseWithoutId);
+      }
 
       expense.id = key;
       await FinanceIndexDB.addExpenseList([expense]);
@@ -631,10 +654,13 @@ export class LiveExpenseAPI {
 
           // Batch update expenses in Firestore
           const updatePromises = batch.map(async (expense) => {
-            const {id, ...expenseWithoutId} = expense;
-            if (id) {
-              const docRef = userDoc('expense', id);
-              await setDoc(docRef, expenseWithoutId);
+            if (expense.id) {
+              const docRef = userDoc('expense', expense.id);
+              await setDoc(docRef, {
+                tags: expense.tags || [],
+                tag: expense.tag ?? null,
+                modifiedDate: expense.modifiedDate,
+              }, {merge: true});
             }
           });
 

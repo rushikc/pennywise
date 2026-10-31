@@ -113,6 +113,27 @@ describe('DemoExpenseAPI', () => {
     expect((await DemoExpenseAPI.getExpenseList()).filter((item) => item.mailId === gmailId)).toHaveLength(1);
   });
 
+  it('merges owned fields on an existing id and keeps unknown keys', async () => {
+    const created = await DemoExpenseAPI.addExpense({
+      ...makeExpense({
+        id: 'keep-extra-id',
+        mailId: 'keep-extra-mail',
+        vendor: 'KEEP',
+        cost: 10,
+      }),
+      foo: 'bar',
+    } as ReturnType<typeof makeExpense> & {foo: string});
+    await DemoExpenseAPI.addExpense({
+      ...created,
+      cost: 15,
+    });
+    const updated = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === 'keep-extra-mail') as
+      | (ReturnType<typeof makeExpense> & {foo?: string})
+      | undefined;
+    expect(updated?.cost).toBe(15);
+    expect(updated?.foo).toBe('bar');
+  });
+
   it('treats the placeholder id manual as a new expense', async () => {
     const created = await DemoExpenseAPI.addExpense(makeExpense({
       id: 'manual',

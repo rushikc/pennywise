@@ -122,6 +122,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     }, tags);
     if (note) {
       mergedExpense.description = note;
+    } else if (expenses.some((item) => Boolean(item.description))) {
+      mergedExpense.description = '';
     }
 
     // Log the merged expense for debugging

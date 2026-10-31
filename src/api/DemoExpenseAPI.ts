@@ -4,7 +4,16 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
-import {adaptExpense, extraTags, normalizeTags, primaryTag, withTags} from '../domain/tags';
+import {
+  adaptExpense,
+  extraTags,
+  isPersistedExpenseId,
+  normalizeTags,
+  ownedExpenseFields,
+  primaryTag,
+  withConfiguredTags,
+  withTags,
+} from '../domain/tags';
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import {DemoStore} from '../demoData/createDemoStore';
@@ -63,16 +72,30 @@ export class DemoExpenseAPI {
   static addExpense = async (_expense: Expense, operation = 'update'): Promise<Expense> => {
     const store = await DemoExpenseAPI.getStore();
     const expense = JSONCopy(_expense);
-    const existingId = typeof expense.id === 'string' ? expense.id.trim() : '';
-    const key = existingId && existingId !== 'manual'
-      ? existingId
+    const persisted = isPersistedExpenseId(expense.id);
+    const key = persisted
+      ? String(expense.id).trim()
       : getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
     expense.modifiedDate = Date.now();
     expense.cost = Number(expense.cost.toFixed(2));
     expense.operation = operation;
     expense.id = key;
+    const config = await DemoExpenseAPI.getTagConfig();
+    Object.assign(expense, withConfiguredTags(expense, config));
 
     const index = store.expenses.findIndex((item) => item.mailId === expense.mailId || item.id === expense.id);
+    if (index > -1 && persisted) {
+      const owned = ownedExpenseFields(expense, _expense);
+      const current = store.expenses[index];
+      Object.assign(current, owned);
+      (Object.entries(owned) as [keyof typeof owned, unknown][]).forEach(([field, value]) => {
+        if (value === null && field !== 'tag') {
+          delete current[field];
+        }
+      });
+      current.id = key;
+      return JSONCopy(current);
+    }
     if (index > -1) {
       store.expenses[index] = expense;
     } else {
