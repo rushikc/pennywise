@@ -54,6 +54,15 @@ describe('summarizeMonth', () => {
     ]);
   });
 
+  it('groups debit share by primary tag only', () => {
+    const summary = summarizeMonth([
+      makeExpense({id: 'a', cost: 80, costType: 'debit', tags: ['food', 'zomato']}),
+      makeExpense({id: 'b', cost: 20, costType: 'debit', tags: ['travel', 'zomato']}),
+    ]);
+    expect(summary.tags.map((item) => item.label)).toEqual(['food', 'travel']);
+    expect(summary.tags.map((item) => item.label)).not.toContain('zomato');
+  });
+
   it('returns empty lists when there is no spending', () => {
     expect(summarizeMonth([])).toEqual({
       spent: 0,

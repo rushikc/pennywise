@@ -51,7 +51,12 @@ export const ExpenseListTags: FC<{expense: Expense}> = ({expense}): ReactElement
       {description && (
         isDesktop ? (
           <Tooltip title={description}>
-            <span className="expense-note-icon" aria-label="Expense note">
+            <span
+              className="expense-note-icon"
+              tabIndex={0}
+              role="img"
+              aria-label="Expense note"
+            >
               <StickyNote2Outlined fontSize="inherit"/>
             </span>
           </Tooltip>

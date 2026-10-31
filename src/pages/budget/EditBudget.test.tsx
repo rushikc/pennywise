@@ -9,6 +9,9 @@ import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import EditBudget from './EditBudget';
 import expenseReducer, {expenseSlice} from '../../store/expenseSlice';
+import {calculateBudgetProgress} from './budgetMath';
+import {makeExpense} from '../../testUtils';
+import {Budget} from '../../Types';
 
 jest.mock('../../api/ExpenseAPI', () => ({
   ExpenseAPI: {addBudget: jest.fn(), updateBudget: jest.fn(), deleteBudget: jest.fn()},
@@ -46,5 +49,19 @@ describe('EditBudget', () => {
 
     await userEvent.click(screen.getByText('food'));
     expect(create).toBeEnabled();
+  });
+
+  it('counts a legacy primary toward its budget', () => {
+    const budget: Budget = {
+      id: 'b-legacy',
+      name: 'Drinks',
+      amount: 100,
+      tagList: ['alcohol'],
+      modifiedDate: 1,
+    };
+    const [progress] = calculateBudgetProgress([
+      makeExpense({cost: 40, costType: 'debit', tags: ['alcohol']}),
+    ], [budget]);
+    expect(progress.spent).toBe(40);
   });
 });

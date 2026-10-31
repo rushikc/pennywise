@@ -38,6 +38,19 @@ describe('applyDuplicateResolution', () => {
     expect(updated.dupeCandidateOf).toBeUndefined();
   });
 
+  it('leaves extras-only tag differences unchanged', () => {
+    const taggedKeep = makeExpense({id: 'keep', tags: ['food', 'swiggy']});
+    const taggedDrop = makeExpense({
+      id: 'drop',
+      tags: ['food', 'zomato'],
+      dupeCandidateOf: 'keep',
+      dupeStatus: 'pending',
+    });
+    const updated = applyDuplicateResolution(taggedDrop, taggedKeep, 'confirmed');
+    expect(updated.tags).toEqual(['food', 'zomato']);
+    expect(taggedKeep.tags).toEqual(['food', 'swiggy']);
+  });
+
   it('rejects by clearing dupe fields', () => {
     const updated = applyDuplicateResolution(drop, keep, 'rejected');
     expect(updated.dupeStatus).toBe('rejected');
