@@ -5,7 +5,6 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, deleteField, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
-import {doc as fullDoc, getFirestore as getFullFirestore, runTransaction} from 'firebase/firestore';
 import {
   BUDGET_LAST_UPDATE,
   EMAIL_PARSE_BANKS_CACHE_KEY,
@@ -44,7 +43,12 @@ export type DocumentData = { [field: string]: unknown };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const fullDb = getFullFirestore(app);
+
+const loadFullFirestore = async () => {
+  const firestore = await import('firebase/firestore');
+  const fullDb = firestore.getFirestore(app);
+  return {firestore, fullDb};
+};
 
 const toFirestorePatch = (patch: Record<string, unknown>): Record<string, unknown> => {
   const out: Record<string, unknown> = {};
@@ -59,9 +63,6 @@ const userCol = (collectionName: ClientUserCollection) =>
 
 const userDoc = (collectionName: ClientUserCollection, key: string) =>
   doc(db, ...userDocSegments(currentUid(), collectionName, key));
-
-const userFullDoc = (collectionName: ClientUserCollection, key: string) =>
-  fullDoc(fullDb, ...userDocSegments(currentUid(), collectionName, key));
 
 // Utility for CRUD operations on single docs
 const fireStoreDoc = {
@@ -281,9 +282,10 @@ export class LiveExpenseAPI {
 
   static updateExpense = async (id: string, edit: ExpenseEdit): Promise<Expense> => {
     const key = String(id).trim();
-    const ref = userFullDoc('expense', key);
     try {
-      const merged = await runTransaction(fullDb, async (transaction) => {
+      const {firestore, fullDb} = await loadFullFirestore();
+      const ref = firestore.doc(fullDb, ...userDocSegments(currentUid(), 'expense', key));
+      const merged = await firestore.runTransaction(fullDb, async (transaction) => {
         const snap = await transaction.get(ref);
         if (!snap.exists()) {
           throw new Error('Expense no longer exists');
@@ -693,9 +695,10 @@ export class LiveExpenseAPI {
 
         for (let i = 0; i < expensesToUpdate.length; i += batchSize) {
           const batch = expensesToUpdate.slice(i, batchSize + i);
+          const {firestore, fullDb} = await loadFullFirestore();
           const updatePromises = batch.map(async ({id, vendorTag}) => {
-            const ref = userFullDoc('expense', id);
-            return runTransaction(fullDb, async (transaction) => {
+            const ref = firestore.doc(fullDb, ...userDocSegments(currentUid(), 'expense', id));
+            return firestore.runTransaction(fullDb, async (transaction) => {
               const snap = await transaction.get(ref);
               if (!snap.exists()) {
                 return null;

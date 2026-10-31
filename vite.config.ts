@@ -76,6 +76,9 @@ const manualChunk = (id: string, isDemo: boolean): string | undefined => {
     return 'mui';
   }
   if (!isDemo && (id.includes('firebase') || id.includes('@firebase'))) {
+    if (id.includes('firestore') && !id.includes('lite')) {
+      return 'firestore-full';
+    }
     return 'firebase';
   }
   if (
