@@ -110,6 +110,19 @@ function errorBody(code, message, requestId) {
   return body;
 }
 
+function readRawBody(req) {
+  if (req.rawBody != null) {
+    return req.rawBody;
+  }
+  if (typeof req.body === 'string') {
+    return req.body;
+  }
+  if (req.body && typeof req.body === 'object') {
+    return JSON.stringify(req.body);
+  }
+  return '';
+}
+
 function parseJsonBody(req, maxBytes, requestId) {
   const lengthHeader = header(req, 'content-length');
   if (lengthHeader != null && Number(lengthHeader) > maxBytes) {
@@ -119,7 +132,7 @@ function parseJsonBody(req, maxBytes, requestId) {
   if (!type.ok) {
     return {...type, requestId};
   }
-  const raw = req.rawBody != null ? req.rawBody : '';
+  const raw = readRawBody(req);
   const size = checkBodySize(raw, maxBytes);
   if (!size.ok) {
     return {...size, requestId};

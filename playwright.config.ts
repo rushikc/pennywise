@@ -5,6 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {defineConfig, devices} from '@playwright/test';
 import {
+  E2E_API_BASE,
   E2E_APP_PORT,
   E2E_AUTH_HOST,
   E2E_BASE_URL,
@@ -41,10 +42,10 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `npx firebase emulators:start --only firestore,auth --project ${E2E_PROJECT_ID}`,
-      url: `http://${E2E_AUTH_HOST}/`,
+      command: `node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && npx firebase emulators:start --only firestore,auth,functions --project ${E2E_PROJECT_ID}`,
+      url: `${E2E_API_BASE}/health`,
       reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
+      timeout: 180_000,
       stdout: 'ignore',
     },
     {

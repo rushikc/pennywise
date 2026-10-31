@@ -7,9 +7,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 export const E2E_PROJECT_ID = 'demo-pennywise';
 export const E2E_FIRESTORE_HOST = '127.0.0.1:8080';
 export const E2E_AUTH_HOST = '127.0.0.1:9099';
+export const E2E_FUNCTIONS_HOST = '127.0.0.1:5001';
 export const E2E_APP_PORT = 3100;
 export const E2E_BASE_URL = `http://127.0.0.1:${E2E_APP_PORT}`;
 export const E2E_PASSWORD = 'e2e-password-123';
+export const E2E_API_TOKEN = 'e2e-api-token-0123456789abcdef0123456789abcdef';
+export const E2E_API_OWNER = {uid: 'e2e-api-owner', email: 'api-owner@example.com'};
+export const E2E_FUNCTIONS_REGION = 'asia-south1';
+export const E2E_API_BASE =
+  `http://${E2E_FUNCTIONS_HOST}/${E2E_PROJECT_ID}/${E2E_FUNCTIONS_REGION}/pennywiseApi`;
 
 /** Fixed "now" for the browser clock and for every seeded date: 15 Jun 2026, 12:00 IST. */
 export const E2E_NOW = Date.UTC(2026, 5, 15, 6, 30, 0);

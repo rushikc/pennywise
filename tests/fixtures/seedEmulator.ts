@@ -17,6 +17,7 @@ import {
   E2E_AUTH_HOST,
   E2E_FIRESTORE_HOST,
   E2E_NOW,
+  E2E_API_OWNER,
   E2E_PASSWORD,
   E2E_PROJECT_ID,
   E2E_WORKER_USERS,
@@ -80,6 +81,13 @@ export async function seedUsers(): Promise<void> {
     await db.doc(`allowedUsers/${email.toLowerCase()}`).set({addedAt: E2E_NOW});
   }
   await db.doc(`allowedUsers/${POPUP_USER_EMAIL}`).set({addedAt: E2E_NOW});
+  await auth.createUser({
+    uid: E2E_API_OWNER.uid,
+    email: E2E_API_OWNER.email,
+    password: E2E_PASSWORD,
+    emailVerified: true,
+  });
+  await db.doc(`allowedUsers/${E2E_API_OWNER.email}`).set({addedAt: E2E_NOW});
 }
 
 /** Replaces one user's subtree with the fixture data. */
@@ -102,6 +110,7 @@ export async function seedAll(): Promise<void> {
   for (let index = 0; index < E2E_WORKER_USERS; index += 1) {
     await seedUserData(userForWorker(index).uid);
   }
+  await seedUserData(E2E_API_OWNER.uid);
 }
 
 const isMain = /seedEmulator\.ts$/.test(process.argv[1] ?? '');
