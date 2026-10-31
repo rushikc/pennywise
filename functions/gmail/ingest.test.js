@@ -196,6 +196,7 @@ describe('saveParsedExpense', () => {
 
   it('writes tags array and the tag mirror from a vendor map', async () => {
     const db = collectionStore();
+    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
     const created = await saveParsedExpense(
       db,
       'u1',
@@ -207,6 +208,36 @@ describe('saveParsedExpense', () => {
     assert.equal(created.created, true);
     assert.deepEqual(created.expense.tags, ['food']);
     assert.equal(created.expense.tag, 'food');
+  });
+
+  it('canonicalises a vendor tag against tagList', async () => {
+    const db = collectionStore();
+    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
+    const created = await saveParsedExpense(
+      db,
+      'u1',
+      {id: 'msg-food-space', internalDate: '10'},
+      {cost: 12, costType: 'debit', vendor: 'Shop', type: 'upi'},
+      [{vendor: 'SHOP', tag: ' Food '}],
+      100,
+    );
+    assert.deepEqual(created.expense.tags, ['food']);
+    assert.equal(created.expense.tag, 'food');
+  });
+
+  it('drops an unknown vendor tag', async () => {
+    const db = collectionStore();
+    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
+    const created = await saveParsedExpense(
+      db,
+      'u1',
+      {id: 'msg-unknown-tag', internalDate: '10'},
+      {cost: 12, costType: 'debit', vendor: 'Shop', type: 'upi'},
+      [{vendor: 'SHOP', tag: 'mystery'}],
+      100,
+    );
+    assert.deepEqual(created.expense.tags, []);
+    assert.equal(created.expense.tag, null);
   });
 
   it('does not resurrect a deleted expense when the processed marker remains', async () => {

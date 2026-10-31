@@ -94,18 +94,34 @@ async function loadVendorTags(db, uid) {
   return tags;
 }
 
+async function loadTagConfig(db, uid) {
+  const snap = await db.doc(`users/${uid}/config/tags`).get();
+  if (!snap.exists) {
+    return {tagList: [], legacyTagList: []};
+  }
+  const data = snap.data() || {};
+  return {
+    tagList: Array.isArray(data.tagList) ? data.tagList : [],
+    legacyTagList: Array.isArray(data.legacyTagList) ? data.legacyTagList : [],
+  };
+}
+
 async function saveParsedExpense(db, uid, message, parsed, vendorTags, nowMs) {
   const parse = loadParse();
   const messageId = message.id;
   const vendor = parse.canonicalizeVendor(parsed.vendor);
   const tag = parse.resolveVendorTag(vendor, vendorTags);
+  const tagConfig = await loadTagConfig(db, uid);
+  const normalised = parse.normalizeTags(tag, [], tagConfig).tags;
+  const allowed = normalised[0] && parse.isValidPrimary(normalised[0], tagConfig.tagList, tagConfig.legacyTagList);
+  const tagged = parse.withTags({}, allowed ? normalised : []);
   // Extra tags and description are added by the external local enrichment process; see docs/DATA_MODEL.md.
   const expense = {
     cost: parsed.cost,
     costType: parsed.costType,
     vendor,
-    tags: tag ? [tag] : [],
-    tag: tag || null,
+    tags: tagged.tags,
+    tag: tagged.tag,
     type: parsed.type,
     date: parse.mailDateFromMessage(message, nowMs),
     modifiedDate: nowMs,
