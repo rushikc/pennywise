@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import dayjs, {Dayjs} from 'dayjs';
 import type {CalculationOption, DateRange, GroupByOption} from '../dataValidations';
-import {displayTag, groupKey, primaryTag} from '../../domain/tags';
+import {displayTag, groupKey, primaryTag, tagListStatus} from '../../domain/tags';
 
 export interface InsightExpense {
   cost: number;
@@ -185,11 +185,12 @@ export const distributionSlices = (
   expenses: InsightExpense[],
   groupBy: GroupByOption,
   lists: {tagList?: string[]; legacyTagList?: string[]} = {},
-): {name: string; value: number}[] => {
-  const groups = new Map<string, {name: string; value: number}>();
+): {name: string; value: number; unlisted?: boolean}[] => {
+  const groups = new Map<string, {name: string; value: number; unlisted?: boolean}>();
   expenses.forEach((expense) => {
     let key = '';
     let name = '';
+    let unlisted = false;
     if (groupBy === 'vendor') {
       key = (expense.vendor || 'Unknown').toLowerCase();
       name = expense.vendor || 'Unknown';
@@ -199,6 +200,7 @@ export const distributionSlices = (
       name = primary
         ? (displayTag(primary, lists.tagList, lists.legacyTagList) || primary)
         : 'Untagged';
+      unlisted = tagListStatus(primary, lists.tagList, lists.legacyTagList) === 'unlisted';
     } else if (groupBy === 'cost') {
       name = costRange(Number(expense.cost));
       key = name;
@@ -207,7 +209,11 @@ export const distributionSlices = (
       key = name;
     }
     const current = groups.get(key);
-    groups.set(key, {name: current?.name || name, value: (current?.value || 0) + Number(expense.cost)});
+    groups.set(key, {
+      name: current?.name || name,
+      value: (current?.value || 0) + Number(expense.cost),
+      ...(unlisted || current?.unlisted ? {unlisted: true} : {}),
+    });
   });
   return Array.from(groups.values()).sort((a, b) => b.value - a.value);
 };

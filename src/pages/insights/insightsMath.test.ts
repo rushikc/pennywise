@@ -74,7 +74,7 @@ describe('insightsMath', () => {
     ], 'tags', {tagList: ['food'], legacyTagList: []});
     expect(slices).toEqual([
       {name: 'food', value: 100},
-      {name: 'mystery', value: 40},
+      {name: 'mystery', value: 40, unlisted: true},
     ]);
   });
 

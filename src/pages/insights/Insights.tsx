@@ -329,6 +329,9 @@ const Insights: React.FC = () => {
             selectedItems={selectedItems}
             onItemsChange={setSelectedItems}
             availableItems={availableItems}
+            unlistedItems={new Set(
+              slices.filter((slice) => slice.unlisted).map((slice) => slice.name),
+            )}
             panelRef={selectionPanelRef}
           />
         </>
@@ -429,8 +432,9 @@ const SelectionPanel: React.FC<{
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
   availableItems: string[];
+  unlistedItems: Set<string>;
   panelRef: React.RefObject<HTMLDivElement>;
-}> = ({show, onClose, selectedItems, onItemsChange, availableItems, panelRef}) => {
+}> = ({show, onClose, selectedItems, onItemsChange, availableItems, unlistedItems, panelRef}) => {
   if (!show) return null;
 
   const handleItemToggle = (item: string) => {
@@ -450,16 +454,26 @@ const SelectionPanel: React.FC<{
         </IconButton>
       </div>
       <div className="selection-options">
-        {availableItems.map(item => (
-          <Chip
-            key={item}
-            label={item}
-            color={selectedItems.includes(item) ? 'primary' : 'default'}
-            variant={selectedItems.includes(item) ? 'filled' : 'outlined'}
-            onClick={() => handleItemToggle(item)}
-            className="selection-chip"
-          />
-        ))}
+        {availableItems.map(item => {
+          const unlisted = unlistedItems.has(item);
+          return (
+            <Chip
+              key={item}
+              label={item}
+              color={selectedItems.includes(item) ? 'primary' : 'default'}
+              variant={selectedItems.includes(item) && !unlisted ? 'filled' : 'outlined'}
+              onClick={() => handleItemToggle(item)}
+              className="selection-chip"
+              title={unlisted ? `${item} (not in tag list)` : undefined}
+              aria-label={unlisted ? `${item} (not in tag list)` : item}
+              sx={unlisted ? {
+                color: 'var(--text-secondary)',
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'transparent',
+              } : undefined}
+            />
+          );
+        })}
       </div>
     </div>
   );

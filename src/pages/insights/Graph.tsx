@@ -33,7 +33,7 @@ interface LineGraphProps {
 }
 
 interface PieGraphProps {
-  data: {name: string; value: number}[];
+  data: {name: string; value: number; unlisted?: boolean}[];
   onSelectionToggle?: () => void;
 }
 
@@ -102,7 +102,13 @@ export const PieGraph: React.FC<PieGraphProps> = ({data, onSelectionToggle}) => 
                 <Cell key={entry.name} fill={chartColors[index % chartColors.length]}/>
               ))}
             </Pie>
-            <Tooltip formatter={(value, name) => [`₹${formatAxis(Number(value))}`, name]}/>
+            <Tooltip
+              formatter={(value, name, item) => {
+                const unlisted = Boolean((item?.payload as {unlisted?: boolean} | undefined)?.unlisted);
+                const label = unlisted ? `${name} (not in list)` : String(name);
+                return [`₹${formatAxis(Number(value))}`, label];
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
       )}
