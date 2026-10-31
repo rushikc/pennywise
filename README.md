@@ -163,7 +163,7 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 * **Date Manipulation**: [dayjs](https://day.js.org/)
 * **Exports**: [ExcelJS](https://github.com/exceljs/exceljs) and [json-2-csv](https://www.npmjs.com/package/json-2-csv)
-* **Testing**: [Vitest](https://vitest.dev/), Node's built-in test runner, and the Firestore emulator for security rules
+* **Testing**: [Vitest](https://vitest.dev/), Node's built-in test runner, the Firestore emulator for security rules, and [Playwright](https://playwright.dev/) end-to-end tests against the Firebase emulators (see [tests/README.md](tests/README.md))
 
 ## Project Structure
 
@@ -182,7 +182,7 @@ pennywise/
 │   ├── backup/             # Full Firestore backup (npm run backup)
 │   ├── migrate/            # Move old root collections into users/{uid}
 │   └── export/             # Legacy top-level collection export
-├── tests/                  # Firestore security rules tests
+├── tests/                  # Playwright e2e (tests/e2e), seed fixtures, Firestore rules tests
 └── src/                    # React application source code
     ├── api/                # Live (Firestore) and demo data APIs, Gmail connect
     ├── components/         # Reusable UI components (app shell, navigation, demo banner)
