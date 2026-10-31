@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {FC, ReactElement, useState} from 'react';
+import {FC, ReactElement, useEffect, useMemo, useState} from 'react';
 import './TagExpenses.scss';
 
 import Button from '@mui/material/Button';
@@ -18,21 +18,51 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Chip from '@mui/material/Chip';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {createTimedAlert} from '../../../store/alertActions';
-import {primaryTag} from '../../../domain/tags';
-
+import {
+  extraTags,
+  isValidPrimary,
+  normalizeDescription,
+  normalizeTags,
+  primaryTag,
+  withTags,
+} from '../../../domain/tags';
+import {useIsDesktop} from '../../../hooks/useIsDesktop';
+import {TagEditorFields} from './TagEditorFields';
 
 const TagExpenses: FC = (): ReactElement => {
+  const [selectedPrimary, setSelectedPrimary] = useState('');
+  const [extras, setExtras] = useState<string[]>([]);
+  const [description, setDescription] = useState('');
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [autoTag, setAutoTag] = useState(false);
+  const isDesktop = useIsDesktop();
 
-  const [selectedTag, setSelectedTag] = useState<string[]>([]);
-  const [autoTag, setAutoTag] = useState<boolean>(false);
+  const {vendorTagList, expense, isTagModal, tagList, legacyTagList, expenseList} = useSelector(selectExpense);
 
-  const {vendorTagList, expense, isTagModal, tagList} = useSelector(selectExpense);
+  useEffect(() => {
+    if (!expense || !isTagModal) {
+      return;
+    }
+    const primary = primaryTag(expense) || '';
+    setSelectedPrimary(primary);
+    setExtras(extraTags(expense));
+    setDescription(expense.description || '');
+    setNoteOpen(Boolean(expense.description));
+    setAutoTag(false);
+  }, [expense, isTagModal]);
+
+  const extraSuggestions = useMemo(() => {
+    const found = new Set<string>();
+    for (const item of expenseList) {
+      extraTags(item).forEach((tag) => found.add(tag));
+    }
+    return [...found].sort();
+  }, [expenseList]);
 
   if (expense == null || !isTagModal) {
     return <></>;
@@ -49,18 +79,18 @@ const TagExpenses: FC = (): ReactElement => {
   };
 
   const onSaveExpense = () => {
-    if (autoTag && selectedTag.length > 0) {
+    if (selectedPrimary && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
+      return;
+    }
+    if (autoTag && selectedPrimary) {
       const _vendor = expense.vendor;
-      const _tag = primaryTag(expense);
-
-      let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
-
+      let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === selectedPrimary);
       if (!tagObj) {
         tagObj = {
           id: _vendor,
           vendor: _vendor,
-          tag: selectedTag[0],
-          date: Date.now()
+          tag: selectedPrimary,
+          date: Date.now(),
         };
         void ExpenseAPI.updateVendorTag(tagObj);
         setTagMap(tagObj);
@@ -68,22 +98,32 @@ const TagExpenses: FC = (): ReactElement => {
     }
 
     const expenseNew = JSONCopy(expense);
-    expenseNew.tag = selectedTag[0];
+    const {tags} = normalizeTags(selectedPrimary, extras, {tagList, legacyTagList});
+    Object.assign(expenseNew, withTags(expenseNew, tags));
+    const note = normalizeDescription(description);
+    if (note) {
+      expenseNew.description = note;
+    } else {
+      delete expenseNew.description;
+    }
+    expenseNew.modifiedDate = Date.now();
     void ExpenseAPI.addExpense(expenseNew);
     updateExpense(expenseNew);
     hideTagExpense();
   };
 
   const vendorNames = formatVendorName(expense.vendor);
+  const currentPrimary = primaryTag(expense);
 
   return (
     <Dialog
       open={isTagModal}
       onClose={hideTagExpense}
-      maxWidth="xs"
+      maxWidth={isDesktop ? 'sm' : false}
       fullWidth
+      fullScreen={!isDesktop}
       slots={{
-        transition: Zoom
+        transition: Zoom,
       }}
       transitionDuration={350}
     >
@@ -117,8 +157,8 @@ const TagExpenses: FC = (): ReactElement => {
               <span className="tag-expense-cost">₹{expense.cost}</span>
             </Typography>
             <Typography variant="caption">
-              <span className={`tag-expense-tag${primaryTag(expense) ? ' tagged' : ''}`}>
-                {primaryTag(expense) ? primaryTag(expense) : 'untagged'}
+              <span className={`tag-expense-tag${currentPrimary ? ' tagged' : ''}`}>
+                {currentPrimary || 'untagged'}
               </span>
             </Typography>
           </div>
@@ -145,28 +185,19 @@ const TagExpenses: FC = (): ReactElement => {
 
         <Fade in={isTagModal} timeout={600}>
           <div>
-            <Typography variant="subtitle1" className="tag-expense-category-label">
-              Select a category
-            </Typography>
-            <div className="tag-expense-chip-list">
-              {tagList.map((val, index) => (
-                <Chip
-                  key={index}
-                  label={val}
-                  clickable
-                  color={selectedTag.includes(val) ? 'primary' : 'default'}
-                  variant={selectedTag.includes(val) ? 'filled' : 'outlined'}
-                  onClick={() => setSelectedTag([val])}
-                  className={`tag-expense-chip${selectedTag.includes(val) ? ' selected' : ''}`}
-                  aria-label={`Select tag ${val}`}
-                  size="medium"
-                  sx={{
-                    minWidth: '80px',
-                    transition: 'all var(--transition-fast)'
-                  }}
-                />
-              ))}
-            </div>
+          <TagEditorFields
+            tagList={tagList}
+            legacyPrimary={currentPrimary}
+            selectedPrimary={selectedPrimary}
+            extras={extras}
+            extraSuggestions={extraSuggestions}
+            description={description}
+            noteOpen={noteOpen}
+            onPrimaryChange={setSelectedPrimary}
+            onExtrasChange={setExtras}
+            onDescriptionChange={setDescription}
+            onNoteOpen={() => setNoteOpen(true)}
+          />
           </div>
         </Fade>
       </DialogContent>
@@ -174,7 +205,7 @@ const TagExpenses: FC = (): ReactElement => {
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={selectedTag.length === 0}
+          disabled={!selectedPrimary}
           onClick={onSaveExpense}
           className="tag-save-btn"
         >

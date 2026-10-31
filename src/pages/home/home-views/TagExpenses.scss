@@ -125,6 +125,27 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   margin-bottom: var(--space-sm) !important;
 }
 
+.tag-expense-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.tag-expense-fields-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.tag-expense-note {
+  grid-column: 1 / -1;
+}
+
+.tag-note-toggle {
+  color: var(--text-secondary) !important;
+  text-transform: none !important;
+}
+
 .tag-expense-chip-list {
   display: flex;
   flex-wrap: wrap;
@@ -201,6 +222,11 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 }
 
 @media (max-width: 799px) {
+  .tag-expense-fields-split {
+    display: flex;
+    flex-direction: column;
+  }
+
   .tag-expense-dialog-content {
     padding: var(--space-md) var(--space-sm) !important;
   }

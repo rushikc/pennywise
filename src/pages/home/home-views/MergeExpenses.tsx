@@ -21,6 +21,15 @@ import {TransitionProps} from '@mui/material/transitions';
 import {formatVendorName} from '../../../utility/utility';
 import {createTimedAlert} from '../../../store/alertActions';
 import {mergedCostAndType, signedExpenseTotal} from './mergeMath';
+import {
+  extraTags,
+  normalizeDescription,
+  normalizeTags,
+  primaryTag,
+  withTags,
+} from '../../../domain/tags';
+import {TagEditorFields} from './TagEditorFields';
+import {useIsDesktop} from '../../../hooks/useIsDesktop';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -46,20 +55,34 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   onMergeComplete
 }): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string>('');
+  const [extras, setExtras] = useState<string[]>([]);
+  const [description, setDescription] = useState('');
+  const [noteOpen, setNoteOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [totalCost, setTotalCost] = useState<number>(0);
+  const isDesktop = useIsDesktop();
 
-  // Get tagList from Redux store instead of props
-  const {tagList} = useSelector(selectExpense);
+  const {tagList, legacyTagList, expenseList} = useSelector(selectExpense);
 
   useEffect(() => {
     if (open && expenses.length > 0) {
-      // Calculate the total cost when handling multiple expenses
       setTotalCost(signedExpenseTotal(expenses));
-
-      // Reset selected values when modal opens
       setSelectedVendor('');
       setSelectedTag('');
+      const seen = new Set<string>();
+      const union: string[] = [];
+      for (const tag of expenses.flatMap((item) => extraTags(item))) {
+        if (!seen.has(tag)) {
+          seen.add(tag);
+          union.push(tag);
+        }
+      }
+      setExtras(union);
+      const survivor = expenses[0];
+      const firstNote = normalizeDescription(survivor?.description) ||
+        expenses.map((item) => normalizeDescription(item.description)).find(Boolean);
+      setDescription(firstNote || '');
+      setNoteOpen(Boolean(firstNote));
     }
   }, [expenses, open]);
 
@@ -78,10 +101,15 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
     // Create a new merged expense with properties from the selected vendor's expense
     const {cost, costType} = mergedCostAndType(totalCost);
-    const mergedExpense: Expense = {
+    const primary = selectedTag || primaryTag(vendorExpense);
+    const {tags} = normalizeTags(primary, extras, {
+      tagList,
+      legacyTagList,
+    });
+    const note = normalizeDescription(description);
+    const mergedExpense: Expense = withTags({
       id: vendorExpense.id,
       vendor: selectedVendor,
-      tag: selectedTag || vendorExpense.tag,
       cost,
       date: vendorExpense.date,
       modifiedDate: Date.now(),
@@ -89,8 +117,12 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       mailId: vendorExpense.mailId,
       user: vendorExpense.user,
       type: vendorExpense.type,
-      operation: 'merged'
-    };
+      operation: 'merged',
+      enrichedAt: vendorExpense.enrichedAt,
+    }, tags);
+    if (note) {
+      mergedExpense.description = note;
+    }
 
     // Log the merged expense for debugging
     console.log('Merged Expense:', mergedExpense);
@@ -121,8 +153,9 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="xs"
+      maxWidth={isDesktop ? 'sm' : false}
       fullWidth
+      fullScreen={!isDesktop}
       slotProps={{
         transition: {
           timeout: 350,
@@ -173,31 +206,19 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
         <Fade in={open} timeout={600}>
           <div>
-            <Typography
-              variant="subtitle1"
-              className="tag-expense-category-label"
-            >
-              Select a category
-            </Typography>
-            <div className="tag-expense-chip-list">
-              {tagList.map((tag, index) => (
-                <Chip
-                  key={index}
-                  label={tag}
-                  clickable
-                  color={selectedTag === tag ? 'primary' : 'default'}
-                  variant={selectedTag === tag ? 'filled' : 'outlined'}
-                  onClick={() => setSelectedTag(tag)}
-                  className={`tag-expense-chip${selectedTag === tag ? ' selected' : ''}`}
-                  aria-label={`Select tag ${tag}`}
-                  size="medium"
-                  sx={{
-                    minWidth: '80px',
-                    transition: 'all var(--transition-fast)'
-                  }}
-                />
-              ))}
-            </div>
+          <TagEditorFields
+            tagList={tagList}
+            legacyPrimary={primaryTag(expenses[0])}
+            selectedPrimary={selectedTag}
+            extras={extras}
+            extraSuggestions={[...new Set(expenseList.flatMap((item) => extraTags(item)))].sort()}
+            description={description}
+            noteOpen={noteOpen}
+            onPrimaryChange={setSelectedTag}
+            onExtrasChange={setExtras}
+            onDescriptionChange={setDescription}
+            onNoteOpen={() => setNoteOpen(true)}
+          />
           </div>
         </Fade>
 
