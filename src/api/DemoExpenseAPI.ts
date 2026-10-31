@@ -62,7 +62,10 @@ export class DemoExpenseAPI {
   static addExpense = async (_expense: Expense, operation = 'update'): Promise<Expense> => {
     const store = await DemoExpenseAPI.getStore();
     const expense = JSONCopy(_expense);
-    const key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
+    const existingId = typeof expense.id === 'string' ? expense.id.trim() : '';
+    const key = existingId && existingId !== 'manual'
+      ? existingId
+      : getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
     expense.modifiedDate = Date.now();
     expense.cost = Number(expense.cost.toFixed(2));
     expense.operation = operation;

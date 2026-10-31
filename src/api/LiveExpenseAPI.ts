@@ -199,11 +199,15 @@ export class LiveExpenseAPI {
     try {
 
       const expense = JSONCopy(_expense);
-      const key = getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
+      const existingId = typeof expense.id === 'string' ? expense.id.trim() : '';
+      const key = existingId && existingId !== 'manual'
+        ? existingId
+        : getDateJsIdFormat(new Date(expense.date)) + ' ' + expense.vendor.slice(0, 10);
 
       expense.modifiedDate = Date.now(); // date to epoch
       expense.cost = Number(expense.cost.toFixed(2));
       expense.operation = operation;
+      expense.id = key;
 
       const docRef = userDoc('expense', key);
 

@@ -70,6 +70,7 @@ describe('DemoExpenseAPI', () => {
 
   it('supports expense CRUD for the session', async () => {
     const created = await DemoExpenseAPI.addExpense(makeExpense({
+      id: '',
       mailId: 'demo-mail-crud',
       vendor: 'DEMO SHOP',
       cost: 42.1,
@@ -90,6 +91,36 @@ describe('DemoExpenseAPI', () => {
     await DemoExpenseAPI.deleteExpense(created);
     const afterDelete = await DemoExpenseAPI.getExpenseList();
     expect(afterDelete.some((item) => item.mailId === 'demo-mail-crud')).toBe(false);
+  });
+
+  it('updates an existing expense by id instead of generating a date+vendor key', async () => {
+    const gmailId = 'gmail-message-id-abc';
+    const created = await DemoExpenseAPI.addExpense(makeExpense({
+      id: gmailId,
+      mailId: gmailId,
+      vendor: 'ZOMATO',
+      tag: undefined,
+    }));
+    expect(created.id).toBe(gmailId);
+
+    await DemoExpenseAPI.addExpense({
+      ...created,
+      tag: 'food',
+    }, 'update');
+    const tagged = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === gmailId);
+    expect(tagged?.id).toBe(gmailId);
+    expect(tagged?.tag).toBe('food');
+    expect((await DemoExpenseAPI.getExpenseList()).filter((item) => item.mailId === gmailId)).toHaveLength(1);
+  });
+
+  it('treats the placeholder id manual as a new expense', async () => {
+    const created = await DemoExpenseAPI.addExpense(makeExpense({
+      id: 'manual',
+      mailId: 'manual-mail',
+      vendor: 'MANUAL VEND',
+    }));
+    expect(created.id).not.toBe('manual');
+    expect(created.id).toContain('MANUAL VEN');
   });
 
   it('supports budget, tag, vendor tag and bank config writes', async () => {
