@@ -47,6 +47,8 @@ import {
   sortByOptions
 } from '../dataValidations';
 import './Home.scss';
+import {bulkDelete, bulkDeleteFailureMessage} from './bulkDelete';
+import {createTimedAlert} from '../../store/alertActions';
 import MergeExpenses from './home-views/MergeExpenses';
 import {ExpenseListTags} from './home-views/ExpenseListTags';
 import AddExpense from './home-views/AddExpense';
@@ -174,17 +176,15 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
     setLoading(true); // Show loading state while deleting
 
     try {
-
-      // Delete each selected expense using the ExpenseAPI
-      const deletePromises = selectedExpenses.map(expense => {
-        return ExpenseAPI.updateExpense(expense.id, {operation: 'delete'});
-      });
-
-      // Wait for all delete operations to complete
-      await Promise.all(deletePromises);
-
-      selectedExpenses.forEach(expense => deleteExpense(expense));
-
+      const {deleted, failed} = await bulkDelete(selectedExpenses, (expense) =>
+        ExpenseAPI.updateExpense(expense.id, {operation: 'delete'}));
+      deleted.forEach((expense) => deleteExpense(expense));
+      if (failed.length > 0) {
+        createTimedAlert({
+          type: 'error',
+          message: bulkDeleteFailureMessage(failed.length, selectedExpenses.length),
+        });
+      }
     } catch (error) {
       console.error('Error deleting expenses:', error);
     } finally {
