@@ -169,36 +169,48 @@ Pennywise leverages a modern and robust set of technologies to deliver a user-fr
 
 ```
 pennywise/
-├── build/                  # Production build output (Vite)
+├── build/                  # Gitignored Vite output (not source)
 ├── functions/              # Firebase Cloud Functions
-│   ├── api/                # Token-protected HTTPS API (list/patch expenses)
+│   ├── api/                # HTTPS function exported as pennywiseApi (unreleased; no route docs)
 │   ├── gmail/              # Gmail connect/disconnect, push handler, hourly sweep, ingest
 │   ├── dedupe/             # Duplicate expense detection
+│   ├── shared/             # Generated copy of shared/gcpNames.json (predeploy cp; do not edit)
 │   └── src/parse/          # TypeScript parsers (bank regex + Gemini)
 ├── infra/terraform/        # GCP resources firebase deploy cannot create
-├── shared/                 # Names shared by Terraform, functions, and the web app
-├── public/                 # Static assets served directly
+├── shared/
+│   ├── gcpNames.json       # Topic, region, and secret ids shared with Terraform and functions
+│   └── tagCases.json       # Tag spec shared by the web app and Cloud Functions
+├── public/                 # Static assets copied into the Vite build
 │   └── docs/               # Diagrams and screenshots used by the docs
-├── scripts/                # Utility scripts
+├── scripts/
 │   ├── backup/             # Full Firestore backup (npm run backup)
-│   ├── migrate/            # Move old root collections into users/{uid}
-│   └── export/             # Legacy top-level collection export
-├── tests/                  # Playwright e2e (tests/e2e), seed fixtures, Firestore rules tests
+│   ├── ci/                 # Demo-bundle check and the doc link checker
+│   ├── demo/               # Synthetic demo data generator
+│   ├── export/             # Legacy top-level collection export
+│   └── migrate/            # User move, tags-v1 migration, and import
+├── docs/                   # Data model, demo deploy, and other guides
+├── tests/
+│   ├── e2e/                # Playwright specs
+│   └── fixtures/           # Synthetic seed data for the emulators
+├── playwright.config.ts    # e2e servers and projects
+├── .cursor/rules/          # Agent rules (tests, commits, docs, design tokens)
 └── src/                    # React application source code
     ├── api/                # Live (Firestore) and demo data APIs, Gmail connect
     ├── components/         # Reusable UI components (app shell, navigation, demo banner)
     ├── demoData/           # Mock data shown in demo mode
-    ├── firebase/           # Firebase configuration & utilities
+    ├── domain/             # Tag rules shared with the UI
+    ├── firebase/           # Firebase configuration and utilities
     ├── hooks/              # Custom React hooks
-    ├── pages/              # Application pages & views
+    ├── pages/              # Application pages and views
     │   ├── budget/         # Budget management pages
     │   ├── home/           # Main dashboard and expense views
     │   ├── insights/       # Analytics, exports, and insights pages
     │   ├── login/          # Authentication flow
     │   └── setting/        # Application settings
+    ├── routes.ts           # Lazy route table
     ├── store/              # Redux store configuration
     ├── styles/             # Global styles, themes, and design tokens
-    └── utility/            # Helper functions & constants
+    └── utility/            # Helper functions and constants
 ```
 
 ## Architecture
@@ -244,10 +256,9 @@ Merged duplicates stay in Firestore but are hidden from lists. The rules can be 
 
 ### Architecture Diagram
 
-<!-- TODO: update screenshot -->
-![Architecture Diagram](public/docs/Pennywise.drawio.svg)
+The overview and diagram live in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-The Graphviz source for the data flow lives in [public/docs/dataflow.dot](public/docs/dataflow.dot).
+<!-- TODO: update screenshot -->
 
 ## Application Sections
 
