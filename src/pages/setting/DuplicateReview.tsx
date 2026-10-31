@@ -144,7 +144,7 @@ const DuplicateReview: React.FC = () => {
       )}
 
       {!loading && pairs.map((pair) => (
-        <Paper key={pair.drop.id} elevation={1} sx={{p: 'var(--card-padding)', mb: 'var(--space-lg)'}}>
+        <Paper key={pair.drop.id} data-testid={`dupe-pair-${pair.drop.id}`} elevation={1} sx={{p: 'var(--card-padding)', mb: 'var(--space-lg)'}}>
           <Stack direction="row" spacing="var(--space-sm)" alignItems="center" sx={{mb: 'var(--space-lg)'}}>
             <Chip label={pair.rule} size="small" variant="outlined"/>
             <Typography variant="body2" color="text.secondary">
