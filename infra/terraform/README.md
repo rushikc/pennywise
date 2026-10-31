@@ -60,7 +60,7 @@ Do not commit `backend.hcl`, `terraform.tfvars`, `*.tfstate*`, or `.terraform/`.
 5. `firebase deploy` (functions use the Terraform service account via `setGlobalOptions`).
 6. Deploy or paste `firestore.rules`. Create `allowedUsers/{lowercase-email}` docs for each family member in the Firebase console.
 
-Existing installs: follow the **Existing install / upgrade** checklist in [SETUP.md](../../SETUP.md) (backup, allowlist, migrate including `config/emailParseBanks`, deploy rules/functions, then Connect Gmail). Rules and the app use `users/{uid}/...`; unmigrated root collections are hidden.
+Existing installs: follow the **Existing install / upgrade** checklist in [SETUP.md](../../docs/SETUP.md) (backup, allowlist, migrate including `config/emailParseBanks`, deploy rules/functions, then Connect Gmail). Rules and the app use `users/{uid}/...`; unmigrated root collections are hidden.
 
 ## Ownership split
 

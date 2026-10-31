@@ -1,8 +1,8 @@
 # Docs
 
 - [README](../README.md) — what Pennywise is, and the project tree.
-- [SETUP](../SETUP.md) — first-time Firebase, Terraform, and Gmail setup.
-- [DEVELOP](../DEVELOP.md) — local dev, tests, env vars, and pull requests.
+- [SETUP](SETUP.md) — first-time Firebase, Terraform, and Gmail setup.
+- [DEVELOP](DEVELOP.md) — local dev, tests, env vars, and pull requests.
 - [CONTRIBUTING](../CONTRIBUTING.md) — test, lint, and docs checklist.
 - [SECURITY](../SECURITY.md) — auth, rules, and the unreleased HTTPS function.
 - [ARCHITECTURE](ARCHITECTURE.md) — how the app, functions, and GCP pieces connect.

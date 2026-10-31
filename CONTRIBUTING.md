@@ -1,6 +1,6 @@
 # Contributing
 
-Setup, the test table, and the branch flow are in [DEVELOP.md](DEVELOP.md).
+Setup, the test table, and the branch flow are in [DEVELOP.md](docs/DEVELOP.md).
 
 Before you open a pull request:
 

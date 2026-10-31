@@ -74,4 +74,4 @@ node scripts/migrate/migrateToUser.js --from <export-dir> --uid <uid>
 node scripts/migrate/migrateToUser.js --from <export-dir> --uid <uid> --apply
 ```
 
-Do that before the tags-v1 import if the backup still has root collections. See the upgrade checklist in [SETUP.md](../../SETUP.md).
+Do that before the tags-v1 import if the backup still has root collections. See the upgrade checklist in [SETUP.md](../SETUP.md).
