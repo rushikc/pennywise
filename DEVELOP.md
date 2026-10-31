@@ -132,25 +132,20 @@ GitHub Environment `demo` (restrict it to `main`) holds:
 
 The one-time console setup is in [docs/DEMO_DEPLOY.md](docs/DEMO_DEPLOY.md). `npm run deploy:demo` deploys locally using the `demo` `.firebaserc` alias. Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint, typecheck, Vitest, and the functions tests plus lint. Rules, migrate, and e2e tests are local-only.
 
-### Branching Strategy
+### Branching
 
-We follow a simplified version of Gitflow, which is well-suited for open-source projects:
-
-*   **`main`**: This branch contains the stable, production-ready code. All releases are made from this branch.
-*   **`develop`**: This is the main branch for active development. All new features and bug fixes should be merged into this branch.
-*   **`feature/*`**: Feature branches are used for developing new features. They should be branched off from `develop` and merged back into `develop` when complete.
-*   **`bugfix/*`**: Bugfix branches are used for fixing bugs. They should be branched off from `develop` and merged back into `develop` once the fix is verified.
+Branch from `main`. Use `feat/*`, `fix/*`, or `docs/*`. Open a pull request to `main` and let CI pass. Every merge to `main` deploys the public demo ([.github/workflows/deploy-demo.yml](.github/workflows/deploy-demo.yml)).
 
 ### Contribution Guidelines
 
 1.  **Fork the Repository**: Start by forking the Pennywise repository to your GitHub account.
-2.  **Create a Branch**: Create a new branch for your feature or bug fix, following the naming convention (`feature/your-feature-name` or `bugfix/your-bug-fix`).
+2.  **Create a Branch**: Branch from `main` (`feat/*`, `fix/*`, or `docs/*`).
 3.  **Make Changes**: Implement your changes, ensuring that the code is well-documented and follows our coding standards. New UI should use the design tokens in `src/styles/theme.scss` and include dark mode styles.
-4.  **Test Your Changes**: Thoroughly test your changes to ensure they work as expected and don't introduce any new issues. Run the checks in [Running Tests and Checks](#running-tests-and-checks) that cover the code you touched: for frontend work `npm test`, `npm run lint`, and `npm run typecheck`; for Cloud Functions `npm test --prefix functions` and `npm run lint --prefix functions`; for `firestore.rules`, `npm run test:rules`.
-5.  **Commit Your Changes**: Commit your changes with clear and concise commit messages.
-6.  **Create a Pull Request**: Create a pull request (PR) from your branch to the `develop` branch of the Pennywise repository.
+4.  **Test Your Changes**: Run the checks in [Running Tests and Checks](#running-tests-and-checks) that cover the code you touched, plus `npm run docs:check` when you edit markdown. See [CONTRIBUTING.md](CONTRIBUTING.md).
+5.  **Commit Your Changes**: Use a conventional commit: `feat`, `fix`, `refactor`, `test`, `doc`, or `chore`, then a short lowercase description.
+6.  **Create a Pull Request**: Open the pull request against `main`.
 7.  **Code Review**: Your PR will be reviewed by the project maintainers. Address any feedback and make necessary changes.
-8.  **Merge**: Once your PR is approved, it will be merged into the `develop` branch.
+8.  **Merge**: Once CI is green and the PR is approved, it merges to `main`. That merge deploys the public demo.
 
 ### Version Changes Guide
 

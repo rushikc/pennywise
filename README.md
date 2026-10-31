@@ -288,7 +288,7 @@ The React application is divided into several key sections, each serving a speci
 
 ## Contributing & Local Development
 
-We welcome contributions to Pennywise! If you're interested in helping out, please refer to our [Development Guide](DEVELOP.md) for instructions on setting up the project locally, contributing code, and submitting pull requests.
+We welcome contributions to Pennywise! Setup and pull requests are in the [Development Guide](DEVELOP.md). The doc index is [docs/README.md](docs/README.md). The checklist is [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## Support the Project

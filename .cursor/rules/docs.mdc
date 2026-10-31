@@ -1,0 +1,15 @@
+---
+description: Keep docs in sync with the tree, scripts, and env vars
+globs: "**/*.md,.cursor/rules/**"
+alwaysApply: false
+---
+
+# Docs
+
+When you add or edit markdown or a cursor rule, run `npm run docs:check` and fix every dead link it prints.
+
+When you add a folder, a script, or an environment variable, update the project structure tree in `README.md`, the test table in `DEVELOP.md`, and the environment-variable table in `DEVELOP.md`.
+
+Never put a Firebase project id, a secret, a token, or real transaction data in docs. Use placeholders such as `<your-project-id>`.
+
+Do not write API docs until [ADR 0006](../../docs/adr/0006-external-write-api.md) is Accepted.
