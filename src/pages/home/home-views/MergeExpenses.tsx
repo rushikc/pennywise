@@ -115,9 +115,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       return;
     }
     if (!selectedTag && !sourcePrimary && extras.length > 0) {
-      if (!window.confirm('Merging without a primary tag drops extra tags. Continue?')) {
-        return;
-      }
+      setPrimaryError('Choose a primary tag to keep extra tags.');
+      return;
     }
     setPrimaryError('');
 
@@ -170,8 +169,11 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     }
   };
 
-  // Get unique vendors from selected expenses
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));
+  const vendorExpensePreview = expenses.find((exp) => exp.vendor === selectedVendor) || expenses[0];
+  const extrasNeedPrimary = extras.length > 0 &&
+    !selectedTag &&
+    !primaryTag(vendorExpensePreview);
 
   return (
     <Dialog
@@ -246,6 +248,14 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
               onDescriptionChange={setDescription}
               onNoteOpen={() => setNoteOpen(true)}
             />
+            {extrasNeedPrimary && (
+              <Alert
+                severity="warning"
+                sx={{mt: 'var(--space-md)', color: 'var(--text-primary)'}}
+              >
+                Choose a primary tag to keep extra tags.
+              </Alert>
+            )}
             {primaryError && (
               <Alert
                 severity="error"
@@ -262,6 +272,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
+          disabled={extrasNeedPrimary}
           onClick={onSaveMergedExpense}
           className="tag-save-btn"
         >

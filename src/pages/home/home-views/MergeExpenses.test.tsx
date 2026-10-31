@@ -75,6 +75,33 @@ describe('MergeExpenses', () => {
     expect(ExpenseAPI.addExpense).not.toHaveBeenCalled();
   });
 
+  it('disables merge when extras exist and there is no primary', async () => {
+    const store = configureStore({
+      reducer: {expense: expenseReducer},
+      preloadedState: {
+        expense: {
+          ...configureStore({reducer: {expense: expenseReducer}}).getState().expense,
+          tagList: ['food'],
+        },
+      },
+    });
+    render(
+      <Provider store={store}>
+        <MergeExpenses
+          open
+          expenses={[
+            makeExpense({id: 'a', vendor: 'SHOP', tags: []}),
+            makeExpense({id: 'b', vendor: 'OTHER', tags: ['food', 'zomato']}),
+          ]}
+          onClose={jest.fn()}
+        />
+      </Provider>,
+    );
+    await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
+    expect(screen.getByText(/choose a primary tag to keep extra tags/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /^merge$/i})).toBeDisabled();
+  });
+
   it('unions extras and keeps the survivor description', async () => {
     jest.mocked(ExpenseAPI.addExpense).mockResolvedValue(makeExpense());
     renderMerge();
