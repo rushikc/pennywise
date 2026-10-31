@@ -42,7 +42,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && node tests/fixtures/startE2eEmulators.mjs`,
+      command: 'node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && node tests/fixtures/startE2eEmulators.mjs',
       url: `${E2E_API_BASE}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,

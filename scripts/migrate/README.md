@@ -7,7 +7,7 @@ All scripts default to a dry run. `--apply` writes; never pass it against live F
 | `migrateTagFiles.js` | Rewrites exported JSON files to the `tags: string[]` shape (`--in`, `--out`). |
 | `importToFirestore.js` | Creates the exported docs under `users/{uid}/` (`--dir`, `--email` or `--uid`). |
 | `migrateTagsFirestore.js` | Backfills `tags` on live expense docs, with `--rollback`. |
-| `migrateToUser.js` | Moves legacy root collections under `users/{uid}/`. |
+| `migrateToUser.js` | Moves legacy root collections under `users/{uid}/`. `npm run migrate:to-user` (`npm run migrate` is the same command). |
 
 ## importToFirestore
 

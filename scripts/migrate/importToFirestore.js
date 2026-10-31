@@ -53,7 +53,11 @@ function assertTagsSchema(expenses, allowLegacyShape, dataDir) {
 }
 
 const load = (dir, name) => JSON.parse(fs.readFileSync(path.join(dir, `${name}.json`), 'utf8'));
-const withoutId = ({id, ...rest}) => rest;
+const withoutId = (doc) => {
+  const rest = {...doc};
+  delete rest.id;
+  return rest;
+};
 
 const PLAN = [
   {file: 'expense', path: (uid, id) => `users/${uid}/expense/${id}`},

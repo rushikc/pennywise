@@ -43,7 +43,8 @@ function timestampFolderName(date) {
 }
 
 function payloadWithoutId(doc) {
-  const {id: _id, ...rest} = doc;
+  const rest = {...doc};
+  delete rest.id;
   return rest;
 }
 

@@ -1,6 +1,6 @@
 # Tags-v1 migration
 
-Move expense documents onto `tags[]` and the `tag` mirror. This is separate from `npm run migrate`, which only copies old root collections into `users/{uid}` (`scripts/migrate/migrateToUser.js`).
+Move expense documents onto `tags[]` and the `tag` mirror. This is separate from `npm run migrate:to-user` (`npm run migrate` is the same command), which only copies old root collections into `users/{uid}` (`scripts/migrate/migrateToUser.js`).
 
 Every script defaults to a dry run. `--apply` writes. Do not pass `--apply` against live Firestore from an agent.
 
@@ -67,7 +67,7 @@ Rollback checks each doc's post-migration `writeTime` and restores `tag` / `tags
 
 ## Root collections
 
-Moving `expense`, `vendorTag`, `budget`, and `config` from the old root into one user is `npm run migrate` (an alias of `migrateToUser`):
+Moving `expense`, `vendorTag`, `budget`, and `config` from the old root into one user is `npm run migrate:to-user` (`npm run migrate` is the same command):
 
 ```bash
 node scripts/migrate/migrateToUser.js --from <export-dir> --uid <uid>

@@ -83,7 +83,7 @@ const readTagList = () => {
   return matches.filter((tag) => tag !== 'export const TAG_LIST = [');
 };
 
-const jsString = (value) => `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+const jsString = (value) => `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, '\\\'')}'`;
 
 const jsValue = (value, indent) => {
   if (value === null) {
