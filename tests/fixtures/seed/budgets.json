@@ -1,0 +1,34 @@
+[
+ {
+  "id": "budget-food",
+  "name": "Food",
+  "amount": 12000,
+  "tagList": [
+   "food",
+   "groceries",
+   "snacks"
+  ],
+  "modifiedDate": 1778913000000
+ },
+ {
+  "id": "budget-travel",
+  "name": "Travel",
+  "amount": 5000,
+  "tagList": [
+   "travel",
+   "petrol"
+  ],
+  "modifiedDate": 1778913000000
+ },
+ {
+  "id": "budget-bills",
+  "name": "Bills",
+  "amount": 30000,
+  "tagList": [
+   "rent",
+   "utility",
+   "subscribe"
+  ],
+  "modifiedDate": 1778913000000
+ }
+]

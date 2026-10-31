@@ -1,0 +1,2413 @@
+[
+ {
+  "id": "anchor-cafe",
+  "mailId": "anchor-cafe",
+  "vendor": "CITY CAFE",
+  "cost": 450,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781497800000,
+  "modifiedDate": 1781497800000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "office",
+   "weekend",
+   "split"
+  ],
+  "tag": "food",
+  "description": "Team lunch with the design crew"
+ },
+ {
+  "id": "anchor-books",
+  "mailId": "anchor-books",
+  "vendor": "BOOK NOOK",
+  "cost": 899,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781418600000,
+  "modifiedDate": 1781418600000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "anchor-pets-lower",
+  "mailId": "anchor-pets-lower",
+  "vendor": "PET PALS",
+  "cost": 640,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781407800000,
+  "modifiedDate": 1781407800000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "pets"
+  ],
+  "tag": "pets"
+ },
+ {
+  "id": "anchor-pets-upper",
+  "mailId": "anchor-pets-upper",
+  "vendor": "PET PALS",
+  "cost": 310,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781332200000,
+  "modifiedDate": 1781332200000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "Pets"
+  ],
+  "tag": "Pets"
+ },
+ {
+  "id": "anchor-spice",
+  "mailId": "anchor-spice",
+  "vendor": "SPICE KITCHEN",
+  "cost": 720,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781314200000,
+  "modifiedDate": 1781314200000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "anchor-gift",
+  "mailId": "anchor-gift",
+  "vendor": "GIFT GALLERY",
+  "cost": 1250,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781245800000,
+  "modifiedDate": 1781245800000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "gifts"
+  ],
+  "tag": "gifts"
+ },
+ {
+  "id": "anchor-fuel",
+  "mailId": "anchor-fuel",
+  "vendor": "QUICK FUEL",
+  "cost": 1800,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781238600000,
+  "modifiedDate": 1781238600000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "anchor-metro",
+  "mailId": "anchor-metro",
+  "vendor": "METRO RAIL",
+  "cost": 60,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781159400000,
+  "modifiedDate": 1781159400000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel",
+   "office"
+  ],
+  "tag": "travel",
+  "description": "Client visit downtown"
+ },
+ {
+  "id": "anchor-refund",
+  "mailId": "anchor-refund",
+  "vendor": "FRESH BASKET",
+  "cost": 230,
+  "costType": "credit",
+  "type": "credit",
+  "date": 1781137800000,
+  "modifiedDate": 1781137800000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "anchor-movie",
+  "mailId": "anchor-movie",
+  "vendor": "MOVIE MAX",
+  "cost": 540,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781073000000,
+  "modifiedDate": 1781073000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "Movies"
+  ],
+  "tag": "Movies"
+ },
+ {
+  "id": "dupe-sky-drop",
+  "mailId": "dupe-sky-drop",
+  "vendor": "SKY MOBILE",
+  "cost": 599,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781065920000,
+  "modifiedDate": 1781065920000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility",
+  "dupeCandidateOf": "dupe-sky-keep",
+  "dupeStatus": "pending",
+  "dupeRule": "review"
+ },
+ {
+  "id": "dupe-sky-keep",
+  "mailId": "dupe-sky-keep",
+  "vendor": "SKY MOBILE",
+  "cost": 599,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1781065800000,
+  "modifiedDate": 1781065800000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "anchor-stream",
+  "mailId": "anchor-stream",
+  "vendor": "PIXEL STREAM",
+  "cost": 199,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780986600000,
+  "modifiedDate": 1780986600000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "e2e0000000000102",
+  "mailId": "e2e0000000000102",
+  "vendor": "TOWN PHARMACY",
+  "cost": 898.04,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780812780829,
+  "modifiedDate": 1780812780829,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000105",
+  "mailId": "e2e0000000000105",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1010.45,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780742050657,
+  "modifiedDate": 1780742050657,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000047",
+  "mailId": "e2e0000000000047",
+  "vendor": "PIXEL STREAM",
+  "cost": 596.42,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780660263866,
+  "modifiedDate": 1780660263866,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000016",
+  "mailId": "e2e0000000000016",
+  "vendor": "HOME RENT CO",
+  "cost": 18000,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780641000000,
+  "modifiedDate": 1780641000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "rent"
+  ],
+  "tag": "rent"
+ },
+ {
+  "id": "e2e0000000000093",
+  "mailId": "e2e0000000000093",
+  "vendor": "CITY CAFE",
+  "cost": 318.95,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780545993799,
+  "modifiedDate": 1780545993799,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000058",
+  "mailId": "e2e0000000000058",
+  "vendor": "SKY MOBILE",
+  "cost": 533.86,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780464351813,
+  "modifiedDate": 1780464351813,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000146",
+  "mailId": "e2e0000000000146",
+  "vendor": "CORNER SNACKS",
+  "cost": 210.61,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780403606639,
+  "modifiedDate": 1780403606639,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000101",
+  "mailId": "e2e0000000000101",
+  "vendor": "CORNER SNACKS",
+  "cost": 97.93,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780346035446,
+  "modifiedDate": 1780346035446,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks",
+   "office"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000097",
+  "mailId": "e2e0000000000097",
+  "vendor": "SKY MOBILE",
+  "cost": 756.83,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780264036227,
+  "modifiedDate": 1780264036227,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000113",
+  "mailId": "e2e0000000000113",
+  "vendor": "BOOK NOOK",
+  "cost": 399.34,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780245655505,
+  "modifiedDate": 1780245655505,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000071",
+  "mailId": "e2e0000000000071",
+  "vendor": "SKY MOBILE",
+  "cost": 773.5,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780172248967,
+  "modifiedDate": 1780172248967,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000114",
+  "mailId": "e2e0000000000114",
+  "vendor": "QUICK FUEL",
+  "cost": 2109.44,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1780062763473,
+  "modifiedDate": 1780062763473,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000112",
+  "mailId": "e2e0000000000112",
+  "vendor": "CITY CAFE",
+  "cost": 430.55,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779823642429,
+  "modifiedDate": 1779823642429,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000091",
+  "mailId": "e2e0000000000091",
+  "vendor": "CITY CAFE",
+  "cost": 573.29,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779821449683,
+  "modifiedDate": 1779821449683,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "dupe-grocer-drop",
+  "mailId": "dupe-grocer-drop",
+  "vendor": "GREEN GROCER",
+  "cost": 342.5,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779777060000,
+  "modifiedDate": 1779777060000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries",
+  "dupeCandidateOf": "dupe-grocer-keep",
+  "dupeStatus": "pending",
+  "dupeRule": "review"
+ },
+ {
+  "id": "dupe-grocer-keep",
+  "mailId": "dupe-grocer-keep",
+  "vendor": "GREEN GROCER",
+  "cost": 342.5,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779777000000,
+  "modifiedDate": 1779777000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000108",
+  "mailId": "e2e0000000000108",
+  "vendor": "QUICK FUEL",
+  "cost": 542.84,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779697403849,
+  "modifiedDate": 1779697403849,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000037",
+  "mailId": "e2e0000000000037",
+  "vendor": "QUICK FUEL",
+  "cost": 1085.56,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779694184940,
+  "modifiedDate": 1779694184940,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000123",
+  "mailId": "e2e0000000000123",
+  "vendor": "FRESH BASKET",
+  "cost": 1913.96,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779639448264,
+  "modifiedDate": 1779639448264,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000056",
+  "mailId": "e2e0000000000056",
+  "vendor": "GREEN GROCER",
+  "cost": 521.49,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779504005644,
+  "modifiedDate": 1779504005644,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries",
+   "split"
+  ],
+  "tag": "groceries",
+  "description": "Split with flatmates"
+ },
+ {
+  "id": "e2e0000000000062",
+  "mailId": "e2e0000000000062",
+  "vendor": "CORNER SNACKS",
+  "cost": 109.89,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779492296735,
+  "modifiedDate": 1779492296735,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000025",
+  "mailId": "e2e0000000000025",
+  "vendor": "CITY CAFE",
+  "cost": 422.53,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779486925883,
+  "modifiedDate": 1779486925883,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000148",
+  "mailId": "e2e0000000000148",
+  "vendor": "SKY MOBILE",
+  "cost": 478.71,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779289831539,
+  "modifiedDate": 1779289831539,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000131",
+  "mailId": "e2e0000000000131",
+  "vendor": "SKY MOBILE",
+  "cost": 410.97,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779284899612,
+  "modifiedDate": 1779284899612,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000126",
+  "mailId": "e2e0000000000126",
+  "vendor": "CITY CAFE",
+  "cost": 587.31,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1779034507728,
+  "modifiedDate": 1779034507728,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000124",
+  "mailId": "e2e0000000000124",
+  "vendor": "SKY MOBILE",
+  "cost": 394.94,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778955080791,
+  "modifiedDate": 1778955080791,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000030",
+  "mailId": "e2e0000000000030",
+  "vendor": "CORNER SNACKS",
+  "cost": 217.51,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778795931698,
+  "modifiedDate": 1778795931698,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "e2e0000000000106",
+  "mailId": "e2e0000000000106",
+  "vendor": "CITY CAFE",
+  "cost": 470.24,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778732954063,
+  "modifiedDate": 1778732954063,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000133",
+  "mailId": "e2e0000000000133",
+  "vendor": "GYM PULSE",
+  "cost": 1770.58,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778606267711,
+  "modifiedDate": 1778606267711,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health",
+  "description": "Paid by card"
+ },
+ {
+  "id": "e2e0000000000110",
+  "mailId": "e2e0000000000110",
+  "vendor": "BOOK NOOK",
+  "cost": 276.88,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778430443334,
+  "modifiedDate": 1778430443334,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000066",
+  "mailId": "e2e0000000000066",
+  "vendor": "TOWN PHARMACY",
+  "cost": 1185.07,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778422555772,
+  "modifiedDate": 1778422555772,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000028",
+  "mailId": "e2e0000000000028",
+  "vendor": "FRESH BASKET",
+  "cost": 912.65,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778376624965,
+  "modifiedDate": 1778376624965,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000035",
+  "mailId": "e2e0000000000035",
+  "vendor": "SKY MOBILE",
+  "cost": 642.96,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778356539707,
+  "modifiedDate": 1778356539707,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000060",
+  "mailId": "e2e0000000000060",
+  "vendor": "SKY MOBILE",
+  "cost": 612.51,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778305031685,
+  "modifiedDate": 1778305031685,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility",
+  "description": "Monthly top-up"
+ },
+ {
+  "id": "e2e0000000000017",
+  "mailId": "e2e0000000000017",
+  "vendor": "HOME RENT CO",
+  "cost": 18000,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1778049000000,
+  "modifiedDate": 1778049000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "rent"
+  ],
+  "tag": "rent"
+ },
+ {
+  "id": "e2e0000000000134",
+  "mailId": "e2e0000000000134",
+  "vendor": "SKY MOBILE",
+  "cost": 449.39,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777871996512,
+  "modifiedDate": 1777871996512,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility",
+   "split"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000033",
+  "mailId": "e2e0000000000033",
+  "vendor": "METRO RAIL",
+  "cost": 118.21,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777848820226,
+  "modifiedDate": 1777848820226,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000117",
+  "mailId": "e2e0000000000117",
+  "vendor": "TOWN PHARMACY",
+  "cost": 179.05,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777823222744,
+  "modifiedDate": 1777823222744,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000092",
+  "mailId": "e2e0000000000092",
+  "vendor": "CITY CAFE",
+  "cost": 380.02,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777723817626,
+  "modifiedDate": 1777723817626,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000053",
+  "mailId": "e2e0000000000053",
+  "vendor": "SPICE KITCHEN",
+  "cost": 676.01,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777705721689,
+  "modifiedDate": 1777705721689,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000051",
+  "mailId": "e2e0000000000051",
+  "vendor": "PIXEL STREAM",
+  "cost": 281.72,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777693641231,
+  "modifiedDate": 1777693641231,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000140",
+  "mailId": "e2e0000000000140",
+  "vendor": "CORNER SNACKS",
+  "cost": 97.62,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777684446633,
+  "modifiedDate": 1777684446633,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000022",
+  "mailId": "e2e0000000000022",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1226.75,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777652659813,
+  "modifiedDate": 1777652659813,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000068",
+  "mailId": "e2e0000000000068",
+  "vendor": "CITY CAFE",
+  "cost": 268.08,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777625139201,
+  "modifiedDate": 1777625139201,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000135",
+  "mailId": "e2e0000000000135",
+  "vendor": "BOOK NOOK",
+  "cost": 1463.16,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777623186388,
+  "modifiedDate": 1777623186388,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000111",
+  "mailId": "e2e0000000000111",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1503.3,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777594983147,
+  "modifiedDate": 1777594983147,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000144",
+  "mailId": "e2e0000000000144",
+  "vendor": "QUICK FUEL",
+  "cost": 1875.65,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777432810807,
+  "modifiedDate": 1777432810807,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000086",
+  "mailId": "e2e0000000000086",
+  "vendor": "GYM PULSE",
+  "cost": 1125.82,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777392606430,
+  "modifiedDate": 1777392606430,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000036",
+  "mailId": "e2e0000000000036",
+  "vendor": "METRO RAIL",
+  "cost": 64.11,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777390443794,
+  "modifiedDate": 1777390443794,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000127",
+  "mailId": "e2e0000000000127",
+  "vendor": "SKY MOBILE",
+  "cost": 607.68,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777272954538,
+  "modifiedDate": 1777272954538,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility",
+  "description": "Split with flatmates"
+ },
+ {
+  "id": "e2e0000000000031",
+  "mailId": "e2e0000000000031",
+  "vendor": "CORNER SNACKS",
+  "cost": 123.75,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777154901278,
+  "modifiedDate": 1777154901278,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000074",
+  "mailId": "e2e0000000000074",
+  "vendor": "PIXEL STREAM",
+  "cost": 365.34,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1777063708561,
+  "modifiedDate": 1777063708561,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000149",
+  "mailId": "e2e0000000000149",
+  "vendor": "TOWN PHARMACY",
+  "cost": 844.92,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776997524364,
+  "modifiedDate": 1776997524364,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health",
+   "cash"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000141",
+  "mailId": "e2e0000000000141",
+  "vendor": "PIXEL STREAM",
+  "cost": 627.32,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776984190576,
+  "modifiedDate": 1776984190576,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe",
+   "split"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000078",
+  "mailId": "e2e0000000000078",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1232.98,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776884080801,
+  "modifiedDate": 1776884080801,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000040",
+  "mailId": "e2e0000000000040",
+  "vendor": "GYM PULSE",
+  "cost": 1658.95,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776639851271,
+  "modifiedDate": 1776639851271,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000067",
+  "mailId": "e2e0000000000067",
+  "vendor": "SKY MOBILE",
+  "cost": 624.15,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776486185284,
+  "modifiedDate": 1776486185284,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000032",
+  "mailId": "e2e0000000000032",
+  "vendor": "FRESH BASKET",
+  "cost": 1388.94,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776473438687,
+  "modifiedDate": 1776473438687,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "e2e0000000000077",
+  "mailId": "e2e0000000000077",
+  "vendor": "TOWN PHARMACY",
+  "cost": 874.18,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776471064541,
+  "modifiedDate": 1776471064541,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000049",
+  "mailId": "e2e0000000000049",
+  "vendor": "GYM PULSE",
+  "cost": 1775.88,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776463740173,
+  "modifiedDate": 1776463740173,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000055",
+  "mailId": "e2e0000000000055",
+  "vendor": "BOOK NOOK",
+  "cost": 566.25,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776428594831,
+  "modifiedDate": 1776428594831,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000070",
+  "mailId": "e2e0000000000070",
+  "vendor": "METRO RAIL",
+  "cost": 97.98,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776389039431,
+  "modifiedDate": 1776389039431,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000072",
+  "mailId": "e2e0000000000072",
+  "vendor": "CITY CAFE",
+  "cost": 595.33,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776264949896,
+  "modifiedDate": 1776264949896,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000026",
+  "mailId": "e2e0000000000026",
+  "vendor": "CORNER SNACKS",
+  "cost": 151.09,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776217999760,
+  "modifiedDate": 1776217999760,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000121",
+  "mailId": "e2e0000000000121",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1483.75,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1776145259298,
+  "modifiedDate": 1776145259298,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "cash"
+  ],
+  "tag": "food",
+  "description": "Monthly top-up"
+ },
+ {
+  "id": "e2e0000000000020",
+  "mailId": "e2e0000000000020",
+  "vendor": "FRESH BASKET",
+  "cost": 2370.63,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775969421107,
+  "modifiedDate": 1775969421107,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000147",
+  "mailId": "e2e0000000000147",
+  "vendor": "CITY CAFE",
+  "cost": 864.06,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775933227478,
+  "modifiedDate": 1775933227478,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000100",
+  "mailId": "e2e0000000000100",
+  "vendor": "CORNER SNACKS",
+  "cost": 65.76,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775917578801,
+  "modifiedDate": 1775917578801,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks",
+   "office"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000104",
+  "mailId": "e2e0000000000104",
+  "vendor": "BOOK NOOK",
+  "cost": 457.29,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775826268727,
+  "modifiedDate": 1775826268727,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000098",
+  "mailId": "e2e0000000000098",
+  "vendor": "PIXEL STREAM",
+  "cost": 166.3,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775798406029,
+  "modifiedDate": 1775798406029,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000075",
+  "mailId": "e2e0000000000075",
+  "vendor": "GYM PULSE",
+  "cost": 1213.92,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775763086098,
+  "modifiedDate": 1775763086098,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000059",
+  "mailId": "e2e0000000000059",
+  "vendor": "SKY MOBILE",
+  "cost": 796.62,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775657927590,
+  "modifiedDate": 1775657927590,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility",
+   "office"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000050",
+  "mailId": "e2e0000000000050",
+  "vendor": "GREEN GROCER",
+  "cost": 777.87,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775617216936,
+  "modifiedDate": 1775617216936,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000018",
+  "mailId": "e2e0000000000018",
+  "vendor": "HOME RENT CO",
+  "cost": 18000,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775457000000,
+  "modifiedDate": 1775457000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "rent"
+  ],
+  "tag": "rent"
+ },
+ {
+  "id": "e2e0000000000073",
+  "mailId": "e2e0000000000073",
+  "vendor": "TOWN PHARMACY",
+  "cost": 1300.64,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775297601340,
+  "modifiedDate": 1775297601340,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000128",
+  "mailId": "e2e0000000000128",
+  "vendor": "FRESH BASKET",
+  "cost": 1490.58,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775150825627,
+  "modifiedDate": 1775150825627,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000125",
+  "mailId": "e2e0000000000125",
+  "vendor": "METRO RAIL",
+  "cost": 39.21,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775103341868,
+  "modifiedDate": 1775103341868,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel",
+   "weekend"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000080",
+  "mailId": "e2e0000000000080",
+  "vendor": "CORNER SNACKS",
+  "cost": 134.92,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1775034511023,
+  "modifiedDate": 1775034511023,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000115",
+  "mailId": "e2e0000000000115",
+  "vendor": "CORNER SNACKS",
+  "cost": 117.52,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774979818049,
+  "modifiedDate": 1774979818049,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "e2e0000000000043",
+  "mailId": "e2e0000000000043",
+  "vendor": "GREEN GROCER",
+  "cost": 573.22,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774966349317,
+  "modifiedDate": 1774966349317,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000096",
+  "mailId": "e2e0000000000096",
+  "vendor": "CITY CAFE",
+  "cost": 163.25,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774893891387,
+  "modifiedDate": 1774893891387,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000041",
+  "mailId": "e2e0000000000041",
+  "vendor": "FRESH BASKET",
+  "cost": 1115.44,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774886164567,
+  "modifiedDate": 1774886164567,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000021",
+  "mailId": "e2e0000000000021",
+  "vendor": "METRO RAIL",
+  "cost": 87.77,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774851701849,
+  "modifiedDate": 1774851701849,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000087",
+  "mailId": "e2e0000000000087",
+  "vendor": "CITY CAFE",
+  "cost": 310.48,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774787719361,
+  "modifiedDate": 1774787719361,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000122",
+  "mailId": "e2e0000000000122",
+  "vendor": "GREEN GROCER",
+  "cost": 210.01,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774777529958,
+  "modifiedDate": 1774777529958,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries",
+   "office"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000118",
+  "mailId": "e2e0000000000118",
+  "vendor": "CITY CAFE",
+  "cost": 876.82,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774619889871,
+  "modifiedDate": 1774619889871,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000095",
+  "mailId": "e2e0000000000095",
+  "vendor": "METRO RAIL",
+  "cost": 52.52,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774503406783,
+  "modifiedDate": 1774503406783,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel",
+   "office"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000138",
+  "mailId": "e2e0000000000138",
+  "vendor": "GREEN GROCER",
+  "cost": 807.22,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774487660259,
+  "modifiedDate": 1774487660259,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000130",
+  "mailId": "e2e0000000000130",
+  "vendor": "QUICK FUEL",
+  "cost": 1565.2,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774441679015,
+  "modifiedDate": 1774441679015,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000064",
+  "mailId": "e2e0000000000064",
+  "vendor": "CITY CAFE",
+  "cost": 265.22,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774410908429,
+  "modifiedDate": 1774410908429,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000076",
+  "mailId": "e2e0000000000076",
+  "vendor": "QUICK FUEL",
+  "cost": 2455.45,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774354326011,
+  "modifiedDate": 1774354326011,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000137",
+  "mailId": "e2e0000000000137",
+  "vendor": "QUICK FUEL",
+  "cost": 2179.83,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774295916812,
+  "modifiedDate": 1774295916812,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000085",
+  "mailId": "e2e0000000000085",
+  "vendor": "CORNER SNACKS",
+  "cost": 217.64,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774292588990,
+  "modifiedDate": 1774292588990,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000024",
+  "mailId": "e2e0000000000024",
+  "vendor": "SKY MOBILE",
+  "cost": 370.68,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774270124492,
+  "modifiedDate": 1774270124492,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000042",
+  "mailId": "e2e0000000000042",
+  "vendor": "QUICK FUEL",
+  "cost": 1173.06,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774189266365,
+  "modifiedDate": 1774189266365,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000045",
+  "mailId": "e2e0000000000045",
+  "vendor": "METRO RAIL",
+  "cost": 73.22,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774172707729,
+  "modifiedDate": 1774172707729,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000103",
+  "mailId": "e2e0000000000103",
+  "vendor": "TOWN PHARMACY",
+  "cost": 294.04,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774153153374,
+  "modifiedDate": 1774153153374,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000099",
+  "mailId": "e2e0000000000099",
+  "vendor": "FRESH BASKET",
+  "cost": 1714.39,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774131079533,
+  "modifiedDate": 1774131079533,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000132",
+  "mailId": "e2e0000000000132",
+  "vendor": "QUICK FUEL",
+  "cost": 2142.41,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1774032441841,
+  "modifiedDate": 1774032441841,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000027",
+  "mailId": "e2e0000000000027",
+  "vendor": "GREEN GROCER",
+  "cost": 547.46,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773993644170,
+  "modifiedDate": 1773993644170,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries",
+   "weekend"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000136",
+  "mailId": "e2e0000000000136",
+  "vendor": "TOWN PHARMACY",
+  "cost": 1070.25,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773955656705,
+  "modifiedDate": 1773955656705,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [],
+  "tag": null
+ },
+ {
+  "id": "e2e0000000000143",
+  "mailId": "e2e0000000000143",
+  "vendor": "SKY MOBILE",
+  "cost": 592.22,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773906615715,
+  "modifiedDate": 1773906615715,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000034",
+  "mailId": "e2e0000000000034",
+  "vendor": "FRESH BASKET",
+  "cost": 1678.38,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773680709202,
+  "modifiedDate": 1773680709202,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000079",
+  "mailId": "e2e0000000000079",
+  "vendor": "CITY CAFE",
+  "cost": 256.46,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773574088243,
+  "modifiedDate": 1773574088243,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000081",
+  "mailId": "e2e0000000000081",
+  "vendor": "QUICK FUEL",
+  "cost": 1295.43,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773552974855,
+  "modifiedDate": 1773552974855,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000109",
+  "mailId": "e2e0000000000109",
+  "vendor": "METRO RAIL",
+  "cost": 61.57,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773435950124,
+  "modifiedDate": 1773435950124,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000038",
+  "mailId": "e2e0000000000038",
+  "vendor": "GREEN GROCER",
+  "cost": 563.27,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773394528778,
+  "modifiedDate": 1773394528778,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000052",
+  "mailId": "e2e0000000000052",
+  "vendor": "PIXEL STREAM",
+  "cost": 385.66,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773340469116,
+  "modifiedDate": 1773340469116,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "subscribe"
+  ],
+  "tag": "subscribe"
+ },
+ {
+  "id": "e2e0000000000046",
+  "mailId": "e2e0000000000046",
+  "vendor": "SKY MOBILE",
+  "cost": 501.1,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773307475474,
+  "modifiedDate": 1773307475474,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility",
+   "cash"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000084",
+  "mailId": "e2e0000000000084",
+  "vendor": "GYM PULSE",
+  "cost": 1603.53,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773268240836,
+  "modifiedDate": 1773268240836,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000107",
+  "mailId": "e2e0000000000107",
+  "vendor": "FRESH BASKET",
+  "cost": 641.45,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773243613434,
+  "modifiedDate": 1773243613434,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000116",
+  "mailId": "e2e0000000000116",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1170.28,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773089811612,
+  "modifiedDate": 1773089811612,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000039",
+  "mailId": "e2e0000000000039",
+  "vendor": "CITY CAFE",
+  "cost": 860.74,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773078673206,
+  "modifiedDate": 1773078673206,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000054",
+  "mailId": "e2e0000000000054",
+  "vendor": "BOOK NOOK",
+  "cost": 259.61,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773059793474,
+  "modifiedDate": 1773059793474,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000023",
+  "mailId": "e2e0000000000023",
+  "vendor": "SKY MOBILE",
+  "cost": 608.15,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1773025960400,
+  "modifiedDate": 1773025960400,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000057",
+  "mailId": "e2e0000000000057",
+  "vendor": "CITY CAFE",
+  "cost": 197.89,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772945764164,
+  "modifiedDate": 1772945764164,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "split"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000145",
+  "mailId": "e2e0000000000145",
+  "vendor": "SPICE KITCHEN",
+  "cost": 682.83,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772943078157,
+  "modifiedDate": 1772943078157,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "office"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000083",
+  "mailId": "e2e0000000000083",
+  "vendor": "SKY MOBILE",
+  "cost": 435.08,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772888950293,
+  "modifiedDate": 1772888950293,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000090",
+  "mailId": "e2e0000000000090",
+  "vendor": "GYM PULSE",
+  "cost": 1912.76,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772880190974,
+  "modifiedDate": 1772880190974,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health",
+   "weekend"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000019",
+  "mailId": "e2e0000000000019",
+  "vendor": "HOME RENT CO",
+  "cost": 18000,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772865000000,
+  "modifiedDate": 1772865000000,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "rent"
+  ],
+  "tag": "rent"
+ },
+ {
+  "id": "e2e0000000000044",
+  "mailId": "e2e0000000000044",
+  "vendor": "TOWN PHARMACY",
+  "cost": 662.24,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772714197100,
+  "modifiedDate": 1772714197100,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health"
+ },
+ {
+  "id": "e2e0000000000119",
+  "mailId": "e2e0000000000119",
+  "vendor": "CITY CAFE",
+  "cost": 781.79,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772629378867,
+  "modifiedDate": 1772629378867,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000048",
+  "mailId": "e2e0000000000048",
+  "vendor": "QUICK FUEL",
+  "cost": 2207.28,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772569893629,
+  "modifiedDate": 1772569893629,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "petrol"
+  ],
+  "tag": "petrol"
+ },
+ {
+  "id": "e2e0000000000082",
+  "mailId": "e2e0000000000082",
+  "vendor": "SPICE KITCHEN",
+  "cost": 1169.5,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772232624394,
+  "modifiedDate": 1772232624394,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "office"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000065",
+  "mailId": "e2e0000000000065",
+  "vendor": "FRESH BASKET",
+  "cost": 221.82,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1772133412667,
+  "modifiedDate": 1772133412667,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000089",
+  "mailId": "e2e0000000000089",
+  "vendor": "GREEN GROCER",
+  "cost": 826.52,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771885723332,
+  "modifiedDate": 1771885723332,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "groceries",
+   "cash"
+  ],
+  "tag": "groceries"
+ },
+ {
+  "id": "e2e0000000000088",
+  "mailId": "e2e0000000000088",
+  "vendor": "CITY CAFE",
+  "cost": 518.96,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771864576515,
+  "modifiedDate": 1771864576515,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "cash"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000069",
+  "mailId": "e2e0000000000069",
+  "vendor": "METRO RAIL",
+  "cost": 48.18,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771852350171,
+  "modifiedDate": 1771852350171,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000094",
+  "mailId": "e2e0000000000094",
+  "vendor": "CORNER SNACKS",
+  "cost": 83.08,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771786942159,
+  "modifiedDate": 1771786942159,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "snacks",
+   "weekend"
+  ],
+  "tag": "snacks"
+ },
+ {
+  "id": "e2e0000000000129",
+  "mailId": "e2e0000000000129",
+  "vendor": "TOWN PHARMACY",
+  "cost": 550.12,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771716183473,
+  "modifiedDate": 1771716183473,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "health"
+  ],
+  "tag": "health",
+  "description": "Split with flatmates"
+ },
+ {
+  "id": "e2e0000000000063",
+  "mailId": "e2e0000000000063",
+  "vendor": "SKY MOBILE",
+  "cost": 558.4,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771666074622,
+  "modifiedDate": 1771666074622,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000139",
+  "mailId": "e2e0000000000139",
+  "vendor": "SKY MOBILE",
+  "cost": 502.29,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771599708467,
+  "modifiedDate": 1771599708467,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "utility"
+  ],
+  "tag": "utility"
+ },
+ {
+  "id": "e2e0000000000120",
+  "mailId": "e2e0000000000120",
+  "vendor": "CITY CAFE",
+  "cost": 129.5,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771435489622,
+  "modifiedDate": 1771435489622,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "cash"
+  ],
+  "tag": "food"
+ },
+ {
+  "id": "e2e0000000000029",
+  "mailId": "e2e0000000000029",
+  "vendor": "BOOK NOOK",
+  "cost": 553.16,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771349117304,
+  "modifiedDate": 1771349117304,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "shopping",
+   "office"
+  ],
+  "tag": "shopping"
+ },
+ {
+  "id": "e2e0000000000061",
+  "mailId": "e2e0000000000061",
+  "vendor": "METRO RAIL",
+  "cost": 90.73,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771285285078,
+  "modifiedDate": 1771285285078,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "travel"
+  ],
+  "tag": "travel"
+ },
+ {
+  "id": "e2e0000000000142",
+  "mailId": "e2e0000000000142",
+  "vendor": "SPICE KITCHEN",
+  "cost": 917.43,
+  "costType": "debit",
+  "type": "credit",
+  "date": 1771218397671,
+  "modifiedDate": 1771218397671,
+  "user": "e2e",
+  "operation": "add",
+  "tags": [
+   "food",
+   "cash"
+  ],
+  "tag": "food"
+ }
+]

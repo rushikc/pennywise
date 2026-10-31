@@ -1,0 +1,74 @@
+[
+ {
+  "id": "vt-1",
+  "vendor": "CITY CAFE",
+  "tag": "food",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-2",
+  "vendor": "SPICE KITCHEN",
+  "tag": "food",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-3",
+  "vendor": "METRO RAIL",
+  "tag": "travel",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-4",
+  "vendor": " quick fuel ",
+  "tag": "petrol",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-5",
+  "vendor": "GREEN GROCER",
+  "tag": "groceries",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-6",
+  "vendor": "FRESH BASKET",
+  "tag": "groceries",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-7",
+  "vendor": "SKY MOBILE",
+  "tag": "utility",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-8",
+  "vendor": "HOME RENT CO",
+  "tag": "rent",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-9",
+  "vendor": "GYM PULSE",
+  "tag": "health",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-10",
+  "vendor": "TOWN PHARMACY",
+  "tag": "health",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-11",
+  "vendor": "CORNER SNACKS",
+  "tag": "snacks",
+  "date": 1778913000000
+ },
+ {
+  "id": "vt-12",
+  "vendor": "MOVIE MAX",
+  "tag": "Movies",
+  "date": 1778913000000
+ }
+]

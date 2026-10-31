@@ -1,0 +1,45 @@
+{
+ "tags": {
+  "tagList": [
+   "food",
+   "groceries",
+   "travel",
+   "petrol",
+   "subscribe",
+   "utility",
+   "rent",
+   "health",
+   "shopping",
+   "snacks"
+  ],
+  "legacyTagList": [
+   "amenities",
+   "Movies"
+  ]
+ },
+ "darkMode": {
+  "value": false
+ },
+ "emailParseBanks": {
+  "banks": [
+   {
+    "id": "e2e-bank-a",
+    "displayName": "Sample Bank A",
+    "matchStrings": [
+     "SAMPLEBANKA"
+    ]
+   },
+   {
+    "id": "e2e-bank-b",
+    "displayName": "Sample Bank B",
+    "matchStrings": [
+     "SAMPLEBANKB"
+    ]
+   }
+  ],
+  "modifiedDate": 1776321000000
+ },
+ "investments": {
+  "list": []
+ }
+}

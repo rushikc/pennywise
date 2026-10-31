@@ -54,3 +54,9 @@ infra/terraform/*.tfstate
 infra/terraform/*.tfstate.*
 infra/terraform/.terraform/
 infra/terraform/.terraform.lock.hcl.bak
+
+# Playwright e2e
+/playwright-report/
+/test-results/
+/build-e2e/
+/blob-report/
