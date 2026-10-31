@@ -73,7 +73,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     if (open && expenses.length > 0) {
       setTotalCost(signedExpenseTotal(expenses));
       setSelectedVendor('');
-      setSelectedTag('');
+      setSelectedTag(expenses.map((item) => primaryTag(item)).find(Boolean) || '');
       const seen = new Set<string>();
       const union: string[] = [];
       for (const tag of expenses.flatMap((item) => extraTags(item))) {
@@ -106,17 +106,14 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
     // Find the expense object that corresponds to the selected vendor or use first expense as fallback
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
-    const sourcePrimary = primaryTag(vendorExpense);
-    if (!selectedTag && !sourcePrimary && extras.length > 0) {
+    if (!selectedTag && extras.length > 0) {
       setPrimaryError('Choose a primary tag to keep extra tags.');
       return;
     }
     setPrimaryError('');
 
-    // Create a new merged expense with properties from the selected vendor's expense
     const {cost, costType} = mergedCostAndType(totalCost);
-    const primary = selectedTag || primaryTag(vendorExpense);
-    const {tags} = normalizeTags(primary, extras, {
+    const {tags} = normalizeTags(selectedTag, extras, {
       tagList,
       legacyTagList,
     });
@@ -135,13 +132,23 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       description: note,
     };
 
-    await Promise.all(
-      expenses
-        .filter((exp) => exp.id !== vendorExpense.id)
-        .map((exp) => ExpenseAPI.updateExpense(exp.id, {operation: 'delete'})),
-    );
+    let mergedExpense;
+    try {
+      mergedExpense = await ExpenseAPI.updateExpense(vendorExpense.id, edit);
+    } catch {
+      createTimedAlert({type: 'error', message: 'Could not save the merged expense'});
+      return;
+    }
 
-    const mergedExpense = await ExpenseAPI.updateExpense(vendorExpense.id, edit);
+    const drops = expenses.filter((exp) => exp.id !== vendorExpense.id);
+    try {
+      for (const exp of drops) {
+        await ExpenseAPI.updateExpense(exp.id, {operation: 'delete'});
+      }
+    } catch {
+      createTimedAlert({type: 'error', message: 'Merged expense was saved, but not every duplicate could be removed'});
+      return;
+    }
 
     if (onMergeComplete) {
       onMergeComplete(mergedExpense);
@@ -151,10 +158,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   };
 
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));
-  const vendorExpensePreview = expenses.find((exp) => exp.vendor === selectedVendor) || expenses[0];
-  const extrasNeedPrimary = extras.length > 0 &&
-    !selectedTag &&
-    !primaryTag(vendorExpensePreview);
+  const extrasNeedPrimary = extras.length > 0 && !selectedTag;
 
   return (
     <Dialog
