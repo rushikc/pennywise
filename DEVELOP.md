@@ -92,7 +92,7 @@ Without a signed-in, allowlisted account the app runs in **demo mode** on the mo
 
 Vite HMR is not a type-check, so run `npm run typecheck` before you push. The ingest emulator test in `functions/gmail` is skipped unless `FIRESTORE_EMULATOR_HOST` is set.
 
-Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml), which runs only `npm run lint`, `npm run typecheck`, `npm test`, and the functions tests plus `npm run lint --prefix functions`. Rules, migrate, and e2e tests are local-only.
+Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml), which runs `npm run lint`, `npm run docs:check`, `npm run typecheck`, `npm test`, and the functions tests plus `npm run lint --prefix functions`. Rules, migrate, and e2e tests are local-only.
 
 ### Firebase Deployment
 Local deploys use git-ignored `.firebaserc` aliases. Copy [`.firebaserc.example`](.firebaserc.example) to `.firebaserc` and set `default` / `personal` to your project.
@@ -130,7 +130,7 @@ GitHub Environment `demo` (restrict it to `main`) holds:
 - Secrets `GCP_WORKLOAD_IDENTITY_PROVIDER` and `GCP_DEMO_DEPLOY_SERVICE_ACCOUNT` (Workload Identity Federation) **or** `FIREBASE_SERVICE_ACCOUNT_DEMO` (JSON key)
 - Variable `DEMO_HOSTING_SITE` (optional custom Hosting site id)
 
-The one-time console setup is in [docs/DEMO_DEPLOY.md](docs/DEMO_DEPLOY.md). `npm run deploy:demo` deploys locally using the `demo` `.firebaserc` alias. Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint, typecheck, Vitest, and the functions tests plus lint. Rules, migrate, and e2e tests are local-only.
+The one-time console setup is in [docs/DEMO_DEPLOY.md](docs/DEMO_DEPLOY.md). `npm run deploy:demo` deploys locally using the `demo` `.firebaserc` alias. Pull requests run [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint, docs:check, typecheck, Vitest, and the functions tests plus lint. Rules, migrate, and e2e tests are local-only.
 
 ### Branching
 
