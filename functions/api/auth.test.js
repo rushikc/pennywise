@@ -106,7 +106,8 @@ describe('verifyBearerToken', () => {
       return timingSafeEqual(left, right);
     };
     const short = 'short-token';
-    const result = verifyBearerToken(`Bearer ${short}`, {current: sha256(short).toString('hex'), next: 'disabled'}, compare);
+    const secrets = {current: sha256(short).toString('hex'), next: 'disabled'};
+    const result = verifyBearerToken(`Bearer ${short}`, secrets, compare);
     assert.equal(result.code, 'invalid_token');
     assert.equal(calls.length, 1);
     assert.equal(calls[0].length, 32);

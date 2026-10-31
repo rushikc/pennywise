@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 const {setGlobalOptions} = require('firebase-functions/v2');
-const {onCall} = require('firebase-functions/v2/https');
+const {onCall, onRequest} = require('firebase-functions/v2/https');
 const {onMessagePublished} = require('firebase-functions/v2/pubsub');
 const {onSchedule} = require('firebase-functions/v2/scheduler');
 const {defineSecret, defineString} = require('firebase-functions/params');
@@ -27,14 +27,20 @@ if (projectId) {
 require('dotenv').config();
 
 const admin = require('firebase-admin');
-const {getFirestore} = require('firebase-admin/firestore');
+const {FieldPath, FieldValue, getFirestore} = require('firebase-admin/firestore');
+const {getAuth} = require('firebase-admin/auth');
+const functionsLogger = require('firebase-functions/logger');
+const {createApiHandler} = require('./api/router');
 
 admin.initializeApp();
 const db = getFirestore();
 
 const oauthClientSecret = defineSecret('pennywise-oauth-client-secret');
 const geminiApiKey = defineSecret('pennywise-gemini-api-key');
+const apiToken = defineSecret('pennywise-api-token');
+const apiTokenNext = defineSecret('pennywise-api-token-next');
 const oauthClientId = defineString('GOOGLE_OAUTH_CLIENT_ID');
+const apiOwnerEmail = defineString('PENNYWISE_API_OWNER_EMAIL');
 const {createTokenStore} = require('./gmail/tokenStore');
 const {createGmailCallables} = require('./gmail/callables');
 const {handleGmailPush} = require('./gmail/push');
@@ -77,6 +83,25 @@ exports.onGmailPush = onMessagePublished({
   geminiKey: geminiApiKey.value(),
   message: event.data && event.data.message,
   fetchImpl: fetch,
+}));
+
+exports.pennywiseApi = onRequest({
+  secrets: [apiToken, apiTokenNext],
+  invoker: 'public',
+  cors: false,
+  maxInstances: 2,
+  concurrency: 20,
+  memory: '256MiB',
+  timeoutSeconds: 60,
+}, createApiHandler({
+  db,
+  auth: getAuth(),
+  getTokenDigests: () => ({current: apiToken.value(), next: apiTokenNext.value()}),
+  ownerEmail: () => apiOwnerEmail.value(),
+  now: () => Date.now(),
+  logger: functionsLogger,
+  fieldDelete: () => FieldValue.delete(),
+  documentIdField: FieldPath.documentId(),
 }));
 
 exports.hourlyGmailSweep = onSchedule({

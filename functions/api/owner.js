@@ -30,7 +30,8 @@ function createOwnerResolver({
       return {ok: true, uid: cache.uid};
     }
 
-    const email = connectionEmailKey(ownerEmail);
+    const configured = typeof ownerEmail === 'function' ? ownerEmail() : ownerEmail;
+    const email = connectionEmailKey(configured);
     if (!email) {
       return ownerUnavailable('missing_email', logger);
     }
