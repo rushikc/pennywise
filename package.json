@@ -73,6 +73,7 @@
     "preview": "vite preview --port 3000 --host 127.0.0.1",
     "preview:demo": "vite preview --mode demo --port 3000 --host 127.0.0.1",
     "verify:demo-bundle": "node scripts/ci/verifyDemoBundle.js",
+    "docs:check": "node scripts/ci/checkDocLinks.js",
     "deploy:personal": "npm run build && firebase deploy --project personal",
     "deploy:personal:hosting": "npm run build && firebase deploy --only hosting --project personal",
     "deploy:demo": "npm run build:demo && npm run verify:demo-bundle && firebase deploy --only hosting --config firebase.demo.json --project demo",
