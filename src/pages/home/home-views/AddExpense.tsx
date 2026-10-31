@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {selectExpense, updateExpense} from '../../../store/expenseActions';
 import {createTimedAlert} from '../../../store/alertActions';
+import {OFFLINE_SAVE_MESSAGE} from '../../../utility/constants';
 import {getDateMonthTime} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
@@ -39,6 +40,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   const [noteOpen, setNoteOpen] = useState(false);
   const [cost, setCost] = useState<string>('');
   const [primaryError, setPrimaryError] = useState('');
+  const [saving, setSaving] = useState(false);
   const isDesktop = useIsDesktop();
 
   const {tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -51,6 +53,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       setNoteOpen(false);
       setCost('');
       setPrimaryError('');
+      setSaving(false);
     }
   }, [open]);
 
@@ -63,6 +66,9 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   }, [expenseList]);
 
   const onSaveExpense = () => {
+    if (saving) {
+      return;
+    }
     if (!selectedPrimary && extras.length > 0) {
       if (!window.confirm('Untagging drops extra tags. Continue?')) {
         return;
@@ -87,7 +93,12 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
     if (note) {
       newExpense.description = note;
     }
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      createTimedAlert({type: 'error', message: OFFLINE_SAVE_MESSAGE});
+      return;
+    }
 
+    setSaving(true);
     ExpenseAPI.addExpense(newExpense).then((expense) => {
       updateExpense(expense);
       if (onExpenseAdded) {
@@ -96,6 +107,8 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       onClose();
     }).catch(() => {
       createTimedAlert({type: 'error', message: 'Could not save this expense'});
+    }).finally(() => {
+      setSaving(false);
     });
   };
 
@@ -173,14 +186,16 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={cost === '0' || isNaN(parseFloat(cost))}
+          disabled={saving || cost === '0' || isNaN(parseFloat(cost))}
           onClick={onSaveExpense}
           className="tag-save-btn"
+          data-testid="add-expense-save"
         >
-          Save
+          {saving ? 'Saving…' : 'Save'}
         </Button>
         <Button
           variant="outlined"
+          disabled={saving}
           onClick={onClose}
           className="tag-close-btn"
         >
