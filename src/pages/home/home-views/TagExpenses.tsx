@@ -18,6 +18,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Alert from '@mui/material/Alert';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
@@ -40,6 +41,7 @@ const TagExpenses: FC = (): ReactElement => {
   const [description, setDescription] = useState('');
   const [noteOpen, setNoteOpen] = useState(false);
   const [autoTag, setAutoTag] = useState(false);
+  const [primaryError, setPrimaryError] = useState('');
   const isDesktop = useIsDesktop();
 
   const {vendorTagList, expense, isTagModal, tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -54,6 +56,7 @@ const TagExpenses: FC = (): ReactElement => {
     setDescription(expense.description || '');
     setNoteOpen(Boolean(expense.description));
     setAutoTag(false);
+    setPrimaryError('');
   }, [expense, isTagModal]);
 
   const extraSuggestions = useMemo(() => {
@@ -79,9 +82,20 @@ const TagExpenses: FC = (): ReactElement => {
   };
 
   const onSaveExpense = () => {
-    if (selectedPrimary && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
+    const current = primaryTag(expense);
+    const matchesCurrent = Boolean(
+      current && selectedPrimary && selectedPrimary.toLowerCase() === current.toLowerCase(),
+    );
+    if (selectedPrimary && !matchesCurrent && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
+      setPrimaryError('Choose a tag from the list, or keep the current tag.');
       return;
     }
+    if (!selectedPrimary && extras.length > 0) {
+      if (!window.confirm('Untagging drops extra tags. Continue?')) {
+        return;
+      }
+    }
+    setPrimaryError('');
     if (autoTag && selectedPrimary) {
       const _vendor = expense.vendor;
       let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === selectedPrimary);
@@ -195,11 +209,22 @@ const TagExpenses: FC = (): ReactElement => {
               extraSuggestions={extraSuggestions}
               description={description}
               noteOpen={noteOpen}
-              onPrimaryChange={setSelectedPrimary}
+              onPrimaryChange={(tag) => {
+                setPrimaryError('');
+                setSelectedPrimary(tag);
+              }}
               onExtrasChange={setExtras}
               onDescriptionChange={setDescription}
               onNoteOpen={() => setNoteOpen(true)}
             />
+            {primaryError && (
+              <Alert
+                severity="error"
+                sx={{mt: 'var(--space-md)', color: 'var(--text-primary)'}}
+              >
+                {primaryError}
+              </Alert>
+            )}
           </div>
         </Fade>
       </DialogContent>
@@ -207,7 +232,6 @@ const TagExpenses: FC = (): ReactElement => {
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={!selectedPrimary}
           onClick={onSaveExpense}
           className="tag-save-btn"
         >

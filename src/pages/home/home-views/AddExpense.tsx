@@ -17,10 +17,11 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
+import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import {Expense} from '../../../Types';
 import {v4 as uuidv4} from 'uuid';
-import {extraTags, normalizeDescription, normalizeTags, withTags} from '../../../domain/tags';
+import {extraTags, isValidPrimary, normalizeDescription, normalizeTags, withTags} from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
 import {TagEditorFields} from './TagEditorFields';
 
@@ -36,6 +37,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   const [description, setDescription] = useState('');
   const [noteOpen, setNoteOpen] = useState(false);
   const [cost, setCost] = useState<string>('');
+  const [primaryError, setPrimaryError] = useState('');
   const isDesktop = useIsDesktop();
 
   const {tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -47,6 +49,7 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
       setDescription('');
       setNoteOpen(false);
       setCost('');
+      setPrimaryError('');
     }
   }, [open]);
 
@@ -59,6 +62,16 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
   }, [expenseList]);
 
   const onSaveExpense = () => {
+    if (selectedPrimary && !isValidPrimary(selectedPrimary, tagList, legacyTagList)) {
+      setPrimaryError('Choose a tag from the list, or leave this expense untagged.');
+      return;
+    }
+    if (!selectedPrimary && extras.length > 0) {
+      if (!window.confirm('Untagging drops extra tags. Continue?')) {
+        return;
+      }
+    }
+    setPrimaryError('');
     const uuid = uuidv4();
     const {tags} = normalizeTags(selectedPrimary, extras, {tagList, legacyTagList});
     const note = normalizeDescription(description);
@@ -137,11 +150,22 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
               extraSuggestions={extraSuggestions}
               description={description}
               noteOpen={noteOpen}
-              onPrimaryChange={setSelectedPrimary}
+              onPrimaryChange={(tag) => {
+                setPrimaryError('');
+                setSelectedPrimary(tag);
+              }}
               onExtrasChange={setExtras}
               onDescriptionChange={setDescription}
               onNoteOpen={() => setNoteOpen(true)}
             />
+            {primaryError && (
+              <Alert
+                severity="error"
+                sx={{mt: 'var(--space-md)', color: 'var(--text-primary)'}}
+              >
+                {primaryError}
+              </Alert>
+            )}
           </div>
         </Fade>
       </DialogContent>

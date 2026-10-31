@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Fade from '@mui/material/Fade';
+import Alert from '@mui/material/Alert';
 import {useSelector} from 'react-redux';
 import {Expense} from '../../../Types';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
@@ -23,6 +24,7 @@ import {createTimedAlert} from '../../../store/alertActions';
 import {mergedCostAndType, signedExpenseTotal} from './mergeMath';
 import {
   extraTags,
+  isValidPrimary,
   normalizeDescription,
   normalizeTags,
   primaryTag,
@@ -60,6 +62,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const [noteOpen, setNoteOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [totalCost, setTotalCost] = useState<number>(0);
+  const [primaryError, setPrimaryError] = useState('');
   const isDesktop = useIsDesktop();
 
   const {tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -83,6 +86,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
         expenses.map((item) => normalizeDescription(item.description)).find(Boolean);
       setDescription(firstNote || '');
       setNoteOpen(Boolean(firstNote));
+      setPrimaryError('');
     }
   }, [expenses, open]);
 
@@ -98,6 +102,24 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
     // Find the expense object that corresponds to the selected vendor or use first expense as fallback
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
+    const sourcePrimary = primaryTag(vendorExpense);
+    const matchesCurrent = Boolean(
+      selectedTag &&
+      expenses.some((item) => {
+        const primary = primaryTag(item);
+        return primary && selectedTag.toLowerCase() === primary.toLowerCase();
+      }),
+    );
+    if (selectedTag && !matchesCurrent && !isValidPrimary(selectedTag, tagList, legacyTagList)) {
+      setPrimaryError('Choose a tag from the list, or keep a current tag.');
+      return;
+    }
+    if (!selectedTag && !sourcePrimary && extras.length > 0) {
+      if (!window.confirm('Merging without a primary tag drops extra tags. Continue?')) {
+        return;
+      }
+    }
+    setPrimaryError('');
 
     // Create a new merged expense with properties from the selected vendor's expense
     const {cost, costType} = mergedCostAndType(totalCost);
@@ -216,11 +238,22 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
               extraSuggestions={[...new Set(expenseList.flatMap((item) => extraTags(item)))].sort()}
               description={description}
               noteOpen={noteOpen}
-              onPrimaryChange={setSelectedTag}
+              onPrimaryChange={(tag) => {
+                setPrimaryError('');
+                setSelectedTag(tag);
+              }}
               onExtrasChange={setExtras}
               onDescriptionChange={setDescription}
               onNoteOpen={() => setNoteOpen(true)}
             />
+            {primaryError && (
+              <Alert
+                severity="error"
+                sx={{mt: 'var(--space-md)', color: 'var(--text-primary)'}}
+              >
+                {primaryError}
+              </Alert>
+            )}
           </div>
         </Fade>
 

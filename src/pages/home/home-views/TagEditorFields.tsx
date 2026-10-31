@@ -56,6 +56,15 @@ export const TagEditorFields: FC<{
           Primary tag
         </Typography>
         <div className="tag-expense-chip-list">
+          <Chip
+            label="Untagged"
+            clickable
+            color={!selectedPrimary ? 'primary' : 'default'}
+            variant={!selectedPrimary ? 'filled' : 'outlined'}
+            onClick={() => onPrimaryChange('')}
+            className={`tag-expense-chip${!selectedPrimary ? ' selected' : ''}`}
+            aria-label="Select tag untagged"
+          />
           {showLegacy && legacyPrimary && (
             <Chip
               label={`${legacyPrimary} (retired)`}
