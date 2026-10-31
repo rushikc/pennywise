@@ -3,6 +3,9 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
+// Optional: readers already tolerate `tag` without `tags`. Use this only to
+// undo a live apply of the tags-v1 field rewrite.
+
 const fs = require('fs');
 const path = require('path');
 const {migrateExpenseDoc, computeLegacyTags, countMailIdCollisions, isNullToEmptyTag} = require('./tagsModel');
@@ -47,6 +50,7 @@ function planExpenseDocs(expenses, tagList, vendorTags = [], budgets = []) {
       tags: next.tags,
       tag: next.tag,
       previousTag: expense.tag === undefined ? null : expense.tag,
+      previousTags: Array.isArray(expense.tags) ? expense.tags : '__absent__',
       previousModifiedDate: expense.modifiedDate,
       updateTime: expense._updateTime || null,
     });
@@ -87,41 +91,46 @@ async function loadLiveExpenses(db, uid) {
   return expenses;
 }
 
-async function applyUpdates(db, uid, plan, tagsSnap) {
-  const rollback = {
-    expenses: plan.updates.map((item) => ({
-      id: item.id,
-      previousTag: item.previousTag,
-      previousModifiedDate: item.previousModifiedDate,
-      migratedTags: item.tags,
-      updateTime: item.updateTime,
-    })),
-    config: tagsSnap && tagsSnap.exists && tagsSnap.get('legacyTagList') == null
-      ? {hadLegacy: false}
-      : null,
-  };
-  const rollbackDir = path.resolve(__dirname, '../../temp/migrations');
-  fs.mkdirSync(rollbackDir, {recursive: true});
-  const rollbackPath = path.join(rollbackDir, `tags-${Date.now()}.json`);
-  fs.writeFileSync(rollbackPath, JSON.stringify(rollback, null, 2));
+function serializeWriteTime(writeTime) {
+  if (!writeTime) {
+    return null;
+  }
+  if (typeof writeTime.seconds === 'number' && typeof writeTime.nanoseconds === 'number') {
+    return {seconds: writeTime.seconds, nanoseconds: writeTime.nanoseconds};
+  }
+  if (typeof writeTime._seconds === 'number') {
+    return {seconds: writeTime._seconds, nanoseconds: writeTime._nanoseconds || 0};
+  }
+  return null;
+}
 
+async function applyUpdates(db, uid, plan, tagsSnap) {
+  const rollbackExpenses = [];
   const result = {
     updated: 0,
     skippedConcurrent: 0,
     configUpdated: false,
-    rollbackPath,
+    rollbackPath: null,
     errors: [],
   };
   const nowMs = Date.now();
   for (const item of plan.updates) {
     const ref = db.doc(`users/${uid}/expense/${item.id}`);
     try {
-      await ref.update({
+      const writeResult = await ref.update({
         tags: item.tags,
         tag: item.tag,
         modifiedDate: nowMs,
       }, item.updateTime ? {lastUpdateTime: item.updateTime} : {});
       result.updated += 1;
+      rollbackExpenses.push({
+        id: item.id,
+        previousTag: item.previousTag,
+        previousTags: item.previousTags === undefined ? '__absent__' : item.previousTags,
+        previousModifiedDate: item.previousModifiedDate,
+        migratedTags: item.tags,
+        writeTime: serializeWriteTime(writeResult && writeResult.writeTime),
+      });
     } catch (error) {
       if (isConcurrentError(error)) {
         result.skippedConcurrent += 1;
@@ -133,6 +142,17 @@ async function applyUpdates(db, uid, plan, tagsSnap) {
       }
     }
   }
+  const rollback = {
+    expenses: rollbackExpenses,
+    config: tagsSnap && tagsSnap.exists && tagsSnap.get('legacyTagList') == null
+      ? {hadLegacy: false}
+      : null,
+  };
+  const rollbackDir = path.resolve(__dirname, '../../temp/migrations');
+  fs.mkdirSync(rollbackDir, {recursive: true});
+  const rollbackPath = path.join(rollbackDir, `tags-${Date.now()}.json`);
+  fs.writeFileSync(rollbackPath, JSON.stringify(rollback, null, 2));
+  result.rollbackPath = rollbackPath;
   if (result.errors.length === 0 && tagsSnap && tagsSnap.exists && tagsSnap.get('legacyTagList') == null) {
     await tagsSnap.ref.update({legacyTagList: plan.legacyTagList});
     result.configUpdated = true;
@@ -149,13 +169,24 @@ async function loadCollection(db, uid, name) {
   return rows;
 }
 
-async function rollbackFromFile(db, uid, filePath, apply, fieldValueDelete) {
+function rehydrateWriteTime(writeTime, TimestampCtor) {
+  if (!writeTime || typeof writeTime.seconds !== 'number') {
+    return null;
+  }
+  if (TimestampCtor) {
+    return new TimestampCtor(writeTime.seconds, writeTime.nanoseconds || 0);
+  }
+  return writeTime;
+}
+
+async function rollbackFromFile(db, uid, filePath, apply, fieldValueDelete, TimestampCtor) {
   const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   const report = {
     mode: apply ? 'APPLY' : 'dry-run',
     expenseCount: (payload.expenses || []).length,
     restored: 0,
     skipped: 0,
+    skippedChangedSince: 0,
     errors: [],
   };
   console.log(JSON.stringify({mode: report.mode, expenseCount: report.expenseCount}, null, 2));
@@ -163,6 +194,7 @@ async function rollbackFromFile(db, uid, filePath, apply, fieldValueDelete) {
     return report;
   }
   const deleteField = fieldValueDelete || require('firebase-admin').firestore.FieldValue.delete();
+  const Timestamp = TimestampCtor || require('firebase-admin').firestore.Timestamp;
   const nowMs = Date.now();
   for (const item of payload.expenses || []) {
     const ref = db.doc(`users/${uid}/expense/${item.id}`);
@@ -172,21 +204,23 @@ async function rollbackFromFile(db, uid, filePath, apply, fieldValueDelete) {
         report.skipped += 1;
         continue;
       }
-      const currentTags = snap.data ? (snap.data().tags || snap.get && snap.get('tags')) : snap.get('tags');
-      if (item.migratedTags && JSON.stringify(currentTags) !== JSON.stringify(item.migratedTags)) {
-        report.skipped += 1;
-        continue;
-      }
-      const precondition = item.updateTime ? {lastUpdateTime: item.updateTime} : {};
-      await ref.update({
+      const writeTime = rehydrateWriteTime(item.writeTime, Timestamp);
+      const precondition = writeTime ? {lastUpdateTime: writeTime} : {};
+      const data = {
         tag: item.previousTag,
         modifiedDate: nowMs,
-        tags: deleteField,
-      }, precondition);
+      };
+      if (item.previousTags === '__absent__' || item.previousTags === undefined) {
+        data.tags = deleteField;
+      } else {
+        data.tags = item.previousTags;
+      }
+      await ref.update(data, precondition);
       report.restored += 1;
     } catch (error) {
       if (isConcurrentError(error)) {
         report.skipped += 1;
+        report.skippedChangedSince += 1;
         continue;
       }
       report.errors.push({id: item.id, message: error.message || String(error), code: error.code});
@@ -226,7 +260,14 @@ async function main(argv = process.argv) {
   }
 
   if (args.rollback) {
-    return rollbackFromFile(db, uid, path.resolve(args.rollback), args.apply);
+    return rollbackFromFile(
+      db,
+      uid,
+      path.resolve(args.rollback),
+      args.apply,
+      admin.firestore.FieldValue.delete(),
+      admin.firestore.Timestamp,
+    );
   }
 
   const tagsSnap = await db.doc(`users/${uid}/config/tags`).get();

@@ -50,7 +50,10 @@ function createFakeDb(initial = {}) {
             error.code = rec.failCode;
             throw error;
           }
-          if (opts.lastUpdateTime != null && opts.lastUpdateTime !== rec.updateTime) {
+          const expected = opts.lastUpdateTime && typeof opts.lastUpdateTime === 'object'
+            ? opts.lastUpdateTime.seconds
+            : opts.lastUpdateTime;
+          if (expected != null && expected !== rec.updateTime) {
             const error = new Error('concurrent');
             error.code = 9;
             throw error;
@@ -65,6 +68,7 @@ function createFakeDb(initial = {}) {
           });
           rec.data = next;
           rec.updateTime += 1;
+          return {writeTime: {seconds: rec.updateTime, nanoseconds: 0}};
         },
       };
       return self;
@@ -131,9 +135,10 @@ describe('rollbackFromFile', () => {
       expenses: [{
         id: 'a',
         previousTag: 'food',
+        previousTags: '__absent__',
         previousModifiedDate: 1,
         migratedTags: ['food'],
-        updateTime: 1,
+        writeTime: {seconds: 1, nanoseconds: 0},
       }],
       config: {hadLegacy: false},
     }));
@@ -142,7 +147,13 @@ describe('rollbackFromFile', () => {
       'users/uid-1/config/tags': {data: {tagList: ['food'], legacyTagList: ['alcohol']}, updateTime: 1},
     });
     const before = Date.now();
-    const report = await rollbackFromFile(db, 'uid-1', filePath, true, deleteSentinel);
+    class Timestamp {
+      constructor(seconds, nanoseconds) {
+        this.seconds = seconds;
+        this.nanoseconds = nanoseconds;
+      }
+    }
+    const report = await rollbackFromFile(db, 'uid-1', filePath, true, deleteSentinel, Timestamp);
     assert.equal(report.restored, 1);
     const expense = docs.get('users/uid-1/expense/a').data;
     assert.equal(expense.tag, 'food');
