@@ -8,6 +8,7 @@ import {DocumentData, ExpenseAPI} from './ExpenseAPI';
 import {collection, getDocs, getFirestore, query} from 'firebase/firestore/lite';
 import {initializeApp} from 'firebase/app';
 import {firebaseConfig} from '../firebase/firebase-public';
+import {connectEmulators} from '../firebase/e2eEmulators';
 import {isEmpty, JSONCopy, sleep} from '../utility/utility';
 import {ErrorHandlers} from '../components/ErrorHandlers';
 import {Budget} from '../Types';
@@ -17,6 +18,7 @@ import {currentUid} from './liveCurrentUid';
 
 
 const app = initializeApp(firebaseConfig);
+connectEmulators(app);
 const db = getFirestore(app);
 
 

@@ -12,6 +12,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {store} from './store/store';
 import {Provider} from 'react-redux';
 
+if (__E2E_EMULATORS__) {
+  void import('./firebase/e2eHooks').then(({installE2EHooks}) => installE2EHooks());
+}
+
 const container = document.getElementById('root');
 
 if (container) {

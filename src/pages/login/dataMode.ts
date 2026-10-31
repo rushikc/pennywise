@@ -30,6 +30,10 @@ const probeLiveFirestore = async (uid: string): Promise<'demo' | 'live'> => {
   const {getApp} = await import('firebase/app');
   const {doc, getDoc, getFirestore} = await import('firebase/firestore/lite');
   try {
+    if (__E2E_EMULATORS__) {
+      const {connectEmulators} = await import('../../firebase/e2eEmulators');
+      connectEmulators(getApp());
+    }
     await getDoc(doc(getFirestore(getApp()), ...profileProbeSegments(uid)));
     return 'live';
   } catch (error) {

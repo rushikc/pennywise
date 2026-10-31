@@ -132,14 +132,31 @@ const stripDemoFirebaseHosts = (mode: string): Plugin => ({
   },
 });
 
+/**
+ * `--mode e2e` (Playwright only): never reads .env, points the app at the local Firebase
+ * emulators under the fake `demo-pennywise` project, and builds into build-e2e/.
+ */
+const E2E_FIREBASE_ENV: Record<string, string> = {
+  REACT_APP_FIREBASE_API_KEY: 'demo-api-key',
+  REACT_APP_FIREBASE_AUTH_DOMAIN: 'demo-pennywise.firebaseapp.com',
+  REACT_APP_FIREBASE_PROJECT_ID: 'demo-pennywise',
+  REACT_APP_FIREBASE_STORAGE_BUCKET: '',
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID: '',
+  REACT_APP_FIREBASE_APP_ID: 'demo-app-id',
+  REACT_APP_FIREBASE_MEASUREMENT_ID: '',
+  REACT_APP_GOOGLE_OAUTH_CLIENT_ID: '',
+};
+
 export default defineConfig(({mode, command}) => {
   const isDemo = mode === 'demo';
-  const env = isDemo ? {} : loadEnv(mode, rootDir, 'REACT_APP_');
+  const isE2E = mode === 'e2e';
+  const env: Record<string, string> = isDemo ? {} : isE2E ? E2E_FIREBASE_ENV : loadEnv(mode, rootDir, 'REACT_APP_');
   const processEnvDefines: Record<string, string> = {
     'process.env.NODE_ENV': JSON.stringify(
       command === 'build' ? 'production' : 'development',
     ),
     __DEMO_BUILD__: JSON.stringify(isDemo),
+    __E2E_EMULATORS__: JSON.stringify(isE2E),
   };
   for (const key of firebaseEnvKeys) {
     processEnvDefines[`process.env.${key}`] = JSON.stringify(isDemo ? '' : (env[key] ?? ''));
@@ -147,6 +164,8 @@ export default defineConfig(({mode, command}) => {
 
   return {
     envPrefix: 'REACT_APP_',
+    // e2e must not pick up REACT_APP_* values from .env files through import.meta.env.
+    envDir: isE2E ? path.join(rootDir, 'tests') : rootDir,
     define: processEnvDefines,
     plugins: [
       react(),
@@ -154,8 +173,8 @@ export default defineConfig(({mode, command}) => {
       buildInfoPlugin(),
       demoModuleAliases(isDemo),
       stripDemoFirebaseHosts(mode),
-      mode !== 'test' && checker({typescript: true}),
-      command === 'build' && !isDemo && visualizer({
+      mode !== 'test' && !isE2E && checker({typescript: true}),
+      command === 'build' && !isDemo && !isE2E && visualizer({
         filename: path.join(rootDir, 'build/bundle-analysis-report.html'),
         open: false,
         gzipSize: true,
@@ -173,11 +192,12 @@ export default defineConfig(({mode, command}) => {
       },
     },
     preview: {
-      port: 3000,
+      port: isE2E ? 3100 : 3000,
+      strictPort: true,
       host: '127.0.0.1',
     },
     build: {
-      outDir: 'build',
+      outDir: isE2E ? 'build-e2e' : 'build',
       emptyOutDir: true,
       rollupOptions: {
         output: {

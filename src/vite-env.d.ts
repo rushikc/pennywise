@@ -7,6 +7,8 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 /// <reference types="vitest/globals" />
 
 declare const __DEMO_BUILD__: boolean;
+/** True only in `vite --mode e2e` builds (Playwright against the Firebase emulators). */
+declare const __E2E_EMULATORS__: boolean;
 
 declare module '../../shared/tagCases.json' {
   const value: {

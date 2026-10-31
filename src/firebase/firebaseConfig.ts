@@ -7,6 +7,7 @@ import {initializeApp, type FirebaseApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider, type Auth} from 'firebase/auth';
 import {firebaseConfig} from './firebase-public';
 import {IS_DEMO_BUILD} from '../utility/buildMode';
+import {connectEmulators} from './e2eEmulators';
 
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
@@ -22,6 +23,7 @@ export const getFirebaseApp = (): FirebaseApp => {
   assertLiveBuild();
   if (!app) {
     app = initializeApp(firebaseConfig);
+    connectEmulators(app);
   }
   return app;
 };
