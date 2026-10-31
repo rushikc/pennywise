@@ -176,6 +176,13 @@ describe('vendor helpers', () => {
     assert.equal(tag, 'food');
   });
 
+  it('matches vendors case-insensitively', () => {
+    assert.equal(
+      resolveVendorTag(canonicalizeVendor('shop'), [{vendor: 'Shop', tag: 'mystery'}]),
+      'mystery',
+    );
+  });
+
   it('treats a non-array tag list as empty', () => {
     assert.equal(resolveVendorTag('SHOP', null), undefined);
   });

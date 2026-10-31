@@ -196,7 +196,6 @@ describe('saveParsedExpense', () => {
 
   it('writes tags array and the tag mirror from a vendor map', async () => {
     const db = collectionStore();
-    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
     const created = await saveParsedExpense(
       db,
       'u1',
@@ -210,9 +209,8 @@ describe('saveParsedExpense', () => {
     assert.equal(created.expense.tag, 'food');
   });
 
-  it('canonicalises a vendor tag against tagList', async () => {
+  it('keeps the trimmed original vendor tag without canonicalising against a list', async () => {
     const db = collectionStore();
-    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
     const created = await saveParsedExpense(
       db,
       'u1',
@@ -221,13 +219,12 @@ describe('saveParsedExpense', () => {
       [{vendor: 'SHOP', tag: ' Food '}],
       100,
     );
-    assert.deepEqual(created.expense.tags, ['food']);
-    assert.equal(created.expense.tag, 'food');
+    assert.deepEqual(created.expense.tags, ['Food']);
+    assert.equal(created.expense.tag, 'Food');
   });
 
-  it('drops an unknown vendor tag', async () => {
+  it('keeps a vendor tag that is not in the tag list', async () => {
     const db = collectionStore();
-    db.docs.set('users/u1/config/tags', {tagList: ['food'], legacyTagList: []});
     const created = await saveParsedExpense(
       db,
       'u1',
@@ -236,8 +233,29 @@ describe('saveParsedExpense', () => {
       [{vendor: 'SHOP', tag: 'mystery'}],
       100,
     );
-    assert.deepEqual(created.expense.tags, []);
-    assert.equal(created.expense.tag, null);
+    assert.deepEqual(created.expense.tags, ['mystery']);
+    assert.equal(created.expense.tag, 'mystery');
+  });
+
+  it('works when config/tags is missing', async () => {
+    const db = collectionStore();
+    const origDoc = db.doc.bind(db);
+    const paths = [];
+    db.doc = (path) => {
+      paths.push(path);
+      return origDoc(path);
+    };
+    const created = await saveParsedExpense(
+      db,
+      'u1',
+      {id: 'msg-no-config', internalDate: '10'},
+      {cost: 12, costType: 'debit', vendor: 'Shop', type: 'upi'},
+      [{vendor: 'SHOP', tag: 'mystery'}],
+      100,
+    );
+    assert.equal(created.created, true);
+    assert.deepEqual(created.expense.tags, ['mystery']);
+    assert.equal(paths.some((path) => path === 'users/u1/config/tags'), false);
   });
 
   it('does not resurrect a deleted expense when the processed marker remains', async () => {
