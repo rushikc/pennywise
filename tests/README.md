@@ -2,13 +2,17 @@
 
 | Folder / file | What it covers | Command |
 | --- | --- | --- |
+| `src/**/*.test.ts(x)` | Web app unit tests (Vitest + jsdom) | `CI=true npm test` |
+| `functions/**` | Cloud Functions unit tests (builds the TypeScript parsers first) | `npm test --prefix functions` |
 | `e2e/` | Playwright end-to-end tests against the built app and the local Firebase emulators | `npm run test:e2e` |
 | `fixtures/` | Synthetic seed data and the emulator seeding helpers used by `e2e/` | `npm run test:e2e:seed` |
+| emulators left running for a manual look | Firestore, Auth, and Functions emulators | `npm run test:e2e:emulators` |
 | `firestore.rules.test.js` | Firestore security rules | `npm run test:rules` |
-| `migrateTagsFirestore.emulator.test.js` | Tag migration script against the Firestore emulator | `npm run test:migrate` |
+| `scripts/migrate/*.test.js` | Migration script unit tests | `npm run test:migrate` |
+| `migrateTagsFirestore.emulator.test.js` | Tag migration script against the Firestore emulator | `npm run test:migrate:emulator` |
 | `functions/api/api.emulator.test.js` | Pennywise API against the Firestore + Auth emulators | `npm run test:api:emulator` |
 
-Unit tests live next to the code under `src/` and run with `npm test` (Vitest).
+One-time, before the first Playwright run: `npx playwright install chromium`.
 
 ## Playwright e2e
 
@@ -42,7 +46,8 @@ Outside CI, already-running servers are reused. **If you keep `vite preview` run
 
 - `--mode e2e` ignores every `.env` file and hard-codes the fake `demo-pennywise` project
   (see `E2E_FIREBASE_ENV` in `vite.config.ts`). The app connects to the emulators on
-  `127.0.0.1:8080` (Firestore) and `127.0.0.1:9099` (Auth).
+  `127.0.0.1:8080` (Firestore) and `127.0.0.1:9099` (Auth). The Functions emulator listens on
+  `127.0.0.1:5001`. Playwright waits until that emulator's health URL answers before the specs start.
 - `tests/fixtures/seedEmulator.ts` refuses to run unless `FIRESTORE_EMULATOR_HOST`,
   `FIREBASE_AUTH_EMULATOR_HOST` and `GCLOUD_PROJECT` point at the local emulator and `demo-pennywise`.
 - The `window.__pennywiseE2E` test hooks (`src/firebase/e2eHooks.ts`) only exist in the e2e build.

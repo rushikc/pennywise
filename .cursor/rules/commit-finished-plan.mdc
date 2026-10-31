@@ -34,7 +34,7 @@ Follow the repo git safety protocol. In parallel: `git status`, `git diff` (stag
 
 ## Lint, typecheck, and build
 
-Write these commands into the plan as the last verify step. Run them once at the end of every implementation, including work from a plan. ESLint is not a typecheck. Vite HMR and `vite-plugin-checker` overlay are not a substitute for `npx tsc --noEmit`. Treat a type overlay as a failure. After toolchain or typecheck changes, restart `npm run dev`; do not reuse a leftover CRA/`react-scripts` process on port 3000.
+Write these commands into the plan as the last verify step. Run them once at the end of every implementation, including work from a plan. ESLint is not a typecheck. Vite HMR and `vite-plugin-checker` overlay are not a substitute for `npx tsc --noEmit`. Treat a type overlay as a failure. After toolchain or typecheck changes, restart `npm run dev` (the Vite dev server). Do not reuse a leftover `vite preview` on port 3000.
 
 Plan-file-only or docs-only edits skip this pass. If a touched package has no matching command, skip that command and say so.
 
