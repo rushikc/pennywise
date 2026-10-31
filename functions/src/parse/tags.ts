@@ -35,7 +35,7 @@ const normalizePrimaryValue = (value: unknown): string | null => {
   if (!trimmed || trimmed.toLowerCase() === 'untagged') {
     return null;
   }
-  return trimmed;
+  return trimmed.slice(0, TAG_LIMITS.maxTagLength);
 };
 
 const canonicalPrimary = (primary: string, opts?: TagNormalizeOpts): string => {
@@ -106,10 +106,7 @@ export function readTags(doc: TagDoc | null | undefined): string[] {
     return normalizeTags(doc.tags[0], doc.tags.slice(1)).tags;
   }
   if (typeof doc.tag === 'string') {
-    const trimmed = collapseWhitespace(doc.tag);
-    if (trimmed && trimmed.toLowerCase() !== 'untagged') {
-      return [trimmed];
-    }
+    return normalizeTags(doc.tag, []).tags;
   }
   return [];
 }

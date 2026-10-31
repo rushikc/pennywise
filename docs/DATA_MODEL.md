@@ -16,6 +16,7 @@ This is the source of truth for expense tags after the multi-tag change. The exe
 ## Primary tag (`tags[0]`)
 
 - Simple category, easy to recognise.
+- Trimmed and capped at 40 characters (`TAG_LIMITS.maxTagLength`), same as extras.
 - On **app writes** it must be in `config/tags.tagList ∪ config/tags.legacyTagList`, matched case-insensitively after trim, stored in the list's canonical spelling.
 - On **read**, any value is shown as-is. Never drop it.
 - A **legacy tag** is one removed from `tagList` but still valid on old expenses.

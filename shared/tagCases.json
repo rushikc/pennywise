@@ -106,6 +106,33 @@
         "tags": [],
         "dropped": ["zomato"]
       }
+    },
+    {
+      "name": "truncate a 50-character primary",
+      "primary": "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
+      "extras": [],
+      "expected": {
+        "tags": ["abcdefghijklmnopqrstuvwxyz0123456789ABCD"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "cap 10 extras at 8 tags total",
+      "primary": "food",
+      "extras": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+      "expected": {
+        "tags": ["food", "a", "b", "c", "d", "e", "f", "g"],
+        "dropped": ["h", "i", "j"]
+      }
+    },
+    {
+      "name": "extra equal to primary in a different case is dropped",
+      "primary": "Food",
+      "extras": ["FOOD"],
+      "expected": {
+        "tags": ["Food"],
+        "dropped": ["FOOD"]
+      }
     }
   ],
   "readTags": [
@@ -157,6 +184,43 @@
         "tag": "   "
       },
       "expected": []
+    },
+    {
+      "name": "dirty tags array is normalised",
+      "doc": {
+        "tags": [" Food ", "food", "X"]
+      },
+      "expected": ["Food", "x"]
+    },
+    {
+      "name": "untagged primary in tags array drops extras",
+      "doc": {
+        "tags": ["untagged", "x"]
+      },
+      "expected": []
+    },
+    {
+      "name": "null primary in tags array drops extras",
+      "doc": {
+        "tags": [null, "x"]
+      },
+      "expected": []
+    },
+    {
+      "name": "non-array tags falls through to tag string",
+      "doc": {
+        "tags": "ignored",
+        "tag": "food"
+      },
+      "expected": ["food"]
+    },
+    {
+      "name": "empty tags array uses tag string",
+      "doc": {
+        "tags": [],
+        "tag": "food"
+      },
+      "expected": ["food"]
     }
   ],
   "description": [
@@ -185,6 +249,16 @@
       "input": "x",
       "repeat": 300,
       "expectedLength": 280
+    },
+    {
+      "name": "number omitted",
+      "input": 12,
+      "expected": null
+    },
+    {
+      "name": "object omitted",
+      "input": {"text": "nope"},
+      "expected": null
     }
   ],
   "isValidPrimary": [

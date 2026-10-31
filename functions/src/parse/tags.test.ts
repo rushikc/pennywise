@@ -36,7 +36,7 @@ const cases = JSON.parse(
   }>;
   description: Array<{
     name: string;
-    input: string | null;
+    input: string | number | object | null;
     expected?: string | null;
     repeat?: number;
     expectedLength?: number;
