@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 /* eslint-disable */
 
 const {defaultRules} = require('./defaultRules');
+const {primaryTag, extraTags, normalizeTags, normalizeDescription, readTags, sameTag} = require('../lib/parse/tags');
 
 /**
  * @typedef {object} Expense
@@ -92,19 +93,17 @@ function resolveRail(expense, railGroup) {
  * @param {object} neverMerge
  * @returns {boolean}
  */
-const {primaryTag, extraTags, normalizeTags, normalizeDescription, readTags} = require('../lib/parse/tags');
-
 function violatesDistinctTags(a, b, neverMerge) {
   const tagA = primaryTag(a);
   const tagB = primaryTag(b);
-  if (!tagA || !tagB || tagA === tagB) {
+  if (!tagA || !tagB || sameTag(tagA, tagB)) {
     return false;
   }
   for (const pair of neverMerge.distinctTagPairs || []) {
     const [t1, t2] = pair;
     if (
-      (tagA === t1 && tagB === t2) ||
-      (tagA === t2 && tagB === t1)
+      (sameTag(tagA, t1) && sameTag(tagB, t2)) ||
+      (sameTag(tagA, t2) && sameTag(tagB, t1))
     ) {
       return true;
     }
@@ -387,5 +386,6 @@ module.exports = {
   resolveAliasEntity,
   resolveRail,
   pickSurvivor,
+  violatesDistinctTags,
   defaultRules,
 };

@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import {TAG_LIMITS, normalizeTags} from '../../../domain/tags';
+import {TAG_LIMITS, normalizeTags, sameTag} from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
 
 export const TagEditorFields: FC<{
@@ -69,10 +69,10 @@ export const TagEditorFields: FC<{
             <Chip
               label={`${legacyPrimary} (retired)`}
               clickable
-              color={selectedPrimary === legacyPrimary ? 'primary' : 'default'}
-              variant={selectedPrimary === legacyPrimary ? 'filled' : 'outlined'}
+              color={sameTag(selectedPrimary, legacyPrimary) ? 'primary' : 'default'}
+              variant={sameTag(selectedPrimary, legacyPrimary) ? 'filled' : 'outlined'}
               onClick={() => onPrimaryChange(legacyPrimary)}
-              className={`tag-expense-chip${selectedPrimary === legacyPrimary ? ' selected' : ''}`}
+              className={`tag-expense-chip${sameTag(selectedPrimary, legacyPrimary) ? ' selected' : ''}`}
               aria-label={`Select tag ${legacyPrimary}`}
             />
           )}
@@ -81,10 +81,10 @@ export const TagEditorFields: FC<{
               key={tag}
               label={tag}
               clickable
-              color={selectedPrimary === tag ? 'primary' : 'default'}
-              variant={selectedPrimary === tag ? 'filled' : 'outlined'}
+              color={sameTag(selectedPrimary, tag) ? 'primary' : 'default'}
+              variant={sameTag(selectedPrimary, tag) ? 'filled' : 'outlined'}
               onClick={() => onPrimaryChange(tag)}
-              className={`tag-expense-chip${selectedPrimary === tag ? ' selected' : ''}`}
+              className={`tag-expense-chip${sameTag(selectedPrimary, tag) ? ' selected' : ''}`}
               aria-label={`Select tag ${tag}`}
             />
           ))}

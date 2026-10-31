@@ -48,6 +48,21 @@ describe('TagExpenses', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('marks the matching primary chip selected regardless of case', async () => {
+    const store = configureStore({reducer: {expense: expenseReducer}});
+    store.dispatch(expenseSlice.actions.setTagList(['food']));
+    store.dispatch(expenseSlice.actions.setTagExpense(makeExpense({
+      vendor: 'SHOP',
+      tags: ['FOOD'],
+    })));
+    render(
+      <Provider store={store}>
+        <TagExpenses/>
+      </Provider>,
+    );
+    expect(await screen.findByRole('button', {name: /select tag food/i})).toHaveClass('MuiChip-colorPrimary');
+  });
+
   it('saves an untagged expense as empty tags', async () => {
     render(
       <Provider store={makeTagStore(true)}>

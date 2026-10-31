@@ -216,5 +216,19 @@
       "legacyTagList": [],
       "expected": false
     }
+  ],
+  "sameTag": [
+    {
+      "name": "mixed case matches",
+      "left": "Food",
+      "right": "food",
+      "expected": true
+    },
+    {
+      "name": "different tags",
+      "left": "food",
+      "right": "rent",
+      "expected": false
+    }
   ]
 }

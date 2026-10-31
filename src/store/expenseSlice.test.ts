@@ -72,4 +72,15 @@ describe('expenseSlice', () => {
     expect(store.getState().expense.tagList).toEqual(['rent']);
     expect(store.getState().expense.legacyTagList).toEqual(['food']);
   });
+
+  it('treats Food and food as the same tag when retiring and restoring', () => {
+    const store = makeStore();
+    store.dispatch(expenseSlice.actions.setTagList(['Food']));
+    store.dispatch(expenseSlice.actions.deleteTag('food'));
+    expect(store.getState().expense.tagList).toEqual([]);
+    expect(store.getState().expense.legacyTagList).toEqual(['Food']);
+    store.dispatch(expenseSlice.actions.addTag('food'));
+    expect(store.getState().expense.tagList).toEqual(['food']);
+    expect(store.getState().expense.legacyTagList).toEqual([]);
+  });
 });

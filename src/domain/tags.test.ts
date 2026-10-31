@@ -12,6 +12,7 @@ import {
   normalizeTags,
   primaryTag,
   readTags,
+  sameTag,
   withTags,
 } from './tags';
 
@@ -43,6 +44,12 @@ describe('tag helpers', () => {
   describe('isValidPrimary', () => {
     it.each(cases.isValidPrimary)('$name', (item) => {
       expect(isValidPrimary(item.tag, item.tagList, item.legacyTagList)).toBe(item.expected);
+    });
+  });
+
+  describe('sameTag', () => {
+    it.each(cases.sameTag)('$name', (item) => {
+      expect(sameTag(item.left, item.right)).toBe(item.expected);
     });
   });
 

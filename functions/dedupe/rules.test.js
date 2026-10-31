@@ -17,6 +17,7 @@ const {
   resolveAliasEntity,
   resolveRail,
   pickSurvivor,
+  violatesDistinctTags,
   defaultRules,
 } = require('./rules');
 
@@ -187,6 +188,13 @@ describe('detect never-merge tags', () => {
       exp({id: '2', ...netflixB, tag: 'entertainment', date: t0 + MINUTE}),
     ]);
     assert.equal(pairs.length, 1);
+  });
+
+  it('treats Food and food as the same primary', () => {
+    assert.equal(
+      violatesDistinctTags({tag: 'Food'}, {tag: 'food'}, defaultRules.neverMerge),
+      false,
+    );
   });
 
   it('does not block unrelated tags', () => {

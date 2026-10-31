@@ -26,6 +26,7 @@ import {ArrowBack as BackIcon} from '@mui/icons-material';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectExpense} from '../../../store/expenseActions';
 import {expenseSlice} from '../../../store/expenseSlice';
+import {sameTag} from '../../../domain/tags';
 import './settingViews.scss';
 import {useNavigate} from 'react-router-dom';
 
@@ -57,8 +58,10 @@ const ManageTags: React.FC = () => {
   };
 
   const confirmDeleteTag = () => {
-    const nextTagList = tagList.filter((item) => item !== tagToDelete);
-    const nextLegacy = legacyTagList.includes(tagToDelete) ? legacyTagList : [...legacyTagList, tagToDelete];
+    const nextTagList = tagList.filter((item) => !sameTag(item, tagToDelete));
+    const nextLegacy = legacyTagList.some((item) => sameTag(item, tagToDelete))
+      ? legacyTagList
+      : [...legacyTagList, tagToDelete];
     dispatch(expenseSlice.actions.deleteTag(tagToDelete));
     persistConfig(nextTagList, nextLegacy);
     setDeleteConfirmDialog(false);
@@ -75,14 +78,14 @@ const ManageTags: React.FC = () => {
 
   const handleAddTag = () => {
     const trimmed = newTagName.trim();
-    if (!trimmed || tagList.includes(trimmed)) {
+    if (!trimmed || tagList.some((item) => sameTag(item, trimmed))) {
       handleCloseAddDialog();
       return;
     }
     dispatch(expenseSlice.actions.addTag(trimmed));
     persistConfig(
-      tagList.includes(trimmed) ? tagList : [...tagList, trimmed],
-      legacyTagList.filter((item) => item !== trimmed),
+      tagList.some((item) => sameTag(item, trimmed)) ? tagList : [...tagList, trimmed],
+      legacyTagList.filter((item) => !sameTag(item, trimmed)),
     );
     handleCloseAddDialog();
   };
@@ -90,8 +93,8 @@ const ManageTags: React.FC = () => {
   const handleRestoreTag = (tag: string) => {
     dispatch(expenseSlice.actions.addTag(tag));
     persistConfig(
-      tagList.includes(tag) ? tagList : [...tagList, tag],
-      legacyTagList.filter((item) => item !== tag),
+      tagList.some((item) => sameTag(item, tag)) ? tagList : [...tagList, tag],
+      legacyTagList.filter((item) => !sameTag(item, tag)),
     );
   };
 

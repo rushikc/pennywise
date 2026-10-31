@@ -15,6 +15,7 @@ import {
   normalizeTags,
   primaryTag,
   readTags,
+  sameTag,
   withTags,
 } from './tags';
 
@@ -47,6 +48,12 @@ const cases = JSON.parse(
     legacyTagList: string[];
     expected: boolean;
   }>;
+  sameTag: Array<{
+    name: string;
+    left: string;
+    right: string;
+    expected: boolean;
+  }>;
 };
 
 describe('tag helpers', () => {
@@ -77,6 +84,12 @@ describe('tag helpers', () => {
   for (const item of cases.isValidPrimary) {
     it(`isValidPrimary: ${item.name}`, () => {
       assert.equal(isValidPrimary(item.tag, item.tagList, item.legacyTagList), item.expected);
+    });
+  }
+
+  for (const item of cases.sameTag) {
+    it(`sameTag: ${item.name}`, () => {
+      assert.equal(sameTag(item.left, item.right), item.expected);
     });
   }
 

@@ -7,6 +7,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppConfig, BankConfig, Budget, Expense, VendorTag, Alert} from '../Types';
 import {FinanceIndexDB} from '../api/FinanceIndexDB';
 import {getDataMode} from '../pages/login/dataMode';
+import {sameTag} from '../domain/tags';
 
 
 interface InitialState {
@@ -126,17 +127,18 @@ export const expenseSlice = createSlice({
 
     addTag: (state, action: PayloadAction<string>) => {
       const tag = action.payload;
-      state.legacyTagList = state.legacyTagList.filter((item) => item !== tag);
-      if (!state.tagList.includes(tag)) {
+      state.legacyTagList = state.legacyTagList.filter((item) => !sameTag(item, tag));
+      if (!state.tagList.some((item) => sameTag(item, tag))) {
         state.tagList.push(tag);
       }
     },
 
     deleteTag: (state, action: PayloadAction<string>) => {
       const tag = action.payload;
-      state.tagList = state.tagList.filter((item) => item !== tag);
-      if (!state.legacyTagList.includes(tag)) {
-        state.legacyTagList.push(tag);
+      const existing = state.tagList.find((item) => sameTag(item, tag)) || tag;
+      state.tagList = state.tagList.filter((item) => !sameTag(item, tag));
+      if (!state.legacyTagList.some((item) => sameTag(item, tag))) {
+        state.legacyTagList.push(existing);
       }
     },
 

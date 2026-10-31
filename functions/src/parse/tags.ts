@@ -146,6 +146,15 @@ export function normalizeDescription(value: unknown): string | undefined {
   return trimmed.slice(0, TAG_LIMITS.maxDescription);
 }
 
+export function sameTag(left: unknown, right: unknown): boolean {
+  const a = normalizePrimaryValue(left);
+  const b = normalizePrimaryValue(right);
+  if (!a || !b) {
+    return false;
+  }
+  return a.toLowerCase() === b.toLowerCase();
+}
+
 export function isValidPrimary(
   tag: unknown,
   tagList: string[] = [],
