@@ -38,6 +38,10 @@ const normalizePrimaryValue = (value: unknown): string | null => {
   return trimmed.slice(0, TAG_LIMITS.maxTagLength);
 };
 
+/**
+ * Rewrites a primary to the list spelling when a case-insensitive match exists.
+ * Lists never drop a value: an unmatched primary is returned as given.
+ */
 const canonicalPrimary = (primary: string, opts?: TagNormalizeOpts): string => {
   const lists = [...(opts?.tagList || []), ...(opts?.legacyTagList || [])];
   const match = lists.find((item) => {
@@ -60,6 +64,11 @@ const normalizeExtraValue = (value: unknown): string | null => {
   return trimmed.slice(0, TAG_LIMITS.maxTagLength);
 };
 
+/**
+ * Normalise a primary plus extras.
+ * When tagList / legacyTagList are passed, a case-insensitive match rewrites
+ * the primary to the list spelling. Lists never drop an unlisted primary.
+ */
 export function normalizeTags(
   primary: unknown,
   extras: unknown = [],
@@ -152,19 +161,58 @@ export function sameTag(left: unknown, right: unknown): boolean {
   return a.toLowerCase() === b.toLowerCase();
 }
 
+export type TagListStatus = 'active' | 'retired' | 'unlisted' | null;
+
+export function tagListStatus(
+  tag: unknown,
+  tagList: string[] = [],
+  legacyTagList: string[] = [],
+): TagListStatus {
+  const primary = normalizePrimaryValue(tag);
+  if (!primary) {
+    return null;
+  }
+  const listed = (item: unknown) =>
+    typeof item === 'string' && collapseWhitespace(item).toLowerCase() === primary.toLowerCase();
+  if (tagList.some(listed)) {
+    return 'active';
+  }
+  if (legacyTagList.some(listed)) {
+    return 'retired';
+  }
+  return 'unlisted';
+}
+
+export function isListedTag(
+  tag: unknown,
+  tagList: string[] = [],
+  legacyTagList: string[] = [],
+): boolean {
+  const status = tagListStatus(tag, tagList, legacyTagList);
+  return status === 'active' || status === 'retired';
+}
+
+export function groupKey(tag: unknown): string | null {
+  const primary = normalizePrimaryValue(tag);
+  return primary ? primary.toLowerCase() : null;
+}
+
+export function displayTag(
+  tag: unknown,
+  tagList: string[] = [],
+  legacyTagList: string[] = [],
+): string | null {
+  const primary = normalizePrimaryValue(tag);
+  if (!primary) {
+    return null;
+  }
+  return canonicalPrimary(primary, {tagList, legacyTagList});
+}
+
 export function isValidPrimary(
   tag: unknown,
   tagList: string[] = [],
   legacyTagList: string[] = [],
 ): boolean {
-  const primary = normalizePrimaryValue(tag);
-  if (!primary) {
-    return false;
-  }
-  return [...tagList, ...legacyTagList].some((item) => {
-    if (typeof item !== 'string') {
-      return false;
-    }
-    return collapseWhitespace(item).toLowerCase() === primary.toLowerCase();
-  });
+  return isListedTag(tag, tagList, legacyTagList);
 }

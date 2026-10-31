@@ -29,11 +29,17 @@ declare module '../../shared/tagCases.json' {
       repeat?: number;
       expectedLength?: number;
     }>;
-    isValidPrimary: Array<{
+    tagListStatus: Array<{
       name: string;
       tag: string;
       tagList: string[];
       legacyTagList: string[];
+      expected: 'active' | 'retired' | 'unlisted' | null;
+    }>;
+    sameTag: Array<{
+      name: string;
+      left: string;
+      right: string;
       expected: boolean;
     }>;
   };

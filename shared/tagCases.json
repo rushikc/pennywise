@@ -133,6 +133,32 @@
         "tags": ["Food"],
         "dropped": ["FOOD"]
       }
+    },
+    {
+      "name": "keeps an unlisted primary as written",
+      "primary": "Mystery Shop",
+      "extras": [],
+      "opts": {
+        "tagList": ["food"],
+        "legacyTagList": []
+      },
+      "expected": {
+        "tags": ["Mystery Shop"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "canonicalises a listed primary from spaced mixed case",
+      "primary": " Food ",
+      "extras": [],
+      "opts": {
+        "tagList": ["food"],
+        "legacyTagList": []
+      },
+      "expected": {
+        "tags": ["food"],
+        "dropped": []
+      }
     }
   ],
   "readTags": [
@@ -221,6 +247,13 @@
         "tag": "food"
       },
       "expected": ["food"]
+    },
+    {
+      "name": "LLM-written unlisted primary and extras",
+      "doc": {
+        "tags": ["Mystery Shop", "zomato"]
+      },
+      "expected": ["Mystery Shop", "zomato"]
     }
   ],
   "description": [
@@ -261,34 +294,48 @@
       "expected": null
     }
   ],
-  "isValidPrimary": [
+  "tagListStatus": [
     {
-      "name": "in tagList",
+      "name": "active in tagList",
       "tag": "food",
       "tagList": ["food"],
       "legacyTagList": [],
-      "expected": true
+      "expected": "active"
     },
     {
-      "name": "in legacy case insensitive",
+      "name": "retired in legacy case insensitive",
       "tag": "Tech",
       "tagList": ["food"],
       "legacyTagList": ["tech"],
-      "expected": true
+      "expected": "retired"
     },
     {
-      "name": "unknown",
+      "name": "unlisted mystery",
       "tag": "mystery",
       "tagList": ["food"],
       "legacyTagList": ["tech"],
-      "expected": false
+      "expected": "unlisted"
     },
     {
-      "name": "empty",
+      "name": "case-insensitive listed match",
+      "tag": " FOOD ",
+      "tagList": ["food"],
+      "legacyTagList": [],
+      "expected": "active"
+    },
+    {
+      "name": "empty is null",
       "tag": "  ",
       "tagList": ["food"],
       "legacyTagList": [],
-      "expected": false
+      "expected": null
+    },
+    {
+      "name": "untagged is null",
+      "tag": "untagged",
+      "tagList": ["food"],
+      "legacyTagList": [],
+      "expected": null
     }
   ],
   "sameTag": [

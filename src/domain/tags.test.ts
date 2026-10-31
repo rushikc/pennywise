@@ -6,13 +6,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import cases from '../../shared/tagCases.json';
 import {
   extraTags,
+  displayTag,
+  groupKey,
   isUntagged,
-  isValidPrimary,
   normalizeDescription,
   normalizeTags,
   primaryTag,
   readTags,
   sameTag,
+  tagListStatus,
   withTags,
 } from './tags';
 
@@ -41,10 +43,20 @@ describe('tag helpers', () => {
     });
   });
 
-  describe('isValidPrimary', () => {
-    it.each(cases.isValidPrimary)('$name', (item) => {
-      expect(isValidPrimary(item.tag, item.tagList, item.legacyTagList)).toBe(item.expected);
+  describe('tagListStatus', () => {
+    it.each(cases.tagListStatus)('$name', (item) => {
+      expect(tagListStatus(item.tag, item.tagList, item.legacyTagList)).toBe(item.expected);
     });
+  });
+
+  it('groupKey lowercases the normalised primary', () => {
+    expect(groupKey(' Food ')).toBe('food');
+    expect(groupKey('untagged')).toBeNull();
+  });
+
+  it('displayTag uses list spelling when listed and the stored value otherwise', () => {
+    expect(displayTag('FOOD', ['food'], [])).toBe('food');
+    expect(displayTag('Mystery Shop', ['food'], [])).toBe('Mystery Shop');
   });
 
   describe('sameTag', () => {

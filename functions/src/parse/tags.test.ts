@@ -9,13 +9,15 @@ import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {
   extraTags,
+  displayTag,
+  groupKey,
   isUntagged,
-  isValidPrimary,
   normalizeDescription,
   normalizeTags,
   primaryTag,
   readTags,
   sameTag,
+  tagListStatus,
   withTags,
 } from './tags';
 
@@ -41,12 +43,12 @@ const cases = JSON.parse(
     repeat?: number;
     expectedLength?: number;
   }>;
-  isValidPrimary: Array<{
+  tagListStatus: Array<{
     name: string;
     tag: string;
     tagList: string[];
     legacyTagList: string[];
-    expected: boolean;
+    expected: 'active' | 'retired' | 'unlisted' | null;
   }>;
   sameTag: Array<{
     name: string;
@@ -81,11 +83,21 @@ describe('tag helpers', () => {
     });
   }
 
-  for (const item of cases.isValidPrimary) {
-    it(`isValidPrimary: ${item.name}`, () => {
-      assert.equal(isValidPrimary(item.tag, item.tagList, item.legacyTagList), item.expected);
+  for (const item of cases.tagListStatus) {
+    it(`tagListStatus: ${item.name}`, () => {
+      assert.equal(tagListStatus(item.tag, item.tagList, item.legacyTagList), item.expected);
     });
   }
+
+  it('groupKey lowercases the normalised primary', () => {
+    assert.equal(groupKey(' Food '), 'food');
+    assert.equal(groupKey('untagged'), null);
+  });
+
+  it('displayTag uses list spelling when listed and the stored value otherwise', () => {
+    assert.equal(displayTag('FOOD', ['food'], []), 'food');
+    assert.equal(displayTag('Mystery Shop', ['food'], []), 'Mystery Shop');
+  });
 
   for (const item of cases.sameTag) {
     it(`sameTag: ${item.name}`, () => {
