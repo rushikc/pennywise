@@ -177,7 +177,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
 
       // Delete each selected expense using the ExpenseAPI
       const deletePromises = selectedExpenses.map(expense => {
-        return ExpenseAPI.addExpense(expense, 'delete');
+        return ExpenseAPI.updateExpense(expense.id, {operation: 'delete'});
       });
 
       // Wait for all delete operations to complete

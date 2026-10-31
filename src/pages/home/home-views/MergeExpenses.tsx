@@ -28,7 +28,8 @@ import {
   normalizeDescription,
   normalizeTags,
   primaryTag,
-  withTags,
+  sameTag,
+  type ExpenseEdit,
 } from '../../../domain/tags';
 import {TagEditorFields} from './TagEditorFields';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
@@ -58,6 +59,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 }): ReactElement => {
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [extras, setExtras] = useState<string[]>([]);
+  const [openedExtras, setOpenedExtras] = useState<string[]>([]);
   const [description, setDescription] = useState('');
   const [noteOpen, setNoteOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<string>('');
@@ -82,6 +84,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
         }
       }
       setExtras(union);
+      setOpenedExtras(union);
       const survivor = expenses[0];
       const firstNote = normalizeDescription(survivor?.description) ||
         expenses.map((item) => normalizeDescription(item.description)).find(Boolean);
@@ -117,43 +120,31 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       tagList,
       legacyTagList,
     });
-    const note = normalizeDescription(description);
-    const mergedExpense: Expense = withTags({
-      id: vendorExpense.id,
-      vendor: selectedVendor,
+    const note = normalizeDescription(description) ?? null;
+    const keepExtras = extraTags(vendorExpense);
+    const edit: ExpenseEdit = {
+      primary: tags[0] ?? null,
+      addExtras: extras.filter((tag) => !keepExtras.some((item) => sameTag(item, tag))),
+      removeExtras: openedExtras.filter((tag) => !extras.some((item) => sameTag(item, tag))),
       cost,
+      vendor: selectedVendor,
       date: vendorExpense.date,
-      modifiedDate: Date.now(),
       costType,
-      mailId: vendorExpense.mailId,
-      user: vendorExpense.user,
       type: vendorExpense.type,
       operation: 'merged',
-      enrichedAt: vendorExpense.enrichedAt,
-    }, tags);
-    if (note) {
-      mergedExpense.description = note;
-    } else if (expenses.some((item) => Boolean(item.description))) {
-      mergedExpense.description = '';
-    }
+      description: note,
+    };
 
-    // Log the merged expense for debugging
-    console.log('Merged Expense:', mergedExpense);
+    await Promise.all(
+      expenses
+        .filter((exp) => exp.id !== vendorExpense.id)
+        .map((exp) => ExpenseAPI.updateExpense(exp.id, {operation: 'delete'})),
+    );
 
-    // Soft delete all original expenses from the database
-    const promiseList: Promise<Expense>[] = [];
-    expenses.forEach(exp => {
-      promiseList.push(ExpenseAPI.addExpense(exp, 'delete'));
-    });
+    const mergedExpense = await ExpenseAPI.updateExpense(vendorExpense.id, edit);
 
-    await Promise.all(promiseList);
-
-    // Add the new merged expense to the database
-    await ExpenseAPI.addExpense(mergedExpense);
-
-    // Complete the merge process
     if (onMergeComplete) {
-      onMergeComplete(mergedExpense); // Update Redux store via callback
+      onMergeComplete(mergedExpense);
     } else {
       onClose();
     }

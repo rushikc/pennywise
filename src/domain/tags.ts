@@ -232,51 +232,103 @@ export function isPersistedExpenseId(id: unknown): boolean {
 
 const DUPE_KEYS = ['duplicateOf', 'dupeCandidateOf', 'dupeStatus', 'dupeRule'] as const;
 
-export type OwnedExpenseFields = {
-  tags: string[];
-  tag: string | null;
-  cost: number;
-  vendor: string;
-  date: number;
-  type: string;
-  costType: Expense['costType'];
-  operation: string;
-  modifiedDate: number;
-  enrichedAt?: number;
+export type ExpenseEdit = {
+  primary?: string | null;
+  addExtras?: string[];
+  removeExtras?: string[];
   description?: string | null;
-  duplicateOf?: string | null;
-  dupeCandidateOf?: string | null;
-  dupeStatus?: Expense['dupeStatus'] | null;
-  dupeRule?: string | null;
+  cost?: number;
+  vendor?: string;
+  costType?: Expense['costType'];
+  date?: number;
+  type?: string;
+  operation?: string;
+  dupe?: {
+    duplicateOf?: string | null;
+    dupeCandidateOf?: string | null;
+    dupeStatus?: Expense['dupeStatus'] | null;
+    dupeRule?: string | null;
+  };
 };
 
-export function ownedExpenseFields(
-  expense: Expense,
-  source: Partial<Expense>,
-): OwnedExpenseFields {
-  const fields: OwnedExpenseFields = {
-    tags: expense.tags || [],
-    tag: expense.tag ?? null,
-    cost: expense.cost,
-    vendor: expense.vendor,
-    date: expense.date,
-    type: expense.type,
-    costType: expense.costType,
-    operation: expense.operation,
-    modifiedDate: expense.modifiedDate,
-  };
-  if (Object.prototype.hasOwnProperty.call(source, 'enrichedAt')) {
-    fields.enrichedAt = source.enrichedAt;
+export function applyExpenseEdit<T extends Partial<Expense>>(
+  server: T,
+  edit: ExpenseEdit,
+): {next: T; patch: Record<string, unknown>} {
+  const modifiedDate = Date.now();
+  const next: T = {...server, modifiedDate};
+  const patch: Record<string, unknown> = {modifiedDate};
+
+  const writeTags = edit.primary !== undefined
+    || edit.addExtras !== undefined
+    || edit.removeExtras !== undefined;
+  if (writeTags) {
+    const primary = edit.primary !== undefined ? edit.primary : primaryTag(server);
+    let extras = extraTags(server);
+    if (edit.removeExtras) {
+      const removeExtras = edit.removeExtras;
+      extras = extras.filter((tag) => !removeExtras.some((item) => sameTag(item, tag)));
+    }
+    if (edit.addExtras) {
+      extras = [...extras, ...edit.addExtras];
+    }
+    Object.assign(next, withTags(next, normalizeTags(primary, extras).tags));
+    patch.tags = next.tags;
+    patch.tag = next.tag ?? null;
   }
-  if (Object.prototype.hasOwnProperty.call(source, 'description')) {
-    fields.description = normalizeDescription(source.description) ?? null;
+
+  if (edit.description !== undefined) {
+    const note = normalizeDescription(edit.description);
+    if (note) {
+      next.description = note;
+      patch.description = note;
+    } else {
+      delete next.description;
+      patch.description = null;
+    }
   }
-  const hasDupe = DUPE_KEYS.some((key) => Object.prototype.hasOwnProperty.call(source, key));
-  if (hasDupe) {
-    fields.duplicateOf = source.duplicateOf ?? null;
-    fields.dupeCandidateOf = source.dupeCandidateOf ?? null;
-    fields.dupeStatus = source.dupeStatus ?? null;
-    fields.dupeRule = source.dupeRule ?? null;
+
+  if (edit.cost !== undefined) {
+    const cost = Number(Number(edit.cost).toFixed(2));
+    next.cost = cost;
+    patch.cost = cost;
   }
-  return fields;
+  if (edit.vendor !== undefined) {
+    next.vendor = edit.vendor;
+    patch.vendor = edit.vendor;
+  }
+  if (edit.costType !== undefined) {
+    next.costType = edit.costType;
+    patch.costType = edit.costType;
+  }
+  if (edit.date !== undefined) {
+    next.date = edit.date;
+    patch.date = edit.date;
+  }
+  if (edit.type !== undefined) {
+    next.type = edit.type;
+    patch.type = edit.type;
+  }
+  if (edit.operation !== undefined) {
+    next.operation = edit.operation;
+    patch.operation = edit.operation;
+  }
+
+  if (edit.dupe) {
+    for (const key of DUPE_KEYS) {
+      if (!Object.prototype.hasOwnProperty.call(edit.dupe, key)) {
+        continue;
+      }
+      const value = edit.dupe[key];
+      if (value == null) {
+        delete next[key];
+        patch[key] = null;
+      } else {
+        (next as Expense)[key] = value as never;
+        patch[key] = value;
+      }
+    }
+  }
+
+  return {next, patch};
 }

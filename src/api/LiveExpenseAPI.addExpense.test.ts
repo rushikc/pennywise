@@ -15,6 +15,12 @@ jest.mock('firebase/app', () => ({
 
 const deleteFieldSentinel = {__deleteField: true};
 
+jest.mock('firebase/firestore', () => ({
+  getFirestore: jest.fn(() => ({})),
+  runTransaction: jest.fn(),
+  doc: jest.fn(),
+}));
+
 jest.mock('firebase/firestore/lite', () => ({
   getDoc: jest.fn(),
   getDocs: jest.fn(),

@@ -6,16 +6,17 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
 import {
   adaptExpense,
+  applyExpenseEdit,
   extraTags,
   isPersistedExpenseId,
   normalizeTags,
-  ownedExpenseFields,
   primaryTag,
   readTags,
   withTags,
+  type ExpenseEdit,
 } from '../domain/tags';
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
-import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
+import {isHiddenDuplicate} from './duplicateLogic';
 import {DemoStore} from '../demoData/createDemoStore';
 import type {ClientUserCollection} from './firestorePaths';
 
@@ -84,16 +85,27 @@ export class DemoExpenseAPI {
 
     const index = store.expenses.findIndex((item) => item.mailId === expense.mailId || item.id === expense.id);
     if (index > -1 && persisted) {
-      const owned = ownedExpenseFields(expense, _expense);
-      const current = store.expenses[index];
-      Object.assign(current, owned);
-      (Object.entries(owned) as [keyof typeof owned, unknown][]).forEach(([field, value]) => {
+      const {next, patch} = applyExpenseEdit(store.expenses[index], {
+        primary: primaryTag(expense),
+        addExtras: extraTags(expense),
+        cost: expense.cost,
+        vendor: expense.vendor,
+        date: expense.date,
+        type: expense.type,
+        costType: expense.costType,
+        operation,
+        ...(Object.prototype.hasOwnProperty.call(_expense, 'description')
+          ? {description: expense.description ?? null}
+          : {}),
+      });
+      Object.assign(store.expenses[index], next);
+      Object.entries(patch).forEach(([field, value]) => {
         if (value === null && field !== 'tag') {
-          delete current[field];
+          delete store.expenses[index][field as keyof Expense];
         }
       });
-      current.id = key;
-      return JSONCopy(current);
+      store.expenses[index].id = key;
+      return JSONCopy(store.expenses[index]);
     }
     if (index > -1) {
       store.expenses[index] = expense;
@@ -101,6 +113,22 @@ export class DemoExpenseAPI {
       store.expenses.push(expense);
     }
     return expense;
+  };
+
+  static updateExpense = async (id: string, edit: ExpenseEdit): Promise<Expense> => {
+    const store = await DemoExpenseAPI.getStore();
+    const index = store.expenses.findIndex((item) => item.id === id || item.mailId === id);
+    if (index < 0) {
+      throw new Error('Expense no longer exists');
+    }
+    const {next, patch} = applyExpenseEdit(store.expenses[index], edit);
+    Object.assign(store.expenses[index], next);
+    Object.entries(patch).forEach(([field, value]) => {
+      if (value === null && field !== 'tag') {
+        delete store.expenses[index][field as keyof Expense];
+      }
+    });
+    return JSONCopy(store.expenses[index]);
   };
 
   static deleteExpense = async (expense: Expense): Promise<boolean> => {
@@ -143,8 +171,23 @@ export class DemoExpenseAPI {
     drop: Expense,
     action: 'confirmed' | 'rejected',
   ): Promise<Expense> => {
-    const updated = applyDuplicateResolution(drop, keep, action);
-    return DemoExpenseAPI.addExpense(updated);
+    if (action === 'confirmed') {
+      return DemoExpenseAPI.updateExpense(drop.id, {
+        dupe: {
+          duplicateOf: keep.id,
+          dupeStatus: 'confirmed',
+          dupeCandidateOf: null,
+        },
+      });
+    }
+    return DemoExpenseAPI.updateExpense(drop.id, {
+      dupe: {
+        dupeStatus: 'rejected',
+        duplicateOf: null,
+        dupeCandidateOf: null,
+        dupeRule: null,
+      },
+    });
   };
 
   static getTagConfig = async (): Promise<TagConfig> => {
@@ -226,21 +269,30 @@ export class DemoExpenseAPI {
       return 0;
     }
 
+    const candidateIds = store.expenses
+      .filter((expense) => !primaryTag(expense) && expense.modifiedDate >= startDate)
+      .filter((expense) => vendorTagMap.has(expense.vendor.toLowerCase()))
+      .map((expense) => expense.id);
     let processedCount = 0;
-    store.expenses = store.expenses.map((expense) => {
-      if (primaryTag(expense) || expense.modifiedDate < startDate) {
-        return expense;
+    for (const id of candidateIds) {
+      const index = store.expenses.findIndex((item) => item.id === id);
+      if (index < 0) {
+        continue;
       }
-      const newTag = vendorTagMap.get(expense.vendor.toLowerCase());
+      const current = store.expenses[index];
+      if (primaryTag(current)) {
+        continue;
+      }
+      const newTag = vendorTagMap.get(current.vendor.toLowerCase());
       if (!newTag) {
-        return expense;
+        continue;
       }
       processedCount += 1;
-      return {
-        ...withTags(expense, normalizeTags(newTag, extraTags(expense)).tags),
+      store.expenses[index] = {
+        ...withTags(current, normalizeTags(newTag, extraTags(current)).tags),
         modifiedDate: Date.now(),
       };
-    });
+    }
     return processedCount;
   };
 

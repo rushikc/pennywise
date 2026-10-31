@@ -5,6 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, deleteField, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
+import {doc as fullDoc, getFirestore as getFullFirestore, runTransaction} from 'firebase/firestore';
 import {
   BUDGET_LAST_UPDATE,
   EMAIL_PARSE_BANKS_CACHE_KEY,
@@ -21,15 +22,17 @@ import {ErrorHandlers} from '../components/ErrorHandlers';
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
 import {
   adaptExpense,
+  applyExpenseEdit,
   extraTags,
   isPersistedExpenseId,
+  normalizeDescription,
   normalizeTags,
-  ownedExpenseFields,
   primaryTag,
   readTags,
   withTags,
+  type ExpenseEdit,
 } from '../domain/tags';
-import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
+import {isHiddenDuplicate} from './duplicateLogic';
 import type {ClientUserCollection} from './firestorePaths';
 import {userCollectionSegments, userDocSegments} from './firestorePaths';
 import {currentUid} from './liveCurrentUid';
@@ -41,12 +44,24 @@ export type DocumentData = { [field: string]: unknown };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const fullDb = getFullFirestore(app);
+
+const toFirestorePatch = (patch: Record<string, unknown>): Record<string, unknown> => {
+  const out: Record<string, unknown> = {};
+  Object.entries(patch).forEach(([key, value]) => {
+    out[key] = value === null && key !== 'tag' ? deleteField() : value;
+  });
+  return out;
+};
 
 const userCol = (collectionName: ClientUserCollection) =>
   collection(db, ...userCollectionSegments(currentUid(), collectionName));
 
 const userDoc = (collectionName: ClientUserCollection, key: string) =>
   doc(db, ...userDocSegments(currentUid(), collectionName, key));
+
+const userFullDoc = (collectionName: ClientUserCollection, key: string) =>
+  fullDoc(fullDb, ...userDocSegments(currentUid(), collectionName, key));
 
 // Utility for CRUD operations on single docs
 const fireStoreDoc = {
@@ -230,15 +245,20 @@ export class LiveExpenseAPI {
 
       const docRef = userDoc('expense', key);
       if (persisted) {
-        const owned = ownedExpenseFields(expense, _expense);
-        const patch: Record<string, unknown> = {};
-        (Object.entries(owned) as [keyof typeof owned, unknown][]).forEach(([key, value]) => {
-          if (value === null && key !== 'tag') {
-            patch[key] = deleteField();
-          } else {
-            patch[key] = value;
-          }
-        });
+        const patch: Record<string, unknown> = {
+          tags: expense.tags || [],
+          tag: expense.tag ?? null,
+          cost: expense.cost,
+          vendor: expense.vendor,
+          date: expense.date,
+          type: expense.type,
+          costType: expense.costType,
+          operation: expense.operation,
+          modifiedDate: expense.modifiedDate,
+        };
+        if (Object.prototype.hasOwnProperty.call(_expense, 'description')) {
+          patch.description = normalizeDescription(_expense.description) ?? deleteField();
+        }
         await setDoc(docRef, patch, {merge: true});
       } else {
         // eslint-disable-next-line
@@ -256,6 +276,28 @@ export class LiveExpenseAPI {
       ErrorHandlers.handleApiError(e);
       // console.error('Error adding document: ', e, _expense);
       return _expense;
+    }
+  };
+
+  static updateExpense = async (id: string, edit: ExpenseEdit): Promise<Expense> => {
+    const key = String(id).trim();
+    const ref = userFullDoc('expense', key);
+    try {
+      const merged = await runTransaction(fullDb, async (transaction) => {
+        const snap = await transaction.get(ref);
+        if (!snap.exists()) {
+          throw new Error('Expense no longer exists');
+        }
+        const server = adaptExpense({id: snap.id, ...snap.data()} as Expense);
+        const {next, patch} = applyExpenseEdit(server, edit);
+        transaction.update(ref, toFirestorePatch(patch) as never);
+        return next as Expense;
+      });
+      await FinanceIndexDB.addExpenseList([merged]);
+      return merged;
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
+      throw e;
     }
   };
 
@@ -380,8 +422,23 @@ export class LiveExpenseAPI {
     drop: Expense,
     action: 'confirmed' | 'rejected',
   ): Promise<Expense> => {
-    const updated = applyDuplicateResolution(drop, keep, action);
-    return LiveExpenseAPI.addExpense(updated);
+    if (action === 'confirmed') {
+      return LiveExpenseAPI.updateExpense(drop.id, {
+        dupe: {
+          duplicateOf: keep.id,
+          dupeStatus: 'confirmed',
+          dupeCandidateOf: null,
+        },
+      });
+    }
+    return LiveExpenseAPI.updateExpense(drop.id, {
+      dupe: {
+        dupeStatus: 'rejected',
+        duplicateOf: null,
+        dupeCandidateOf: null,
+        dupeRule: null,
+      },
+    });
   };
 
   /**
@@ -617,66 +674,56 @@ export class LiveExpenseAPI {
       const querySnapshot = await getDocs(expenseQuery);
 
       let processedCount = 0;
-      const expensesToUpdate: Expense[] = [];
+      const expensesToUpdate: Array<{id: string; vendorTag: string}> = [];
 
-      querySnapshot.forEach((doc) => {
-        const expense = {id: doc.id, ...doc.data()} as Expense;
-
+      querySnapshot.forEach((docSnap) => {
+        const expense = {id: docSnap.id, ...docSnap.data()} as Expense;
         if (primaryTag(expense)) {
           return;
         }
-
-        const vendorLower = expense.vendor.toLowerCase();
-        if (vendorTagMap.has(vendorLower)) {
-          const newTag = vendorTagMap.get(vendorLower);
-          if (newTag) {
-            const extras = extraTags(expense);
-            const updatedExpense: Expense = {
-              ...withTags(expense, normalizeTags(newTag, extras).tags),
-              modifiedDate: Date.now(),
-            };
-            expensesToUpdate.push(updatedExpense);
-          }
+        const newTag = vendorTagMap.get(expense.vendor.toLowerCase());
+        if (newTag) {
+          expensesToUpdate.push({id: expense.id, vendorTag: newTag});
         }
       });
 
       if (expensesToUpdate.length > 0) {
-        processedCount = expensesToUpdate.length;
-        // console.log('Auto tag past expenses for expense: ', expensesToUpdate);
-        // console.log(`Found ${processedCount} expenses to auto-tag.`);
-
-        const batchSize = 700;
+        const batchSize = 400;
+        const tagged: Expense[] = [];
 
         for (let i = 0; i < expensesToUpdate.length; i += batchSize) {
-          const batch = expensesToUpdate.slice(i, i + batchSize);
-          // console.log(`Processing batch ${i / batchSize + 1}...`);
-
-          // Batch update expenses in Firestore
-          const updatePromises = batch.map(async (expense) => {
-            if (expense.id) {
-              const docRef = userDoc('expense', expense.id);
-              await setDoc(docRef, {
-                tags: expense.tags || [],
-                tag: expense.tag ?? null,
-                modifiedDate: expense.modifiedDate,
-              }, {merge: true});
-            }
+          const batch = expensesToUpdate.slice(i, batchSize + i);
+          const updatePromises = batch.map(async ({id, vendorTag}) => {
+            const ref = userFullDoc('expense', id);
+            return runTransaction(fullDb, async (transaction) => {
+              const snap = await transaction.get(ref);
+              if (!snap.exists()) {
+                return null;
+              }
+              const server = adaptExpense({id: snap.id, ...snap.data()} as Expense);
+              if (primaryTag(server)) {
+                return null;
+              }
+              const {tags} = normalizeTags(vendorTag, extraTags(server));
+              const modifiedDate = Date.now();
+              transaction.update(ref, {
+                tags,
+                tag: tags[0] ?? null,
+                modifiedDate,
+              });
+              return {...server, tags, tag: tags[0] ?? null, modifiedDate} as Expense;
+            });
           });
-
-          await Promise.all(updatePromises);
-
-          // Update in IndexedDB
-          await FinanceIndexDB.addExpenseList(batch);
-          // console.log(`Batch ${i / batchSize + 1} processed.`);
-
-          // Pause 1.5 sec between batches
+          const written = (await Promise.all(updatePromises)).filter((item): item is Expense => Boolean(item));
+          tagged.push(...written);
+          processedCount += written.length;
+          if (written.length > 0) {
+            await FinanceIndexDB.addExpenseList(written);
+          }
           if (i + batchSize < expensesToUpdate.length) {
             await sleep(1500);
           }
         }
-
-        // console.log('Successfully updated all expenses in Firestore and IndexedDB.');
-
       }
 
       return processedCount;

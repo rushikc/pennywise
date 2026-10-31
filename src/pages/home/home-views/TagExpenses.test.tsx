@@ -12,7 +12,7 @@ import TagExpenses from './TagExpenses';
 import expenseReducer, {expenseSlice} from '../../../store/expenseSlice';
 import {makeExpense} from '../../../testUtils';
 jest.mock('../../../api/ExpenseAPI', () => ({
-  ExpenseAPI: {addExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn()},
+  ExpenseAPI: {updateExpense: jest.fn().mockResolvedValue({}), updateVendorTag: jest.fn()},
 }));
 
 jest.mock('../../../store/alertActions', () => ({
@@ -34,7 +34,7 @@ const makeTagStore = (open: boolean) => {
 
 describe('TagExpenses', () => {
   beforeEach(() => {
-    jest.mocked(ExpenseAPI.addExpense).mockClear();
+    jest.mocked(ExpenseAPI.updateExpense).mockClear();
   });
 
   it('renders nothing when the modal is closed', () => {
@@ -68,10 +68,9 @@ describe('TagExpenses', () => {
       </Provider>,
     );
     await userEvent.click(await screen.findByRole('button', {name: /save/i}));
-    expect(ExpenseAPI.addExpense).toHaveBeenCalled();
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags).toEqual([]);
-    expect(saved.tag).toBeNull();
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBeNull();
   });
 
   it('saves extras and a note while preserving unknown fields', async () => {
@@ -91,13 +90,11 @@ describe('TagExpenses', () => {
     const extraInput = await screen.findByPlaceholderText(/add extra tags/i);
     await userEvent.type(extraInput, 'zomato{Enter}');
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
-    expect(ExpenseAPI.addExpense).toHaveBeenCalled();
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags?.[0]).toBe('food');
-    expect(saved.tags).toEqual(expect.arrayContaining(['existing', 'zomato']));
-    expect(saved.tag).toBe('food');
-    expect(saved.description).toBe('keep me');
-    expect(saved.enrichedAt).toBe(77);
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.addExtras).toEqual(['zomato']);
+    expect(edit.primary).toBeUndefined();
+    expect(edit.description).toBeUndefined();
   });
 
   it('labels a legacy primary as retired', async () => {
@@ -132,10 +129,10 @@ describe('TagExpenses', () => {
     await userEvent.click(screen.getByRole('button', {name: /add note/i}));
     await userEvent.type(screen.getByLabelText(/note/i), 'keep retired');
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
-    expect(ExpenseAPI.addExpense).toHaveBeenCalled();
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags?.[0]).toBe('alcohol');
-    expect(saved.description).toBe('keep retired');
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalled();
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBeUndefined();
+    expect(edit.description).toBe('keep retired');
   });
 
   it('saves an unlisted primary without error', async () => {
@@ -153,8 +150,8 @@ describe('TagExpenses', () => {
     expect(await screen.findByRole('button', {name: /select tag mystery \(not in list\)/i})).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
     expect(screen.queryByText(/choose a tag from the list/i)).not.toBeInTheDocument();
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags).toEqual(['mystery']);
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBeUndefined();
   });
 
   it('canonicalises a picked list tag to the list spelling', async () => {
@@ -171,8 +168,8 @@ describe('TagExpenses', () => {
     );
     await userEvent.click(await screen.findByRole('button', {name: /select tag food/i}));
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags).toEqual(['food']);
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBe('food');
   });
 
   it('untags and writes empty tags', async () => {
@@ -191,9 +188,9 @@ describe('TagExpenses', () => {
     await userEvent.click(await screen.findByRole('button', {name: /select tag untagged/i}));
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
     expect(confirm).toHaveBeenCalled();
-    const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags).toEqual([]);
-    expect(saved.tag).toBeNull();
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit.primary).toBeNull();
+    expect(edit.removeExtras).toEqual(['zomato']);
     confirm.mockRestore();
   });
 });

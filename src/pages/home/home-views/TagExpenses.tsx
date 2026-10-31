@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import {useSelector} from 'react-redux';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import {hideTagExpense, selectExpense, setTagMap, updateExpense} from '../../../store/expenseActions';
-import {formatVendorName, getDateMonthTime, JSONCopy} from '../../../utility/utility';
+import {formatVendorName, getDateMonthTime} from '../../../utility/utility';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -31,6 +31,7 @@ import {
   primaryTag,
   sameTag,
   withTags,
+  type ExpenseEdit,
 } from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
 import {TagEditorFields} from './TagEditorFields';
@@ -104,21 +105,36 @@ const TagExpenses: FC = (): ReactElement => {
       }
     }
 
-    const expenseNew = JSONCopy(expense);
     const {tags} = normalizeTags(selectedPrimary, extras, {tagList, legacyTagList});
-    Object.assign(expenseNew, withTags(expenseNew, tags));
-    const note = normalizeDescription(description);
-    if (note) {
-      expenseNew.description = note;
-    } else if (expense.description) {
-      expenseNew.description = '';
-    } else {
-      delete expenseNew.description;
+    const normalised = withTags({}, tags);
+    const openedPrimary = primaryTag(expense);
+    const openedExtras = extraTags(expense);
+    const edit: ExpenseEdit = {};
+    const nextPrimary = normalised.tag;
+    if (!sameTag(openedPrimary, nextPrimary) && (openedPrimary || nextPrimary)) {
+      edit.primary = nextPrimary;
     }
-    expenseNew.modifiedDate = Date.now();
-    void ExpenseAPI.addExpense(expenseNew);
-    updateExpense(expenseNew);
-    hideTagExpense();
+    if (!openedPrimary && !nextPrimary) {
+      edit.primary = null;
+    }
+    const nextExtras = nextPrimary ? extras : [];
+    const removeExtras = openedExtras.filter((tag) => !nextExtras.some((item) => sameTag(item, tag)));
+    const addExtras = nextExtras.filter((tag) => !openedExtras.some((item) => sameTag(item, tag)));
+    if (removeExtras.length > 0) {
+      edit.removeExtras = removeExtras;
+    }
+    if (addExtras.length > 0) {
+      edit.addExtras = addExtras;
+    }
+    const note = normalizeDescription(description) ?? null;
+    const openedNote = normalizeDescription(expense.description) ?? null;
+    if (note !== openedNote) {
+      edit.description = note;
+    }
+    void ExpenseAPI.updateExpense(expense.id, edit).then((saved) => {
+      updateExpense(saved);
+      hideTagExpense();
+    });
   };
 
   const vendorNames = formatVendorName(expense.vendor);

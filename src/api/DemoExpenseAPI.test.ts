@@ -199,6 +199,42 @@ describe('DemoExpenseAPI', () => {
     expect(await DemoExpenseAPI.getDarkModeConfig()).toBe(true);
   });
 
+  it('keeps server extras and enrichedAt when the primary is updated', async () => {
+    const created = await DemoExpenseAPI.addExpense(makeExpense({
+      id: 'edit-keep-extra',
+      mailId: 'edit-keep-extra',
+      vendor: 'KEEP',
+      tags: ['food', 'x'],
+      enrichedAt: 44,
+    }));
+    await DemoExpenseAPI.updateExpense(created.id, {addExtras: ['y']});
+    const saved = await DemoExpenseAPI.updateExpense(created.id, {
+      primary: 'travel',
+      removeExtras: ['x'],
+    });
+    expect(saved.tags).toEqual(['travel', 'y']);
+    expect(saved.enrichedAt).toBe(44);
+  });
+
+  it('skips auto-tag when a primary appears before the write', async () => {
+    await DemoExpenseAPI.updateVendorTag({
+      id: 'SKIP VENDOR',
+      vendor: 'SKIP VENDOR',
+      tag: 'food',
+      date: Date.now(),
+    });
+    const created = await DemoExpenseAPI.addExpense(makeExpense({
+      mailId: 'auto-skip-mail',
+      vendor: 'SKIP VENDOR',
+      tags: [],
+    }));
+    await DemoExpenseAPI.updateExpense(created.id, {primary: 'travel'});
+    const count = await DemoExpenseAPI.autoTagPastExpenses(0);
+    const tagged = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === 'auto-skip-mail');
+    expect(tagged?.tags?.[0]).toBe('travel');
+    expect(count).toBeGreaterThanOrEqual(0);
+  });
+
   it('auto-tags untagged in-memory expenses from vendor tags', async () => {
     await DemoExpenseAPI.updateVendorTag({
       id: 'AUTO VENDOR',

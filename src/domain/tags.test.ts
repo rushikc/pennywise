@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import cases from '../../shared/tagCases.json';
 import {
   extraTags,
+  applyExpenseEdit,
   displayTag,
   groupKey,
   isUntagged,
@@ -63,6 +64,26 @@ describe('tag helpers', () => {
     it.each(cases.sameTag)('$name', (item) => {
       expect(sameTag(item.left, item.right)).toBe(item.expected);
     });
+  });
+
+  it('keeps server extras when the primary changes and removes only requested extras', () => {
+    const server = withTags({description: 'note', enrichedAt: 9}, ['food', 'x', 'y']);
+    const {next, patch} = applyExpenseEdit(server, {
+      primary: 'travel',
+      removeExtras: ['x'],
+    });
+    expect(next.tags).toEqual(['travel', 'y']);
+    expect(next.enrichedAt).toBe(9);
+    expect(patch).not.toHaveProperty('enrichedAt');
+    expect(patch.tags).toEqual(['travel', 'y']);
+  });
+
+  it('omits tags from the patch when only the description changes', () => {
+    const server = withTags({description: 'old'}, ['food', 'zomato']);
+    const {next, patch} = applyExpenseEdit(server, {description: 'new'});
+    expect(next.description).toBe('new');
+    expect(patch.description).toBe('new');
+    expect(patch.tags).toBeUndefined();
   });
 
   it('derives primary, extras, untagged, and the tag mirror', () => {

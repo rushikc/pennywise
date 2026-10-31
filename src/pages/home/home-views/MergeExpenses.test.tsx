@@ -14,7 +14,7 @@ import {createTimedAlert} from '../../../store/alertActions';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 
 jest.mock('../../../api/ExpenseAPI', () => ({
-  ExpenseAPI: {addExpense: jest.fn()},
+  ExpenseAPI: {updateExpense: jest.fn()},
 }));
 
 jest.mock('../../../store/alertActions', () => ({
@@ -72,7 +72,7 @@ describe('MergeExpenses', () => {
       type: 'error',
       message: 'Please select a vendor first',
     });
-    expect(ExpenseAPI.addExpense).not.toHaveBeenCalled();
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
   });
 
   it('disables merge when extras exist and there is no primary', async () => {
@@ -103,14 +103,15 @@ describe('MergeExpenses', () => {
   });
 
   it('unions extras and keeps the survivor description', async () => {
-    jest.mocked(ExpenseAPI.addExpense).mockResolvedValue(makeExpense());
+    jest.mocked(ExpenseAPI.updateExpense).mockResolvedValue(makeExpense({id: 'a'}));
     renderMerge();
     await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
     await userEvent.click(screen.getByRole('button', {name: /^merge$/i}));
-    await waitFor(() => expect(ExpenseAPI.addExpense).toHaveBeenCalled());
-    const merged = jest.mocked(ExpenseAPI.addExpense).mock.calls.find((call) => call[1] !== 'delete')?.[0];
-    expect(merged?.tags?.[0]).toBe('food');
-    expect(merged?.tags).toEqual(expect.arrayContaining(['zomato', 'online food ordering']));
-    expect(merged?.description).toBe('survivor note');
+    await waitFor(() => expect(ExpenseAPI.updateExpense).toHaveBeenCalled());
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalledWith('b', {operation: 'delete'});
+    const keepEdit = jest.mocked(ExpenseAPI.updateExpense).mock.calls.find((call) => call[0] === 'a')?.[1];
+    expect(keepEdit?.primary).toBe('food');
+    expect(keepEdit?.addExtras).toEqual(expect.arrayContaining(['online food ordering']));
+    expect(keepEdit?.description).toBe('survivor note');
   });
 });

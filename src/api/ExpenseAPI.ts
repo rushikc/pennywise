@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
+import type {ExpenseEdit} from '../domain/tags';
 import {getDataMode} from '../pages/login/dataMode';
 import {isHiddenDuplicate} from './duplicateLogic';
 import {DemoExpenseAPI} from './DemoExpenseAPI';
@@ -52,6 +53,9 @@ export class ExpenseAPI {
 
   static addExpense = (_expense: Expense, operation = 'update'): Promise<Expense> =>
     api().then((impl) => impl.addExpense(_expense, operation));
+
+  static updateExpense = (id: string, edit: ExpenseEdit): Promise<Expense> =>
+    api().then((impl) => impl.updateExpense(id, edit));
 
   static deleteExpense = (expense: Expense): Promise<boolean> =>
     api().then((impl) => impl.deleteExpense(expense));
