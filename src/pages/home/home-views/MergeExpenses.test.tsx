@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
@@ -196,5 +196,84 @@ describe('MergeExpenses', () => {
     expect(ExpenseAPI.updateExpense).toHaveBeenCalledTimes(1);
     expect(onMergeComplete).not.toHaveBeenCalled();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  const renderPair = (tagList: string[], a: string[], b: string[]) => {
+    const store = configureStore({
+      reducer: {expense: expenseReducer},
+      preloadedState: {
+        expense: {
+          ...configureStore({reducer: {expense: expenseReducer}}).getState().expense,
+          tagList,
+        },
+      },
+    });
+    return render(
+      <Provider store={store}>
+        <MergeExpenses
+          open
+          expenses={[
+            makeExpense({id: 'a', vendor: 'SHOP', tags: a}),
+            makeExpense({id: 'b', vendor: 'OTHER', tags: b}),
+          ]}
+          onClose={jest.fn()}
+        />
+      </Provider>,
+    );
+  };
+
+  it('defaults the primary to the survivor chosen by vendor', async () => {
+    jest.mocked(ExpenseAPI.updateExpense).mockResolvedValue(makeExpense({id: 'b'}));
+    renderPair(['food', 'rent'], ['food'], ['rent']);
+    expect(screen.getByRole('button', {name: /select tag food/i})).toHaveClass('MuiChip-colorPrimary');
+    await userEvent.click(screen.getByRole('button', {name: /select vendor other/i}));
+    expect(screen.getByRole('button', {name: /select tag rent/i})).toHaveClass('MuiChip-colorPrimary');
+    await userEvent.click(screen.getByRole('button', {name: /^merge$/i}));
+    await waitFor(() => expect(ExpenseAPI.updateExpense).toHaveBeenCalled());
+    const [id, edit] = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0];
+    expect(id).toBe('b');
+    expect(edit?.primary).toBe('rent');
+  });
+
+  it('keeps a tag the user picked when the vendor changes', async () => {
+    renderPair(['food', 'rent', 'travel'], ['food'], ['rent']);
+    await userEvent.click(screen.getByRole('button', {name: /select tag travel/i}));
+    await userEvent.click(screen.getByRole('button', {name: /select vendor other/i}));
+    expect(screen.getByRole('button', {name: /select tag travel/i})).toHaveClass('MuiChip-colorPrimary');
+  });
+
+  it('uses the list spelling for the default primary', () => {
+    renderPair(['Food'], ['FOOD'], []);
+    expect(screen.getByRole('button', {name: /select tag food/i})).toHaveClass('MuiChip-colorPrimary');
+    expect(screen.getAllByRole('button', {name: /select tag food/i})).toHaveLength(1);
+  });
+
+  it('disables Merge while the merge is pending and ignores a second click', async () => {
+    let resolveKeep: (value: unknown) => void = () => undefined;
+    jest.mocked(ExpenseAPI.updateExpense).mockImplementationOnce(
+      () => new Promise((resolve) => { resolveKeep = resolve; }) as never,
+    );
+    renderPair(['food'], ['food'], ['food']);
+    await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
+    const button = screen.getByTestId('merge-save');
+    await userEvent.click(button);
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
+    expect(ExpenseAPI.updateExpense).toHaveBeenCalledTimes(1);
+    resolveKeep(makeExpense({id: 'a'}));
+    await waitFor(() => expect(ExpenseAPI.updateExpense).toHaveBeenCalledTimes(2));
+  });
+
+  it('does not call the API when offline', async () => {
+    const online = jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
+    renderPair(['food'], ['food'], ['food']);
+    await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
+    await userEvent.click(screen.getByRole('button', {name: /^merge$/i}));
+    expect(createTimedAlert).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'You\'re offline, the save needs a connection',
+    });
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
+    online.mockRestore();
   });
 });

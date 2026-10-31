@@ -23,6 +23,7 @@ import {formatVendorName} from '../../../utility/utility';
 import {createTimedAlert} from '../../../store/alertActions';
 import {mergedCostAndType, signedExpenseTotal} from './mergeMath';
 import {
+  displayTag,
   extraTags,
   groupKey,
   normalizeDescription,
@@ -33,6 +34,7 @@ import {
 } from '../../../domain/tags';
 import {TagEditorFields} from './TagEditorFields';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
+import {OFFLINE_SAVE_MESSAGE} from '../../../utility/constants';
 
 interface MergeExpensesProps {
   expenses: Expense[];
@@ -65,6 +67,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [totalCost, setTotalCost] = useState<number>(0);
   const [primaryError, setPrimaryError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [tagTouched, setTagTouched] = useState(false);
   const isDesktop = useIsDesktop();
 
   const {tagList, legacyTagList, expenseList} = useSelector(selectExpense);
@@ -73,7 +77,9 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     if (open && expenses.length > 0) {
       setTotalCost(signedExpenseTotal(expenses));
       setSelectedVendor('');
-      setSelectedTag(expenses.map((item) => primaryTag(item)).find(Boolean) || '');
+      setSelectedTag(displayTag(primaryTag(expenses[0]), tagList, legacyTagList) || '');
+      setTagTouched(false);
+      setSaving(false);
       const seen = new Set<string>();
       const union: string[] = [];
       for (const tag of expenses.flatMap((item) => extraTags(item))) {
@@ -92,9 +98,23 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       setNoteOpen(Boolean(firstNote));
       setPrimaryError('');
     }
+    // Tag lists are read at open time only; later list updates must not reset the picker.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, open]);
 
+  const onVendorChange = (vendor: string) => {
+    setSelectedVendor(vendor);
+    if (tagTouched) {
+      return;
+    }
+    const survivor = expenses.find((exp) => exp.vendor === vendor) || expenses[0];
+    setSelectedTag(displayTag(primaryTag(survivor), tagList, legacyTagList) || '');
+  };
+
   const onSaveMergedExpense = async () => {
+    if (saving) {
+      return;
+    }
     // Validate vendor selection
     if (!selectedVendor) {
       createTimedAlert({
@@ -111,6 +131,10 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       return;
     }
     setPrimaryError('');
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      createTimedAlert({type: 'error', message: OFFLINE_SAVE_MESSAGE});
+      return;
+    }
 
     const {cost, costType} = mergedCostAndType(totalCost);
     const {tags} = normalizeTags(selectedTag, extras, {
@@ -132,11 +156,13 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       description: note,
     };
 
+    setSaving(true);
     let mergedExpense;
     try {
       mergedExpense = await ExpenseAPI.updateExpense(vendorExpense.id, edit);
     } catch {
       createTimedAlert({type: 'error', message: 'Could not save the merged expense'});
+      setSaving(false);
       return;
     }
 
@@ -147,8 +173,10 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       }
     } catch {
       createTimedAlert({type: 'error', message: 'Merged expense was saved, but not every duplicate could be removed'});
+      setSaving(false);
       return;
     }
+    setSaving(false);
 
     if (onMergeComplete) {
       onMergeComplete(mergedExpense);
@@ -201,7 +229,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
                   clickable
                   color={selectedVendor === vendor ? 'primary' : 'default'}
                   variant={selectedVendor === vendor ? 'filled' : 'outlined'}
-                  onClick={() => setSelectedVendor(vendor)}
+                  onClick={() => onVendorChange(vendor)}
                   className={`tag-expense-chip${selectedVendor === vendor ? ' selected' : ''}`}
                   aria-label={`Select vendor ${vendor}`}
                   size="medium"
@@ -228,6 +256,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
               noteOpen={noteOpen}
               onPrimaryChange={(tag) => {
                 setPrimaryError('');
+                setTagTouched(true);
                 setSelectedTag(tag);
               }}
               onExtrasChange={setExtras}
@@ -258,15 +287,17 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={extrasNeedPrimary}
-          onClick={onSaveMergedExpense}
+          disabled={extrasNeedPrimary || saving}
+          onClick={() => void onSaveMergedExpense()}
           className="tag-save-btn"
+          data-testid="merge-save"
         >
-          Merge
+          {saving ? 'Merging…' : 'Merge'}
         </Button>
         <Button
           variant="outlined"
           onClick={onClose}
+          disabled={saving}
           className="tag-close-btn"
         >
           Cancel
