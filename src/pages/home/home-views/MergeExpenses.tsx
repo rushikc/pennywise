@@ -127,17 +127,19 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     // Find the expense object that corresponds to the selected vendor or use first expense as fallback
     const vendorExpense = expenses.find(exp => exp.vendor === selectedVendor) || expenses[0];
     if (!selectedTag && extras.length > 0) {
-      setPrimaryError('Choose a primary tag to keep extra tags.');
-      return;
+      if (!window.confirm('Untagging drops extra tags. Continue?')) {
+        return;
+      }
     }
     setPrimaryError('');
+    const keptExtras = selectedTag ? extras : [];
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
       createTimedAlert({type: 'error', message: OFFLINE_SAVE_MESSAGE});
       return;
     }
 
     const {cost, costType} = mergedCostAndType(totalCost);
-    const {tags} = normalizeTags(selectedTag, extras, {
+    const {tags} = normalizeTags(selectedTag, keptExtras, {
       tagList,
       legacyTagList,
     });
@@ -145,8 +147,8 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
     const keepExtras = extraTags(vendorExpense);
     const edit: ExpenseEdit = {
       primary: tags[0] ?? null,
-      addExtras: extras.filter((tag) => !keepExtras.some((item) => sameTag(item, tag))),
-      removeExtras: openedExtras.filter((tag) => !extras.some((item) => sameTag(item, tag))),
+      addExtras: keptExtras.filter((tag) => !keepExtras.some((item) => sameTag(item, tag))),
+      removeExtras: openedExtras.filter((tag) => !keptExtras.some((item) => sameTag(item, tag))),
       cost,
       vendor: selectedVendor,
       date: vendorExpense.date,
@@ -186,7 +188,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
   };
 
   const uniqueVendors = Array.from(new Set(expenses.map(exp => exp.vendor)));
-  const extrasNeedPrimary = extras.length > 0 && !selectedTag;
+  const extrasDropped = extras.length > 0 && !selectedTag;
 
   return (
     <Dialog
@@ -263,12 +265,12 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
               onDescriptionChange={setDescription}
               onNoteOpen={() => setNoteOpen(true)}
             />
-            {extrasNeedPrimary && (
+            {extrasDropped && (
               <Alert
                 severity="warning"
                 sx={{mt: 'var(--space-md)', color: 'var(--text-primary)'}}
               >
-                Choose a primary tag to keep extra tags.
+                Untagged drops the extra tags.
               </Alert>
             )}
             {primaryError && (
@@ -287,7 +289,7 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
       <DialogActions className="tag-expense-dialog-actions">
         <Button
           variant="contained"
-          disabled={extrasNeedPrimary || saving}
+          disabled={saving}
           onClick={() => void onSaveMergedExpense()}
           className="tag-save-btn"
           data-testid="merge-save"

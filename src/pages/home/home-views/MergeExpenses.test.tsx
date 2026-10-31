@@ -81,7 +81,7 @@ describe('MergeExpenses', () => {
     expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
   });
 
-  it('disables merge when extras exist and there is no primary', async () => {
+  const renderUntaggedWithExtras = () => {
     const store = configureStore({
       reducer: {expense: expenseReducer},
       preloadedState: {
@@ -103,10 +103,34 @@ describe('MergeExpenses', () => {
         />
       </Provider>,
     );
+  };
+
+  it('asks before Untagged drops extras and keeps the dialog when declined', async () => {
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+    renderUntaggedWithExtras();
     await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
     await userEvent.click(screen.getByRole('button', {name: /select tag untagged/i}));
-    expect(screen.getByText(/choose a primary tag to keep extra tags/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', {name: /^merge$/i})).toBeDisabled();
+    expect(screen.getByText(/untagged drops the extra tags/i)).toBeInTheDocument();
+    const merge = screen.getByRole('button', {name: /^merge$/i});
+    expect(merge).toBeEnabled();
+    await userEvent.click(merge);
+    expect(confirmSpy).toHaveBeenCalledWith('Untagging drops extra tags. Continue?');
+    expect(ExpenseAPI.updateExpense).not.toHaveBeenCalled();
+    confirmSpy.mockRestore();
+  });
+
+  it('clears primary and extras when Untagged is confirmed', async () => {
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
+    jest.mocked(ExpenseAPI.updateExpense).mockResolvedValue(makeExpense({id: 'a'}));
+    renderUntaggedWithExtras();
+    await userEvent.click(screen.getByRole('button', {name: /select vendor shop/i}));
+    await userEvent.click(screen.getByRole('button', {name: /select tag untagged/i}));
+    await userEvent.click(screen.getByRole('button', {name: /^merge$/i}));
+    await waitFor(() => expect(ExpenseAPI.updateExpense).toHaveBeenCalled());
+    const edit = jest.mocked(ExpenseAPI.updateExpense).mock.calls[0][1];
+    expect(edit?.primary).toBeNull();
+    expect(edit?.addExtras ?? []).toEqual([]);
+    confirmSpy.mockRestore();
   });
 
   it('unions extras and keeps the survivor description', async () => {
