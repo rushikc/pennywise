@@ -34,7 +34,7 @@ describe('Settings demo build', () => {
   it('hides sign-out and shows the reset note', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
           <Settings/>
         </MemoryRouter>
       </Provider>,

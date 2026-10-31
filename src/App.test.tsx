@@ -188,7 +188,7 @@ const liveUser: TestUser = {
 
 const renderApp = (path = '/') => render(
   <Provider store={store}>
-    <MemoryRouter initialEntries={[path]}>
+    <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}} initialEntries={[path]}>
       <App/>
     </MemoryRouter>
   </Provider>,
@@ -240,7 +240,7 @@ describe('App demo mode', () => {
     expect(await screen.findByText('Sign Out')).toBeInTheDocument();
     expect(screen.queryByText('You\'re viewing demo data.')).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Sign Out'));
+    await userEvent.click(screen.getByText('Sign Out'));
     await waitFor(() => {
       expect(mockClearIndexedDBData).toHaveBeenCalled();
     });

@@ -55,7 +55,7 @@ describe('GmailConnectCard', () => {
     mockRead.mockResolvedValue({status: 'unknown', email: null, lastError: null});
     render(<GmailConnectCard/>);
     expect(await screen.findByText('Connect Gmail')).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', {name: 'Connect'}));
+    await userEvent.click(screen.getByRole('button', {name: 'Connect'}));
     await waitFor(() => expect(mockConnect).toHaveBeenCalledWith('auth-code'));
   });
 
@@ -70,7 +70,7 @@ describe('GmailConnectCard', () => {
     mockRead.mockResolvedValue({status: 'connected', email: 'ada@example.com', lastError: null});
     render(<GmailConnectCard/>);
     expect(await screen.findByText('Gmail connected')).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', {name: 'Disconnect'}));
+    await userEvent.click(screen.getByRole('button', {name: 'Disconnect'}));
     await waitFor(() => expect(mockDisconnect).toHaveBeenCalled());
   });
 });

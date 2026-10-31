@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
@@ -41,7 +41,7 @@ jest.mock('./setting-views/GmailConnectCard', () => ({
 
 const renderSettings = () => render(
   <Provider store={store}>
-    <MemoryRouter>
+    <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
       <Settings/>
     </MemoryRouter>
   </Provider>,
@@ -54,9 +54,12 @@ describe('Settings', () => {
     mockSignOut.mockClear();
   });
 
-  it('hides Sign out for a signed-out demo visitor', () => {
+  it('hides Sign out for a signed-out demo visitor', async () => {
     renderSettings();
-    expect(screen.getByText('Tags')).toBeInTheDocument();
+    expect(await screen.findByText('Tags')).toBeInTheDocument();
+    await act(async () => {
+      await Promise.resolve();
+    });
     expect(screen.queryByText('Sign Out')).not.toBeInTheDocument();
   });
 
@@ -81,7 +84,7 @@ describe('Settings', () => {
     mockAuth.currentUser = {displayName: 'Ada', email: 'ada@example.com', photoURL: null};
     mockAuth.dataMode = 'live';
     renderSettings();
-    userEvent.click(screen.getByText('Sign Out'));
+    await userEvent.click(screen.getByText('Sign Out'));
     expect(mockSignOut).toHaveBeenCalled();
   });
 });

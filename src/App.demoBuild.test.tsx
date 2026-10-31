@@ -90,7 +90,7 @@ describe('App demo build routing', () => {
   it('redirects /login to /home and shows the demo-build banner', async () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/login']}>
+        <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}} initialEntries={['/login']}>
           <App/>
         </MemoryRouter>
       </Provider>,

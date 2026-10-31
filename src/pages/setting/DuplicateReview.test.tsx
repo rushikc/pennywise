@@ -35,7 +35,7 @@ const pair = {
 };
 
 const renderPage = () => render(
-  <MemoryRouter>
+  <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
     <DuplicateReview/>
   </MemoryRouter>,
 );

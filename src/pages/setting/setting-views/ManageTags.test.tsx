@@ -38,7 +38,7 @@ const renderManageTags = () => {
     store,
     ...render(
       <Provider store={store}>
-        <MemoryRouter>
+        <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
           <ManageTags/>
         </MemoryRouter>
       </Provider>,
@@ -64,7 +64,7 @@ describe('ManageTags', () => {
     });
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
           <ManageTags/>
         </MemoryRouter>
       </Provider>,

@@ -10,7 +10,7 @@ import BottomNav from './BottomNav';
 const labels = ['Home', 'Stats', 'Budget', 'Profile'];
 
 const renderNav = (path: string) => render(
-  <MemoryRouter initialEntries={[path]}>
+  <MemoryRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}} initialEntries={[path]}>
     <BottomNav/>
   </MemoryRouter>,
 );
