@@ -36,7 +36,7 @@ npx playwright show-report               # HTML report after a run
 
 `playwright.config.ts` starts both servers on its own:
 
-1. The Firestore, Auth, and Functions emulators (`firebase emulators:start --only firestore,auth,functions --project demo-pennywise`) after `tests/fixtures/writeApiEmulatorEnv.mjs` writes gitignored `functions/.secret.local` and `functions/.env.demo-pennywise` (files must start with `# pennywise-e2e generated` or the writer refuses to overwrite them). Cold start is slower because it also builds Cloud Functions.
+1. The Firestore, Auth, and Functions emulators (`tests/fixtures/startE2eEmulators.mjs`) after `tests/fixtures/writeApiEmulatorEnv.mjs` writes gitignored `functions/.secret.local` and `functions/.env.demo-pennywise` (files must start with `# pennywise-e2e generated` or the writer refuses to overwrite them). The emulator dotenv parser only accepts `A-Z0-9_` keys, so the starter also injects the kebab-case secret ids into the process environment. Cold start is slower because it also builds Cloud Functions.
 2. `vite build --mode e2e` then `vite preview` on `http://127.0.0.1:3100`.
 
 Outside CI, already-running servers are reused. **If you keep `vite preview` running, rebuild with

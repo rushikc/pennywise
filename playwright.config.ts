@@ -38,11 +38,11 @@ export default defineConfig({
   },
   projects: [
     {name: 'desktop', use: {...devices['Desktop Chrome'], viewport: {width: 1280, height: 800}}},
-    {name: 'mobile', use: {...devices['Pixel 7']}},
+    {name: 'mobile', testIgnore: ['**/api.spec.ts'], use: {...devices['Pixel 7']}},
   ],
   webServer: [
     {
-      command: `node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && npx firebase emulators:start --only firestore,auth,functions --project ${E2E_PROJECT_ID}`,
+      command: `node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && node tests/fixtures/startE2eEmulators.mjs`,
       url: `${E2E_API_BASE}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,

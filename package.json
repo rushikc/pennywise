@@ -87,7 +87,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "test:e2e:emulators": "node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && firebase emulators:start --only firestore,auth,functions --project demo-pennywise",
+    "test:e2e:emulators": "node tests/fixtures/writeApiEmulatorEnv.mjs && npm run build --prefix functions && node tests/fixtures/startE2eEmulators.mjs",
     "test:e2e:seed": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 GCLOUD_PROJECT=demo-pennywise node --experimental-strip-types --no-warnings tests/fixtures/seedEmulator.ts"
   },
   "engines": {
