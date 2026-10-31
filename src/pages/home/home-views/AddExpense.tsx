@@ -130,18 +130,18 @@ const AddExpense: FC<AddExpenseModalProps> = ({open, onClose, onExpenseAdded}): 
 
         <Fade in={open} timeout={600}>
           <div>
-          <TagEditorFields
-            tagList={tagList}
-            selectedPrimary={selectedPrimary}
-            extras={extras}
-            extraSuggestions={extraSuggestions}
-            description={description}
-            noteOpen={noteOpen}
-            onPrimaryChange={setSelectedPrimary}
-            onExtrasChange={setExtras}
-            onDescriptionChange={setDescription}
-            onNoteOpen={() => setNoteOpen(true)}
-          />
+            <TagEditorFields
+              tagList={tagList}
+              selectedPrimary={selectedPrimary}
+              extras={extras}
+              extraSuggestions={extraSuggestions}
+              description={description}
+              noteOpen={noteOpen}
+              onPrimaryChange={setSelectedPrimary}
+              onExtrasChange={setExtras}
+              onDescriptionChange={setDescription}
+              onNoteOpen={() => setNoteOpen(true)}
+            />
           </div>
         </Fade>
       </DialogContent>

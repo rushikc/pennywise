@@ -127,7 +127,10 @@ export function isUntagged(expense: TagDoc | null | undefined): boolean {
   return primaryTag(expense) == null;
 }
 
-export function withTags<T extends Partial<Expense>>(expense: T, tags: string[]): T {
+export function withTags<T extends Partial<Expense>>(
+  expense: T,
+  tags: string[],
+): T & {tags: string[]; tag: string | null} {
   const normalised = normalizeTags(tags[0], tags.slice(1)).tags;
   return {
     ...expense,

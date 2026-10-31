@@ -27,8 +27,10 @@ export const calculateBudgetProgress = (expenses: Expense[], budgets: Budget[]):
         .filter(expense => expense.costType === 'debit')
         .filter(expense => {
           const primary = primaryTag(expense);
-          return Boolean(primary) &&
-            budget.tagList.some(tag => primary.toLowerCase() === tag.toLowerCase());
+          if (!primary) {
+            return false;
+          }
+          return budget.tagList.some(tag => primary.toLowerCase() === tag.toLowerCase());
         })
         .reduce((sum, expense) => sum + expense.cost, 0);
     }

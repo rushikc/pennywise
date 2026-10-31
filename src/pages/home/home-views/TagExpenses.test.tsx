@@ -74,7 +74,7 @@ describe('TagExpenses', () => {
     await userEvent.click(screen.getByRole('button', {name: /save/i}));
     expect(ExpenseAPI.addExpense).toHaveBeenCalled();
     const saved = jest.mocked(ExpenseAPI.addExpense).mock.calls[0][0];
-    expect(saved.tags[0]).toBe('food');
+    expect(saved.tags?.[0]).toBe('food');
     expect(saved.tags).toEqual(expect.arrayContaining(['existing', 'zomato']));
     expect(saved.tag).toBe('food');
     expect(saved.description).toBe('keep me');

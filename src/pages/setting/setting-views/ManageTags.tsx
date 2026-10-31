@@ -45,7 +45,7 @@ const ManageTags: React.FC = () => {
       dispatch(expenseSlice.actions.setTagList(config.tagList));
       dispatch(expenseSlice.actions.setLegacyTagList(config.legacyTagList || []));
     });
-  }, []);
+  }, [dispatch]);
 
   const persistConfig = (nextTagList: string[], nextLegacy: string[]) => {
     void ExpenseAPI.updateTagConfig({tagList: nextTagList, legacyTagList: nextLegacy});

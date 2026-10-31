@@ -185,19 +185,19 @@ const TagExpenses: FC = (): ReactElement => {
 
         <Fade in={isTagModal} timeout={600}>
           <div>
-          <TagEditorFields
-            tagList={tagList}
-            legacyPrimary={currentPrimary}
-            selectedPrimary={selectedPrimary}
-            extras={extras}
-            extraSuggestions={extraSuggestions}
-            description={description}
-            noteOpen={noteOpen}
-            onPrimaryChange={setSelectedPrimary}
-            onExtrasChange={setExtras}
-            onDescriptionChange={setDescription}
-            onNoteOpen={() => setNoteOpen(true)}
-          />
+            <TagEditorFields
+              tagList={tagList}
+              legacyPrimary={currentPrimary}
+              selectedPrimary={selectedPrimary}
+              extras={extras}
+              extraSuggestions={extraSuggestions}
+              description={description}
+              noteOpen={noteOpen}
+              onPrimaryChange={setSelectedPrimary}
+              onExtrasChange={setExtras}
+              onDescriptionChange={setDescription}
+              onNoteOpen={() => setNoteOpen(true)}
+            />
           </div>
         </Fade>
       </DialogContent>

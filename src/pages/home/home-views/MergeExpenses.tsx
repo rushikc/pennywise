@@ -206,19 +206,19 @@ const MergeExpenses: FC<MergeExpensesProps> = ({
 
         <Fade in={open} timeout={600}>
           <div>
-          <TagEditorFields
-            tagList={tagList}
-            legacyPrimary={primaryTag(expenses[0])}
-            selectedPrimary={selectedTag}
-            extras={extras}
-            extraSuggestions={[...new Set(expenseList.flatMap((item) => extraTags(item)))].sort()}
-            description={description}
-            noteOpen={noteOpen}
-            onPrimaryChange={setSelectedTag}
-            onExtrasChange={setExtras}
-            onDescriptionChange={setDescription}
-            onNoteOpen={() => setNoteOpen(true)}
-          />
+            <TagEditorFields
+              tagList={tagList}
+              legacyPrimary={primaryTag(expenses[0])}
+              selectedPrimary={selectedTag}
+              extras={extras}
+              extraSuggestions={[...new Set(expenseList.flatMap((item) => extraTags(item)))].sort()}
+              description={description}
+              noteOpen={noteOpen}
+              onPrimaryChange={setSelectedTag}
+              onExtrasChange={setExtras}
+              onDescriptionChange={setDescription}
+              onNoteOpen={() => setNoteOpen(true)}
+            />
           </div>
         </Fade>
 
