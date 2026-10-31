@@ -66,6 +66,8 @@ const TagExpenses: FC = (): ReactElement => {
     setNoteOpen(Boolean(noteAtOpen));
     setAutoTag(false);
     setPrimaryError('');
+    // Snapshot only when this dialog opens for an expense id, not on later list updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTagModal, expense?.id]);
 
   const extraSuggestions = useMemo(() => {
