@@ -184,4 +184,4 @@ The React application is divided into several key sections, each serving a speci
 
 *   **Budget** (`/budget`): This section is for managing your financial goals. You can create budgets that cover one or more tags and track monthly progress.
 
-*   **Settings** (`/profile`): Connect Gmail, Tags (retire moves a name to `legacyTagList`; restore moves it back), Manage Vendor Tags (primary only), Auto-tag Expenses, Duplicate Review, Reload Data, dark/light theme, sign-out, and **Banks** (dynamic `emailParseBanks` for Gmail automation). See [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
+*   **Settings** (`/profile`): Connect Gmail, Tags (retire is suggestion-only: the name moves to `legacyTagList` and stays valid on expenses; restore moves it back), Manage Vendor Tags (primary only), Auto-tag Expenses, Duplicate Review, Reload Data, dark/light theme, sign-out, and **Banks** (dynamic `emailParseBanks` for Gmail automation). See [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
