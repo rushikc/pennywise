@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "eslint .",
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node --import tsx --test dedupe/*.test.js gcpNames.test.js gmail/*.test.js src/parse/parse.test.ts",
+    "test": "npm run build && node --import tsx --test dedupe/*.test.js gcpNames.test.js gmail/*.test.js src/parse/parse.test.ts src/parse/tags.test.ts",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",

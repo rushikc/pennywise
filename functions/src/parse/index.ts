@@ -10,3 +10,4 @@ export * from './bankMatch';
 export * from './vendor';
 export * from './regexParse';
 export * from './gemini';
+export * from './tags';

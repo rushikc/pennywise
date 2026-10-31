@@ -1,0 +1,220 @@
+{
+  "normalizeTags": [
+    {
+      "name": "primary plus extras",
+      "primary": "food",
+      "extras": ["zomato", "online food ordering"],
+      "expected": {
+        "tags": ["food", "zomato", "online food ordering"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "trim and collapse extra whitespace and lowercase extras",
+      "primary": "  Food  ",
+      "extras": ["  Online   Food  Ordering "],
+      "expected": {
+        "tags": ["Food", "online food ordering"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "canonical primary from tag lists",
+      "primary": "FOOD",
+      "extras": ["Zomato"],
+      "opts": {
+        "tagList": ["food", "rent"],
+        "legacyTagList": ["tech"]
+      },
+      "expected": {
+        "tags": ["food", "zomato"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "canonical primary from legacy list",
+      "primary": "Tech",
+      "extras": [],
+      "opts": {
+        "tagList": ["food"],
+        "legacyTagList": ["tech"]
+      },
+      "expected": {
+        "tags": ["tech"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "drop empty extras",
+      "primary": "food",
+      "extras": ["", "  ", "zomato"],
+      "expected": {
+        "tags": ["food", "zomato"],
+        "dropped": ["", "  "]
+      }
+    },
+    {
+      "name": "dedupe extras against primary and each other",
+      "primary": "food",
+      "extras": ["Food", "zomato", "ZOMATO", "food"],
+      "expected": {
+        "tags": ["food", "zomato"],
+        "dropped": ["Food", "ZOMATO", "food"]
+      }
+    },
+    {
+      "name": "cap at 8 tags total",
+      "primary": "food",
+      "extras": ["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+      "expected": {
+        "tags": ["food", "a", "b", "c", "d", "e", "f", "g"],
+        "dropped": ["h", "i"]
+      }
+    },
+    {
+      "name": "truncate extra length",
+      "primary": "food",
+      "extras": ["abcdefghijklmnopqrstuvwxyz0123456789EXTRA"],
+      "expected": {
+        "tags": ["food", "abcdefghijklmnopqrstuvwxyz0123456789extr"],
+        "dropped": []
+      }
+    },
+    {
+      "name": "extras without primary are dropped",
+      "primary": "",
+      "extras": ["zomato", "online"],
+      "expected": {
+        "tags": [],
+        "dropped": ["zomato", "online"]
+      }
+    },
+    {
+      "name": "null primary drops extras",
+      "primary": null,
+      "extras": ["zomato"],
+      "expected": {
+        "tags": [],
+        "dropped": ["zomato"]
+      }
+    },
+    {
+      "name": "untagged primary is treated as none",
+      "primary": "Untagged",
+      "extras": ["zomato"],
+      "expected": {
+        "tags": [],
+        "dropped": ["zomato"]
+      }
+    }
+  ],
+  "readTags": [
+    {
+      "name": "non-empty tags array wins over conflicting tag",
+      "doc": {
+        "tags": ["food", "zomato"],
+        "tag": "rent"
+      },
+      "expected": ["food", "zomato"]
+    },
+    {
+      "name": "string tag when tags missing",
+      "doc": {
+        "tag": "food"
+      },
+      "expected": ["food"]
+    },
+    {
+      "name": "string tag when tags is empty array",
+      "doc": {
+        "tags": [],
+        "tag": "food"
+      },
+      "expected": ["food"]
+    },
+    {
+      "name": "null tag",
+      "doc": {
+        "tag": null
+      },
+      "expected": []
+    },
+    {
+      "name": "missing fields",
+      "doc": {},
+      "expected": []
+    },
+    {
+      "name": "untagged string",
+      "doc": {
+        "tag": "untagged"
+      },
+      "expected": []
+    },
+    {
+      "name": "whitespace only tag",
+      "doc": {
+        "tag": "   "
+      },
+      "expected": []
+    }
+  ],
+  "description": [
+    {
+      "name": "trim",
+      "input": "  rare note  ",
+      "expected": "rare note"
+    },
+    {
+      "name": "empty omitted",
+      "input": "   ",
+      "expected": null
+    },
+    {
+      "name": "empty string omitted",
+      "input": "",
+      "expected": null
+    },
+    {
+      "name": "null omitted",
+      "input": null,
+      "expected": null
+    },
+    {
+      "name": "truncate at 280",
+      "input": "x",
+      "repeat": 300,
+      "expectedLength": 280
+    }
+  ],
+  "isValidPrimary": [
+    {
+      "name": "in tagList",
+      "tag": "food",
+      "tagList": ["food"],
+      "legacyTagList": [],
+      "expected": true
+    },
+    {
+      "name": "in legacy case insensitive",
+      "tag": "Tech",
+      "tagList": ["food"],
+      "legacyTagList": ["tech"],
+      "expected": true
+    },
+    {
+      "name": "unknown",
+      "tag": "mystery",
+      "tagList": ["food"],
+      "legacyTagList": ["tech"],
+      "expected": false
+    },
+    {
+      "name": "empty",
+      "tag": "  ",
+      "tagList": ["food"],
+      "legacyTagList": [],
+      "expected": false
+    }
+  ]
+}

@@ -5,7 +5,17 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 export interface Expense {
   id: string,
-  tag?: string, // tag for the expense
+  /** Ordered tags. tags[0] is the primary category; tags[1..] are extras. [] means untagged. */
+  tags?: string[],
+  /**
+   * @deprecated Mirror of tags[0] ?? null. Kept for old clients and deployed functions.
+   * Always write tags[0] ?? null while this field exists.
+   */
+  tag?: string | null,
+  /** Optional note for rare/one-off expenses. Omit when empty. Max 280 chars. */
+  description?: string,
+  /** Epoch ms set by the external local enrichment process. App displays and preserves only. */
+  enrichedAt?: number,
   mailId: string, // unique identifier for the expense from mail id
   cost: number, // expense cost
   costType: 'credit' | 'debit',
@@ -34,6 +44,7 @@ export interface DuplicateCandidatePair {
 export interface VendorTag {
   id: string,
   vendor: string,
+  /** Primary tag only. extraTags on VendorTag is a future extension, not implemented. */
   tag: string,
   date: number // unix timestamp
 }

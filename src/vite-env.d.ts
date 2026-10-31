@@ -8,6 +8,38 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 declare const __DEMO_BUILD__: boolean;
 
+declare module '../../shared/tagCases.json' {
+  const value: {
+    normalizeTags: Array<{
+      name: string;
+      primary: string | null;
+      extras: string[];
+      opts?: {tagList?: string[]; legacyTagList?: string[]};
+      expected: {tags: string[]; dropped: string[]};
+    }>;
+    readTags: Array<{
+      name: string;
+      doc: {tags?: unknown; tag?: unknown};
+      expected: string[];
+    }>;
+    description: Array<{
+      name: string;
+      input: string | null;
+      expected?: string | null;
+      repeat?: number;
+      expectedLength?: number;
+    }>;
+    isValidPrimary: Array<{
+      name: string;
+      tag: string;
+      tagList: string[];
+      legacyTagList: string[];
+      expected: boolean;
+    }>;
+  };
+  export default value;
+}
+
 declare module '../../shared/gcpNames.json' {
   const value: {
     pubsubTopic: string;

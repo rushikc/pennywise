@@ -1,0 +1,164 @@
+/*
+MIT License
+Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
+*/
+
+export const TAG_LIMITS = {
+  maxTags: 8,
+  maxTagLength: 40,
+  maxDescription: 280,
+} as const;
+
+export type TagNormalizeOpts = {
+  tagList?: string[];
+  legacyTagList?: string[];
+};
+
+export type NormalizeTagsResult = {
+  tags: string[];
+  dropped: string[];
+};
+
+type TagDoc = {
+  tags?: unknown;
+  tag?: unknown;
+  description?: unknown;
+};
+
+const collapseWhitespace = (value: string): string => value.trim().replace(/\s+/g, ' ');
+
+const normalizePrimaryValue = (value: unknown): string | null => {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const trimmed = collapseWhitespace(value);
+  if (!trimmed || trimmed.toLowerCase() === 'untagged') {
+    return null;
+  }
+  return trimmed;
+};
+
+const canonicalPrimary = (primary: string, opts?: TagNormalizeOpts): string => {
+  const lists = [...(opts?.tagList || []), ...(opts?.legacyTagList || [])];
+  const match = lists.find((item) => {
+    if (typeof item !== 'string') {
+      return false;
+    }
+    return collapseWhitespace(item).toLowerCase() === primary.toLowerCase();
+  });
+  return match ? collapseWhitespace(match) : primary;
+};
+
+const normalizeExtraValue = (value: unknown): string | null => {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const trimmed = collapseWhitespace(value).toLowerCase();
+  if (!trimmed) {
+    return null;
+  }
+  return trimmed.slice(0, TAG_LIMITS.maxTagLength);
+};
+
+export function normalizeTags(
+  primary: unknown,
+  extras: unknown = [],
+  opts?: TagNormalizeOpts,
+): NormalizeTagsResult {
+  const extraList = Array.isArray(extras) ? extras : [];
+  const rawPrimary = normalizePrimaryValue(primary);
+  if (!rawPrimary) {
+    return {tags: [], dropped: extraList.filter((item) => typeof item === 'string')};
+  }
+
+  const resolvedPrimary = canonicalPrimary(rawPrimary, opts);
+  const seen = new Set([resolvedPrimary.toLowerCase()]);
+  const tags = [resolvedPrimary];
+  const dropped: string[] = [];
+
+  for (const extra of extraList) {
+    const original = typeof extra === 'string' ? extra : '';
+    const normalised = normalizeExtraValue(extra);
+    if (!normalised) {
+      dropped.push(original);
+      continue;
+    }
+    if (seen.has(normalised)) {
+      dropped.push(original);
+      continue;
+    }
+    if (tags.length >= TAG_LIMITS.maxTags) {
+      dropped.push(original);
+      continue;
+    }
+    seen.add(normalised);
+    tags.push(normalised);
+  }
+
+  return {tags, dropped};
+}
+
+export function readTags(doc: TagDoc | null | undefined): string[] {
+  if (!doc) {
+    return [];
+  }
+  if (Array.isArray(doc.tags) && doc.tags.length > 0) {
+    return normalizeTags(doc.tags[0], doc.tags.slice(1)).tags;
+  }
+  if (typeof doc.tag === 'string') {
+    const trimmed = collapseWhitespace(doc.tag);
+    if (trimmed && trimmed.toLowerCase() !== 'untagged') {
+      return [trimmed];
+    }
+  }
+  return [];
+}
+
+export function primaryTag(expense: TagDoc | null | undefined): string | null {
+  return readTags(expense)[0] ?? null;
+}
+
+export function extraTags(expense: TagDoc | null | undefined): string[] {
+  return readTags(expense).slice(1);
+}
+
+export function isUntagged(expense: TagDoc | null | undefined): boolean {
+  return primaryTag(expense) == null;
+}
+
+export function withTags<T extends TagDoc>(expense: T, tags: string[]): T {
+  const normalised = normalizeTags(tags[0], tags.slice(1)).tags;
+  return {
+    ...expense,
+    tags: normalised,
+    tag: normalised[0] ?? null,
+  };
+}
+
+export function normalizeDescription(value: unknown): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  return trimmed.slice(0, TAG_LIMITS.maxDescription);
+}
+
+export function isValidPrimary(
+  tag: unknown,
+  tagList: string[] = [],
+  legacyTagList: string[] = [],
+): boolean {
+  const primary = normalizePrimaryValue(tag);
+  if (!primary) {
+    return false;
+  }
+  return [...tagList, ...legacyTagList].some((item) => {
+    if (typeof item !== 'string') {
+      return false;
+    }
+    return collapseWhitespace(item).toLowerCase() === primary.toLowerCase();
+  });
+}
