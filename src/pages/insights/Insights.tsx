@@ -426,7 +426,7 @@ const GroupByPanel: React.FC<{
   );
 };
 
-const SelectionPanel: React.FC<{
+export const SelectionPanel: React.FC<{
   show: boolean;
   onClose: () => void;
   selectedItems: string[];
@@ -456,21 +456,19 @@ const SelectionPanel: React.FC<{
       <div className="selection-options">
         {availableItems.map(item => {
           const unlisted = unlistedItems.has(item);
+          const selected = selectedItems.includes(item);
           return (
             <Chip
               key={item}
-              label={item}
-              color={selectedItems.includes(item) ? 'primary' : 'default'}
-              variant={selectedItems.includes(item) && !unlisted ? 'filled' : 'outlined'}
+              label={unlisted ? `${item} · not in list` : item}
+              color={selected ? 'primary' : 'default'}
+              variant={selected ? 'filled' : 'outlined'}
               onClick={() => handleItemToggle(item)}
-              className="selection-chip"
+              className={unlisted ? 'selection-chip selection-chip--unlisted' : 'selection-chip'}
               title={unlisted ? `${item} (not in tag list)` : undefined}
               aria-label={unlisted ? `${item} (not in tag list)` : item}
-              sx={unlisted ? {
-                color: 'var(--text-secondary)',
-                borderColor: 'var(--border-color)',
-                backgroundColor: 'transparent',
-              } : undefined}
+              aria-pressed={selected}
+              data-testid={`insights-chip-${item}`}
             />
           );
         })}

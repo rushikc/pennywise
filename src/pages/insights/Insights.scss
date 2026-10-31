@@ -492,6 +492,10 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
       cursor: pointer;
       transition: all var(--transition-fast);
 
+      &.selection-chip--unlisted {
+        border-style: dashed;
+      }
+
       &:hover {
         transform: translateY(-1px);
       }
