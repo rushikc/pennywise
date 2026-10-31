@@ -47,6 +47,37 @@ const renderManageTags = () => {
 };
 
 describe('ManageTags', () => {
+  it('writes the stored tagList spelling into legacyTagList', async () => {
+    (ExpenseAPI.getTagConfig as jest.Mock).mockResolvedValueOnce({
+      tagList: ['Food', 'rent'],
+      legacyTagList: [],
+    });
+    const store = configureStore({
+      reducer: {expense: expenseReducer},
+      preloadedState: {
+        expense: {
+          ...configureStore({reducer: {expense: expenseReducer}}).getState().expense,
+          tagList: ['Food', 'rent'],
+          legacyTagList: [],
+        },
+      },
+    });
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ManageTags/>
+        </MemoryRouter>
+      </Provider>,
+    );
+    await userEvent.click(screen.getAllByTestId('CancelIcon')[0]);
+    await userEvent.click(screen.getByRole('button', {name: /^delete$/i}));
+    expect(store.getState().expense.legacyTagList).toEqual(['Food']);
+    expect(ExpenseAPI.updateTagConfig).toHaveBeenCalledWith({
+      tagList: ['rent'],
+      legacyTagList: ['Food'],
+    });
+  });
+
   it('retires a deleted tag to legacyTagList', async () => {
     const {store} = renderManageTags();
     await userEvent.click(screen.getAllByTestId('CancelIcon')[0]);

@@ -58,11 +58,12 @@ const ManageTags: React.FC = () => {
   };
 
   const confirmDeleteTag = () => {
-    const nextTagList = tagList.filter((item) => !sameTag(item, tagToDelete));
-    const nextLegacy = legacyTagList.some((item) => sameTag(item, tagToDelete))
+    const stored = tagList.find((item) => sameTag(item, tagToDelete)) ?? tagToDelete;
+    const nextTagList = tagList.filter((item) => !sameTag(item, stored));
+    const nextLegacy = legacyTagList.some((item) => sameTag(item, stored))
       ? legacyTagList
-      : [...legacyTagList, tagToDelete];
-    dispatch(expenseSlice.actions.deleteTag(tagToDelete));
+      : [...legacyTagList, stored];
+    dispatch(expenseSlice.actions.deleteTag(stored));
     persistConfig(nextTagList, nextLegacy);
     setDeleteConfirmDialog(false);
   };

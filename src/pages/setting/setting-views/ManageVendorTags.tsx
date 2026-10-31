@@ -26,6 +26,7 @@ import {
 import {ArrowBack as BackIcon, RemoveCircleOutline, Search as SearchIcon} from '@mui/icons-material';
 import {VendorTag} from '../../../Types';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
+import {sameTag} from '../../../domain/tags';
 import {useNavigate} from 'react-router-dom';
 import './settingViews.scss';
 
@@ -270,10 +271,10 @@ const ManageVendorTags: React.FC = () => {
                     key={tag}
                     label={tag}
                     clickable
-                    color={selectedTag === tag ? 'primary' : 'default'}
-                    variant={selectedTag === tag ? 'filled' : 'outlined'}
+                    color={sameTag(selectedTag, tag) ? 'primary' : 'default'}
+                    variant={sameTag(selectedTag, tag) ? 'filled' : 'outlined'}
                     onClick={() => setSelectedTag(tag)}
-                    className={`tag-expense-chip${selectedTag === tag ? ' selected' : ''}`}
+                    className={`tag-expense-chip${sameTag(selectedTag, tag) ? ' selected' : ''}`}
                     size="medium"
                   />
                 ))}
