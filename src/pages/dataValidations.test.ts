@@ -50,6 +50,15 @@ describe('groupExpenses', () => {
     expect(grouped.untagged.groupLabel).toBe('Untagged');
   });
 
+  it('groups by primary tag and ignores extras', () => {
+    const grouped = groupExpenses([
+      makeExpense({id: 'a', tags: ['food', 'zomato']}),
+      makeExpense({id: 'b', tags: ['food', 'swiggy']}),
+    ], 'tags');
+    expect(grouped.food.expenses).toHaveLength(2);
+    expect(grouped.food.groupLabel).toBe('food');
+  });
+
   it('subtracts debits and adds credits in totals', () => {
     const grouped = groupExpenses([
       makeExpense({id: 'd', cost: 80, costType: 'debit', vendor: 'A'}),
@@ -82,16 +91,28 @@ describe('searchExpenses', () => {
   const list = [
     makeExpense({id: '1', vendor: 'Netflix', cost: 199, tag: 'entertainment'}),
     makeExpense({id: '2', vendor: 'Rent', cost: 20000, tag: undefined}),
+    makeExpense({
+      id: '3',
+      vendor: 'Zomato',
+      cost: 12,
+      tags: ['food', 'online food ordering'],
+      description: 'birthday dinner',
+    }),
   ];
 
   it('returns all expenses for a blank term', () => {
-    expect(searchExpenses(list, '   ')).toHaveLength(2);
+    expect(searchExpenses(list, '   ')).toHaveLength(3);
   });
 
   it('matches vendor, tag, and cost string case-insensitively', () => {
     expect(searchExpenses(list, 'NET').map((e) => e.id)).toEqual(['1']);
     expect(searchExpenses(list, 'enter').map((e) => e.id)).toEqual(['1']);
     expect(searchExpenses(list, '20000').map((e) => e.id)).toEqual(['2']);
+  });
+
+  it('matches extra tags and description', () => {
+    expect(searchExpenses(list, 'online food').map((e) => e.id)).toEqual(['3']);
+    expect(searchExpenses(list, 'birthday').map((e) => e.id)).toEqual(['3']);
   });
 
   it('does not match missing tags on tag search', () => {

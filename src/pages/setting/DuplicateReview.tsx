@@ -22,6 +22,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {useNavigate} from 'react-router-dom';
 import {ExpenseAPI} from '../../api/ExpenseAPI';
 import {DuplicateCandidatePair} from '../../Types';
+import {extraTags, primaryTag} from '../../domain/tags';
 import {formatVendorName, sortByKey} from '../../utility/utility';
 import {setExpenseList} from '../../store/expenseActions';
 import {createTimedAlert} from '../../store/alertActions';
@@ -45,9 +46,18 @@ const ExpenseCard: React.FC<{label: string; expense: DuplicateCandidatePair['kee
     <Typography variant="caption" display="block" sx={{mt: 'var(--space-sm)'}}>
       {formatExpenseDate(expense.date)}
     </Typography>
-    {expense.tag && (
-      <Chip label={expense.tag} size="small" sx={{mt: 'var(--space-sm)'}}/>
+    {primaryTag(expense) && (
+      <Chip label={primaryTag(expense) as string} size="small" sx={{mt: 'var(--space-sm)'}}/>
     )}
+    {extraTags(expense).map((tag) => (
+      <Chip
+        key={tag}
+        label={tag}
+        size="small"
+        variant="outlined"
+        sx={{mt: 'var(--space-sm)', ml: 'var(--space-xs)', color: 'var(--text-secondary)'}}
+      />
+    ))}
   </Paper>
 );
 

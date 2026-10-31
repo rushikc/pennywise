@@ -19,6 +19,7 @@ interface InitialState {
   isAppLoading: boolean,
   isTagModal: boolean,
   tagList: string[],
+  legacyTagList: string[],
   alerts: Alert[],
 }
 
@@ -37,6 +38,7 @@ const initialState: InitialState = {
   },
   isTagModal: false,
   tagList: [],
+  legacyTagList: [],
   alerts: [],
 };
 
@@ -78,7 +80,12 @@ export const expenseSlice = createSlice({
       const expenseIndex = state.expenseList.findIndex(t => t.mailId === expense.mailId);
 
       if (expenseIndex > -1) {
-        state.expenseList[expenseIndex].tag = expense.tag;
+        const current = state.expenseList[expenseIndex];
+        current.tags = expense.tags;
+        current.tag = expense.tag;
+        current.description = expense.description;
+        current.enrichedAt = expense.enrichedAt;
+        current.modifiedDate = expense.modifiedDate;
       } else {
         state.expenseList.push(expense);
       }
@@ -113,14 +120,24 @@ export const expenseSlice = createSlice({
       state.tagList = action.payload;
     },
 
+    setLegacyTagList: (state, action: PayloadAction<string[]>) => {
+      state.legacyTagList = action.payload;
+    },
+
     addTag: (state, action: PayloadAction<string>) => {
-      if (!state.tagList.includes(action.payload)) {
-        state.tagList.push(action.payload);
+      const tag = action.payload;
+      state.legacyTagList = state.legacyTagList.filter((item) => item !== tag);
+      if (!state.tagList.includes(tag)) {
+        state.tagList.push(tag);
       }
     },
 
     deleteTag: (state, action: PayloadAction<string>) => {
-      state.tagList = state.tagList.filter(tag => tag !== action.payload);
+      const tag = action.payload;
+      state.tagList = state.tagList.filter((item) => item !== tag);
+      if (!state.legacyTagList.includes(tag)) {
+        state.legacyTagList.push(tag);
+      }
     },
 
     mergeSaveExpense: (state, action: PayloadAction<{ originalExpenses: Expense[], mergedExpense: Expense }>) => {

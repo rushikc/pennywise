@@ -2,7 +2,8 @@ import {Expense} from '../Types';
 import dayjs from 'dayjs';
 import {getDateMonth, sortByKey} from '../utility/utility';
 import {ExpenseAPI} from '../api/ExpenseAPI';
-import {setBudgetList, setExpenseState, setTagList} from '../store/expenseActions';
+import {setBudgetList, setExpenseState, setTagConfig} from '../store/expenseActions';
+import {primaryTag, readTags} from '../domain/tags';
 
 // Define date range options
 export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d' | '1800d';
@@ -24,7 +25,7 @@ export const loadInitialAppData = () => {
   const vendorTagApi = ExpenseAPI.getVendorTagList();
   const expenseApi = ExpenseAPI.getExpenseList();
   const budgetApi = ExpenseAPI.getBudgetList();
-  const tagListApi = ExpenseAPI.getTagList();
+  const tagListApi = ExpenseAPI.getTagConfig();
   const darkModeApi = ExpenseAPI.getDarkModeConfig();
 
   Promise.all([vendorTagApi, expenseApi, budgetApi, tagListApi, darkModeApi]).then((res) => {
@@ -32,13 +33,13 @@ export const loadInitialAppData = () => {
     const vendorTagResult = res[0];
     const expenseResult = res[1];
     const budgetResult = res[2];
-    const tagList = res[3];
+    const tagConfig = res[3];
     const darkMode = res[4];
     const expenseList = sortByKey(expenseResult, 'date');
 
     setExpenseState(expenseList, vendorTagResult, darkMode);
     setBudgetList(budgetResult);
-    setTagList(tagList);
+    setTagConfig(tagConfig);
 
   }).catch((res1) => alert(res1));
 };
@@ -154,7 +155,8 @@ export const searchExpenses = (
     return (
       expense.vendor.toLowerCase().includes(searchTermLower) ||
       expense.cost.toString().includes(searchTermLower) ||
-      (expense.tag && expense.tag.toLowerCase().includes(searchTermLower))
+      readTags(expense).some((tag) => tag.toLowerCase().includes(searchTermLower)) ||
+      (expense.description && expense.description.toLowerCase().includes(searchTermLower))
     );
   });
 };
@@ -207,11 +209,12 @@ export const groupExpenses = (
       break;
     }
 
-    case 'tags':
-      // Use tag as key, or "untagged" for null tags
-      groupKey = expense.tag ? expense.tag.toLowerCase() : 'untagged';
-      groupLabel = expense.tag ? expense.tag : 'Untagged';
+    case 'tags': {
+      const primary = primaryTag(expense);
+      groupKey = primary ? primary.toLowerCase() : 'untagged';
+      groupLabel = primary || 'Untagged';
       break;
+    }
 
     default:
       groupKey = dayjs(new Date(expense.date)).format('YYYY-MM-DD');

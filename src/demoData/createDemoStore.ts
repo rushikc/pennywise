@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BankConfig, BankEmailParsingEntry, Budget, Expense, VendorTag} from '../Types';
+import {adaptExpense} from '../domain/tags';
 import {JSONCopy} from '../utility/utility';
 import {BUDGET_LIST} from './budgetList';
 import {GET_LATEST_EXPENSE} from './expenseFunctions';
@@ -16,6 +17,7 @@ export type DemoStore = {
   expenses: Expense[];
   budgets: Budget[];
   tags: string[];
+  legacyTags: string[];
   vendorTags: VendorTag[];
   bankConfig: BankConfig;
   emailParseBanks: BankEmailParsingEntry[];
@@ -40,13 +42,14 @@ const markPendingDuplicates = (expenses: Expense[]): void => {
 };
 
 export const createDemoStore = (): DemoStore => {
-  const expenses = GET_LATEST_EXPENSE();
+  const expenses = GET_LATEST_EXPENSE().map((item) => adaptExpense(item));
   markPendingDuplicates(expenses);
 
   return {
     expenses,
     budgets: JSONCopy(BUDGET_LIST),
     tags: JSONCopy(TAG_LIST),
+    legacyTags: [],
     vendorTags: JSONCopy(VendorTags),
     bankConfig: {
       enableUpi: false,

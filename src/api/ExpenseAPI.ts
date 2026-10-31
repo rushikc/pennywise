@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
+import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
 import {getDataMode} from '../pages/login/dataMode';
 import {isHiddenDuplicate} from './duplicateLogic';
 import {DemoExpenseAPI} from './DemoExpenseAPI';
@@ -69,6 +69,10 @@ export class ExpenseAPI {
   ): Promise<Expense> => api().then((impl) => impl.resolveDuplicate(keep, drop, action));
 
   static getTagList = () => api().then((impl) => impl.getTagList());
+
+  static getTagConfig = (): Promise<TagConfig> => api().then((impl) => impl.getTagConfig());
+
+  static updateTagConfig = (config: TagConfig) => api().then((impl) => impl.updateTagConfig(config));
 
   static updateTagList = (tags: string[]) => api().then((impl) => impl.updateTagList(tags));
 

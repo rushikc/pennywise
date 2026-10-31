@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BudgetProgress, Expense} from '../../Types';
+import {primaryTag} from '../../domain/tags';
 import {DateRange} from '../dataValidations';
 import {formatVendorName} from '../../utility/utility';
 
@@ -59,7 +60,7 @@ export const summarizeMonth = (expenses: Expense[]): DashboardSummary => {
 
   const tagTotals = new Map<string, number>();
   debits.forEach((expense) => {
-    const label = expense.tag?.trim() ? expense.tag : 'Untagged';
+    const label = primaryTag(expense) || 'Untagged';
     tagTotals.set(label, (tagTotals.get(label) || 0) + Number(expense.cost));
   });
 

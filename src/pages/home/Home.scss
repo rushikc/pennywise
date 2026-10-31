@@ -275,6 +275,33 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
   color: var(--text-secondary);
 }
 
+.expense-tag-cluster {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.expense-extra-more {
+  color: var(--text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.expense-note-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--font-size-body);
+}
+
+.expense-note-text {
+  display: block;
+  width: 100%;
+  color: var(--text-secondary);
+  font-size: var(--font-size-caption);
+}
+
 /* Filter styles */
 .no-expenses {
   color: var(--text-muted);

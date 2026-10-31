@@ -43,6 +43,15 @@ describe('calculateBudgetProgress', () => {
     expect(progress.spent).toBe(50);
   });
 
+  it('matches the primary tag only, including legacy primaries', () => {
+    const [progress] = calculateBudgetProgress([
+      makeExpense({id: 'a', cost: 20, costType: 'debit', tags: ['food', 'zomato']}),
+      makeExpense({id: 'b', cost: 15, costType: 'debit', tags: ['tech']}),
+      makeExpense({id: 'c', cost: 40, costType: 'debit', tags: ['rent', 'food']}),
+    ], [{...foodBudget(), tagList: ['food', 'tech']}]);
+    expect(progress.spent).toBe(35);
+  });
+
   it('floors remaining at 0 and allows percentage over 100', () => {
     const [progress] = calculateBudgetProgress([
       makeExpense({cost: 150, costType: 'debit', tag: 'food'}),

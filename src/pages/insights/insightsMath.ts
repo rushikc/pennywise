@@ -5,12 +5,15 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import dayjs, {Dayjs} from 'dayjs';
 import type {CalculationOption, DateRange, GroupByOption} from '../dataValidations';
+import {primaryTag} from '../../domain/tags';
 
 export interface InsightExpense {
   cost: number;
   date: number;
   vendor: string;
-  tag?: string;
+  tag?: string | null;
+  tags?: string[];
+  description?: string;
 }
 
 export interface VendorRow {
@@ -186,7 +189,7 @@ export const distributionSlices = (
   expenses.forEach((expense) => {
     let name = '';
     if (groupBy === 'vendor') name = expense.vendor || 'Unknown';
-    else if (groupBy === 'tags') name = expense.tag || 'Untagged';
+    else if (groupBy === 'tags') name = primaryTag(expense) || 'Untagged';
     else if (groupBy === 'cost') name = costRange(Number(expense.cost));
     else name = dayjs(expense.date).format('D MMM');
     groups.set(name, (groups.get(name) || 0) + Number(expense.cost));

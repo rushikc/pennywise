@@ -48,6 +48,7 @@ import {
 } from '../dataValidations';
 import './Home.scss';
 import MergeExpenses from './home-views/MergeExpenses';
+import {ExpenseListTags} from './home-views/ExpenseListTags';
 import AddExpense from './home-views/AddExpense';
 import PhoneStatsHeader from './home-views/PhoneStatsHeader';
 import {daysForRange} from './homeDashboardMath';
@@ -870,9 +871,7 @@ const ExpenseItem: FC<{
         </Row>
         <Row className="expense-date-row">
           <Col>
-            <span className={expense.tag ? 'tag-text-red' : 'tag-text-purple-light'}>
-              {expense.tag ? expense.tag : 'untagged'}
-            </span>
+            <ExpenseListTags expense={expense}/>
             <span className="expense-date">{getDateMonth(expense.date)}</span>
           </Col>
         </Row>

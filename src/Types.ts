@@ -79,6 +79,11 @@ export interface AppConfig {
   darkMode: boolean;
 }
 
+export interface TagConfig {
+  tagList: string[];
+  legacyTagList: string[];
+}
+
 export interface Budget {
   id: string;
   name: string;

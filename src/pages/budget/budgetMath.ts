@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import dayjs from 'dayjs';
 import {Budget, BudgetProgress, Expense, MonthYear} from '../../Types';
-import {isEmpty} from '../../utility/utility';
+import {primaryTag} from '../../domain/tags';
 
 export const filterExpensesByMonth = (expenses: Expense[], monthYear: MonthYear): Expense[] => {
   return expenses.filter(expense => {
@@ -24,11 +24,12 @@ export const calculateBudgetProgress = (expenses: Expense[], budgets: Budget[]):
         .reduce((sum, expense) => sum + expense.cost, 0);
     } else {
       spent = expenses
-        .filter(expense => !isEmpty(expense.tag))
         .filter(expense => expense.costType === 'debit')
-        .filter(expense =>
-          budget.tagList.some(tag => expense.tag?.toLowerCase() === tag.toLowerCase())
-        )
+        .filter(expense => {
+          const primary = primaryTag(expense);
+          return Boolean(primary) &&
+            budget.tagList.some(tag => primary.toLowerCase() === tag.toLowerCase());
+        })
         .reduce((sum, expense) => sum + expense.cost, 0);
     }
 

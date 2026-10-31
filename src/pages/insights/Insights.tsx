@@ -26,6 +26,7 @@ import {
 import '../home/Home.scss';
 import './Insights.scss';
 import {Expense} from '../../Types';
+import {primaryTag} from '../../domain/tags';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
 import {desktop, phone} from '../../styles/designTokens';
 import {
@@ -103,7 +104,7 @@ const Insights: React.FC = () => {
 
     const getGroupKey = (expense: Expense): string => {
       if (groupBy === 'vendor') return expense.vendor;
-      if (groupBy === 'tags') return expense.tag || 'Untagged';
+      if (groupBy === 'tags') return primaryTag(expense) || 'Untagged';
       if (groupBy === 'cost') return getCostRange(expense.cost);
       return '';
     };

@@ -24,6 +24,7 @@ import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {createTimedAlert} from '../../../store/alertActions';
+import {primaryTag} from '../../../domain/tags';
 
 
 const TagExpenses: FC = (): ReactElement => {
@@ -50,7 +51,7 @@ const TagExpenses: FC = (): ReactElement => {
   const onSaveExpense = () => {
     if (autoTag && selectedTag.length > 0) {
       const _vendor = expense.vendor;
-      const _tag = expense.tag;
+      const _tag = primaryTag(expense);
 
       let tagObj = vendorTagList.find(({vendor, tag}) => vendor === _vendor && tag === _tag);
 
@@ -116,8 +117,8 @@ const TagExpenses: FC = (): ReactElement => {
               <span className="tag-expense-cost">₹{expense.cost}</span>
             </Typography>
             <Typography variant="caption">
-              <span className={`tag-expense-tag${expense.tag ? ' tagged' : ''}`}>
-                {expense.tag ? expense.tag : 'untagged'}
+              <span className={`tag-expense-tag${primaryTag(expense) ? ' tagged' : ''}`}>
+                {primaryTag(expense) ? primaryTag(expense) : 'untagged'}
               </span>
             </Typography>
           </div>

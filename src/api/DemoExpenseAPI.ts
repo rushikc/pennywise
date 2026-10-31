@@ -3,7 +3,8 @@ MIT License
 Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
-import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
+import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
+import {adaptExpense, extraTags, normalizeTags, primaryTag, withTags} from '../domain/tags';
 import {getDateJsIdFormat, JSONCopy} from '../utility/utility';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import {DemoStore} from '../demoData/createDemoStore';
@@ -92,7 +93,8 @@ export class DemoExpenseAPI {
     const store = await DemoExpenseAPI.getStore(overrideLastDate !== undefined);
     return store.expenses
       .filter((item) => item.operation !== 'delete')
-      .filter((item) => !DemoExpenseAPI.isHiddenDuplicate(item));
+      .filter((item) => !DemoExpenseAPI.isHiddenDuplicate(item))
+      .map((item) => adaptExpense(item));
   };
 
   static getDuplicateCandidates = async (): Promise<DuplicateCandidatePair[]> => {
@@ -123,9 +125,22 @@ export class DemoExpenseAPI {
     return DemoExpenseAPI.addExpense(updated);
   };
 
-  static getTagList = async () => {
+  static getTagConfig = async (): Promise<TagConfig> => {
     const store = await DemoExpenseAPI.getStore();
-    return JSONCopy(store.tags);
+    return {
+      tagList: JSONCopy(store.tags),
+      legacyTagList: JSONCopy(store.legacyTags || []),
+    };
+  };
+
+  static getTagList = async () => {
+    return (await DemoExpenseAPI.getTagConfig()).tagList;
+  };
+
+  static updateTagConfig = async (config: TagConfig) => {
+    const store = await DemoExpenseAPI.getStore();
+    store.tags = JSONCopy(config.tagList);
+    store.legacyTags = JSONCopy(config.legacyTagList || []);
   };
 
   static updateTagList = async (tags: string[]) => {
@@ -191,7 +206,7 @@ export class DemoExpenseAPI {
 
     let processedCount = 0;
     store.expenses = store.expenses.map((expense) => {
-      if (expense.tag || expense.modifiedDate < startDate) {
+      if (primaryTag(expense) || expense.modifiedDate < startDate) {
         return expense;
       }
       const newTag = vendorTagMap.get(expense.vendor.toLowerCase());
@@ -200,8 +215,7 @@ export class DemoExpenseAPI {
       }
       processedCount += 1;
       return {
-        ...expense,
-        tag: newTag,
+        ...withTags(expense, normalizeTags(newTag, extraTags(expense)).tags),
         modifiedDate: Date.now(),
       };
     });

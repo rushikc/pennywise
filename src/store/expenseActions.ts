@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {expenseSlice} from './expenseSlice';
 import {RootState, store} from './store';
-import {Budget, Expense, VendorTag} from '../Types';
+import {Budget, Expense, TagConfig, VendorTag} from '../Types';
 
 
 export const selectExpense = (state: RootState) => state.expense;
@@ -22,6 +22,11 @@ export const setExpenseState = (expenseList: Expense[], vendorTagList: VendorTag
 }));
 
 export const setTagList = (tags: string[]) => store.dispatch(expenseSlice.actions.setTagList(tags));
+export const setLegacyTagList = (tags: string[]) => store.dispatch(expenseSlice.actions.setLegacyTagList(tags));
+export const setTagConfig = (config: TagConfig) => {
+  store.dispatch(expenseSlice.actions.setTagList(config.tagList));
+  store.dispatch(expenseSlice.actions.setLegacyTagList(config.legacyTagList || []));
+};
 export const addTag = (tag: string) => store.dispatch(expenseSlice.actions.addTag(tag));
 export const deleteTag = (tag: string) => store.dispatch(expenseSlice.actions.deleteTag(tag));
 export const mergeSaveExpense = (originalExpenses: Expense[], mergedExpense: Expense) =>

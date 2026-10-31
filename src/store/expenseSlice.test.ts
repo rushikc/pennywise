@@ -37,17 +37,39 @@ describe('expenseSlice', () => {
   });
 
   it('updateExpense matches by mailId', () => {
-    const existing = makeExpense({id: 'a', mailId: 'mail-1', tag: undefined});
+    const existing = makeExpense({id: 'a', mailId: 'mail-1', tag: undefined, enrichedAt: 9});
     const store = makeStore();
     store.dispatch(expenseSlice.actions.setExpenseList([existing]));
-    store.dispatch(expenseSlice.actions.updateExpense({...existing, tag: 'food'}));
-    expect(store.getState().expense.expenseList[0].tag).toBe('food');
+    store.dispatch(expenseSlice.actions.updateExpense({
+      ...existing,
+      tags: ['food', 'zomato'],
+      tag: 'food',
+      description: 'note',
+      enrichedAt: 9,
+      modifiedDate: 42,
+    }));
+    const updated = store.getState().expense.expenseList[0];
+    expect(updated.tags).toEqual(['food', 'zomato']);
+    expect(updated.tag).toBe('food');
+    expect(updated.description).toBe('note');
+    expect(updated.enrichedAt).toBe(9);
+    expect(updated.modifiedDate).toBe(42);
   });
 
-  it('addTag dedupes', () => {
+  it('addTag dedupes and restores from legacy', () => {
     const store = makeStore();
+    store.dispatch(expenseSlice.actions.setLegacyTagList(['food']));
     store.dispatch(expenseSlice.actions.addTag('food'));
     store.dispatch(expenseSlice.actions.addTag('food'));
     expect(store.getState().expense.tagList).toEqual(['food']);
+    expect(store.getState().expense.legacyTagList).toEqual([]);
+  });
+
+  it('deleteTag moves the name to legacyTagList', () => {
+    const store = makeStore();
+    store.dispatch(expenseSlice.actions.setTagList(['food', 'rent']));
+    store.dispatch(expenseSlice.actions.deleteTag('food'));
+    expect(store.getState().expense.tagList).toEqual(['rent']);
+    expect(store.getState().expense.legacyTagList).toEqual(['food']);
   });
 });

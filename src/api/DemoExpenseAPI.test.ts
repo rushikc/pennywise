@@ -184,6 +184,7 @@ describe('DemoExpenseAPI', () => {
     expect(count).toBeGreaterThan(0);
     const tagged = (await DemoExpenseAPI.getExpenseList()).find((item) => item.mailId === 'auto-tag-mail');
     expect(tagged?.tag).toBe('food');
+    expect(tagged?.tags).toEqual(['food']);
   });
 
   it('re-seeds and drops session writes when getExpenseList receives a date override', async () => {

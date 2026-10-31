@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {Expense} from '../../Types';
+import {extraTags, primaryTag} from '../../domain/tags';
 import {Workbook} from 'exceljs';
 import {saveAs} from 'file-saver';
 import {filterOptions} from '../dataValidations';
@@ -21,6 +22,8 @@ interface FormattedExpense {
   Type: string;
   PaymentMode: string;
   Tag: string;
+  'Extra tags': string;
+  Description: string;
   User: string;
 }
 
@@ -42,7 +45,7 @@ const validateExpenses = (expenses: Expense[]): boolean => {
  * @param expenses List of expenses to format
  * @returns Formatted expenses
  */
-const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
+export const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
   return expenses.map(expense => ({
     Date: new Date(expense.date).toLocaleDateString(),
     Time: new Date(expense.date).toLocaleTimeString(),
@@ -50,7 +53,9 @@ const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
     Amount: expense.cost,
     Type: expense.costType,
     PaymentMode: expense.type,
-    Tag: expense.tag || 'Untagged',
+    Tag: primaryTag(expense) || 'Untagged',
+    'Extra tags': extraTags(expense).join('; '),
+    Description: expense.description || '',
     User: expense.user,
   }));
 };
@@ -96,6 +101,8 @@ export const exportAsXLSX = async (expenses: Expense[], timeRange: string): Prom
       {header: 'Type', key: 'Type', width: 10},
       {header: 'PaymentMode', key: 'PaymentMode', width: 15},
       {header: 'Tag', key: 'Tag', width: 15},
+      {header: 'Extra tags', key: 'Extra tags', width: 24},
+      {header: 'Description', key: 'Description', width: 32},
       {header: 'User', key: 'User', width: 15},
     ];
 

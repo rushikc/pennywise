@@ -5,12 +5,21 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import {initializeApp} from 'firebase/app';
 import {collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, where} from 'firebase/firestore/lite';
-import {BUDGET_LAST_UPDATE, EMAIL_PARSE_BANKS_CACHE_KEY, EXPENSE_LAST_UPDATE, TAG_LAST_UPDATE} from '../utility/constants';
+import {
+  BUDGET_LAST_UPDATE,
+  EMAIL_PARSE_BANKS_CACHE_KEY,
+  EXPENSE_LAST_UPDATE,
+  EXPENSE_SCHEMA_VERSION,
+  EXPENSE_SCHEMA_VERSION_KEY,
+  expenseSchemaNeedsFullRefetch,
+  TAG_LAST_UPDATE,
+} from '../utility/constants';
 import {firebaseConfig} from '../firebase/firebase-public';
 import {getDateJsIdFormat, getUnixTimestamp, JSONCopy, sleep} from '../utility/utility';
 import {FinanceIndexDB} from './FinanceIndexDB';
 import {ErrorHandlers} from '../components/ErrorHandlers';
-import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, VendorTag} from '../Types';
+import {BankConfig, BankEmailParsingEntry, Budget, DuplicateCandidatePair, Expense, TagConfig, VendorTag} from '../Types';
+import {adaptExpense, extraTags, normalizeTags, primaryTag, withTags} from '../domain/tags';
 import {applyDuplicateResolution, isHiddenDuplicate} from './duplicateLogic';
 import type {ClientUserCollection} from './firestorePaths';
 import {userCollectionSegments, userDocSegments} from './firestorePaths';
@@ -271,6 +280,15 @@ export class LiveExpenseAPI {
       const fireDocList: Expense[] = [];
       let lastUpdatedDate = getUnixTimestamp('2020-01-01');
 
+      const schemaConfig = await FinanceIndexDB.getData('config', EXPENSE_SCHEMA_VERSION_KEY);
+      if (expenseSchemaNeedsFullRefetch(schemaConfig?.value)) {
+        lastUpdatedDate = getUnixTimestamp('2020-01-01');
+        await FinanceIndexDB.addConfig([
+          {key: EXPENSE_LAST_UPDATE, value: lastUpdatedDate},
+          {key: EXPENSE_SCHEMA_VERSION_KEY, value: EXPENSE_SCHEMA_VERSION},
+        ]);
+      }
+
       const configData = await FinanceIndexDB.getData('config', EXPENSE_LAST_UPDATE);
       if (configData) lastUpdatedDate = Number(configData.value);
       if (overrideLastDate) lastUpdatedDate = overrideLastDate;
@@ -279,7 +297,7 @@ export class LiveExpenseAPI {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.docs.length) {
-        fireDocList.push(...querySnapshot.docs.map(docSnap => ({
+        fireDocList.push(...querySnapshot.docs.map(docSnap => adaptExpense({
           id: docSnap.id,
           ...docSnap.data()
         } as Expense)));
@@ -290,7 +308,7 @@ export class LiveExpenseAPI {
       indexDocList = await FinanceIndexDB.getAllData('expense');
       indexDocList = indexDocList.filter(item => item.operation !== 'delete');
       indexDocList = indexDocList.filter(item => !LiveExpenseAPI.isHiddenDuplicate(item));
-      return indexDocList;
+      return indexDocList.map((item) => adaptExpense(item));
     } catch (e) {
       ErrorHandlers.handleApiError(e);
       // console.error('Error fetching expense list: ', e);
@@ -348,33 +366,40 @@ export class LiveExpenseAPI {
    * Retrieves the list of tags from the 'tags' document in the 'config' collection.
    * Returns an array of strings representing the tags.
    */
-  static getTagList = async () => {
+  static getTagConfig = async (): Promise<TagConfig> => {
     try {
-      const table = 'config';
-
-      const tagObject = await LiveExpenseAPI.getOneDoc('tags', table);
-      const tagList: string[] = tagObject?.tagList || [];
-
-      return tagList;
+      const tagObject = await LiveExpenseAPI.getOneDoc('tags', 'config');
+      return {
+        tagList: tagObject?.tagList || [],
+        legacyTagList: tagObject?.legacyTagList || [],
+      };
     } catch (e) {
       ErrorHandlers.handleApiError(e);
-      // console.error('Error getting tag list: ', e);
-      return [];
+      return {tagList: [], legacyTagList: []};
+    }
+  };
+
+  static getTagList = async () => {
+    return (await LiveExpenseAPI.getTagConfig()).tagList;
+  };
+
+  static updateTagConfig = async (config: TagConfig) => {
+    try {
+      await LiveExpenseAPI.setOneDoc('tags', {
+        tagList: config.tagList,
+        legacyTagList: config.legacyTagList || [],
+      }, 'config');
+    } catch (e) {
+      ErrorHandlers.handleApiError(e);
     }
   };
 
   /**
-   * Updates the list of tags in the 'tags' document in the 'config' collection.
+   * Updates tagList while preserving legacyTagList on the config/tags document.
    */
   static updateTagList = async (tags: string[]) => {
-    try {
-      const table = 'config';
-      await LiveExpenseAPI.setOneDoc('tags', {tagList: tags}, table);
-
-    } catch (e) {
-      ErrorHandlers.handleApiError(e);
-      // console.error('Error updating tag list: ', e);
-    }
+    const current = await LiveExpenseAPI.getTagConfig();
+    await LiveExpenseAPI.updateTagConfig({tagList: tags, legacyTagList: current.legacyTagList});
   };
 
   /**
@@ -575,8 +600,7 @@ export class LiveExpenseAPI {
       querySnapshot.forEach((doc) => {
         const expense = {id: doc.id, ...doc.data()} as Expense;
 
-        // Check if the expense already has a tag or is a payment
-        if (expense.tag) {
+        if (primaryTag(expense)) {
           return;
         }
 
@@ -584,9 +608,9 @@ export class LiveExpenseAPI {
         if (vendorTagMap.has(vendorLower)) {
           const newTag = vendorTagMap.get(vendorLower);
           if (newTag) {
+            const extras = extraTags(expense);
             const updatedExpense: Expense = {
-              ...expense,
-              tag: newTag,
+              ...withTags(expense, normalizeTags(newTag, extras).tags),
               modifiedDate: Date.now(),
             };
             expensesToUpdate.push(updatedExpense);

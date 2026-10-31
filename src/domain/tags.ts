@@ -136,6 +136,10 @@ export function withTags<T extends Partial<Expense>>(expense: T, tags: string[])
   };
 }
 
+export function adaptExpense<T extends Partial<Expense>>(expense: T): T {
+  return withTags(expense, readTags(expense));
+}
+
 export function normalizeDescription(value: unknown): string | undefined {
   if (typeof value !== 'string') {
     return undefined;
