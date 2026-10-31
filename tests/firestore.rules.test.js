@@ -108,6 +108,13 @@ describe('firestore.rules', () => {
     await assertFails(otherDb.doc('users/uid-owner/meta/gmailStatus').get());
   });
 
+  it('allows the owner to delete an expense and denies another user', async () => {
+    const db = authed(owner);
+    await assertSucceeds(db.doc('users/uid-owner/expense/exp-1').delete());
+    const otherDb = authed(other);
+    await assertFails(otherDb.doc('users/uid-owner/expense/exp-2').delete());
+  });
+
   it('allows expense tags lists of at most 8 and descriptions of at most 280', async () => {
     const db = authed(owner);
     await assertSucceeds(db.doc('users/uid-owner/expense/exp-tags').set({
@@ -121,10 +128,19 @@ describe('firestore.rules', () => {
       vendor: 'A',
       tags: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
     }));
+    await assertFails(db.doc('users/uid-owner/expense/exp-tags-invalid').set({
+      cost: 1,
+      vendor: 'A',
+      tags: [1, null],
+    }));
     await assertFails(db.doc('users/uid-owner/expense/exp-desc-too-long').set({
       cost: 1,
       vendor: 'A',
       description: 'x'.repeat(281),
+    }));
+    await assertSucceeds(db.doc('users/uid-owner/expense/exp-tags').update({
+      tags: ['food'],
+      description: 'updated',
     }));
   });
 

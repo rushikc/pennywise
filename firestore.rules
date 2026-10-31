@@ -13,14 +13,32 @@ service cloud.firestore {
       return request.auth.uid == uid && isAllowlisted();
     }
 
+    function validExpenseTags(data) {
+      return !('tags' in data)
+        || (data.tags is list
+          && data.tags.size() <= 8
+          && (data.tags.size() < 1 || data.tags[0] is string)
+          && (data.tags.size() < 2 || data.tags[1] is string)
+          && (data.tags.size() < 3 || data.tags[2] is string)
+          && (data.tags.size() < 4 || data.tags[3] is string)
+          && (data.tags.size() < 5 || data.tags[4] is string)
+          && (data.tags.size() < 6 || data.tags[5] is string)
+          && (data.tags.size() < 7 || data.tags[6] is string)
+          && (data.tags.size() < 8 || data.tags[7] is string));
+    }
+
+    function validExpenseDescription(data) {
+      return !('description' in data)
+        || (data.description is string && data.description.size() <= 280);
+    }
+
+    function validExpense(data) {
+      return validExpenseTags(data) && validExpenseDescription(data);
+    }
+
     match /users/{uid}/expense/{document} {
-      allow read: if isOwner(uid);
-      allow write: if isOwner(uid)
-        && (!('tags' in request.resource.data)
-          || (request.resource.data.tags is list && request.resource.data.tags.size() <= 8))
-        && (!('description' in request.resource.data)
-          || (request.resource.data.description is string
-            && request.resource.data.description.size() <= 280));
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && validExpense(request.resource.data);
     }
 
     match /users/{uid}/vendorTag/{document} {
