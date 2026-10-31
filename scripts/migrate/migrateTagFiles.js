@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 const fs = require('fs');
 const path = require('path');
-const {migrateExpenseDoc, computeLegacyTags, loadTags} = require('./tagsModel');
+const {migrateExpenseDoc, computeLegacyTags, loadTags, isNullToEmptyTag} = require('./tagsModel');
 
 function parseArgs(argv) {
   const args = {apply: false, force: false, in: '', out: ''};
@@ -55,8 +55,11 @@ function planFileMigration(inDir) {
     const beforeArray = Array.isArray(doc.tags);
     const {changed, next} = migrateExpenseDoc(doc);
     if (beforeArray) expenseStats.alreadyArray += 1;
-    else if (typeof doc.tag === 'string' && doc.tag.trim()) expenseStats.stringToArray += 1;
-    else expenseStats.nullToEmpty += 1;
+    else if (typeof doc.tag === 'string' && doc.tag.trim() && doc.tag.trim().toLowerCase() !== 'untagged') {
+      expenseStats.stringToArray += 1;
+    } else if (isNullToEmptyTag(doc.tag)) {
+      expenseStats.nullToEmpty += 1;
+    }
     if (changed) expenseStats.changed += 1;
     const primary = next.tags[0];
     if (primary && !isValidPrimary(primary, tagList, legacyTagList)) {

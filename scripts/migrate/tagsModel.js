@@ -13,6 +13,13 @@ function loadTags() {
   }
 }
 
+function isNullToEmptyTag(tag) {
+  if (tag == null) {
+    return true;
+  }
+  return typeof tag === 'string' && tag.trim().toLowerCase() === 'untagged';
+}
+
 function migrateExpenseDoc(doc) {
   const {readTags} = loadTags();
   const source = doc && typeof doc === 'object' ? doc : {};
@@ -94,4 +101,5 @@ module.exports = {
   migrateExpenseDoc,
   computeLegacyTags,
   countMailIdCollisions,
+  isNullToEmptyTag,
 };
