@@ -92,13 +92,38 @@ async function importAll({db, uid, dataDir}) {
   }
   await writer.close();
   const ok = Object.values(result).every((stat) => stat.failed === 0);
-  if (ok) {
-    await db.doc(`users/${uid}/meta/profile`).set({migratedAt: Date.now()}, {merge: true});
-  }
+  const created = Object.values(result).reduce((sum, stat) => sum + stat.created, 0);
+  await writeProfile(db, uid, {ok, created});
   return {ok, result};
 }
 
+/**
+ * lastImportRunAt is stamped on every run. migratedAt records the first import that actually
+ * wrote data, so a later re-run (all skippedExisting) or a failed run never moves it.
+ */
+async function writeProfile(db, uid, {ok, created}) {
+  const ref = db.doc(`users/${uid}/meta/profile`);
+  const now = Date.now();
+  const patch = {lastImportRunAt: now};
+  if (ok && created > 0) {
+    const snap = await ref.get();
+    const existing = snap.exists ? snap.data() : undefined;
+    if (!existing || existing.migratedAt == null) {
+      patch.migratedAt = now;
+    }
+  }
+  await ref.set(patch, {merge: true});
+}
+
 async function initLive(args) {
+  if (process.env.FIRESTORE_EMULATOR_HOST) {
+    const admin = require('firebase-admin');
+    if (!admin.apps.length) {
+      admin.initializeApp({projectId: process.env.GCLOUD_PROJECT || 'demo-pennywise'});
+    }
+    const uid = args.uid || (await admin.auth().getUserByEmail(args.email)).uid;
+    return {db: admin.firestore(), uid};
+  }
   require('dotenv').config({path: path.join(repoRoot, '.env')});
   const projectId = process.env.REACT_APP_FIREBASE_PROJECT_ID;
   if (!projectId) {
@@ -119,6 +144,13 @@ async function main(argv = process.argv) {
   const args = parseArgs(argv);
   if (!args.uid && !args.email) {
     console.error('Pass --email <your google email> or --uid <firebase uid>.');
+    process.exitCode = 1;
+    return {done: false};
+  }
+  if (process.env.FIRESTORE_EMULATOR_HOST && !process.env.FIREBASE_AUTH_EMULATOR_HOST && !args.uid) {
+    // Without the auth emulator, getUserByEmail would query the real project's users.
+    console.error('FIRESTORE_EMULATOR_HOST is set without FIREBASE_AUTH_EMULATOR_HOST: pass --uid, '
+      + '--email cannot be resolved against the emulator.');
     process.exitCode = 1;
     return {done: false};
   }
@@ -155,4 +187,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = {parseArgs, assertTagsSchema, importAll, main, reportResult, PLAN};
+module.exports = {parseArgs, assertTagsSchema, importAll, writeProfile, main, reportResult, PLAN};

@@ -27,7 +27,7 @@ function writeFixture(overrides = {}) {
   return dir;
 }
 
-function fakeDb(onCreate = () => 'ok') {
+function fakeDb(onCreate = () => 'ok', profile) {
   const pending = [];
   const profileSets = [];
   const writer = {
@@ -62,6 +62,7 @@ function fakeDb(onCreate = () => 'ok') {
     bulkWriter: () => writer,
     doc: (docPath) => ({
       path: docPath,
+      get: async () => ({exists: Boolean(profile), data: () => profile}),
       set: async (data, opts) => {
         profileSets.push({path: docPath, data, opts});
       },
@@ -85,9 +86,11 @@ describe('importAll', () => {
     assert.equal(db.profileSets.length, 1);
     assert.equal(db.profileSets[0].path, 'users/uid-1/meta/profile');
     assert.equal(typeof db.profileSets[0].data.migratedAt, 'number');
+    assert.equal(typeof db.profileSets[0].data.lastImportRunAt, 'number');
+    assert.deepEqual(db.profileSets[0].opts, {merge: true});
   });
 
-  it('counts already-exists as skippedExisting and still writes migratedAt', async () => {
+  it('counts already-exists as skippedExisting and writes migratedAt when others were created', async () => {
     const dir = writeFixture();
     const db = fakeDb((ref) => (ref.path.includes('/expense/') ? 'exists' : 'ok'));
     const outcome = await importAll({db, uid: 'uid-1', dataDir: dir});
@@ -95,6 +98,26 @@ describe('importAll', () => {
     assert.equal(outcome.result.expense.skippedExisting, 1);
     assert.equal(outcome.result.expense.created, 0);
     assert.equal(db.profileSets.length, 1);
+    assert.equal(typeof db.profileSets[0].data.migratedAt, 'number');
+  });
+
+  it('a re-run that creates nothing only stamps lastImportRunAt', async () => {
+    const dir = writeFixture();
+    const db = fakeDb(() => 'exists');
+    const outcome = await importAll({db, uid: 'uid-1', dataDir: dir});
+    assert.equal(outcome.ok, true);
+    assert.equal(db.profileSets.length, 1);
+    assert.equal(db.profileSets[0].data.migratedAt, undefined);
+    assert.equal(typeof db.profileSets[0].data.lastImportRunAt, 'number');
+  });
+
+  it('keeps the first migratedAt when a later run creates docs', async () => {
+    const dir = writeFixture();
+    const db = fakeDb(() => 'ok', {migratedAt: 123});
+    await importAll({db, uid: 'uid-1', dataDir: dir});
+    assert.equal(db.profileSets.length, 1);
+    assert.equal(db.profileSets[0].data.migratedAt, undefined);
+    assert.equal(typeof db.profileSets[0].data.lastImportRunAt, 'number');
   });
 
   it('counts other errors as failed, skips migratedAt, and is not ok', async () => {
@@ -105,7 +128,9 @@ describe('importAll', () => {
     reportResult(outcome.ok, outcome.result);
     assert.equal(outcome.ok, false);
     assert.equal(outcome.result.budget.failed, 1);
-    assert.equal(db.profileSets.length, 0);
+    assert.equal(db.profileSets.length, 1);
+    assert.equal(db.profileSets[0].data.migratedAt, undefined);
+    assert.equal(typeof db.profileSets[0].data.lastImportRunAt, 'number');
     assert.equal(process.exitCode, 1);
     process.exitCode = previous;
   });
@@ -129,4 +154,26 @@ describe('main', () => {
       Module._load = origLoad;
     }
   });
+
+  it('requires --uid when only the Firestore emulator is set', async () => {
+    const dir = writeFixture();
+    const saved = {fs: process.env.FIRESTORE_EMULATOR_HOST, auth: process.env.FIREBASE_AUTH_EMULATOR_HOST};
+    const previous = process.exitCode;
+    process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
+    delete process.env.FIREBASE_AUTH_EMULATOR_HOST;
+    try {
+      const result = await main(['node', 'importToFirestore.js', '--dir', dir, '--email', 'test@example.com']);
+      assert.equal(result.done, false);
+      assert.equal(process.exitCode, 1);
+      process.exitCode = previous;
+      const ok = await main(['node', 'importToFirestore.js', '--dir', dir, '--uid', 'uid-1']);
+      assert.equal(ok.mode, 'dry-run');
+    } finally {
+      process.exitCode = previous;
+      if (saved.fs === undefined) delete process.env.FIRESTORE_EMULATOR_HOST;
+      else process.env.FIRESTORE_EMULATOR_HOST = saved.fs;
+      if (saved.auth !== undefined) process.env.FIREBASE_AUTH_EMULATOR_HOST = saved.auth;
+    }
+  });
 });
+

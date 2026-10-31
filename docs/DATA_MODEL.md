@@ -99,6 +99,8 @@ IndexedDB is not version-bumped. On startup, if config `expenseSchemaVersion` is
 6. Re-run the Firestore dry-run to catch docs ingested by old functions between 4 and 5. `--apply` if the count is more than 0.
 7. Open the app on each device. The schema-version bump forces one full refetch. **Settings → Reload Data** also works.
 
+`importToFirestore.js` only creates docs (existing ids are skipped) and stamps `users/{uid}/meta/profile`: `lastImportRunAt` on every run, and `migratedAt` only on the first successful run that created at least one doc, so re-runs never move it. Against the emulator (`FIRESTORE_EMULATOR_HOST` set) without the auth emulator, pass `--uid`; `--email` exits 1 because it cannot be resolved safely.
+
 Both migration scripts default to dry-run. Never pass `--apply` against live Firestore from an agent.
 
 Rollback for the live backfill is optional. If you used `--apply`, undo with `node scripts/migrate/migrateTagsFirestore.js --rollback temp/migrations/tags-<timestamp>.json` (dry-run by default). Rollback preconditions on each doc's post-migration `writeTime` and restores `tag` / `tags` (or deletes `tags` when they were absent).
