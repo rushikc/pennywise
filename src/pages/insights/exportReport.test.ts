@@ -23,4 +23,12 @@ describe('formatExpenses', () => {
     expect(row.Tag).toBe('Untagged');
     expect(row['Extra tags']).toBe('');
   });
+
+  it('exports the list spelling for a listed primary', () => {
+    const [row] = formatExpenses(
+      [makeExpense({tags: ['Food']})],
+      {tagList: ['food'], legacyTagList: []},
+    );
+    expect(row.Tag).toBe('food');
+  });
 });

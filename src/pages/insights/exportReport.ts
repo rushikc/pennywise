@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {Expense} from '../../Types';
-import {extraTags, primaryTag} from '../../domain/tags';
+import {displayTag, extraTags, primaryTag} from '../../domain/tags';
 import {Workbook} from 'exceljs';
 import {saveAs} from 'file-saver';
 import {filterOptions} from '../dataValidations';
@@ -45,7 +45,10 @@ const validateExpenses = (expenses: Expense[]): boolean => {
  * @param expenses List of expenses to format
  * @returns Formatted expenses
  */
-export const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
+export const formatExpenses = (
+  expenses: Expense[],
+  lists: {tagList?: string[]; legacyTagList?: string[]} = {},
+): FormattedExpense[] => {
   return expenses.map(expense => ({
     Date: new Date(expense.date).toLocaleDateString(),
     Time: new Date(expense.date).toLocaleTimeString(),
@@ -53,7 +56,12 @@ export const formatExpenses = (expenses: Expense[]): FormattedExpense[] => {
     Amount: expense.cost,
     Type: expense.costType,
     PaymentMode: expense.type,
-    Tag: primaryTag(expense) || 'Untagged',
+    Tag: (() => {
+      const primary = primaryTag(expense);
+      return primary
+        ? (displayTag(primary, lists.tagList, lists.legacyTagList) || primary)
+        : 'Untagged';
+    })(),
     'Extra tags': extraTags(expense).join('; '),
     Description: expense.description || '',
     User: expense.user,

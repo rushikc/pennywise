@@ -69,7 +69,7 @@ declare global {
 
 const Home: FC<Record<string, never>> = (): ReactElement => {
   const isDesktop = useIsDesktop();
-  const {expenseList, isAppLoading} = useSelector(selectExpense);
+  const {expenseList, isAppLoading, tagList, legacyTagList} = useSelector(selectExpense);
   const [selectedRange, setSelectedRange] = useState<DateRange>('7d');
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -284,7 +284,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       return;
     }
 
-    const grouped = groupExpenses(filteredExpenses, selectedGroupBy);
+    const grouped = groupExpenses(filteredExpenses, selectedGroupBy, {tagList, legacyTagList});
 
     // console.log('Grouped Expenses:', grouped);
     // Initialize collapsed state for new groups
@@ -302,7 +302,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
       setIsRegrouping(false);
     }, 300);
 
-  }, [filteredExpenses, selectedGroupBy, selectedSortBy]);
+  }, [filteredExpenses, selectedGroupBy, selectedSortBy, tagList, legacyTagList]);
 
   // Exit selection mode when search term changes
   useEffect(() => {
@@ -409,8 +409,27 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
           <div className="group-title">
             <span className="group-label">
               {
-                selectedGroupBy === 'days' ? groupData.groupLabel : groupData.groupLabel.toLowerCase()
+                selectedGroupBy === 'days' || selectedGroupBy === 'tags'
+                  ? groupData.groupLabel
+                  : groupData.groupLabel.toLowerCase()
               }
+              {selectedGroupBy === 'tags' && groupData.unlisted ? (
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  label="not in list"
+                  title={`${groupData.groupLabel} (not in tag list)`}
+                  aria-label={`${groupData.groupLabel} (not in tag list)`}
+                  sx={{
+                    ml: 'var(--space-xs)',
+                    height: 'var(--space-lg)',
+                    fontSize: 'var(--font-size-caption)',
+                    color: 'var(--text-secondary)',
+                    borderColor: 'var(--border-color)',
+                    backgroundColor: 'transparent',
+                  }}
+                />
+              ) : null}
             </span>
             <span
               className="expense-count">{groupData.expenses.length} expense{groupData.expenses.length !== 1 ? 's' : ''}</span>

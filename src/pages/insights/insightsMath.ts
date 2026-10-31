@@ -5,7 +5,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 
 import dayjs, {Dayjs} from 'dayjs';
 import type {CalculationOption, DateRange, GroupByOption} from '../dataValidations';
-import {primaryTag} from '../../domain/tags';
+import {displayTag, groupKey, primaryTag} from '../../domain/tags';
 
 export interface InsightExpense {
   cost: number;
@@ -184,19 +184,32 @@ const costRange = (cost: number): string => {
 export const distributionSlices = (
   expenses: InsightExpense[],
   groupBy: GroupByOption,
+  lists: {tagList?: string[]; legacyTagList?: string[]} = {},
 ): {name: string; value: number}[] => {
-  const groups = new Map<string, number>();
+  const groups = new Map<string, {name: string; value: number}>();
   expenses.forEach((expense) => {
+    let key = '';
     let name = '';
-    if (groupBy === 'vendor') name = expense.vendor || 'Unknown';
-    else if (groupBy === 'tags') name = primaryTag(expense) || 'Untagged';
-    else if (groupBy === 'cost') name = costRange(Number(expense.cost));
-    else name = dayjs(expense.date).format('D MMM');
-    groups.set(name, (groups.get(name) || 0) + Number(expense.cost));
+    if (groupBy === 'vendor') {
+      key = (expense.vendor || 'Unknown').toLowerCase();
+      name = expense.vendor || 'Unknown';
+    } else if (groupBy === 'tags') {
+      const primary = primaryTag(expense);
+      key = groupKey(primary) || 'untagged';
+      name = primary
+        ? (displayTag(primary, lists.tagList, lists.legacyTagList) || primary)
+        : 'Untagged';
+    } else if (groupBy === 'cost') {
+      name = costRange(Number(expense.cost));
+      key = name;
+    } else {
+      name = dayjs(expense.date).format('D MMM');
+      key = name;
+    }
+    const current = groups.get(key);
+    groups.set(key, {name: current?.name || name, value: (current?.value || 0) + Number(expense.cost)});
   });
-  return Array.from(groups.entries())
-    .map(([name, value]) => ({name, value}))
-    .sort((a, b) => b.value - a.value);
+  return Array.from(groups.values()).sort((a, b) => b.value - a.value);
 };
 
 export const dailyTrend = (expenses: InsightExpense[]): {date: string; total: number}[] => {

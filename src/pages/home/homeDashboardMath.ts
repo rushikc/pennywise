@@ -4,7 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import {BudgetProgress, Expense} from '../../Types';
-import {primaryTag} from '../../domain/tags';
+import {displayTag, groupKey, primaryTag, tagListStatus} from '../../domain/tags';
 import {DateRange} from '../dataValidations';
 import {formatVendorName} from '../../utility/utility';
 
@@ -16,6 +16,7 @@ export interface VendorTotal {
 export interface TagShare {
   label: string;
   percent: number;
+  unlisted?: boolean;
 }
 
 export interface DashboardSummary {
@@ -40,7 +41,10 @@ export const currentMonthExpenses = (expenses: Expense[], now = new Date()): Exp
   });
 };
 
-export const summarizeMonth = (expenses: Expense[]): DashboardSummary => {
+export const summarizeMonth = (
+  expenses: Expense[],
+  lists: {tagList?: string[]; legacyTagList?: string[]} = {},
+): DashboardSummary => {
   const debits = expenses.filter((expense) => expense.costType === 'debit');
   const credits = expenses.filter((expense) => expense.costType === 'credit');
   const spent = debits.reduce((sum, expense) => sum + Number(expense.cost), 0);
@@ -58,16 +62,26 @@ export const summarizeMonth = (expenses: Expense[]): DashboardSummary => {
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
 
-  const tagTotals = new Map<string, number>();
+  const tagTotals = new Map<string, {label: string; amount: number; unlisted: boolean}>();
   debits.forEach((expense) => {
-    const label = primaryTag(expense) || 'Untagged';
-    tagTotals.set(label, (tagTotals.get(label) || 0) + Number(expense.cost));
+    const primary = primaryTag(expense);
+    const key = groupKey(primary) || 'untagged';
+    const label = primary
+      ? (displayTag(primary, lists.tagList, lists.legacyTagList) || primary)
+      : 'Untagged';
+    const current = tagTotals.get(key);
+    tagTotals.set(key, {
+      label: current?.label || label,
+      amount: (current?.amount || 0) + Number(expense.cost),
+      unlisted: tagListStatus(primary, lists.tagList, lists.legacyTagList) === 'unlisted',
+    });
   });
 
-  const tags = Array.from(tagTotals.entries())
-    .map(([label, amount]) => ({
-      label,
-      percent: spent > 0 ? Math.round((amount / spent) * 100) : 0,
+  const tags = Array.from(tagTotals.values())
+    .map((item) => ({
+      label: item.label,
+      percent: spent > 0 ? Math.round((item.amount / spent) * 100) : 0,
+      ...(item.unlisted ? {unlisted: true} : {}),
     }))
     .sort((a, b) => b.percent - a.percent);
 

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {getDateMonth, sortByKey} from '../utility/utility';
 import {ExpenseAPI} from '../api/ExpenseAPI';
 import {setBudgetList, setExpenseState, setTagConfig} from '../store/expenseActions';
-import {primaryTag, readTags} from '../domain/tags';
+import {displayTag, groupKey, primaryTag, readTags, tagListStatus} from '../domain/tags';
 
 // Define date range options
 export type DateRange = '1d' | '7d' | '14d' | '30d' | '60d' | '90d' | '180d' | '366d' | '732d' | '1800d';
@@ -85,6 +85,7 @@ export interface GroupedExpenses {
     groupLabel: string;
     expenses: Expense[];
     totalAmount: number;
+    unlisted?: boolean;
   };
 }
 
@@ -164,7 +165,8 @@ export const searchExpenses = (
 // Group expenses based on selected grouping option
 export const groupExpenses = (
   expenses: Expense[],
-  selectedGroupBy: GroupByOption
+  selectedGroupBy: GroupByOption,
+  lists: {tagList?: string[]; legacyTagList?: string[]} = {},
 ): GroupedExpenses => {
   if (expenses.length === 0) {
     return {};
@@ -173,37 +175,34 @@ export const groupExpenses = (
   const grouped: GroupedExpenses = {};
 
   expenses.forEach(expense => {
-    let groupKey: string;
+    let key: string;
     let groupLabel: string;
+    let unlisted = false;
 
-    // Group by different criteria based on selectedGroupBy
     switch (selectedGroupBy) {
     case 'days':
-      // Use date as key (without time part)
-      groupKey = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
+      key = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
       groupLabel = getDateMonth(expense.date);
       break;
 
     case 'vendor':
-      // Use vendor name as key
-      groupKey = expense.vendor.toLowerCase();
+      key = expense.vendor.toLowerCase();
       groupLabel = expense.vendor;
       break;
 
     case 'cost': {
-      // Create cost ranges (0-100, 100-500, 500-1000, 1000+)
       const cost = Number(expense.cost);
       if (cost <= 100) {
-        groupKey = 'range_0_100';
+        key = 'range_0_100';
         groupLabel = '₹0 - ₹100';
       } else if (cost <= 500) {
-        groupKey = 'range_100_500';
+        key = 'range_100_500';
         groupLabel = '₹100 - ₹500';
       } else if (cost <= 1000) {
-        groupKey = 'range_500_1000';
+        key = 'range_500_1000';
         groupLabel = '₹500 - ₹1000';
       } else {
-        groupKey = 'range_1000_plus';
+        key = 'range_1000_plus';
         groupLabel = '₹1000+';
       }
       break;
@@ -211,26 +210,30 @@ export const groupExpenses = (
 
     case 'tags': {
       const primary = primaryTag(expense);
-      groupKey = primary ? primary.toLowerCase() : 'untagged';
-      groupLabel = primary || 'Untagged';
+      key = groupKey(primary) || 'untagged';
+      groupLabel = primary
+        ? (displayTag(primary, lists.tagList, lists.legacyTagList) || primary)
+        : 'Untagged';
+      unlisted = tagListStatus(primary, lists.tagList, lists.legacyTagList) === 'unlisted';
       break;
     }
 
     default:
-      groupKey = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
+      key = dayjs(new Date(expense.date)).format('YYYY-MM-DD');
       groupLabel = getDateMonth(expense.date);
     }
 
-    if (!grouped[groupKey]) {
-      grouped[groupKey] = {
+    if (!grouped[key]) {
+      grouped[key] = {
         groupLabel,
         expenses: [],
-        totalAmount: 0
+        totalAmount: 0,
+        ...(unlisted ? {unlisted: true} : {}),
       };
     }
 
-    grouped[groupKey].expenses.push(expense);
-    grouped[groupKey].totalAmount += expense.costType === 'debit' ? -Number(expense.cost) : Number(expense.cost);
+    grouped[key].expenses.push(expense);
+    grouped[key].totalAmount += expense.costType === 'debit' ? -Number(expense.cost) : Number(expense.cost);
   });
 
   return grouped;

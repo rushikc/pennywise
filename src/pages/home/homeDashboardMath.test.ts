@@ -47,7 +47,7 @@ describe('summarizeMonth', () => {
   });
 
   it('reports tag share of debit spending', () => {
-    const summary = summarizeMonth(expenses);
+    const summary = summarizeMonth(expenses, {tagList: ['food']});
     expect(summary.tags).toEqual([
       {label: 'food', percent: 67},
       {label: 'Untagged', percent: 33},
@@ -61,6 +61,18 @@ describe('summarizeMonth', () => {
     ]);
     expect(summary.tags.map((item) => item.label)).toEqual(['food', 'travel']);
     expect(summary.tags.map((item) => item.label)).not.toContain('zomato');
+  });
+
+  it('groups mixed-case listed primaries together and keeps unlisted primaries separate', () => {
+    const summary = summarizeMonth([
+      makeExpense({id: 'a', cost: 50, costType: 'debit', tags: ['Food']}),
+      makeExpense({id: 'b', cost: 50, costType: 'debit', tags: ['food']}),
+      makeExpense({id: 'c', cost: 40, costType: 'debit', tags: ['mystery']}),
+    ], {tagList: ['food'], legacyTagList: []});
+    expect(summary.tags).toEqual([
+      {label: 'food', percent: 71},
+      {label: 'mystery', percent: 29, unlisted: true},
+    ]);
   });
 
   it('returns empty lists when there is no spending', () => {

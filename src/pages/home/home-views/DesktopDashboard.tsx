@@ -4,6 +4,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 */
 
 import React, {useMemo} from 'react';
+import Chip from '@mui/material/Chip';
 import {Typography} from '@mui/material';
 import dayjs from 'dayjs';
 import {useSelector} from 'react-redux';
@@ -15,9 +16,6 @@ import './DesktopDashboard.scss';
 const formatRupees = (amount: number): string =>
   `₹${Math.round(amount).toLocaleString('en-IN')}`;
 
-const tagName = (label: string): string =>
-  label === 'Untagged' ? label : label.toLowerCase();
-
 const TagList: React.FC<{tags: TagShare[]}> = ({tags}) => (
   <section className="dash-card">
     <div className="dash-title">Tags</div>
@@ -26,7 +24,24 @@ const TagList: React.FC<{tags: TagShare[]}> = ({tags}) => (
     ) : (
       tags.map((tag) => (
         <div className="tag-split" key={tag.label}>
-          <span className="dash-row-label">{tagName(tag.label)}</span>
+          <span className="dash-row-label">
+            {tag.unlisted ? (
+              <Chip
+                size="small"
+                variant="outlined"
+                label={tag.label}
+                title={`${tag.label} (not in tag list)`}
+                aria-label={`${tag.label} (not in tag list)`}
+                sx={{
+                  height: 'var(--space-lg)',
+                  fontSize: 'var(--font-size-caption)',
+                  color: 'var(--text-secondary)',
+                  borderColor: 'var(--border-color)',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : tag.label}
+          </span>
           <span className="tag-split-pct">{tag.percent}%</span>
         </div>
       ))
@@ -35,9 +50,12 @@ const TagList: React.FC<{tags: TagShare[]}> = ({tags}) => (
 );
 
 const DesktopDashboard: React.FC = () => {
-  const {expenseList, budgetList} = useSelector(selectExpense);
+  const {expenseList, budgetList, tagList, legacyTagList} = useSelector(selectExpense);
   const monthExpenses = useMemo(() => currentMonthExpenses(expenseList), [expenseList]);
-  const summary = useMemo(() => summarizeMonth(monthExpenses), [monthExpenses]);
+  const summary = useMemo(
+    () => summarizeMonth(monthExpenses, {tagList, legacyTagList}),
+    [monthExpenses, tagList, legacyTagList],
+  );
   const alerts = useMemo(
     () => budgetAlerts(calculateBudgetProgress(monthExpenses, budgetList)),
     [monthExpenses, budgetList],

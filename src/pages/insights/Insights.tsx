@@ -25,8 +25,10 @@ import {
 } from '../dataValidations';
 import '../home/Home.scss';
 import './Insights.scss';
+import {useSelector} from 'react-redux';
 import {Expense} from '../../Types';
-import {primaryTag} from '../../domain/tags';
+import {displayTag, groupKey, primaryTag} from '../../domain/tags';
+import {selectExpense} from '../../store/expenseActions';
 import {useIsDesktop} from '../../hooks/useIsDesktop';
 import {desktop, phone} from '../../styles/designTokens';
 import {
@@ -45,6 +47,7 @@ import {vendorTableBodyHeight, vendorTableColumns} from './vendorTable';
 
 const Insights: React.FC = () => {
   const isDesktop = useIsDesktop();
+  const {tagList, legacyTagList} = useSelector(selectExpense);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<DateRange>('30d');
@@ -83,7 +86,7 @@ const Insights: React.FC = () => {
   const monthly = monthlyFigure(filtered, timeRange, selectedCalculation);
   const change = periodChange(expenses, timeRange);
   const trend = dailyTrend(filtered);
-  const slices = distributionSlices(filtered, selectedGroupBy);
+  const slices = distributionSlices(filtered, selectedGroupBy, {tagList, legacyTagList});
   const chartSlices = !isDesktop && selectedItems.length > 0
     ? slices.filter((slice) => selectedItems.includes(slice.name))
     : slices;
@@ -102,28 +105,46 @@ const Insights: React.FC = () => {
   const getAvailableItems = useCallback((rows: Expense[], groupBy: GroupByOption): string[] => {
     if (groupBy === 'days') return [];
 
-    const getGroupKey = (expense: Expense): string => {
-      if (groupBy === 'vendor') return expense.vendor;
-      if (groupBy === 'tags') return primaryTag(expense) || 'Untagged';
-      if (groupBy === 'cost') return getCostRange(expense.cost);
-      return '';
+    const getGroupMeta = (expense: Expense): {key: string; label: string} => {
+      if (groupBy === 'vendor') {
+        return {key: (expense.vendor || '').toLowerCase(), label: expense.vendor};
+      }
+      if (groupBy === 'tags') {
+        const primary = primaryTag(expense);
+        return {
+          key: groupKey(primary) || 'untagged',
+          label: primary
+            ? (displayTag(primary, tagList, legacyTagList) || primary)
+            : 'Untagged',
+        };
+      }
+      if (groupBy === 'cost') {
+        const label = getCostRange(expense.cost);
+        return {key: label, label};
+      }
+      return {key: '', label: ''};
     };
 
-    const groupMetrics = new Map<string, number>();
+    const groupMetrics = new Map<string, {label: string; amount: number}>();
     rows.forEach((expense) => {
-      const groupKey = getGroupKey(expense);
-      if (groupKey) {
-        groupMetrics.set(groupKey, (groupMetrics.get(groupKey) || 0) + Number(expense.cost));
+      const meta = getGroupMeta(expense);
+      if (meta.key) {
+        const current = groupMetrics.get(meta.key);
+        groupMetrics.set(meta.key, {
+          label: current?.label || meta.label,
+          amount: (current?.amount || 0) + Number(expense.cost),
+        });
       }
     });
 
-    let uniqueGroups = Array.from(groupMetrics.keys());
-    uniqueGroups.sort((a, b) => (groupMetrics.get(b) || 0) - (groupMetrics.get(a) || 0));
+    let uniqueGroups = Array.from(groupMetrics.values())
+      .sort((a, b) => b.amount - a.amount)
+      .map((item) => item.label);
     if (groupBy === 'tags') {
       uniqueGroups = uniqueGroups.filter((group) => group !== 'Untagged');
     }
     return uniqueGroups;
-  }, [getCostRange]);
+  }, [getCostRange, tagList, legacyTagList]);
 
   useEffect(() => {
     if (selectedGroupBy === 'days') {

@@ -8,9 +8,11 @@ import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import StickyNote2Outlined from '@mui/icons-material/StickyNote2Outlined';
+import {useSelector} from 'react-redux';
 import {Expense} from '../../../Types';
-import {extraTags, primaryTag} from '../../../domain/tags';
+import {displayTag, extraTags, primaryTag, tagListStatus} from '../../../domain/tags';
 import {useIsDesktop} from '../../../hooks/useIsDesktop';
+import {selectExpense} from '../../../store/expenseActions';
 
 const extraChipSx = {
   height: 'var(--space-lg)',
@@ -22,17 +24,34 @@ const extraChipSx = {
 
 export const ExpenseListTags: FC<{expense: Expense}> = ({expense}): ReactElement => {
   const isDesktop = useIsDesktop();
+  const {tagList, legacyTagList} = useSelector(selectExpense);
   const [noteOpen, setNoteOpen] = useState(false);
   const primary = primaryTag(expense);
   const extras = extraTags(expense);
   const description = expense.description?.trim();
   const extraCount = extras.length;
+  const unlisted = tagListStatus(primary, tagList, legacyTagList) === 'unlisted';
+  const primaryLabel = primary
+    ? (displayTag(primary, tagList, legacyTagList) || primary)
+    : 'untagged';
 
   return (
     <span className="expense-tag-cluster">
-      <span className={primary ? 'tag-text-red' : 'tag-text-purple-light'}>
-        {primary || 'untagged'}
-      </span>
+      {unlisted && primary ? (
+        <Chip
+          size="small"
+          variant="outlined"
+          label={primaryLabel}
+          title={`${primaryLabel} (not in tag list)`}
+          aria-label={`${primaryLabel} (not in tag list)`}
+          className="expense-unlisted-chip"
+          sx={extraChipSx}
+        />
+      ) : (
+        <span className={primary ? 'tag-text-red' : 'tag-text-purple-light'}>
+          {primaryLabel}
+        </span>
+      )}
       {extraCount > 0 && isDesktop && extras.slice(0, 2).map((tag) => (
         <Chip
           key={tag}

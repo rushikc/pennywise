@@ -59,6 +59,18 @@ describe('groupExpenses', () => {
     expect(grouped.food.groupLabel).toBe('food');
   });
 
+  it('groups mixed-case listed primaries together and keeps mystery unlisted', () => {
+    const grouped = groupExpenses([
+      makeExpense({id: 'a', tags: ['Food']}),
+      makeExpense({id: 'b', tags: ['food']}),
+      makeExpense({id: 'c', tags: ['mystery']}),
+    ], 'tags', {tagList: ['food'], legacyTagList: []});
+    expect(grouped.food.expenses).toHaveLength(2);
+    expect(grouped.food.groupLabel).toBe('food');
+    expect(grouped.mystery.groupLabel).toBe('mystery');
+    expect(grouped.mystery.unlisted).toBe(true);
+  });
+
   it('subtracts debits and adds credits in totals', () => {
     const grouped = groupExpenses([
       makeExpense({id: 'd', cost: 80, costType: 'debit', vendor: 'A'}),

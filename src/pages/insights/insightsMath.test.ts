@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import dayjs from 'dayjs';
 import {
   dailyFigure,
+  distributionSlices,
   expensesInRange,
   InsightExpense,
   monthlyFigure,
@@ -63,6 +64,18 @@ describe('insightsMath', () => {
     ]);
     expect(rows.map((row) => row.vendor)).toEqual(['Beta', 'Alpha']);
     expect(rows[1]).toMatchObject({count: 2, spent: 30});
+  });
+
+  it('groups tag slices case-insensitively and keeps unlisted primaries', () => {
+    const slices = distributionSlices([
+      {date: now.valueOf(), cost: 50, vendor: 'A', tags: ['Food']},
+      {date: now.valueOf(), cost: 50, vendor: 'B', tags: ['food']},
+      {date: now.valueOf(), cost: 40, vendor: 'C', tags: ['mystery']},
+    ], 'tags', {tagList: ['food'], legacyTagList: []});
+    expect(slices).toEqual([
+      {name: 'food', value: 100},
+      {name: 'mystery', value: 40},
+    ]);
   });
 
   it('returns zeros and no vendors for an empty list', () => {
