@@ -157,11 +157,51 @@ describe('firestore.rules', () => {
     }));
   });
 
+  it('denies signed-out access to user collections', async () => {
+    const db = testEnv.unauthenticatedContext().firestore();
+    await assertFails(db.doc('users/uid-owner/expense/exp-1').get());
+    await assertFails(db.doc('users/uid-owner/vendorTag/cafe').get());
+    await assertFails(db.doc('users/uid-owner/budget/food').get());
+    await assertFails(db.doc('users/uid-owner/config/darkMode').get());
+    await assertFails(db.doc('users/uid-owner/meta/profile').get());
+    await assertFails(db.doc('users/uid-owner/private/gmail').get());
+  });
+
+  it('denies another user on vendor tags, budgets, config, and meta', async () => {
+    const db = authed(other);
+    await assertFails(db.doc('users/uid-owner/vendorTag/cafe').get());
+    await assertFails(db.doc('users/uid-owner/vendorTag/cafe').set({tag: 'food'}));
+    await assertFails(db.doc('users/uid-owner/budget/food').get());
+    await assertFails(db.doc('users/uid-owner/budget/food').set({amount: 1}));
+    await assertFails(db.doc('users/uid-owner/config/darkMode').get());
+    await assertFails(db.doc('users/uid-owner/config/darkMode').set({value: true}));
+    await assertFails(db.doc('users/uid-owner/meta/profile').get());
+    await assertFails(db.doc('users/uid-owner/meta/profile').set({createdAt: 2}));
+  });
+
+  it('rejects a description that is not a string', async () => {
+    const db = authed(owner);
+    await assertFails(db.doc('users/uid-owner/expense/exp-desc-type').set({
+      cost: 1,
+      vendor: 'A',
+      description: 12,
+    }));
+  });
+
   it('matches allowlist ids in lowercase', async () => {
     const mixed = testEnv.authenticatedContext('uid-mixed', {
       email: 'Owner@Example.com',
       email_verified: true,
     }).firestore();
     await assertSucceeds(mixed.doc('users/uid-mixed/meta/profile').set({ok: true}));
+  });
+
+  it('denies an owner after they leave the allowlist', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await context.firestore().doc('allowedUsers/owner@example.com').delete();
+    });
+    const db = authed(owner);
+    await assertFails(db.doc('users/uid-owner/expense/exp-2').get());
+    await assertFails(db.doc('users/uid-owner/config/darkMode').set({value: true}));
   });
 });
