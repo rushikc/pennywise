@@ -8,7 +8,7 @@ import {deleteExpenseDoc, expect, longPress, readExpense, rowFor, test} from './
 test.describe('merge', () => {
   test('defaults to the first-selected expense tag and keeps it as survivor', async ({app: page, user}) => {
     await longPress(page, rowFor(page, 'city cafe'));
-    await rowFor(page, 'spice kitchen').locator('.vendor-name').click();
+    await rowFor(page, 'spice kitchen').getByTestId('vendor-name').click();
     await expect(page.getByText('2 expenses selected')).toBeVisible();
     await page.getByRole('button', {name: 'Merge'}).click();
 
@@ -30,7 +30,7 @@ test.describe('merge', () => {
 
   test('picking Untagged clears the merged tags', async ({app: page, user}) => {
     await longPress(page, rowFor(page, 'city cafe'));
-    await rowFor(page, 'metro rail').locator('.vendor-name').click();
+    await rowFor(page, 'metro rail').getByTestId('vendor-name').click();
     await page.getByRole('button', {name: 'Merge'}).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByLabel('Select tag untagged').click();
@@ -50,7 +50,7 @@ test.describe('merge', () => {
 test.describe('delete', () => {
   test('bulk deletes the selected expenses', async ({app: page, user}) => {
     await longPress(page, rowFor(page, 'pixel stream'));
-    await rowFor(page, 'quick fuel').locator('.vendor-name').click();
+    await rowFor(page, 'quick fuel').getByTestId('vendor-name').click();
     await page.getByRole('button', {name: 'Delete'}).click();
     await expect(rowFor(page, 'pixel stream')).toHaveCount(0);
     await expect(rowFor(page, 'quick fuel')).toHaveCount(0);
@@ -60,7 +60,7 @@ test.describe('delete', () => {
 
   test('reports a partial bulk delete failure', async ({app: page, user}) => {
     await longPress(page, rowFor(page, 'gift gallery'));
-    await rowFor(page, 'spice kitchen').locator('.vendor-name').click();
+    await rowFor(page, 'spice kitchen').getByTestId('vendor-name').click();
     // Someone else removes one of the two before we delete.
     await deleteExpenseDoc(user, 'anchor-gift');
     await page.getByRole('button', {name: 'Delete'}).click();

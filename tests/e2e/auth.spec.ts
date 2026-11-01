@@ -15,7 +15,7 @@ test.describe('auth', () => {
     await page.clock.install({time: E2E_NOW});
     await page.goto('/home');
     await expect(demoBanner(page)).toBeVisible();
-    await expect(page.locator('.expense-row').first()).toBeVisible();
+    await expect(page.getByTestId('expense-row').first()).toBeVisible();
     await expect(rowFor(page, 'city cafe').filter({hasText: 'Team lunch'})).toHaveCount(0);
   });
 

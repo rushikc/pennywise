@@ -238,3 +238,21 @@ export const groupExpenses = (
 
   return grouped;
 };
+
+type ExpenseGroup = GroupedExpenses[string];
+
+/** Home list order. Date groups are newest first. Cost and count are highest total first. */
+export const compareExpenseGroups = (
+  groupBy: GroupByOption,
+  sortBy: SortByOption,
+  [keyA, groupA]: [string, ExpenseGroup],
+  [keyB, groupB]: [string, ExpenseGroup],
+): number => {
+  if (groupBy === 'days' && (sortBy === 'date' || sortBy == null)) {
+    return keyB.localeCompare(keyA);
+  }
+  if (sortBy === 'cost') {
+    return groupB.totalAmount - groupA.totalAmount;
+  }
+  return groupB.expenses.length - groupA.expenses.length;
+};

@@ -36,6 +36,7 @@ import {
 import {formatVendorName, getDateMonth, sortByKey} from '../../utility/utility';
 import {
   DateRange,
+  compareExpenseGroups,
   filterExpensesByDate,
   filterOptions,
   GroupByOption,
@@ -485,16 +486,19 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
                       allowClear
                     />
                     <Select
+                      data-testid="home-range"
                       value={selectedRange}
                       onChange={(value) => handleRangeChange(value as DateRange)}
                       options={filterOptions.map((option) => ({value: option.id, label: option.label}))}
                     />
                     <Select
+                      data-testid="home-group-by"
                       value={selectedGroupBy}
                       onChange={(value) => handleGroupByChange(value as GroupByOption)}
                       options={groupByOptions.map((option) => ({value: option.id, label: option.label}))}
                     />
                     <Select
+                      data-testid="home-sort"
                       value={selectedSortBy === 'cost' || selectedSortBy === 'count' ? selectedSortBy : 'default'}
                       onChange={(value) => handleSortByChange(value === 'default' ? null : value as SortByOption)}
                       options={[
@@ -650,16 +654,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
           </div>
         ) : (
           Object.entries(groupedExpenses)
-            .sort(([keyA, groupDataA], [keyB, groupDataB]) => {
-
-              if (selectedGroupBy === 'days' &&
-                (selectedSortBy === 'date' || selectedSortBy == null))
-                return keyB.localeCompare(keyA);
-
-              return selectedSortBy === 'cost' ?
-                groupDataB.totalAmount - groupDataA.totalAmount :
-                groupDataB.expenses.length - groupDataA.expenses.length;
-            })
+            .sort((groupA, groupB) => compareExpenseGroups(selectedGroupBy, selectedSortBy, groupA, groupB))
             .map(([groupKey, groupData]) => renderGroupSection(groupKey, groupData))
         )}
       </div>
@@ -863,6 +858,7 @@ const ExpenseItem: FC<{
   return (
     <Row
       className={`expense-row ${isSelected ? 'selected' : ''}`}
+      data-testid="expense-row"
       {...longPressHandlers}
     >
       <Col xs="auto" className="avatar-col">
@@ -878,7 +874,7 @@ const ExpenseItem: FC<{
       <Col className="content-col">
         <Row className="expense-row-header">
           <Col className="vendor-name-col">
-            <span className="vendor-name">{formatVendorName(expense.vendor)[0]}</span>
+            <span className="vendor-name" data-testid="vendor-name">{formatVendorName(expense.vendor)[0]}</span>
           </Col>
           <Col xs="auto" className="expense-cost-col">
             <span className="expense-type">

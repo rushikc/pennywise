@@ -10,7 +10,7 @@ jest.mock('../store/expenseActions', () => ({
   setTagList: jest.fn(),
 }));
 
-import {filterExpensesByDate, groupExpenses, searchExpenses, DateRange} from './dataValidations';
+import {compareExpenseGroups, filterExpensesByDate, groupExpenses, searchExpenses, DateRange} from './dataValidations';
 import {makeExpense} from '../testUtils';
 import dayjs from 'dayjs';
 
@@ -129,5 +129,46 @@ describe('searchExpenses', () => {
 
   it('does not match missing tags on tag search', () => {
     expect(searchExpenses(list, 'untagged')).toHaveLength(0);
+  });
+});
+
+describe('compareExpenseGroups', () => {
+  const group = (totalAmount: number, count: number) => ({
+    groupLabel: 'g',
+    expenses: Array.from({length: count}, () => makeExpense()),
+    totalAmount,
+  });
+
+  it('orders day groups newest first and keeps equal keys stable', () => {
+    const june2 = ['2026-06-02', group(0, 1)] as [string, ReturnType<typeof group>];
+    const june1 = ['2026-06-01', group(0, 1)] as [string, ReturnType<typeof group>];
+    const same = ['2026-06-01', group(0, 1)] as [string, ReturnType<typeof group>];
+    expect(compareExpenseGroups('days', null, june1, june2)).toBeGreaterThan(0);
+    expect(compareExpenseGroups('days', 'date', june2, june1)).toBeLessThan(0);
+    expect(compareExpenseGroups('days', null, june1, same)).toBe(0);
+  });
+
+  it('orders cost and count highest first', () => {
+    const small = ['a', group(-10, 1)] as [string, ReturnType<typeof group>];
+    const large = ['b', group(-80, 3)] as [string, ReturnType<typeof group>];
+    expect(compareExpenseGroups('vendor', 'cost', small, large)).toBeLessThan(0);
+    expect(compareExpenseGroups('vendor', 'count', small, large)).toBeGreaterThan(0);
+    expect(compareExpenseGroups('vendor', 'cost', small, ['c', group(-10, 4)])).toBe(0);
+  });
+});
+
+describe('filterExpensesByDate IST boundaries', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('keeps 00:00 and 23:59 IST on the first day of the window and drops the previous day', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-02T00:30:00+05:30'));
+    const onFirstMidnight = makeExpense({id: 'midnight', date: new Date('2026-06-01T00:00:00+05:30').getTime()});
+    const onFirstEvening = makeExpense({id: 'evening', date: new Date('2026-06-01T23:59:00+05:30').getTime()});
+    const previousEvening = makeExpense({id: 'prev', date: new Date('2026-05-31T23:59:00+05:30').getTime()});
+    const kept = filterExpensesByDate([onFirstMidnight, onFirstEvening, previousEvening], '1d');
+    expect(kept.map((expense) => expense.id)).toEqual(['midnight', 'evening']);
   });
 });

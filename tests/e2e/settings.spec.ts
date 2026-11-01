@@ -91,7 +91,7 @@ test.describe('reload data', () => {
   test('reload all fetches docs an incremental sync skips', async ({app: page, user}) => {
     await insertLateExpense(user);
     await page.reload();
-    await expect(page.locator('.expense-row').first()).toBeVisible();
+    await expect(page.getByTestId('expense-row').first()).toBeVisible();
     await expect(rowFor(page, 'late arrival')).toHaveCount(0);
 
     await page.goto('/reload-expense');

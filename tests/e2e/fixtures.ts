@@ -45,7 +45,7 @@ export async function signIn(page: Page, user: E2EUser): Promise<void> {
     [user.email, E2E_PASSWORD],
   );
   await page.goto('/home');
-  await expect(page.locator('.expense-row').first()).toBeVisible();
+  await expect(page.getByTestId('expense-row').first()).toBeVisible();
 }
 
 /** Reads an expense straight from the emulator (admin, bypasses rules). */
@@ -56,7 +56,7 @@ export async function readExpense(user: E2EUser, id: string): Promise<Record<str
 
 /** Locates a home list row by vendor (and optionally cost text). */
 export const rowFor = (page: Page, vendor: string) =>
-  page.locator('.expense-row').filter({has: page.locator('.vendor-name', {hasText: vendor})});
+  page.getByTestId('expense-row').filter({has: page.getByTestId('vendor-name').filter({hasText: vendor})});
 
 /** Admin write to one expense, stamped so the app's incremental fetch picks it up. */
 export async function patchExpense(user: E2EUser, id: string, data: Record<string, unknown>): Promise<void> {
@@ -74,7 +74,7 @@ export async function readConfig(user: E2EUser, key: string): Promise<Record<str
 
 /** Opens the tag dialog for a row and returns the dialog locator. */
 export async function openTagDialog(page: Page, row: Locator): Promise<Locator> {
-  await row.locator('.vendor-name').click();
+  await row.getByTestId('vendor-name').click();
   const dialog = page.getByRole('dialog');
   await expect(dialog.getByTestId('tag-save')).toBeVisible();
   return dialog;
@@ -91,7 +91,7 @@ export async function addExtra(dialog: Locator, value: string): Promise<void> {
 /** Long-presses a row (500ms hold) using the fake clock instead of a sleep. */
 export async function longPress(page: Page, row: Locator): Promise<void> {
   await row.scrollIntoViewIfNeeded();
-  const box = await row.locator('.vendor-name').boundingBox();
+  const box = await row.getByTestId('vendor-name').boundingBox();
   if (!box) throw new Error('row is not visible');
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
@@ -103,7 +103,7 @@ export async function longPress(page: Page, row: Locator): Promise<void> {
 /** Switches the home list grouping on either layout. */
 export async function groupHomeBy(page: Page, isDesktop: boolean, label: 'Days' | 'Vendor' | 'Tags' | 'Cost'): Promise<void> {
   if (isDesktop) {
-    await page.locator('.ant-select').nth(1).click();
+    await page.getByTestId('home-group-by').click();
     await page.locator('.ant-select-item-option', {hasText: label}).click();
   } else {
     await page.getByRole('button', {name: 'Filter'}).click();
