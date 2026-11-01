@@ -6,6 +6,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
 import {FC, ReactElement} from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
+import CancelIcon from '@mui/icons-material/Cancel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -131,6 +132,7 @@ export const TagEditorFields: FC<{
                 label={option}
                 size="small"
                 variant="outlined"
+                deleteIcon={<CancelIcon data-testid="chip-delete"/>}
               />
             ))
           }

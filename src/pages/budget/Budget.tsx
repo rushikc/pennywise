@@ -198,6 +198,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
             >
               <Card
                 className="budget-card"
+                data-testid="budget-card"
                 onClick={() => handleBudgetCardClick(progress.budget)}
               >
                 <CardContent>
@@ -228,7 +229,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                     transition={{delay: index * 0.05 + 0.2, duration: 0.3}}
                   >
                     <Box className="progress-info">
-                      <Typography variant="body2" className="spent-amount">
+                      <Typography variant="body2" className="spent-amount" data-testid="spent-amount">
                         Spent: {formatCurrency(progress.spent)}
                       </Typography>
                       <Typography variant="body2" className="remaining-amount">

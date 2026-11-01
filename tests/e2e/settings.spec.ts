@@ -26,7 +26,7 @@ test.describe('manage tags', () => {
     await expect(chips).toHaveCount(10);
     await expect(page.getByRole('button', {name: 'Retired tags (2)'})).toBeVisible();
 
-    await chips.filter({hasText: /^snacks$/}).locator('.MuiChip-deleteIcon').click();
+    await chips.filter({hasText: /^snacks$/}).getByTestId('chip-delete').click();
     await page.getByRole('dialog').getByRole('button', {name: 'Delete'}).click();
     await expect(chips).toHaveCount(9);
     await expect(page.getByRole('button', {name: 'Retired tags (3)'})).toBeVisible();

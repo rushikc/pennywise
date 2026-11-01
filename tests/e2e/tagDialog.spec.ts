@@ -18,7 +18,7 @@ test.describe('tag dialog', () => {
     await addExtra(dialog, 'weekend');
     await addExtra(dialog, 'gift-wrap');
     await dialog.locator('.MuiAutocomplete-root .MuiChip-root', {hasText: 'weekend'})
-      .locator('.MuiChip-deleteIcon').click();
+      .getByTestId('chip-delete').click();
     await dialog.getByRole('button', {name: 'Add note'}).click();
     await dialog.getByLabel('Note').fill('Birthday present for a friend');
     await dialog.getByTestId('tag-save').click();

@@ -69,7 +69,7 @@ describe('ManageTags', () => {
         </MemoryRouter>
       </Provider>,
     );
-    await userEvent.click(screen.getAllByTestId('CancelIcon')[0]);
+    await userEvent.click(screen.getAllByTestId('chip-delete')[0]);
     await userEvent.click(screen.getByRole('button', {name: /^delete$/i}));
     expect(store.getState().expense.legacyTagList).toEqual(['Food']);
     expect(ExpenseAPI.updateTagConfig).toHaveBeenCalledWith({
@@ -80,7 +80,7 @@ describe('ManageTags', () => {
 
   it('retires a deleted tag to legacyTagList', async () => {
     const {store} = renderManageTags();
-    await userEvent.click(screen.getAllByTestId('CancelIcon')[0]);
+    await userEvent.click(screen.getAllByTestId('chip-delete')[0]);
     await userEvent.click(screen.getByRole('button', {name: /^delete$/i}));
     expect(store.getState().expense.tagList).toEqual(['rent']);
     expect(store.getState().expense.legacyTagList).toEqual(['tech', 'food']);

@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import {ExpenseAPI} from '../../../api/ExpenseAPI';
 import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {ArrowBack as BackIcon} from '@mui/icons-material';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectExpense} from '../../../store/expenseActions';
@@ -133,6 +134,7 @@ const ManageTags: React.FC = () => {
                 key={tag}
                 label={tag}
                 onDelete={() => handleDeleteTag(tag)}
+                deleteIcon={<CancelIcon data-testid="chip-delete"/>}
                 className="manage-tags-chip"
                 color="primary"
                 variant="outlined"
