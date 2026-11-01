@@ -37,8 +37,24 @@ export default defineConfig({
     locale: 'en-IN',
   },
   projects: [
-    {name: 'desktop', use: {...devices['Desktop Chrome'], viewport: {width: 1280, height: 800}}},
-    {name: 'mobile', testIgnore: ['**/api.spec.ts'], use: {...devices['Pixel 7']}},
+    {
+      name: 'desktop',
+      grepInvert: /@visual|@perf/,
+      use: {...devices['Desktop Chrome'], viewport: {width: 1280, height: 800}},
+    },
+    {
+      name: 'mobile',
+      grepInvert: /@visual|@perf/,
+      testIgnore: ['**/api.spec.ts'],
+      use: {...devices['Pixel 7']},
+    },
+    {
+      // Opt-in. Baselines are OS-specific and CI does not run this project.
+      name: 'visual',
+      grep: /@visual/,
+      workers: 1,
+      use: {...devices['Desktop Chrome'], animations: 'disabled', trace: 'off'},
+    },
   ],
   webServer: [
     {

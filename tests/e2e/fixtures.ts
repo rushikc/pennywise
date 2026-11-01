@@ -45,6 +45,7 @@ export async function signIn(page: Page, user: E2EUser): Promise<void> {
     [user.email, E2E_PASSWORD],
   );
   await page.goto('/home');
+  await expect(page.getByText('You\'re viewing demo data.')).toHaveCount(0);
   await expect(page.getByTestId('expense-row').first()).toBeVisible();
 }
 
