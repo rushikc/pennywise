@@ -48,7 +48,7 @@ That writes `backups/<timestamp>/`, or `$PENNYWISE_BACKUP_DIR/<timestamp>/` when
    The dry-run prints a count of expense docs that share a `mailId` with another doc. Do not delete those from the script.
 5. Deploy functions, then the app.
 6. Re-run the Firestore dry-run to catch docs ingested by old functions between steps 4 and 5. `--apply` if the count is more than 0.
-7. Open the app on each device. If `expenseSchemaVersion` is not `tags-v1`, the next fetch reloads every expense. **Settings → Reload Data** does the same.
+7. Open the app on each device. If `expenseSchemaVersion` is not `tags-v1`, the next fetch reloads every expense. Imported budgets and vendor tags with their original timestamps are picked up automatically when IndexedDB `syncResetVersion` is not `import-2026-11` (`SYNC_RESET_VERSION`). Bump that constant after a later back-dated import. Otherwise use **Settings → Reload Data → Reload all data**.
 
 `importToFirestore` only creates docs (existing ids are skipped). It stamps `users/{uid}/meta/profile`: `lastImportRunAt` on every run, and `migratedAt` only on the first successful run that created at least one doc.
 

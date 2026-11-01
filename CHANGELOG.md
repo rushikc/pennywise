@@ -4,6 +4,7 @@ All notable changes are summarized here. The version in `package.json` is 1.1.0.
 
 ## [Unreleased]
 
+- Existing devices pick up imported budgets and vendor tags on the next load via `SYNC_RESET_VERSION`, or from Settings → Reload Data → Reload all data.
 - Tags-v1: `tags[]` plus a deprecated `tag` mirror, an open tag policy, and `shared/tagCases.json` as the spec.
 - Playwright end-to-end suite against the local Firebase emulators.
 - Public demo deploy on every push to `main` (static Hosting, no Firebase in the bundle).
