@@ -11,6 +11,8 @@ import {
   extractPlainTextFromHtml,
   extractUsername,
   findEmailParseBankMatch,
+  messagePlainText,
+  parseExpenseWithGemini,
   gmailSearchQuery,
   getMailSenderReceiver,
   getMailSubject,
@@ -276,5 +278,116 @@ describe('extractPlainTextFromHtml', () => {
 
   it('keeps inner text of nested tags', () => {
     assert.equal(extractPlainTextFromHtml('<div><b>Shop</b> bill</div>'), 'Shop bill');
+  });
+
+  it('reads nested tables, entities, and line breaks', () => {
+    const html = '<table><tr><td><table><tr><td>City&nbsp;Cafe<br/>bill &quot;lunch&quot;</td></tr></table></td></tr></table>';
+    assert.equal(extractPlainTextFromHtml(html), 'City Cafe bill "lunch"');
+  });
+});
+
+describe('messagePlainText', () => {
+  it('reads an HTML-only body', () => {
+    const data = Buffer.from('<p>Hello&nbsp;shop</p>').toString('base64url');
+    assert.equal(messagePlainText({payload: {mimeType: 'text/html', body: {data}}}), 'Hello shop');
+  });
+});
+
+describe('HDFC regex table', () => {
+  const account = 'XX1234';
+  const vpa = 'city.cafe@oksbi';
+
+  it('parses a large HDFC debit and keeps the vendor case trimmed', () => {
+    const text = `Rs.1,00,000.50 is debited from your HDFC Bank Credit Card ending ${account} towards  City Cafe  on 01-01-26`;
+    const parsed = parseExpenseWithRegex(text);
+    assert.equal(parsed?.cost, 100000.5);
+    assert.equal(parsed?.costType, 'debit');
+    assert.equal(parsed?.vendor, 'City Cafe');
+  });
+
+  it('parses a UPI debit VPA and a UPI credit', () => {
+    const debit = parseExpenseWithRegex(
+      `Your UPI transaction Ref 998877 Rs.250.00 has been debited from VPA ${vpa} on 01-01-26`,
+    );
+    assert.equal(debit?.cost, 250);
+    assert.equal(debit?.vendor, vpa);
+    assert.equal(debit?.type, 'upi');
+    const credit = parseExpenseWithRegex(
+      `Your UPI transaction Ref 998877 .80.00 is successfully credited to VPA ${vpa} on 01-01-26`,
+    );
+    assert.equal(credit?.cost, 80);
+    assert.equal(credit?.costType, 'credit');
+    assert.equal(credit?.vendor, vpa);
+  });
+
+  it('parses an INR e-mandate amount', () => {
+    const parsed = parseExpenseWithRegex(
+      'E-mandate has been successfully paid. Your Netflix bill Amount: INR 499.00 Date 01-01-26',
+    );
+    assert.equal(parsed?.cost, 499);
+    assert.equal(parsed?.type, 'e-mandate');
+    assert.equal(parsed?.vendor, 'Netflix');
+  });
+
+  it('fails when the amount is missing', () => {
+    const text = `debited from your HDFC Bank Credit Card ending ${account} towards AMAZON on 01-01-26`;
+    assert.equal(parseExpenseWithRegex(text), null);
+  });
+
+  it('does not log the synthetic account or VPA', () => {
+    const logs: string[] = [];
+    const methods = ['log', 'info', 'warn', 'error'] as const;
+    const originals = methods.map((method) => console[method]);
+    methods.forEach((method) => {
+      console[method] = (...args: unknown[]) => {
+        logs.push(args.map((arg) => String(arg)).join(' '));
+      };
+    });
+    try {
+      parseExpenseWithRegex(
+        `Rs.10.00 is debited from your HDFC Bank Credit Card ending ${account} towards ${vpa} on 01-01-26`,
+      );
+    } finally {
+      methods.forEach((method, index) => {
+        console[method] = originals[index];
+      });
+    }
+    const blob = logs.join('\n');
+    assert.equal(blob.includes(account), false);
+    assert.equal(blob.includes(vpa), false);
+  });
+});
+
+describe('mocked Gemini parse', () => {
+  function geminiResponse(body: unknown, ok = true) {
+    return async () => ({
+      ok,
+      json: async () => ({
+        candidates: [{content: {parts: [{text: typeof body === 'string' ? body : JSON.stringify(body)}]}}],
+      }),
+    });
+  }
+
+  it('calls Gemini when the regex misses a refund', async () => {
+    const text = 'SBI reversal of ₹50.00 to shop@oksbi was refunded';
+    assert.equal(parseExpenseWithRegex(text), null);
+    let calls = 0;
+    const parsed = await parseExpenseWithGemini(text, 'alert', 'key', async () => {
+      calls += 1;
+      return geminiResponse({cost: 50, costType: 'credit', vendor: 'shop', type: 'upi'})();
+    });
+    assert.equal(calls, 1);
+    assert.equal(parsed?.costType, 'credit');
+    assert.equal(parsed?.cost, 50);
+  });
+
+  it('fails geminiShape on malformed JSON', async () => {
+    const parsed = await parseExpenseWithGemini('no bank markers', 'alert', 'key', geminiResponse('{bad'));
+    assert.equal(parsed, null);
+  });
+
+  it('records a parse failure when Gemini errors', async () => {
+    const parsed = await parseExpenseWithGemini('no bank markers', 'alert', 'key', geminiResponse('', false));
+    assert.equal(parsed, null);
   });
 });
