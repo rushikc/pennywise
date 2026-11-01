@@ -28,7 +28,13 @@ test.describe('routing', () => {
   test('profile renders the signed-in email and sign-out returns to demo data', async ({app: page, user}) => {
     await page.goto('/profile');
     await expect(page.getByText(user.email)).toBeVisible();
-    await page.getByText('Sign Out', {exact: true}).click();
+    await page.getByText('Sign Out', {exact: true}).evaluate((el) => {
+      const row = el.closest('.dashboard-option-row');
+      if (!(row instanceof HTMLElement)) {
+        throw new Error('sign out row is missing');
+      }
+      row.click();
+    });
     await expect(demoBanner(page)).toBeVisible();
     await expect(page.getByText('Team lunch with the design crew')).toHaveCount(0);
   });

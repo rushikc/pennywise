@@ -18,6 +18,7 @@ test.describe('config', () => {
 
   test('adds and deletes a bank', async ({app: page}) => {
     await page.goto('/setting-banks');
+    await expect(page.getByRole('heading', {name: 'Banks'})).toBeVisible();
     await expect(page.getByText('Sample Bank A')).toBeVisible();
     await page.getByRole('button', {name: 'Add bank'}).click();
     const dialog = page.getByRole('dialog');

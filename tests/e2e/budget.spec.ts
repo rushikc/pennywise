@@ -51,8 +51,9 @@ test.describe('budgets', () => {
     const dialog = page.getByRole('dialog');
     await dialog.getByLabel('Budget Name').fill('Pets care');
     await dialog.getByLabel('Amount').fill('100');
-    await dialog.getByRole('button', {name: 'pets', exact: true}).click();
+    await dialog.getByRole('button', {name: 'snacks', exact: true}).click();
     await dialog.getByRole('button', {name: 'Create'}).click();
+    await expect(dialog).toBeHidden();
     await expect(budgetCard(page, 'Pets care')).toBeVisible();
 
     await budgetCard(page, 'Pets care').click();
