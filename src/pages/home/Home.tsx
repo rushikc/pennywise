@@ -437,7 +437,10 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
           </div>
           <div className="group-summary">
             <span className="total-amount">₹{groupData.totalAmount.toFixed(0)}</span>
-            <IconButton className="collapse-button">
+            <IconButton
+              className="collapse-button"
+              aria-label={`${isCollapsed ? 'Expand' : 'Collapse'} ${groupData.groupLabel}`}
+            >
               {isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
             </IconButton>
           </div>
@@ -480,6 +483,7 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
                   <>
                     <Input
                       placeholder="Search"
+                      aria-label="Search expenses"
                       value={searchTerm}
                       onChange={handleSearchChange}
                       suffix={<SearchOutlined/>}
@@ -487,18 +491,21 @@ const Home: FC<Record<string, never>> = (): ReactElement => {
                     />
                     <Select
                       data-testid="home-range"
+                      aria-label="Date range"
                       value={selectedRange}
                       onChange={(value) => handleRangeChange(value as DateRange)}
                       options={filterOptions.map((option) => ({value: option.id, label: option.label}))}
                     />
                     <Select
                       data-testid="home-group-by"
+                      aria-label="Group by"
                       value={selectedGroupBy}
                       onChange={(value) => handleGroupByChange(value as GroupByOption)}
                       options={groupByOptions.map((option) => ({value: option.id, label: option.label}))}
                     />
                     <Select
                       data-testid="home-sort"
+                      aria-label="Sort"
                       value={selectedSortBy === 'cost' || selectedSortBy === 'count' ? selectedSortBy : 'default'}
                       onChange={(value) => handleSortByChange(value === 'default' ? null : value as SortByOption)}
                       options={[
@@ -859,6 +866,14 @@ const ExpenseItem: FC<{
     <Row
       className={`expense-row ${isSelected ? 'selected' : ''}`}
       data-testid="expense-row"
+      tabIndex={0}
+      aria-label={formatVendorName(expense.vendor)[0]}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleClick();
+        }
+      }}
       {...longPressHandlers}
     >
       <Col xs="auto" className="avatar-col">

@@ -180,6 +180,7 @@ const Configuration: React.FC = () => {
         <IconButton
           onClick={() => navigate('/profile')}
           className="back-button"
+          aria-label="Back"
         >
           <BackIcon/>
         </IconButton>
@@ -262,39 +263,41 @@ const Configuration: React.FC = () => {
             <CircularProgress size={28} className="loading-indicator"/>
           </Box>
         ) : (
-          <List>
-            {bankConfig.creditCards.map((cardDigits, index) => (
-              <ListItem
-                key={index}
-                className="card-list-item"
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleRemoveCard(cardDigits)}
-                    disabled={isSaving}
-                    className="delete-button"
-                  >
-                    <RemoveCircleOutline/>
-                  </IconButton>
-                }
-              >
-                <CreditCardIcon className="card-icon"/>
-                <ListItemText
-                  primary={`HDFC ****${cardDigits}`}
-                  primaryTypographyProps={{
-                    className: 'card-text'
-                  }}
-                />
-              </ListItem>
-            ))}
+          <>
+            <List>
+              {bankConfig.creditCards.map((cardDigits, index) => (
+                <ListItem
+                  key={index}
+                  className="card-list-item"
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleRemoveCard(cardDigits)}
+                      disabled={isSaving}
+                      className="delete-button"
+                    >
+                      <RemoveCircleOutline/>
+                    </IconButton>
+                  }
+                >
+                  <CreditCardIcon className="card-icon"/>
+                  <ListItemText
+                    primary={`HDFC ****${cardDigits}`}
+                    primaryTypographyProps={{
+                      className: 'card-text'
+                    }}
+                  />
+                </ListItem>
+              ))}
 
+            </List>
             {bankConfig.creditCards.length === 0 && (
               <Typography variant="body2" className="empty-cards-message">
-                No credit cards added yet
+              No credit cards added yet
               </Typography>
             )}
-          </List>
+          </>
         )}
 
         {isSaving && (

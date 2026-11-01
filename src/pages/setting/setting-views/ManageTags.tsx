@@ -106,6 +106,7 @@ const ManageTags: React.FC = () => {
         <IconButton
           onClick={() => navigate('/profile')}
           className="back-button"
+          aria-label="Back"
         >
           <BackIcon/>
         </IconButton>

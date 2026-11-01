@@ -253,6 +253,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
                           value={Math.min(100, progress.percentage)}
                           color={getProgressColor(progress.percentage)}
                           className="progress-bar"
+                          aria-label={`${progress.budget.name} spent`}
                         />
                       </motion.div>
                       <motion.div

@@ -175,6 +175,7 @@ const ReloadData: React.FC = () => {
         <IconButton
           onClick={() => navigate('/profile')}
           className="back-button"
+          aria-label="Back"
         >
           <ArrowBackIcon/>
         </IconButton>

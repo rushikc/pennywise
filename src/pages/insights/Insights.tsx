@@ -193,11 +193,13 @@ const Insights: React.FC = () => {
       {isDesktop && (
         <div className="insights-filters">
           <Select
+            aria-label="Time range"
             value={timeRange}
             options={filterOptions.map((option) => ({value: option.id, label: option.label}))}
             onChange={(value) => setTimeRange(value)}
           />
           <Select
+            aria-label="Group by"
             value={selectedGroupBy}
             options={groupByOptions.map((option) => ({value: option.id, label: option.label}))}
             onChange={(value) => {
@@ -206,6 +208,7 @@ const Insights: React.FC = () => {
             }}
           />
           <Select
+            aria-label="Calculation"
             value={selectedCalculation}
             options={calculationOptions.map((option) => ({value: option.id, label: option.label}))}
             onChange={(value) => setSelectedCalculation(value)}

@@ -62,7 +62,7 @@ const DesktopDashboard: React.FC = () => {
   );
 
   return (
-    <aside className="desktop-dashboard" aria-label="This month">
+    <aside className="desktop-dashboard" aria-label="This month" tabIndex={0}>
       <Typography variant="caption" className="dash-month">
         {dayjs().format('MMMM YYYY')}
       </Typography>
