@@ -36,7 +36,12 @@ export const test = base.extend<Fixtures>({
 
 export {expect};
 
-export async function signIn(page: Page, user: E2EUser, timeout = 10_000): Promise<void> {
+export async function signIn(
+  page: Page,
+  user: E2EUser,
+  timeout = 10_000,
+  expectLive = true,
+): Promise<void> {
   await page.clock.install({time: E2E_NOW});
   await page.goto('/login');
   await page.waitForFunction(() => Boolean(window.__pennywiseE2E));
@@ -45,7 +50,12 @@ export async function signIn(page: Page, user: E2EUser, timeout = 10_000): Promi
     [user.email, E2E_PASSWORD],
   );
   await page.goto('/home');
-  await expect(page.getByText('You\'re viewing demo data.')).toHaveCount(0, {timeout});
+  const banner = page.getByText('You\'re viewing demo data.');
+  if (expectLive) {
+    await expect(banner).toHaveCount(0, {timeout});
+  } else {
+    await expect(banner).toBeVisible({timeout});
+  }
   await expect(page.getByTestId('expense-row').first()).toBeVisible({timeout});
 }
 

@@ -30,7 +30,7 @@ test.describe('auth', () => {
     const auth = adminAuth();
     await auth.deleteUser(stranger.uid).catch(() => undefined);
     await auth.createUser({...stranger, password: E2E_PASSWORD, emailVerified: true});
-    await signIn(page, stranger);
+    await signIn(page, stranger, 10_000, false);
     await expect(demoBanner(page)).toBeVisible();
   });
 
