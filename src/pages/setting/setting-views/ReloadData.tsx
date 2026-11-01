@@ -30,15 +30,12 @@ const ReloadData: React.FC = () => {
   const handleReloadAll = async () => {
     setLoading(true);
     try {
-      console.log('Reloading all expenses');
-      await ExpenseAPI.getExpenseList(getUnixTimestamp('2020-01-01'));
-      if (getDataMode() === 'demo') {
-        loadInitialAppData();
-      }
-      createTimedAlert({type: 'success', message: 'All expenses reloaded successfully.'});
+      console.log('Reloading all data');
+      await loadInitialAppData(getUnixTimestamp('2020-01-01'));
+      createTimedAlert({type: 'success', message: 'All data reloaded successfully.'});
     } catch (error) {
-      console.error('Failed to reload all expenses:', error);
-      createTimedAlert({type: 'error', message: 'Failed to reload expenses. Please try again later.'});
+      console.error('Failed to reload all data:', error);
+      createTimedAlert({type: 'error', message: 'Failed to reload data. Please try again later.'});
     } finally {
       setLoading(false);
     }
@@ -81,6 +78,9 @@ const ReloadData: React.FC = () => {
     try {
       await FinanceIndexDB.clearIndexedDBData();
       createTimedAlert({type: 'success', message: 'Cache deleted successfully.'});
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       createTimedAlert({type: 'error', message: 'Clearing cache failed.'});
     } finally {
@@ -127,7 +127,7 @@ const ReloadData: React.FC = () => {
   const ReloadAllSection = () => (
     <Paper elevation={0} className="reload-section-paper">
       <Typography variant="subtitle1" gutterBottom fontWeight="medium" className="section-title">
-        Reload All Expenses
+        Reload all data
       </Typography>
       <Typography variant="body2" className="reload-warning-text">
         Caution: Reloading all expense data from Firebase can be costly. Repeated operations, particularly with
@@ -142,7 +142,7 @@ const ReloadData: React.FC = () => {
         disabled={loading}
         className="reload-all-button"
       >
-        {loading ? <CircularProgress size={24}/> : 'Reload All Expenses'}
+        {loading ? <CircularProgress size={24}/> : 'Reload all data'}
       </Button>
     </Paper>
   );

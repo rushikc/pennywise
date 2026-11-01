@@ -58,8 +58,8 @@ test.describe('pennywise api', () => {
     expect(res.status()).toBe(200);
 
     await page.goto('/reload-expense');
-    await page.getByRole('button', {name: 'Reload All Expenses'}).click();
-    await expect(page.getByText('All expenses reloaded successfully.')).toBeVisible();
+    await page.getByRole('button', {name: 'Reload all data'}).click();
+    await expect(page.getByText('All data reloaded successfully.')).toBeVisible();
     await page.goto('/home');
 
     const row = rowFor(page, 'book nook');

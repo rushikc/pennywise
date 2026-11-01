@@ -1,7 +1,8 @@
-import {Expense} from '../Types';
+import {Budget, Expense, TagConfig, VendorTag} from '../Types';
 import dayjs from 'dayjs';
 import {getDateMonth, sortByKey} from '../utility/utility';
 import {ExpenseAPI} from '../api/ExpenseAPI';
+import {getDataMode} from './login/dataMode';
 import {setBudgetList, setExpenseState, setTagConfig} from '../store/expenseActions';
 import {displayTag, groupKey, primaryTag, readTags, tagListStatus} from '../domain/tags';
 
@@ -19,29 +20,50 @@ export type SortByOption = 'cost' | 'count' | 'date' | null;
 export type CalculationOption = 'average' | 'median';
 
 
-export const loadInitialAppData = () => {
+export const loadInitialAppData = async (overrideLastDate?: number) => {
   void ExpenseAPI.processData();
 
-  const vendorTagApi = ExpenseAPI.getVendorTagList();
-  const expenseApi = ExpenseAPI.getExpenseList();
-  const budgetApi = ExpenseAPI.getBudgetList();
-  const tagListApi = ExpenseAPI.getTagConfig();
-  const darkModeApi = ExpenseAPI.getDarkModeConfig();
+  if (getDataMode() === 'live') {
+    await ExpenseAPI.resetSyncWatermarksIfNeeded();
+  }
 
-  Promise.all([vendorTagApi, expenseApi, budgetApi, tagListApi, darkModeApi]).then((res) => {
-
-    const vendorTagResult = res[0];
-    const expenseResult = res[1];
-    const budgetResult = res[2];
-    const tagConfig = res[3];
-    const darkMode = res[4];
+  const applyResults = (
+    vendorTagResult: VendorTag[],
+    expenseResult: Expense[],
+    budgetResult: Budget[],
+    tagConfig: TagConfig,
+    darkMode: boolean,
+  ) => {
     const expenseList = sortByKey(expenseResult, 'date');
-
     setExpenseState(expenseList, vendorTagResult, darkMode);
     setBudgetList(budgetResult);
     setTagConfig(tagConfig);
+  };
 
-  }).catch((res1) => alert(res1));
+  try {
+    if (overrideLastDate !== undefined) {
+      const expenseResult = await ExpenseAPI.getExpenseList(overrideLastDate);
+      const [vendorTagResult, budgetResult, tagConfig, darkMode] = await Promise.all([
+        ExpenseAPI.getVendorTagList(overrideLastDate),
+        ExpenseAPI.getBudgetList(overrideLastDate),
+        ExpenseAPI.getTagConfig(),
+        ExpenseAPI.getDarkModeConfig(),
+      ]);
+      applyResults(vendorTagResult, expenseResult, budgetResult, tagConfig, darkMode);
+      return;
+    }
+
+    const [vendorTagResult, expenseResult, budgetResult, tagConfig, darkMode] = await Promise.all([
+      ExpenseAPI.getVendorTagList(),
+      ExpenseAPI.getExpenseList(),
+      ExpenseAPI.getBudgetList(),
+      ExpenseAPI.getTagConfig(),
+      ExpenseAPI.getDarkModeConfig(),
+    ]);
+    applyResults(vendorTagResult, expenseResult, budgetResult, tagConfig, darkMode);
+  } catch (res1) {
+    alert(res1);
+  }
 };
 
 

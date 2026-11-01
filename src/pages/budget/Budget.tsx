@@ -86,10 +86,12 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
 
   // Update filtered expenses and budget progress when data changes
   useEffect(() => {
-    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+    if (budgetList.length > 0 && selectedMonth) {
       const filtered = filterExpensesByMonth(expenseList, selectedMonth);
       const progress = calculateBudgetProgress(filtered, budgetList);
       setBudgetProgress(progress);
+    } else {
+      setBudgetProgress([]);
     }
     setLoading(false);
   }, [expenseList, budgetList, selectedMonth]);
@@ -132,7 +134,7 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   const handleBudgetUpdated = () => {
     // The store has already been updated by the EditBudget component
     // Recalculate budget progress with the updated budget list and current expenses
-    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
+    if (budgetList.length > 0 && selectedMonth) {
       const filtered = filterExpensesByMonth(expenseList, selectedMonth);
       const progress = calculateBudgetProgress(filtered, budgetList);
       setBudgetProgress(progress);
@@ -148,10 +150,11 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
   const handleBudgetDeleted = (budgetId: string) => {
     // The store has already been updated by the EditBudget component
     // Recalculate budget progress with the updated budget list (minus deleted budget)
-    if (expenseList.length > 0 && budgetList.length > 0 && selectedMonth) {
-      // Filter out the deleted budget from current progress
+    if (budgetList.length > 0 && selectedMonth) {
       const updatedProgress = budgetProgress.filter(progress => progress.budget.id !== budgetId);
       setBudgetProgress(updatedProgress);
+    } else {
+      setBudgetProgress([]);
     }
 
     // Reset selected budget since it may have been the deleted one
@@ -305,13 +308,10 @@ const BudgetPage: FC<Record<string, never>> = (): ReactElement => {
         </motion.div>
       </AnimatePresence>
 
-      {budgetProgress.length === 0 && (
-        <div className="no-data">
+      {budgetList.length === 0 && (
+        <div className="no-data" data-testid="budget-empty">
           <Typography variant="h6" color="textSecondary">
-            No budget data available
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {selectedMonth ? `No expenses found for ${selectedMonth.label}` : 'Please select a month to view budget progress'}
+            No budgets yet
           </Typography>
         </div>
       )}
