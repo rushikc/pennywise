@@ -243,4 +243,94 @@ describe('createApiHandler', () => {
     assert.equal(res.statusCode, 422);
     assert.equal(res.body.error.code, 'invalid_id');
   });
+
+  it('returns 400 for invalid JSON', async () => {
+    const {handler} = createHandler();
+    const res = mockRes();
+    await handler(mockReq({
+      method: 'PATCH',
+      path: '/expense/anchor-books',
+      headers: {authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json'},
+      rawBody: '{',
+    }), res);
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.body.error.code, 'invalid_json');
+  });
+
+  it('rejects a batch of more than 100 patches', async () => {
+    const {handler} = createHandler();
+    const res = mockRes();
+    const patches = Array.from({length: 101}, (_, index) => ({id: `id-${index}`, description: 'x'}));
+    await handler(mockReq({
+      method: 'POST',
+      path: '/expenses:batchUpdate',
+      headers: {authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json'},
+      rawBody: JSON.stringify({patches}),
+    }), res);
+    assert.equal(res.statusCode, 422);
+    assert.equal(res.body.error.code, 'invalid_batch');
+  });
+
+  it('returns 401 for a wrong token with the same challenge header', async () => {
+    const {handler} = createHandler();
+    const missing = mockRes();
+    await handler(mockReq({method: 'GET', path: '/expenses'}), missing);
+    const wrong = mockRes();
+    await handler(mockReq({
+      method: 'GET',
+      path: '/expenses',
+      headers: {authorization: 'Bearer wrong-token-0123456789abcdef0123'},
+    }), wrong);
+    assert.equal(missing.statusCode, 401);
+    assert.equal(wrong.statusCode, 401);
+    assert.equal(missing.headers['www-authenticate'], 'Bearer');
+    assert.equal(wrong.headers['www-authenticate'], missing.headers['www-authenticate']);
+    assert.equal(wrong.body.error.code, 'invalid_token');
+  });
+
+  it('accepts the next token digest', async () => {
+    const nextToken = 'router-next-token-0123456789abcdef0123';
+    const nextDigest = createHash('sha256').update(nextToken).digest('hex');
+    const {handler} = createHandler({
+      getTokenDigests: () => ({current: DIGEST, next: nextDigest}),
+    });
+    const res = mockRes();
+    await handler(mockReq({
+      method: 'GET',
+      path: '/expenses',
+      headers: {authorization: `Bearer ${nextToken}`},
+    }), res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.items.length, 1);
+  });
+
+  it('returns 429 with Retry-After', async () => {
+    const {handler} = createHandler({rateLimit: 1});
+    const headers = {authorization: `Bearer ${TOKEN}`};
+    const first = mockRes();
+    await handler(mockReq({method: 'GET', path: '/expenses', headers}), first);
+    assert.equal(first.statusCode, 200);
+    const second = mockRes();
+    await handler(mockReq({method: 'GET', path: '/expenses', headers}), second);
+    assert.equal(second.statusCode, 429);
+    assert.equal(second.body.error.code, 'rate_limited');
+    assert.match(second.headers['retry-after'], /^[1-9]\d*$/);
+  });
+
+  it('sets Idempotent-Replay when a batch request is repeated', async () => {
+    const {handler} = createHandler();
+    const rawBody = JSON.stringify({
+      requestId: 'request-1',
+      patches: [{id: 'anchor-books', description: 'note'}],
+    });
+    const headers = {authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json'};
+    const first = mockRes();
+    await handler(mockReq({method: 'POST', path: '/expenses:batchUpdate', headers, rawBody}), first);
+    assert.equal(first.statusCode, 200);
+    assert.equal(first.headers['idempotent-replay'], undefined);
+    const replay = mockRes();
+    await handler(mockReq({method: 'POST', path: '/expenses:batchUpdate', headers, rawBody}), replay);
+    assert.equal(replay.statusCode, 200);
+    assert.equal(replay.headers['idempotent-replay'], 'true');
+  });
 });
