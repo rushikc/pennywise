@@ -221,6 +221,12 @@ export default defineConfig(({mode, command}) => {
           'src/**/*.d.ts',
           'src/index.tsx',
         ],
+        thresholds: {
+          lines: 57,
+          statements: 57,
+          branches: 81,
+          functions: 59,
+        },
       },
       server: {
         deps: {
