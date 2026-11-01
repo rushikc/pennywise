@@ -134,6 +134,53 @@ describe('importAll', () => {
     assert.equal(process.exitCode, 1);
     process.exitCode = previous;
   });
+
+  it('writes expenses, vendor tags, budgets, config, then processed ids, and profile last', async () => {
+    const dir = writeFixture();
+    const order = [];
+    const db = fakeDb((ref) => {
+      order.push(ref.path);
+      return 'ok';
+    });
+    await importAll({db, uid: 'uid-1', dataDir: dir});
+    assert.deepEqual(order, [
+      'users/uid-1/expense/e1',
+      'users/uid-1/vendorTag/v1',
+      'users/uid-1/budget/b1',
+      'users/uid-1/config/tags',
+      'users/uid-1/private/gmail/processedIds/p1',
+    ]);
+    assert.equal(db.profileSets.length, 1);
+    assert.equal(db.profileSets[0].path, 'users/uid-1/meta/profile');
+  });
+
+  it('a failed run then a rerun skips what was created and does not double-create', async () => {
+    const dir = writeFixture();
+    const written = new Set();
+    let budgetFailed = false;
+    const db = fakeDb((ref) => {
+      if (ref.path.includes('/budget/') && !budgetFailed) {
+        budgetFailed = true;
+        return 'fail';
+      }
+      if (written.has(ref.path)) return 'exists';
+      written.add(ref.path);
+      return 'ok';
+    });
+    const first = await importAll({db, uid: 'uid-1', dataDir: dir});
+    assert.equal(first.ok, false);
+    assert.equal(first.result.expense.created, 1);
+    assert.equal(first.result.budget.failed, 1);
+    assert.equal(first.result.config.created, 1);
+    const second = await importAll({db, uid: 'uid-1', dataDir: dir});
+    assert.equal(second.ok, true);
+    assert.equal(second.result.expense.created, 0);
+    assert.equal(second.result.expense.skippedExisting, 1);
+    assert.equal(second.result.vendorTag.skippedExisting, 1);
+    assert.equal(second.result.config.skippedExisting, 1);
+    assert.equal(second.result.budget.created, 1);
+    assert.equal(second.result.budget.skippedExisting, 0);
+  });
 });
 
 describe('main', () => {
@@ -173,6 +220,27 @@ describe('main', () => {
       if (saved.fs === undefined) delete process.env.FIRESTORE_EMULATOR_HOST;
       else process.env.FIRESTORE_EMULATOR_HOST = saved.fs;
       if (saved.auth !== undefined) process.env.FIREBASE_AUTH_EMULATOR_HOST = saved.auth;
+    }
+  });
+
+  it('rejects a tag mirror mismatch before any write', async () => {
+    const dir = writeFixture({
+      expense: [{id: 'e1', tags: ['food'], tag: 'travel', cost: 1}],
+    });
+    const origLoad = Module._load;
+    Module._load = function load(request, parent, isMain) {
+      if (request === 'firebase-admin') {
+        throw new Error('firebase-admin loaded after a schema mismatch');
+      }
+      return origLoad.call(this, request, parent, isMain);
+    };
+    try {
+      await assert.rejects(
+        () => main(['node', 'importToFirestore.js', '--dir', dir, '--uid', 'uid-1', '--apply']),
+        /tag mirror mismatch/,
+      );
+    } finally {
+      Module._load = origLoad;
     }
   });
 });

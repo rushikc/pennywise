@@ -8,6 +8,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const Module = require('module');
 const {summarize, parseArgs, main} = require('./migrateToUser');
 
 describe('migrateToUser', () => {
@@ -29,5 +30,32 @@ describe('migrateToUser', () => {
     assert.deepEqual(summary.extra, ['notes']);
     const result = await main(['node', 'migrateToUser.js', '--from', dir, '--uid', 'uid-1']);
     assert.equal(result.expense, 2);
+  });
+
+  it('bad CLI args exit non-zero and do not write', async () => {
+    const origExit = process.exit;
+    const origLoad = Module._load;
+    const exits = [];
+    process.exit = (code) => {
+      exits.push(code);
+      throw new Error(`exit ${code}`);
+    };
+    Module._load = function load(request, parent, isMain) {
+      if (request === 'firebase-admin') {
+        throw new Error('firebase-admin loaded for a bad CLI');
+      }
+      return origLoad.call(this, request, parent, isMain);
+    };
+    try {
+      await assert.rejects(() => main(['node', 'migrateToUser.js']), /exit 1/);
+      await assert.rejects(
+        () => main(['node', 'migrateToUser.js', '--from', '/no/such/export', '--uid', 'uid-1', '--apply']),
+        /exit 1/,
+      );
+      assert.deepEqual(exits, [1, 1]);
+    } finally {
+      process.exit = origExit;
+      Module._load = origLoad;
+    }
   });
 });
