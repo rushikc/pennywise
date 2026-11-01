@@ -182,6 +182,37 @@ describe('LiveExpenseAPI.autoTagPastExpenses', () => {
     expect((mockTxUpdate.mock.calls[0][1] as Record<string, unknown>).tags).toEqual(['food']);
   });
 
+  it('leaves a tagged expense and its extra tags untouched', async () => {
+    mockTxUpdate.mockClear();
+    jest.mocked(FinanceIndexDB.getAllData).mockResolvedValueOnce([
+      {id: 'V', vendor: 'SHOP', tag: 'food', date: 1},
+    ]);
+    jest.mocked(getDocs).mockResolvedValueOnce({
+      forEach: (fn: (doc: {id: string; data: () => Record<string, unknown>}) => void) => {
+        fn({id: 'exp-1', data: () => ({vendor: 'SHOP', tags: ['travel', 'office'], modifiedDate: 10})});
+      },
+    } as never);
+    const count = await LiveExpenseAPI.autoTagPastExpenses(0);
+    expect(count).toBe(0);
+    expect(mockTxUpdate).not.toHaveBeenCalled();
+  });
+
+  it('tags an untagged row when leftover extra strings do not form a primary', async () => {
+    mockTxUpdate.mockClear();
+    jest.mocked(FinanceIndexDB.getAllData).mockResolvedValueOnce([
+      {id: 'V', vendor: 'SHOP', tag: 'food', date: 1},
+    ]);
+    jest.mocked(getDocs).mockResolvedValueOnce({
+      forEach: (fn: (doc: {id: string; data: () => Record<string, unknown>}) => void) => {
+        fn({id: 'exp-1', data: () => ({vendor: 'SHOP', tags: [], tag: null, modifiedDate: 10})});
+      },
+    } as never);
+    serverData = {vendor: 'SHOP', tags: ['', 'office'], tag: null};
+    const count = await LiveExpenseAPI.autoTagPastExpenses(0);
+    expect(count).toBe(1);
+    expect((mockTxUpdate.mock.calls[0][1] as Record<string, unknown>).tags).toEqual(['food']);
+  });
+
   it('skips an expense with no vendor instead of aborting the run', async () => {
     mockTxUpdate.mockClear();
     jest.mocked(FinanceIndexDB.getAllData).mockResolvedValueOnce([
