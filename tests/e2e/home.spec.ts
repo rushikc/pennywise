@@ -139,9 +139,15 @@ test.describe('home list', () => {
       await page.getByTestId('home-sort').click();
       await page.locator('.ant-select-item-option', {hasText: 'Total Cost'}).click();
     } else {
-      await page.getByRole('button', {name: 'Filter'}).click();
-      await page.locator('.home-options-panel').getByText('Total Cost', {exact: true}).click();
-      await page.keyboard.press('Escape');
+      // Grouping can scroll the list, and a scroll closes the filter panel, so the
+      // panel may already be open or shut when sort is chosen.
+      const panel = page.locator('.home-options-panel');
+      await expect(async () => {
+        if (!(await panel.isVisible())) {
+          await page.getByRole('button', {name: 'Filter'}).click();
+        }
+        await panel.getByText('Total Cost', {exact: true}).click({timeout: 1000});
+      }).toPass();
     }
     // Vendor groups start collapsed, so the order shows on the group header.
     await expect(page.locator('.group-label').first()).toHaveText(winner);
