@@ -58,6 +58,7 @@ infra/terraform/.terraform.lock.hcl.bak
 /coverage/
 
 # Playwright e2e
+/tests/fixtures/seed-large/
 /playwright-report/
 /test-results/
 /build-e2e/

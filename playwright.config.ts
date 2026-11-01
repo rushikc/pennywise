@@ -55,6 +55,14 @@ export default defineConfig({
       workers: 1,
       use: {...devices['Desktop Chrome'], animations: 'disabled', trace: 'off'},
     },
+    {
+      // Opt-in. CI does not run this project. Home renders every row in the active range.
+      name: 'perf',
+      grep: /@perf/,
+      timeout: 180_000,
+      workers: 1,
+      use: {...devices['Desktop Chrome'], trace: 'off'},
+    },
   ],
   webServer: [
     {

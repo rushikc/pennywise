@@ -8,7 +8,7 @@ Copyright (c) 2025 rushikc <rushikc.dev@gmail.com>
  * fully synthetic. Run: node tests/fixtures/buildSeed.mjs
  * Specs reference the "anchor" expenses by id, so keep those stable.
  */
-import {writeFileSync} from 'node:fs';
+import {mkdirSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -140,9 +140,66 @@ const config = {
   investments: {list: []},
 };
 
-const write = (name, data) => writeFileSync(path.join(outDir, name), `${JSON.stringify(data, null, 1)}\n`);
-write('expenses.json', expenses);
-write('vendorTags.json', vendorTags);
-write('budgets.json', budgets);
-write('config.json', config);
+const write = (dir, name, data) => writeFileSync(path.join(dir, name), `${JSON.stringify(data, null, 1)}\n`);
+
+if (process.argv.includes('--large')) {
+  const largeDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'seed-large');
+  mkdirSync(largeDir, {recursive: true});
+  let largeState = 80000001;
+  const largeRand = () => {
+    largeState = (largeState + 0x6d2b79f5) | 0;
+    let t = Math.imul(largeState ^ (largeState >>> 15), 1 | largeState);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const largePick = (list) => list[Math.floor(largeRand() * list.length)];
+  const span = 24 * 30 * DAY;
+  const large = [];
+  for (let index = 0; index < 5; index += 1) {
+    large.push(expense({
+      id: `large-needle-${index}`,
+      vendor: 'PERF NEEDLE',
+      cost: 42 + index,
+      date: NOW - index * HOUR,
+      tags: ['shopping'],
+      description: 'perf needle',
+    }));
+  }
+  for (let index = 0; index < 30; index += 1) {
+    const v = largePick(BACKGROUND_VENDORS);
+    large.push(expense({
+      vendor: v.vendor,
+      cost: round2(v.min + largeRand() * (v.max - v.min)),
+      date: NOW - 3 * DAY - index * HOUR,
+      tags: [v.tag, largePick(EXTRAS)],
+      description: 'Inside the week',
+    }));
+  }
+  for (let index = 0; index < 7965; index += 1) {
+    const v = largePick(BACKGROUND_VENDORS);
+    const roll = largeRand();
+    let tags = [v.tag];
+    if (roll < 0.08) tags = [];
+    else if (roll < 0.22) tags = [v.tag, largePick(EXTRAS)];
+    const description = largeRand() < 0.1 ? largePick(['Split with flatmates', 'Monthly top-up', 'Paid by card']) : undefined;
+    large.push(expense({
+      vendor: v.vendor,
+      cost: round2(v.min + largeRand() * (v.max - v.min)),
+      date: NOW - Math.floor(largeRand() * span),
+      tags,
+      description,
+    }));
+  }
+  write(largeDir, 'expenses.json', large.sort((a, b) => b.date - a.date));
+  write(largeDir, 'vendorTags.json', vendorTags);
+  write(largeDir, 'budgets.json', budgets);
+  write(largeDir, 'config.json', config);
+  console.log(`large expenses=${large.length}`);
+  process.exit(0);
+}
+
+write(outDir, 'expenses.json', expenses);
+write(outDir, 'vendorTags.json', vendorTags);
+write(outDir, 'budgets.json', budgets);
+write(outDir, 'config.json', config);
 console.log(`expenses=${expenses.length} vendorTags=${vendorTags.length} budgets=${budgets.length}`);

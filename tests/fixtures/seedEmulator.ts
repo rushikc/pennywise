@@ -27,14 +27,27 @@ import {
 
 // Resolved from the repo root: Playwright and the npm script both run from there.
 const seedDir = path.resolve('tests/fixtures/seed');
-const readSeed = <T>(name: string): T => JSON.parse(readFileSync(path.join(seedDir, name), 'utf8')) as T;
+const readJson = <T>(dir: string, name: string): T => JSON.parse(readFileSync(path.join(dir, name), 'utf8')) as T;
 
 type SeedDoc = Record<string, unknown> & {id: string};
-export const seed = {
-  expenses: readSeed<SeedDoc[]>('expenses.json'),
-  vendorTags: readSeed<SeedDoc[]>('vendorTags.json'),
-  budgets: readSeed<SeedDoc[]>('budgets.json'),
-  config: readSeed<Record<string, Record<string, unknown>>>('config.json'),
+type SeedBundle = {
+  expenses: SeedDoc[];
+  vendorTags: SeedDoc[];
+  budgets: SeedDoc[];
+  config: Record<string, Record<string, unknown>>;
+};
+const readBundle = (dir: string): SeedBundle => ({
+  expenses: readJson<SeedDoc[]>(dir, 'expenses.json'),
+  vendorTags: readJson<SeedDoc[]>(dir, 'vendorTags.json'),
+  budgets: readJson<SeedDoc[]>(dir, 'budgets.json'),
+  config: readJson<Record<string, Record<string, unknown>>>(dir, 'config.json'),
+});
+export const seed = readBundle(seedDir);
+let largeSeed: SeedBundle | undefined;
+const bundleFor = (dataset: 'default' | 'large'): SeedBundle => {
+  if (dataset === 'default') return seed;
+  largeSeed ??= readBundle(path.resolve('tests/fixtures/seed-large'));
+  return largeSeed;
 };
 
 /** Aborts unless this process is explicitly pointed at the local emulators and demo project. */
@@ -90,18 +103,24 @@ export async function seedUsers(): Promise<void> {
   await db.doc(`allowedUsers/${E2E_API_OWNER.email}`).set({addedAt: E2E_NOW});
 }
 
-/** Replaces one user's subtree with the fixture data. */
-export async function seedUserData(uid: string): Promise<void> {
+/** Replaces one user's subtree with the fixture data. `large` is the gitignored 8k set. */
+export async function seedUserData(uid: string, options?: {dataset?: 'default' | 'large'}): Promise<void> {
   const db = adminDb();
+  const bundle = bundleFor(options?.dataset ?? 'default');
   const root = db.doc(`users/${uid}`);
   await db.recursiveDelete(root);
-  const batch = db.batch();
-  for (const {id, ...data} of seed.expenses) batch.set(root.collection('expense').doc(id), data);
-  for (const {id, ...data} of seed.vendorTags) batch.set(root.collection('vendorTag').doc(id), data);
-  for (const {id, ...data} of seed.budgets) batch.set(root.collection('budget').doc(id), data);
-  for (const [key, data] of Object.entries(seed.config)) batch.set(root.collection('config').doc(key), data);
-  batch.set(root.collection('meta').doc('profile'), {migratedAt: E2E_NOW});
-  await batch.commit();
+  const writes: {path: string; data: Record<string, unknown>}[] = [];
+  for (const {id, ...data} of bundle.expenses) writes.push({path: `users/${uid}/expense/${id}`, data});
+  for (const {id, ...data} of bundle.vendorTags) writes.push({path: `users/${uid}/vendorTag/${id}`, data});
+  for (const {id, ...data} of bundle.budgets) writes.push({path: `users/${uid}/budget/${id}`, data});
+  for (const [key, data] of Object.entries(bundle.config)) writes.push({path: `users/${uid}/config/${key}`, data});
+  writes.push({path: `users/${uid}/meta/profile`, data: {migratedAt: E2E_NOW}});
+  const chunk = 400;
+  for (let index = 0; index < writes.length; index += chunk) {
+    const batch = db.batch();
+    for (const item of writes.slice(index, index + chunk)) batch.set(db.doc(item.path), item.data);
+    await batch.commit();
+  }
 }
 
 export async function seedAll(): Promise<void> {

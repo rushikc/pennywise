@@ -36,7 +36,7 @@ export const test = base.extend<Fixtures>({
 
 export {expect};
 
-export async function signIn(page: Page, user: E2EUser): Promise<void> {
+export async function signIn(page: Page, user: E2EUser, timeout = 10_000): Promise<void> {
   await page.clock.install({time: E2E_NOW});
   await page.goto('/login');
   await page.waitForFunction(() => Boolean(window.__pennywiseE2E));
@@ -45,8 +45,8 @@ export async function signIn(page: Page, user: E2EUser): Promise<void> {
     [user.email, E2E_PASSWORD],
   );
   await page.goto('/home');
-  await expect(page.getByText('You\'re viewing demo data.')).toHaveCount(0);
-  await expect(page.getByTestId('expense-row').first()).toBeVisible();
+  await expect(page.getByText('You\'re viewing demo data.')).toHaveCount(0, {timeout});
+  await expect(page.getByTestId('expense-row').first()).toBeVisible({timeout});
 }
 
 /** Reads an expense straight from the emulator (admin, bypasses rules). */
