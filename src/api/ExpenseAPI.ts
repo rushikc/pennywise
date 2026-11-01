@@ -51,6 +51,9 @@ export class ExpenseAPI {
 
   static processData = () => api().then((impl) => impl.processData());
 
+  static resetSyncWatermarksIfNeeded = (): Promise<void> =>
+    api().then((impl) => impl.resetSyncWatermarksIfNeeded());
+
   static addExpense = (_expense: Expense, operation = 'update'): Promise<Expense> =>
     api().then((impl) => impl.addExpense(_expense, operation));
 
@@ -92,8 +95,8 @@ export class ExpenseAPI {
   static updateDarkMode = (val: boolean) =>
     api().then((impl) => impl.updateDarkMode(val));
 
-  static getVendorTagList = (): Promise<VendorTag[]> =>
-    api().then((impl) => impl.getVendorTagList());
+  static getVendorTagList = (overrideLastDate: number | undefined = undefined): Promise<VendorTag[]> =>
+    api().then((impl) => impl.getVendorTagList(overrideLastDate));
 
   static updateVendorTag = (vendorTag: VendorTag) =>
     api().then((impl) => impl.updateVendorTag(vendorTag));

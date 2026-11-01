@@ -241,7 +241,12 @@ export class DemoExpenseAPI {
     return true;
   };
 
-  static getVendorTagList = async (): Promise<VendorTag[]> => {
+  static resetSyncWatermarksIfNeeded = async (): Promise<void> => {
+    return;
+  };
+
+  static getVendorTagList = async (overrideLastDate: number | undefined = undefined): Promise<VendorTag[]> => {
+    void overrideLastDate;
     const store = await DemoExpenseAPI.getStore();
     return JSONCopy(store.vendorTags);
   };

@@ -12,6 +12,9 @@ import {
   EXPENSE_SCHEMA_VERSION,
   EXPENSE_SCHEMA_VERSION_KEY,
   expenseSchemaNeedsFullRefetch,
+  SYNC_RESET_VERSION,
+  SYNC_RESET_VERSION_KEY,
+  syncNeedsFullRefetch,
   TAG_LAST_UPDATE,
 } from '../utility/constants';
 import {firebaseConfig} from '../firebase/firebase-public';
@@ -227,6 +230,24 @@ export class LiveExpenseAPI {
   static processData = async () => {
     // console.log('ExpenseAPI processData ::::::::::::::::::::');
     // ProcessData.processExpenseData();
+  };
+
+  /**
+   * After a back-dated import, bump SYNC_RESET_VERSION so existing devices
+   * refetch expenses, vendor tags, and budgets once from 2020-01-01.
+   */
+  static resetSyncWatermarksIfNeeded = async (): Promise<void> => {
+    const stored = await FinanceIndexDB.getData('config', SYNC_RESET_VERSION_KEY);
+    if (!syncNeedsFullRefetch(stored?.value)) {
+      return;
+    }
+    const lastUpdatedDate = getUnixTimestamp('2020-01-01');
+    await FinanceIndexDB.addConfig([
+      {key: EXPENSE_LAST_UPDATE, value: lastUpdatedDate},
+      {key: TAG_LAST_UPDATE, value: lastUpdatedDate},
+      {key: BUDGET_LAST_UPDATE, value: lastUpdatedDate},
+      {key: SYNC_RESET_VERSION_KEY, value: SYNC_RESET_VERSION},
+    ]);
   };
 
 
@@ -583,7 +604,7 @@ export class LiveExpenseAPI {
    * It fetches new or updated mappings from Firestore since the last check,
    * updates the local IndexedDB, and returns the full list.
    */
-  static getVendorTagList = async (): Promise<VendorTag[]> => {
+  static getVendorTagList = async (overrideLastDate: number | undefined = undefined): Promise<VendorTag[]> => {
     try {
       const table = 'vendorTag';
       const fireDocList: VendorTag[] = [];
@@ -593,6 +614,7 @@ export class LiveExpenseAPI {
       if (configData) {
         lastUpdatedDate = Number(configData.value);
       }
+      if (overrideLastDate) lastUpdatedDate = overrideLastDate;
 
       const q = query(userCol(table), where('date', '>', lastUpdatedDate));
       const querySnapshot = await getDocs(q);
@@ -602,7 +624,7 @@ export class LiveExpenseAPI {
           id: doc.id,
           ...doc.data()
         } as VendorTag)));
-        fireDocList.forEach(val => FinanceIndexDB.addVendorTag(val));
+        await Promise.all(fireDocList.map((val) => FinanceIndexDB.addVendorTag(val)));
       }
 
       await FinanceIndexDB.addConfig([{key: TAG_LAST_UPDATE, value: Date.now() - 3600000}]);
