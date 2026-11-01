@@ -32,4 +32,16 @@ describe('saveRefreshToken', () => {
     await store.saveRefreshToken('p', 'u1', 'rt-new');
     assert.deepEqual(destroyed, ['projects/p/secrets/gmail-rt-u1/versions/1']);
   });
+
+  it('rejects when the refresh token secret is missing', async () => {
+    const client = {
+      async accessSecretVersion() {
+        const err = new Error('not found');
+        err.code = 5;
+        throw err;
+      },
+    };
+    const store = createTokenStore(client);
+    await assert.rejects(() => store.readRefreshToken('p', 'u1'), (err) => err.code === 5);
+  });
 });

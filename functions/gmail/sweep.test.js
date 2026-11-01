@@ -256,4 +256,40 @@ describe('runHourlySweep', () => {
     assert.equal(watches.length, 1);
     assert.ok(db.docs.get('users/u-ok/private/gmail').watchExpiration);
   });
+
+  it('finishes the sweep when watch renewal fails', async () => {
+    const nowMs = 1_700_000_000_000;
+    const db = sweepDb([{
+      uid: 'u-ok',
+      email: 'ok@example.com',
+      gmail: {status: 'connected', historyId: '5', watchExpiration: nowMs},
+    }]);
+    const tokenStore = {readRefreshToken: async () => 'rt-u-ok'};
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.includes('/token')) {
+        return {ok: true, json: async () => ({access_token: 'at'})};
+      }
+      if (href.includes('/history')) {
+        return {ok: true, json: async () => ({historyId: '5', history: []})};
+      }
+      if (href.includes('/watch')) {
+        return {ok: false, status: 500, json: async () => ({})};
+      }
+      return {ok: true, json: async () => ({})};
+    };
+    const summary = await runHourlySweep({
+      db,
+      tokenStore,
+      projectId: 'p',
+      clientId: 'id',
+      clientSecret: 'secret',
+      geminiKey: '',
+      fetchImpl,
+      nowMs,
+    });
+    assert.equal(summary.failed, 1);
+    assert.equal(summary.ok, 0);
+    assert.equal(db.docs.get('users/u-ok/private/gmail').historyId, '5');
+  });
 });
